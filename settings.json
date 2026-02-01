@@ -1,0 +1,50 @@
+{
+    "hooks": {
+        "PreToolUse": [
+            {
+                "matcher": "*",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "node hooks/observe.js pre"
+                    }
+                ],
+                "description": "观察工具调用"
+            }
+        ],
+        "PostToolUse": [
+            {
+                "matcher": "*",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "node hooks/observe.js post"
+                    }
+                ],
+                "description": "观察工具调用结果"
+            },
+            {
+                "matcher": "tool == \"Edit\" && tool_input.file_path matches \"\\\\.(ts|tsx|js|jsx)$\"",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "node hooks/check-console-log.js"
+                    }
+                ],
+                "description": "检测 console.log"
+            }
+        ],
+        "Stop": [
+            {
+                "matcher": "*",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "node hooks/evaluate-session.js"
+                    }
+                ],
+                "description": "会话结束评估"
+            }
+        ]
+    }
+}
