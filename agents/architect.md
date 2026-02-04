@@ -1,4 +1,4 @@
----
+﻿---
 name: architect
 description: 系统设计决策专家
 tools: ["Read", "Grep", "Glob"]
