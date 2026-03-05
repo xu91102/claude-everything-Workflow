@@ -2,13 +2,13 @@
 
 ## 基本原则
 
-| 原则 | 说明 |
-|------|------|
-| **NEVER 忽略错误** | 捕获的错误必须处理或重新抛出 |
-| 使用具体异常 | 避免捕获顶级 Exception/Error |
-| 提供上下文 | 错误信息包含足够排查信息 |
-| 区分类型 | 业务错误 vs 系统错误 vs 校验错误 |
-| 统一处理 | 使用全局错误处理机制 |
+| 原则               | 说明                             |
+| ------------------ | -------------------------------- |
+| **NEVER 忽略错误** | 捕获的错误必须处理或重新抛出     |
+| 使用具体异常       | 避免捕获顶级 Exception/Error     |
+| 提供上下文         | 错误信息包含足够排查信息         |
+| 区分类型           | 业务错误 vs 系统错误 vs 校验错误 |
+| 统一处理           | 使用全局错误处理机制             |
 
 ## 错误处理模式
 
@@ -19,35 +19,47 @@
 4. 日志记录：错误必须记录，包含上下文信息
 ```
 
-## 正确示例
+## API 错误处理分层 (CRITICAL)
+
+### 业务代码禁止 try/catch
+
+**原则**：
+
+- 让拦截器统一处理 HTTP 错误
+- 保持业务代码简洁
+
+**正确示例**：
 
 ```typescript
-// CORRECT: 完整的错误处理
-async function fetchUser(id: string): Promise<User> {
+// CORRECT: 让拦截器统一处理
+async function getUser(id: string) {
+  return await api.get(`/users/${id}`);
+}
+```
+
+**错误示例**：
+
+```typescript
+// WRONG: 业务代码不应处理 HTTP 错误
+async function getUser(id: string) {
   try {
-    const response = await api.get(`/users/${id}`)
-    return response.data
+    return await api.get(`/users/${id}`);
   } catch (error) {
-    console.error('获取用户失败:', { id, error })
-    throw new UserFetchError(`无法获取用户 ${id}`, { cause: error })
+    message.error("获取失败");
   }
 }
 ```
 
-## 错误示例
+**特殊场景例外**：
 
-```typescript
-// WRONG: 忽略错误
-try {
-  await dangerousOperation()
-} catch (e) {
-  // 空的 catch 块！
-}
-```
+- 需要降级处理（失败后使用默认值）
+- 需要特殊错误提示
+- 批量操作部分失败继续执行
 
 ## 异步错误处理
 
 ALWAYS 确保：
+
 - 异步操作使用 try-catch 包裹
 - Promise 必须处理 catch
 - NEVER 吞掉异步错误
