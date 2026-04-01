@@ -4,6 +4,7 @@ trigger: "编写新函数时"
 confidence: 0.7
 domain: "code-style"
 source: "session-observation"
+lastObserved: "2026-01-15"
 ---
 
 # 优先使用函数式风格

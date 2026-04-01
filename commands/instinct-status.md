@@ -12,6 +12,8 @@ description: 查看学习到的模式和直觉状态
 /instinct-status              # 显示所有模式
 /instinct-status --domain X   # 按领域筛选
 /instinct-status --high       # 只显示高置信度
+/instinct-status --decay      # 检查并应用置信度衰减
+/instinct-status --decay-preview  # 预览衰减效果
 ```
 
 ## 输出格式
@@ -21,16 +23,20 @@ description: 查看学习到的模式和直觉状态
 ==================
 
 已学习模式: 12 个
-高置信度 (≥0.7): 5 个
+高置信度 (>=0.7): 5 个
 中置信度 (0.5-0.7): 4 个
 低置信度 (<0.5): 3 个
 
 ## 高置信度模式
 
-| 模式 | 领域 | 置信度 |
-|------|------|--------|
-| always-test-first | testing | 0.9 |
-| use-zod-validation | validation | 0.8 |
+| 模式 | 领域 | 置信度 | 上次观察 | 衰减状态 |
+|------|------|--------|----------|----------|
+| always-test-first | testing | 0.9 | 3天前 | 稳定 |
+| use-zod-validation | validation | 0.8 | 10天前 | 即将衰减 |
+
+## 衰减预警
+
+2 个模式超过 7 天未观察，将在下次衰减检查时降低置信度
 
 ## 演化建议
 
@@ -46,3 +52,24 @@ description: 查看学习到的模式和直觉状态
 | 0.5 | 中等 | 相关时应用 |
 | 0.7 | 强 | 自动应用 |
 | 0.9 | 核心 | 始终应用 |
+
+## 衰减机制
+
+每周无新观察，置信度降低 0.02，最低降至 0.3。
+
+**衰减计算:**
+
+```
+新置信度 = max(0.3, 当前置信度 - (周数 * 0.02))
+```
+
+**触发衰减检查:**
+
+```bash
+# 通过命令
+/instinct-status --decay
+
+# 通过脚本
+node ~/.claude/hooks/decay-confidence.js
+```
+

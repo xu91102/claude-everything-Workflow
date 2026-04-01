@@ -4,6 +4,7 @@ trigger: "实现新功能时"
 confidence: 0.9
 domain: "testing"
 source: "session-observation"
+lastObserved: "2026-02-01"
 ---
 
 # 始终先写测试
