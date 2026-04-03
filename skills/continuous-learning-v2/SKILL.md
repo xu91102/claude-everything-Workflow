@@ -126,7 +126,7 @@ source: "session-observation"
 
 | 命令 | 功能 |
 |------|------|
-| `/learn` | 手动分析当前会话 |
+| `/learn-eval` | 手动分析当前会话 (含质量门) |
 | `/instinct-status` | 查看所有直觉及其置信度 |
 | `/evolve` | 将相关直觉聚类为 skills/commands/agents |
 | `/instinct-export` | 导出直觉分享 |
@@ -156,7 +156,7 @@ source: "session-observation"
 
 ## 相关命令
 
-- `/learn` - 手动提取模式
+- `/learn-eval` - 提取模式 (含质量门)
 - `/evolve` - 聚类演化
 - `/instinct-status` - 查看学习状态
 - `/instinct-export` - 导出直觉
