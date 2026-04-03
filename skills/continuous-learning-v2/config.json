@@ -22,7 +22,8 @@
         "inherited_path": "~/.claude/homunculus/instincts/inherited/",
         "min_confidence": 0.3,
         "auto_approve_threshold": 0.7,
-        "confidence_decay_rate": 0.02,
+        "stale_threshold_days": 30,
+        "review_mode": "report",
         "max_instincts": 100
     },
     "observer": {

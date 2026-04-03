@@ -69,7 +69,8 @@ claude-everything-Workflow/
 │   ├── README.md
 │   ├── check-console-log.js
 │   ├── evaluate-session.js
-│   └── observe.js
+│   ├── observe.js
+│   └── review-confidence.js
 │
 └── homunculus/                 # 自主学习系统
     ├── instincts/

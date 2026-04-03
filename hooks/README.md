@@ -7,7 +7,7 @@
 | 脚本 | 用途 | Hook 类型 |
 |------|------|-----------|
 | `check-console-log.js` | 检测 console.log | PostToolUse |
-| `decay-confidence.js` | 置信度衰减检查 | 手动/定时 |
+| `review-confidence.js` | 置信度审查报告 | 手动 |
 | `evaluate-session.js` | 会话结束评估 | Stop |
 | `observe.js` | 观察工具调用 | PreToolUse/PostToolUse |
 
@@ -50,41 +50,41 @@
 
 观察每次工具调用，记录到 `~/.claude/homunculus/observations.jsonl`，供持续学习系统分析。
 
-### decay-confidence.js
+### review-confidence.js
 
-实现直觉置信度衰减机制，每周无观察降低 0.02 置信度。
+生成直觉置信度审查报告，帮助用户识别需要关注的直觉。
+不自动修改任何文件的置信度值，所有变更由用户决策驱动。
 
 **用法:**
 
 ```bash
-# 预览变更
-node ~/.claude/hooks/decay-confidence.js --dry-run
+# 生成审查报告
+node ~/.claude/hooks/review-confidence.js
 
-# 执行衰减
-node ~/.claude/hooks/decay-confidence.js
+# 自定义过期天数（默认 30 天）
+node ~/.claude/hooks/review-confidence.js --stale 60
+
+# JSON 格式输出
+node ~/.claude/hooks/review-confidence.js --json
 ```
+
+**报告分类:**
+
+| 状态 | 含义 | 建议操作 |
+|------|------|----------|
+| 活跃 | 近期有观察证据 | 保持现状 |
+| 待审查 | 超过阈值天数未观察 | 人工确认是否仍适用 |
+| 低证据 | 置信度低且缺乏证据 | 在实践中验证后决定 |
 
 **配置:**
 
-衰减参数在 `skills/continuous-learning-v2/config.json` 中配置：
+审查参数在 `skills/continuous-learning-v2/config.json` 中配置：
 
 ```json
 {
   "instincts": {
-    "confidence_decay_rate": 0.02,
-    "min_confidence": 0.3
+    "stale_threshold_days": 30,
+    "review_mode": "report"
   }
 }
 ```
-
-**直觉文件格式:**
-
-```yaml
----
-id: pattern-name
-confidence: 0.7
-lastObserved: "2026-01-15"    # 最后观察日期
-lastDecayCheck: "2026-02-05"  # 最后衰减检查日期
----
-```
-
