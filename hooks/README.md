@@ -21,6 +21,7 @@ export ECC_DISABLED_HOOKS="hook-id"    # 逗号分隔禁用列表
 | `observe.js` | 观察工具调用 | PreToolUse/PostToolUse | `pre:observe` / `post:observe` |
 | `check-console-log.js` | 检测 console.log | PostToolUse | `post:edit:console-log` |
 | `evaluate-session.js` | 会话结束评估 | Stop | `stop:evaluate-session` |
+| `pre-compact.js` | 上下文压缩前保存信息 | PreCompact | `precompact:save-context` |
 | `review-confidence.js` | 置信度审查报告 | 手动 | - |
 
 ## scripts/hooks/ 脚本

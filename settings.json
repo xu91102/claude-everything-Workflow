@@ -46,6 +46,18 @@
           }
         ]
       }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node hooks/pre-compact.js",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   }
 }
