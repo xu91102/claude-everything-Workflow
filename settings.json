@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node hooks/observe.js pre",
+            "command": "node .claude/hooks/observe.js pre",
             "async": true,
             "timeout": 10
           }
@@ -20,7 +20,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node hooks/observe.js post",
+            "command": "node .claude/hooks/observe.js post",
             "async": true,
             "timeout": 10
           }
@@ -31,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node hooks/check-console-log.js"
+            "command": "node .claude/hooks/check-console-log.js"
           }
         ]
       }
@@ -42,7 +42,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node hooks/evaluate-session.js"
+            "command": "node .claude/hooks/evaluate-session.js"
           }
         ]
       }
@@ -53,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node hooks/pre-compact.js",
+            "command": "node .claude/hooks/pre-compact.js",
             "timeout": 5
           }
         ]
