@@ -42,6 +42,7 @@ claude-everything-Workflow/
 │   ├── architect.md            # 架构师
 │   ├── code-reviewer.md        # 代码审查员
 │   ├── tdd-guide.md            # TDD 指导
+│   ├── e2e-runner.md           # E2E / Playwright（可选 Agent Browser）
 │   ├── harness-optimizer.md    # Harness 配置调优
 │   └── ...                     # 其他专业代理
 │
@@ -55,7 +56,8 @@ claude-everything-Workflow/
 │   ├── plan.md                 # /plan 实施计划
 │   ├── verify.md               # /verify 验证
 │   ├── code-review.md          # /code-review 审查
-│   └── tdd.md                  # /tdd 测试驱动开发
+│   ├── tdd.md                  # /tdd 测试驱动开发
+│   └── e2e.md                  # /e2e 端到端（Playwright）
 │
 ├── contexts/                   # 上下文（模式切换）
 │   ├── dev.md                  # 开发模式
@@ -73,6 +75,8 @@ claude-everything-Workflow/
 │       └── session-end.js      # 会话结束持久化
 │
 ├── skills/
+│   ├── e2e-testing/            # Playwright E2E 模式（POM、CI、制品）
+│   │   └── SKILL.md
 │   ├── continuous-learning-v2/ # 自主学习系统
 │   │   ├── SKILL.md            # 技能说明
 │   │   ├── config.json         # 配置
@@ -104,6 +108,7 @@ claude-everything-Workflow/
 |------|------|
 | `/plan` | 创建实施计划，等待确认 |
 | `/tdd` | 测试驱动开发流程 |
+| `/e2e` | 端到端测试（Playwright；可配合 e2e-runner） |
 | `/verify` | 运行全面验证检查 |
 | `/code-review` | 代码审查 |
 | `/learn-eval` | 从会话提取模式 (含质量门评估) |
@@ -158,10 +163,11 @@ export ECC_DISABLED_HOOKS="pre:bash:commit-quality"
 1. 复制到 ~/.claude/
 2. 使用 /plan 规划功能
 3. 使用 /tdd 实现代码
-4. 使用 /verify 验证
-5. 使用 /code-review 审查
-6. 使用 /learn-eval 积累模式
-7. 使用 /evolve 演化
-8. 使用 /prune 定期清理
-9. 使用 /instinct-export 分享
+4. 关键路径使用 /e2e 或委派 e2e-runner 维护 Playwright
+5. 使用 /verify 验证
+6. 使用 /code-review 审查
+7. 使用 /learn-eval 积累模式
+8. 使用 /evolve 演化
+9. 使用 /prune 定期清理
+10. 使用 /instinct-export 分享
 ```

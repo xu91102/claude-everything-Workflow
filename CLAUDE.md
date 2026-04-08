@@ -13,4 +13,5 @@
 | `05-git-workflow.md` | Git 提交规范 |
 | `06-comments.md` | 注释规范 |
 | `07-forbidden.md` | 禁止事项清单 |
-| `08-ecc-integration.md` | (Agent-First、Hook 系统、性能优化、TDD) |
+| `agents.md` | 代理路由摘要 |
+| `08-ecc-integration.md` | (Agent-First、Hook 系统、性能优化、TDD、E2E) |

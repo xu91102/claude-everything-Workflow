@@ -9,6 +9,7 @@
 | 代码质量审查 | code-reviewer     | 编写代码后      |
 | 安全审查     | security-reviewer | 提交前          |
 | 测试驱动开发 | tdd-guide         | 新功能/bug 修复 |
+| 端到端测试   | e2e-runner        | 关键用户路径、Playwright 维护与执行 |
 | 构建错误     | build-resolver    | 编译失败时      |
 
 **并行执行**: 独立任务必须并行启动多个 agents,避免不必要的串行等待
@@ -154,6 +155,13 @@ export ECC_DISABLED_HOOKS="pre:bash:commit-quality,post:edit:console-log"
 | 测试先行 | 实现前必须有测试 |
 | 关键路径 | 100% 覆盖        |
 | 提交前   | 所有测试必须通过 |
+
+### 端到端测试 (E2E)
+
+- **技能**: `skills/e2e-testing/SKILL.md` — Playwright 目录结构、POM、配置、CI、制品、flake 处理。
+- **代理**: `e2e-runner` — 优先 Agent Browser，回退 Playwright；编写/维护 spec、本地重复跑测、隔离不稳定用例。
+- **入口**: `/e2e`（`commands/e2e.md`）— 委派上述技能；复杂或从零搭建时可 spawn `e2e-runner`。
+- 与单元/集成测试并列：关键业务路径在合并前应有 E2E 覆盖或明确缺口与跟进项。
 
 ## 不可变性原则
 

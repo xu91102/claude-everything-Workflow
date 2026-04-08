@@ -34,6 +34,7 @@ description: 运行全面验证检查
    - 运行所有测试
    - 报告通过/失败数量
    - 报告覆盖率
+   - 若项目已配置 Playwright，运行 E2E（如 `npx playwright test` 或 `package.json` 中的脚本）
 
 5. **Console.log 审计**
    - 搜索源文件中的 console.log
