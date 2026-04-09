@@ -47,6 +47,7 @@ claude-everything-Workflow/
 │   └── ...                     # 其他专业代理
 │
 ├── commands/                   # 命令（斜杠快捷入口）
+│   ├── docs.md                 # /docs → documentation-lookup（兼容入口）
 │   ├── learn-eval.md           # /learn-eval 提取模式 (含质量门)
 │   ├── evolve.md               # /evolve 演化
 │   ├── prune.md                # /prune 清理过期直觉
@@ -75,6 +76,8 @@ claude-everything-Workflow/
 │       └── session-end.js      # 会话结束持久化
 │
 ├── skills/
+│   ├── documentation-lookup/   # Context7：库/API 实时文档（resolve → query）
+│   │   └── SKILL.md
 │   ├── e2e-testing/            # Playwright E2E 模式（POM、CI、制品）
 │   │   └── SKILL.md
 │   ├── continuous-learning-v2/ # 自主学习系统
@@ -102,21 +105,65 @@ claude-everything-Workflow/
         └── agents/
 ```
 
+## 与主仓对齐：Context7 MCP、`~/.claude` 用户级配置与省 Token
+
+本目录已含 **`skills/documentation-lookup/`** 与 **`/docs`**，行为与 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) 主仓一致：通过 Context7 的 **`resolve-library-id` → `query-docs`** 查第三方库最新文档。技能不负责启动 MCP，需在 **Claude Code** 或 **Cursor** 中启用。
+
+### 1. Claude Code：用户级 `~/.claude/settings.json`
+
+复制 Workflow 到 `~/.claude/` 后，在 **`~/.claude/settings.json`**（没有则新建）里配置 **`mcpServers`**，与主仓根目录 **`.mcp.json`** 中 **`context7`** 条目保持一致：
+
+```json
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@2.1.4"]
+    }
+  }
+}
+```
+
+- 若文件中已有 hooks、其它字段，请**合并**进同一 JSON，**不要**整文件覆盖。
+- 需要本机 **Node / npx**（`npx` 首次会拉取包）。
+- 更全的 MCP 列表与说明见主仓 **`mcp-configs/mcp-servers.json`** 与主仓 **README「Configure MCPs」**。
+
+**仅查文档时**：用户级只保留 **`context7`** 即可，不必一次打开主仓里的 GitHub、Exa、Playwright 等全部服务。
+
+### 2. 节省 Token（与主仓 `rules/common/performance.md` 一致）
+
+- MCP 工具描述会占用上下文；建议**同时启用的 MCP 少于 10 个**，并控制活跃工具数量。
+- **策略**：从 **0 个或只开 Context7** 开始，需要再加其它 MCP。
+- **按项目禁用**（Claude Code）：在具体仓库的 **`.claude/settings.json`** 中使用 **`disabledMcpServers`**，写上全局已启用、但本项目不用的服务名（与 `mcpServers` 的**键名**一致），例如：
+
+```json
+{
+  "disabledMcpServers": ["github", "exa", "playwright", "sequential-thinking", "memory"]
+}
+```
+
+- **跑 ECC 安装/同步且你已有同名自建 MCP**：可设置 `export ECC_DISABLED_MCPS="github,context7,exa,playwright,sequential-thinking,memory"`，避免重复写入（见主仓 README）。
+
+### 3. Cursor
+
+在项目根使用 **`.mcp.json`**，放入与上文相同的 **`context7`** 段即可；用 MCP 面板关闭不需要的服务，效果与 `disabledMcpServers` 类似。
+
 ## 可用命令
 
-| 命令 | 功能 |
-|------|------|
-| `/plan` | 创建实施计划，等待确认 |
-| `/tdd` | 测试驱动开发流程 |
-| `/e2e` | 端到端测试（Playwright；可配合 e2e-runner） |
-| `/verify` | 运行全面验证检查 |
-| `/code-review` | 代码审查 |
-| `/learn-eval` | 从会话提取模式 (含质量门评估) |
-| `/evolve` | 演化模式为高级结构 |
-| `/prune` | 清理过期待定直觉 |
-| `/instinct-status` | 查看学习状态 |
-| `/instinct-export` | 导出直觉分享 |
-| `/instinct-import` | 导入他人直觉 |
+| 命令               | 功能                                                                |
+| ------------------ | ------------------------------------------------------------------- |
+| `/docs`            | 库/API 文档查询（委托 `documentation-lookup`，需启用 Context7 MCP） |
+| `/plan`            | 创建实施计划，等待确认                                              |
+| `/tdd`             | 测试驱动开发流程                                                    |
+| `/e2e`             | 端到端测试（Playwright；可配合 e2e-runner）                         |
+| `/verify`          | 运行全面验证检查                                                    |
+| `/code-review`     | 代码审查                                                            |
+| `/learn-eval`      | 从会话提取模式 (含质量门评估)                                       |
+| `/evolve`          | 演化模式为高级结构                                                  |
+| `/prune`           | 清理过期待定直觉                                                    |
+| `/instinct-status` | 查看学习状态                                                        |
+| `/instinct-export` | 导出直觉分享                                                        |
+| `/instinct-import` | 导入他人直觉                                                        |
 
 ## Hook Profile 控制
 
@@ -148,12 +195,12 @@ export ECC_DISABLED_HOOKS="pre:bash:commit-quality"
 
 ### 置信度系统
 
-| 分数 | 含义 | AI 行为 |
-|------|------|---------|
-| 0.3 | 试探性 | 建议但不强制 |
-| 0.5 | 中等 | 相关时应用 |
-| 0.7 | 强 | 主动应用 |
-| 0.9 | 核心 | 始终应用 |
+| 分数 | 含义   | AI 行为      |
+| ---- | ------ | ------------ |
+| 0.3  | 试探性 | 建议但不强制 |
+| 0.5  | 中等   | 相关时应用   |
+| 0.7  | 强     | 主动应用     |
+| 0.9  | 核心   | 始终应用     |
 
 > 置信度不会因时间流逝自动衰减。使用 `review-confidence.js` 审查、`/prune` 清理。
 
