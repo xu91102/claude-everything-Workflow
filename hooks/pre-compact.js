@@ -9,6 +9,8 @@
 const fs = require('fs')
 const path = require('path')
 const os = require('os')
+const crypto = require('crypto')
+const { execFileSync } = require('child_process')
 
 function getCompactLogPath() {
     const claudeDir = path.join(os.homedir(), '.claude')
@@ -19,6 +21,36 @@ function ensureDir(filePath) {
     const dir = path.dirname(filePath)
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true })
+    }
+}
+
+function getProjectContext(input) {
+    const cwd = input.cwd || process.cwd()
+    let projectRoot = cwd
+
+    try {
+        projectRoot = execFileSync('git', ['rev-parse', '--show-toplevel'], {
+            cwd,
+            encoding: 'utf8',
+            timeout: 1000,
+            windowsHide: true,
+            stdio: ['ignore', 'pipe', 'ignore']
+        }).trim()
+    } catch {
+        projectRoot = path.resolve(cwd)
+    }
+
+    const projectId = crypto
+        .createHash('sha1')
+        .update(projectRoot.toLowerCase())
+        .digest('hex')
+        .slice(0, 12)
+
+    return {
+        cwd,
+        project_root: projectRoot,
+        project_name: path.basename(projectRoot),
+        project_id: projectId
     }
 }
 
@@ -37,6 +69,7 @@ async function main() {
             const compactLog = {
                 timestamp: new Date().toISOString(),
                 session_id: input.session_id,
+                ...getProjectContext(input),
                 context_size: input.context_size || 'unknown',
                 message_count: input.message_count || 'unknown'
             }
@@ -50,11 +83,8 @@ async function main() {
             console.error('[PreCompact] 上下文即将压缩，关键信息已保存')
             console.error(`[PreCompact] 当前消息数: ${compactLog.message_count}`)
 
-            // 透传原始数据
-            console.log(data)
         } catch (error) {
-            // 出错时透传原始数据
-            console.log(data)
+            console.error(`[PreCompact] 保存失败: ${error.message}`)
         }
     })
 }

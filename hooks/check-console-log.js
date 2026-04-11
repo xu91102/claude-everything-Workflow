@@ -28,10 +28,8 @@ function main() {
                 }
             }
 
-            // 透传原始数据
-            console.log(data)
         } catch (error) {
-            console.log(data)
+            console.error(`[Hook] console.log 检查失败: ${error.message}`)
         }
     })
 }

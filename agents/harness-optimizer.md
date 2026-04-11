@@ -14,7 +14,7 @@ tools: ["Read", "Grep", "Glob", "Bash", "Edit"]
 
 1. **审计基线**: 检查以下配置文件的当前状态
    - `CLAUDE.md` — 全局指令
-   - `settings.json` / `hooks/hooks.json` — Hook 配置
+   - `settings.json` / 可选 `hooks/hooks.json` — Hook 配置
    - `rules/` — 规则文件
    - `agents/` — 代理定义
    - `skills/` — 技能配置

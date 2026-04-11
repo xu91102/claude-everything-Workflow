@@ -9,6 +9,8 @@
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
+const crypto = require("crypto");
+const { execFileSync } = require("child_process");
 
 function getObservationsPath() {
   return path.join(os.homedir(), ".claude", "homunculus", "observations.jsonl");
@@ -19,6 +21,36 @@ function ensureDir(filePath) {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
+}
+
+function getProjectContext(input) {
+  const cwd = input.cwd || input.tool_input?.cwd || process.cwd();
+  let projectRoot = cwd;
+
+  try {
+    projectRoot = execFileSync("git", ["rev-parse", "--show-toplevel"], {
+      cwd,
+      encoding: "utf8",
+      timeout: 1000,
+      windowsHide: true,
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch {
+    projectRoot = path.resolve(cwd);
+  }
+
+  const projectId = crypto
+    .createHash("sha1")
+    .update(projectRoot.toLowerCase())
+    .digest("hex")
+    .slice(0, 12);
+
+  return {
+    cwd,
+    project_root: projectRoot,
+    project_name: path.basename(projectRoot),
+    project_id: projectId,
+  };
 }
 
 async function main() {
@@ -42,12 +74,14 @@ async function main() {
       if (shouldRecord) {
         const observationsPath = getObservationsPath();
         ensureDir(observationsPath);
+        const project = getProjectContext(input);
 
         const observation = {
           timestamp: new Date().toISOString(),
           phase: phase,
           tool: input.tool,
           session_id: input.session_id,
+          ...project,
           tool_input: input.tool_input,
         };
 
@@ -55,10 +89,8 @@ async function main() {
         fs.appendFileSync(observationsPath, JSON.stringify(observation) + "\n");
       }
 
-      // 透传原始数据
-      console.log(data);
     } catch (error) {
-      console.log(data);
+      console.error(`[Hook] observe failed: ${error.message}`);
     }
   });
 }

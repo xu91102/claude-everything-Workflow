@@ -3,11 +3,41 @@
   "hooks": {
     "PostToolUse": [
       {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/run-with-flags.js post:edit:console-log hooks/check-console-log.js standard,strict",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/run-with-flags.js post:write:console-log hooks/check-console-log.js standard,strict",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/run-with-flags.js post:multiedit:console-log hooks/check-console-log.js standard,strict",
+            "timeout": 5
+          }
+        ]
+      },
+      {
         "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/observe.js post",
+            "command": "node scripts/hooks/run-with-flags.js post:observe hooks/observe.js standard,strict post",
             "async": true,
             "timeout": 10
           }
@@ -20,7 +50,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/evaluate-session.js"
+            "command": "node scripts/hooks/run-with-flags.js stop:evaluate-session hooks/evaluate-session.js standard,strict",
+            "timeout": 10
           }
         ]
       }
@@ -31,7 +62,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/pre-compact.js",
+            "command": "node scripts/hooks/run-with-flags.js precompact:save-context hooks/pre-compact.js minimal,standard,strict",
             "timeout": 5
           }
         ]

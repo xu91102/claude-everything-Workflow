@@ -9,6 +9,8 @@
 const fs = require('fs')
 const path = require('path')
 const os = require('os')
+const crypto = require('crypto')
+const { execFileSync } = require('child_process')
 
 function getConfig() {
     const configPath = path.join(os.homedir(), '.claude', 'skills', 'continuous-learning-v2', 'config.json')
@@ -35,6 +37,36 @@ function ensureDir(filePath) {
     const dir = path.dirname(filePath)
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true })
+    }
+}
+
+function getProjectContext(input) {
+    const cwd = input.cwd || input.tool_input?.cwd || process.cwd()
+    let projectRoot = cwd
+
+    try {
+        projectRoot = execFileSync('git', ['rev-parse', '--show-toplevel'], {
+            cwd,
+            encoding: 'utf8',
+            timeout: 1000,
+            windowsHide: true,
+            stdio: ['ignore', 'pipe', 'ignore']
+        }).trim()
+    } catch {
+        projectRoot = path.resolve(cwd)
+    }
+
+    const projectId = crypto
+        .createHash('sha1')
+        .update(projectRoot.toLowerCase())
+        .digest('hex')
+        .slice(0, 12)
+
+    return {
+        cwd,
+        project_root: projectRoot,
+        project_name: path.basename(projectRoot),
+        project_id: projectId
     }
 }
 
@@ -66,7 +98,6 @@ async function main() {
 
             // 检查是否需要捕获此工具
             if (!shouldCapture(input.tool, config)) {
-                console.log(data)
                 return
             }
 
@@ -77,6 +108,7 @@ async function main() {
                 timestamp: new Date().toISOString(),
                 event: phase === 'pre' ? 'tool_start' : 'tool_complete',
                 session_id: input.session_id || process.env.CLAUDE_SESSION_ID,
+                ...getProjectContext(input),
                 tool: input.tool,
                 tool_input: phase === 'pre' ? input.tool_input : undefined,
                 tool_output: phase === 'post' ? (input.tool_output || '').substring(0, 500) : undefined
@@ -88,10 +120,8 @@ async function main() {
                 JSON.stringify(observation) + '\n'
             )
 
-            // 透传原始数据
-            console.log(data)
         } catch (error) {
-            console.log(data)
+            console.error(`[Hook] observe-v2 failed: ${error.message}`)
         }
     })
 }

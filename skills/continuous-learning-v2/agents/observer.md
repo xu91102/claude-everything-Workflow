@@ -18,12 +18,12 @@ run_mode: background
 
 ## 输入
 
-读取 `~/.claude/homunculus/observations.jsonl`:
+读取 `~/.claude/homunculus/observations.jsonl`，并优先按当前 `project_id` / `project_root` 过滤，避免跨项目污染:
 
 ```jsonl
-{"timestamp":"2026-01-22T10:30:00Z","event":"tool_start","session":"abc123","tool":"Edit","input":"..."}
-{"timestamp":"2026-01-22T10:30:01Z","event":"tool_complete","session":"abc123","tool":"Edit","output":"..."}
-{"timestamp":"2026-01-22T10:30:05Z","event":"tool_start","session":"abc123","tool":"Bash","input":"npm test"}
+{"timestamp":"2026-01-22T10:30:00Z","event":"tool_start","session":"abc123","project_id":"a1b2c3d4e5f6","project_root":"/repo/app","tool":"Edit","input":"..."}
+{"timestamp":"2026-01-22T10:30:01Z","event":"tool_complete","session":"abc123","project_id":"a1b2c3d4e5f6","project_root":"/repo/app","tool":"Edit","output":"..."}
+{"timestamp":"2026-01-22T10:30:05Z","event":"tool_start","session":"abc123","project_id":"a1b2c3d4e5f6","project_root":"/repo/app","tool":"Bash","input":"npm test"}
 ```
 
 ## 模式检测

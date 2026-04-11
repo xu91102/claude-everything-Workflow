@@ -4,8 +4,8 @@
 
 ## 配置
 
-统一 Hook 配置在 `hooks.json` 中，每个 Hook 有唯一 ID 和描述。
-旧版 `settings.json` 保持向后兼容。
+当前 Hook 入口在仓库根目录 `settings.json` 中，脚本通过 `scripts/hooks/run-with-flags.js` 获得 profile 控制。
+本目录只保存 Hook 脚本实现；若后续新增 `hooks.json`，需要同步更新 README 和根配置。
 
 ### Hook Profile 控制
 

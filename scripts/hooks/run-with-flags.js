@@ -6,7 +6,7 @@
  * 支持 require() 直接加载（省去子进程开销）和 legacy spawnSync 两种模式
  *
  * 用法:
- *   node run-with-flags.js <hookId> <scriptRelativePath> [profilesCsv]
+ *   node run-with-flags.js <hookId> <scriptRelativePath> [profilesCsv] [...scriptArgs]
  */
 
 'use strict'
@@ -47,17 +47,15 @@ function getPluginRoot() {
 }
 
 async function main() {
-    const [, , hookId, relScriptPath, profilesCsv] = process.argv
+    const [, , hookId, relScriptPath, profilesCsv, ...scriptArgs] = process.argv
     const { raw } = await readStdinRaw()
 
     if (!hookId || !relScriptPath) {
-        process.stdout.write(raw)
         process.exit(0)
     }
 
     // Profile 检查
     if (!isHookEnabled(hookId, { profiles: profilesCsv })) {
-        process.stdout.write(raw)
         process.exit(0)
     }
 
@@ -70,7 +68,6 @@ async function main() {
         process.stderr.write(
             `[Hook] Path traversal rejected: ${hookId}\n`
         )
-        process.stdout.write(raw)
         process.exit(0)
     }
 
@@ -78,7 +75,6 @@ async function main() {
         process.stderr.write(
             `[Hook] Script not found for ${hookId}: ${scriptPath}\n`
         )
-        process.stdout.write(raw)
         process.exit(0)
     }
 
@@ -91,11 +87,9 @@ async function main() {
         try {
             const hookModule = require(scriptPath)
             if (typeof hookModule.run === 'function') {
-                const output = hookModule.run(raw)
+                const output = hookModule.run(raw, { hookId, scriptArgs })
                 if (typeof output === 'string') {
                     process.stdout.write(output)
-                } else {
-                    process.stdout.write(raw)
                 }
                 process.exit(0)
             }
@@ -107,7 +101,7 @@ async function main() {
     }
 
     // Fallback: spawnSync 子进程执行
-    const result = spawnSync(process.execPath, [scriptPath], {
+    const result = spawnSync(process.execPath, [scriptPath, ...scriptArgs], {
         input: raw,
         encoding: 'utf8',
         cwd: process.cwd(),

@@ -88,7 +88,6 @@ claude-everything-Workflow/
 │   └── learned/                # 学习到的模式
 │
 ├── hooks/                      # 钩子脚本
-│   ├── hooks.json              # 统一 Hook 配置 (含 ID/描述)
 │   ├── README.md               # Hook 文档
 │   ├── check-console-log.js    # console.log 检测
 │   ├── evaluate-session.js     # 会话评估
@@ -177,12 +176,14 @@ export ECC_HOOK_PROFILE=standard
 export ECC_DISABLED_HOOKS="pre:bash:commit-quality"
 ```
 
+当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录只保存脚本实现。若后续恢复 `hooks/hooks.json`，需要同时更新本目录结构说明，避免配置漂移。
+
 ## Continuous Learning v2
 
 ### 工作流程
 
 ```
-会话活动 → Hooks 观察 → observations.jsonl
+会话活动 → Hooks 观察 → observations.jsonl（含 project_root/project_id）
                             ↓
                      Observer Agent (Haiku)
                             ↓

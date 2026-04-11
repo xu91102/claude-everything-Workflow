@@ -101,21 +101,21 @@ source: "session-observation"
       "matcher": "*",
       "hooks": [{
         "type": "command",
-        "command": "node ~/.claude/hooks/observe.js pre"
+        "command": "node scripts/hooks/run-with-flags.js pre:observe hooks/observe.js standard,strict pre"
       }]
     }],
     "PostToolUse": [{
       "matcher": "*",
       "hooks": [{
         "type": "command",
-        "command": "node ~/.claude/hooks/observe.js post"
+        "command": "node scripts/hooks/run-with-flags.js post:observe hooks/observe.js standard,strict post"
       }]
     }],
     "Stop": [{
       "matcher": "*",
       "hooks": [{
         "type": "command",
-        "command": "node ~/.claude/hooks/evaluate-session.js"
+        "command": "node scripts/hooks/run-with-flags.js stop:evaluate-session hooks/evaluate-session.js standard,strict"
       }]
     }]
   }

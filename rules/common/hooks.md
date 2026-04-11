@@ -37,7 +37,7 @@ export ECC_DISABLED_HOOKS="pre:bash:commit-quality,post:edit:console-log"
 ## 编写自定义 Hook
 
 ```javascript
-// my-hook.js - 通过 stdin 接收 JSON，stdout 输出 JSON
+// my-hook.js - 通过 stdin 接收 JSON，默认保持 stdout 静默
 let data = ''
 process.stdin.on('data', chunk => data += chunk)
 process.stdin.on('end', () => {
@@ -49,8 +49,7 @@ process.stdin.on('end', () => {
     // 阻止 (仅 PreToolUse): 以退出码 2 退出
     // process.exit(2)
 
-    // 始终输出原始数据到 stdout
-    console.log(data)
+    // 仅在确实需要修改 hook 协议输出时写 stdout
 })
 ```
 
