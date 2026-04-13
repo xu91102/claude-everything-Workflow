@@ -37,7 +37,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run-with-flags.js post:observe hooks/observe.js standard,strict post",
+            "command": "node scripts/hooks/run-with-flags.js post:observe hooks/observe.js strict post",
             "async": true,
             "timeout": 10
           }

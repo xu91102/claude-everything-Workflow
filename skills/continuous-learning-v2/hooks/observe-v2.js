@@ -40,6 +40,26 @@ function ensureDir(filePath) {
     }
 }
 
+function compactPayload(value, maxChars) {
+    if (value === undefined || value === null) {
+        return value
+    }
+
+    const serialized = typeof value === 'string'
+        ? value
+        : JSON.stringify(value)
+
+    if (!serialized || serialized.length <= maxChars) {
+        return value
+    }
+
+    return {
+        truncated: true,
+        original_chars: serialized.length,
+        preview: serialized.slice(0, maxChars)
+    }
+}
+
 function getProjectContext(input) {
     const cwd = input.cwd || input.tool_input?.cwd || process.cwd()
     let projectRoot = cwd
@@ -110,8 +130,18 @@ async function main() {
                 session_id: input.session_id || process.env.CLAUDE_SESSION_ID,
                 ...getProjectContext(input),
                 tool: input.tool,
-                tool_input: phase === 'pre' ? input.tool_input : undefined,
-                tool_output: phase === 'post' ? (input.tool_output || '').substring(0, 500) : undefined
+                tool_input: phase === 'pre'
+                    ? compactPayload(
+                        input.tool_input,
+                        config.observation?.max_tool_input_chars || 2000
+                    )
+                    : undefined,
+                tool_output: phase === 'post'
+                    ? compactPayload(
+                        input.tool_output || '',
+                        config.observation?.max_tool_output_chars || 500
+                    )
+                    : undefined
             }
 
             // 追加到观察记录

@@ -12,6 +12,8 @@ const os = require("os");
 const crypto = require("crypto");
 const { execFileSync } = require("child_process");
 
+const MAX_TOOL_INPUT_CHARS = 2000;
+
 function getObservationsPath() {
   return path.join(os.homedir(), ".claude", "homunculus", "observations.jsonl");
 }
@@ -21,6 +23,23 @@ function ensureDir(filePath) {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
+}
+
+function compactPayload(value, maxChars) {
+  if (value === undefined || value === null) {
+    return value;
+  }
+
+  const serialized = JSON.stringify(value);
+  if (!serialized || serialized.length <= maxChars) {
+    return value;
+  }
+
+  return {
+    truncated: true,
+    original_chars: serialized.length,
+    preview: serialized.slice(0, maxChars),
+  };
 }
 
 function getProjectContext(input) {
@@ -82,7 +101,7 @@ async function main() {
           tool: input.tool,
           session_id: input.session_id,
           ...project,
-          tool_input: input.tool_input,
+          tool_input: compactPayload(input.tool_input, MAX_TOOL_INPUT_CHARS),
         };
 
         // 追加到观察记录

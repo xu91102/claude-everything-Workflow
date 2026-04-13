@@ -1,18 +1,17 @@
 {
     "version": "2.0",
     "observation": {
-        "enabled": true,
+        "enabled": false,
         "store_path": "~/.claude/homunculus/observations.jsonl",
         "project_scoped": true,
         "max_file_size_mb": 10,
+        "max_tool_input_chars": 2000,
+        "max_tool_output_chars": 500,
         "archive_after_days": 7,
         "capture_tools": [
             "Edit",
             "Write",
-            "Bash",
-            "Read",
-            "Grep",
-            "Glob"
+            "Bash"
         ],
         "ignore_tools": [
             "TodoWrite"
