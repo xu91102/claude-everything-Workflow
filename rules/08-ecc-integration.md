@@ -3,7 +3,6 @@
 本文件只保留 ECC 相关规则索引，避免默认加载过多细节。需要对应场景时再读取专项规则。
 
 | 专项规则 | 内容 |
-| --- | --- |
 | `common/agent-orchestration.md` | Agent 使用、规划、并行编排 |
 | `common/hooks.md` | Hook 类型、退出码、Profile、权限 |
 | `common/performance.md` | 模型选择、MCP、上下文压缩、Token 成本 |
