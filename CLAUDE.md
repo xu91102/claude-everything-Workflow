@@ -19,4 +19,4 @@
 | `05-git-workflow.md`    | Git 提交规范                                 |
 | `06-comments.md`        | 注释规范                                     |
 | `07-forbidden.md`       | 禁止事项清单                                 |
-| `08-ecc-integration.md` | (Agent-First、Hook 系统、性能优化、TDD、E2E) |
+| `08-ecc-integration.md` | ECC 集成索引，按需跳转到 `rules/common/` 专项规则 |

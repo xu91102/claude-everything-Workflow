@@ -33,10 +33,16 @@ claude-everything-Workflow/
 │   ├── 05-git-workflow.md      # Git 规范
 │   ├── 06-comments.md          # 注释规范
 │   ├── 07-forbidden.md         # 禁止事项
+│   ├── 08-ecc-integration.md   # ECC 集成索引
 │   ├── agents.md               # 代理使用规则
 │   └── common/                 # 通用最佳实践
+│       ├── agent-orchestration.md # Agent 编排
 │       ├── performance.md      # Token 优化 & 模型选择
-│       └── hooks.md            # Hook 系统最佳实践
+│       ├── hooks.md            # Hook 系统最佳实践
+│       ├── skills-learning.md  # Skills 与持续学习
+│       ├── security.md         # 安全优先原则
+│       ├── testing.md          # 测试与验证
+│       └── implementation.md   # 实施实践
 │
 ├── agents/                     # 代理（专业任务委托）
 │   ├── architect.md            # 架构师

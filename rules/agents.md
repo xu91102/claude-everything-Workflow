@@ -1,6 +1,6 @@
 # 代理路由（摘要）
 
-完整约定见 **`08-ecc-integration.md`**（Agent-First、并行、模型选择）。
+完整约定见 **`08-ecc-integration.md`** 和 **`common/agent-orchestration.md`**。
 
 ## 常用映射
 
