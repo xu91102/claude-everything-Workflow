@@ -31,7 +31,7 @@ export ECC_DISABLED_HOOKS="hook-id"    # 逗号分隔禁用列表
 | `run-with-flags.js` | Hook 运行时控制器 | 基础设施 | - |
 | `commit-quality.js` | Pre-commit 质量门 | PreToolUse | `pre:bash:commit-quality` |
 | `session-start.js` | 会话启动上下文 | SessionStart | `session:start` |
-| `session-end.js` | 会话结束持久化 | Stop | `stop:session-end` |
+| `session-end.js` | 会话结束持久化 | SessionEnd | `session:end` |
 
 ## review-confidence.js
 

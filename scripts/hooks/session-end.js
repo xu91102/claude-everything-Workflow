@@ -3,7 +3,7 @@
  * Session End Hook
  *
  * 会话结束时持久化状态
- * 用于 Stop hook 或手动调用
+ * 用于 SessionEnd hook 或手动调用
  */
 
 'use strict'

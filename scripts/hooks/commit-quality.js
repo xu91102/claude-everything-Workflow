@@ -35,14 +35,14 @@ function run(raw) {
     try {
         input = JSON.parse(raw)
     } catch {
-        return { exitCode: 0, stdout: raw }
+        return { exitCode: 0 }
     }
 
     const command = input.tool_input?.command || ''
 
     // 仅拦截 git commit 命令
     if (!COMMIT_PATTERN.test(command)) {
-        return { exitCode: 0, stdout: raw }
+        return { exitCode: 0 }
     }
 
     const warnings = []
@@ -111,7 +111,7 @@ function run(raw) {
     }
 
     if (warnings.length === 0) {
-        return { exitCode: 0, stdout: raw }
+        return { exitCode: 0 }
     }
 
     const stderr = warnings.join('\n') + '\n'
@@ -124,7 +124,7 @@ function run(raw) {
         }
     }
 
-    return { exitCode: 0, stderr, stdout: raw }
+    return { exitCode: 0, stderr }
 }
 
 module.exports = { run }

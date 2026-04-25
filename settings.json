@@ -1,6 +1,19 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/run-with-flags.js session:start scripts/hooks/session-start.js minimal,standard,strict",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+
     "PostToolUse": [
       {
         "matcher": "Edit",
@@ -52,6 +65,18 @@
             "type": "command",
             "command": "node scripts/hooks/run-with-flags.js stop:evaluate-session hooks/evaluate-session.js standard,strict",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/hooks/run-with-flags.js session:end scripts/hooks/session-end.js minimal,standard,strict",
+            "timeout": 5
           }
         ]
       }

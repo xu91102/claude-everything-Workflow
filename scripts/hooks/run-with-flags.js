@@ -87,10 +87,30 @@ async function main() {
         try {
             const hookModule = require(scriptPath)
             if (typeof hookModule.run === 'function') {
-                const output = hookModule.run(raw, { hookId, scriptArgs })
+                const output = await hookModule.run(raw, {
+                    hookId,
+                    scriptArgs
+                })
+
                 if (typeof output === 'string') {
                     process.stdout.write(output)
+                    process.exit(0)
                 }
+
+                if (output && typeof output === 'object') {
+                    if (typeof output.stdout === 'string') {
+                        process.stdout.write(output.stdout)
+                    }
+                    if (typeof output.stderr === 'string') {
+                        process.stderr.write(output.stderr)
+                    }
+
+                    const exitCode = Number.isInteger(output.exitCode)
+                        ? output.exitCode
+                        : 0
+                    process.exit(exitCode)
+                }
+
                 process.exit(0)
             }
         } catch (err) {
