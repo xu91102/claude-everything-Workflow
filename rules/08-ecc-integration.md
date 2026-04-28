@@ -9,6 +9,7 @@
 | `common/skills-learning.md` | Skills 工作流、持续学习、按需学习 |
 | `common/security.md` | 安全优先原则、安全扫描 |
 | `common/testing.md` | TDD、E2E、验证策略 |
+| `common/pr-automation.md` | PR 自动化、CI 质量门、验证制品 |
 | `common/implementation.md` | 不可变性、跨平台、实施阶段控制 |
 
 ## 默认原则

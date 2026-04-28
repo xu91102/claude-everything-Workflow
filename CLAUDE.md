@@ -20,3 +20,8 @@
 | `06-comments.md`        | 注释规范                                     |
 | `07-forbidden.md`       | 禁止事项清单                                 |
 | `08-ecc-integration.md` | ECC 集成索引，按需跳转到 `rules/common/` 专项规则 |
+
+## PR 与验证
+
+- 用户要求提交、推送、创建 PR 或整理可审阅提交时，优先读取 `commands/pr.md` 和 `rules/common/pr-automation.md`。
+- 推送分支、创建 PR、合并 PR 属于外部写操作，执行前必须向用户确认。

@@ -37,3 +37,12 @@ fix bug
 - [ ] 无 console.log 调试代码
 - [ ] 无硬编码的敏感信息
 - [ ] 代码已通过 lint 检查
+- [ ] 只暂存本次任务相关文件
+- [ ] PR 前验证结果已记录
+
+## PR 工作流
+
+- 用户要求提交、推送、创建 PR 时，读取 `commands/pr.md` 和 `rules/common/pr-automation.md`。
+- 不在 `main`、`master`、`prod` 等受保护分支直接提交。
+- 推送分支、创建 PR、合并 PR 前必须向用户确认。
+- PR 描述必须包含背景、核心改动、验证结果、风险与回滚。

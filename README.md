@@ -42,6 +42,7 @@ claude-everything-Workflow/
 │       ├── skills-learning.md  # Skills 与持续学习
 │       ├── security.md         # 安全优先原则
 │       ├── testing.md          # 测试与验证
+│       ├── pr-automation.md    # PR 自动化与 CI 质量门
 │       └── implementation.md   # 实施实践
 │
 ├── agents/                     # 代理（专业任务委托）
@@ -61,6 +62,7 @@ claude-everything-Workflow/
 │   ├── instinct-export.md      # /instinct-export 导出
 │   ├── instinct-import.md      # /instinct-import 导入
 │   ├── plan.md                 # /plan 实施计划
+│   ├── pr.md                   # /pr 提交与创建 PR
 │   ├── verify.md               # /verify 验证
 │   ├── code-review.md          # /code-review 审查
 │   ├── tdd.md                  # /tdd 测试驱动开发
@@ -162,6 +164,7 @@ claude-everything-Workflow/
 | `/tdd`             | 测试驱动开发流程                                                    |
 | `/e2e`             | 端到端测试（Playwright；可配合 e2e-runner）                         |
 | `/verify`          | 运行全面验证检查                                                    |
+| `/pr`              | 提交、推送和创建 PR 的标准工作流                                    |
 | `/code-review`     | 代码审查                                                            |
 | `/learn-eval`      | 从会话提取模式 (含质量门评估)                                       |
 | `/evolve`          | 演化模式为高级结构                                                  |

@@ -9,6 +9,19 @@
 | 提交前         | `pnpm test` + `pnpm run build`      |
 | 前端单文件改动 | 对目标文件运行 ESLint               |
 | 前端提交前     | 项目能承受时再运行全量 build        |
+| PR 前          | lint + 相关单测 + build + 关键路径 E2E |
+
+## 验证分层
+
+成熟项目应把验证拆成可组合层级，而不是每次都盲目全量运行：
+
+1. 仓库卫生：临时文件、备份文件、调试残留、配置漂移。
+2. Lint / Format：风格、导入顺序、静态问题。
+3. 单元测试：纯逻辑、服务、组件、工具函数。
+4. 构建 / 类型：跨模块类型边界、产物生成、框架编译。
+5. E2E：核心用户路径、认证、跨服务集成、发布前冒烟。
+
+monorepo 中先识别 package 依赖。若内部 package 以 `dist/` 暴露，consumer 测试和构建前必须先构建上游 package。
 
 ## Build 使用原则
 
@@ -41,3 +54,6 @@
 - 技能：`skills/e2e-testing/SKILL.md`，包含 Playwright 目录结构、POM、配置、CI、制品、flake 处理。
 - 代理：`e2e-runner`，默认 CLI，MCP 仅用于探索和调试。
 - 入口：`/e2e`，复杂或从零搭建时可委派 `e2e-runner`。
+- E2E 应有 `globalSetup` 或等价健康检查，等待 API/Web ready 后再跑用例。
+- 本地多 worktree 开发时，端口和环境变量应隔离，例如 `.env.worktree`。
+- CI 失败时上传 Playwright trace、screenshot、HTML report 和 `test-results`。
