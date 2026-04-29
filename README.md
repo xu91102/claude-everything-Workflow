@@ -3,7 +3,50 @@
 > 一套通用的 Prompt 工程模板，可直接复制到 `~/.claude/` 使用。
 > 学习 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) 的最佳 Harness 工程实践。
 
-## 快速安装
+## 一键安装
+
+macOS / Linux / Git Bash / WSL：
+
+```bash
+bash scripts/install.sh
+```
+
+Windows PowerShell：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
+```
+
+只安装某个工具：
+
+```bash
+bash scripts/install.sh --claude-only
+bash scripts/install.sh --codex-only
+```
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -ClaudeOnly
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -CodexOnly
+```
+
+预览将要写入的文件：
+
+```bash
+bash scripts/install.sh --dry-run
+```
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
+```
+
+安装目标：
+
+- Claude Code: `~/.claude/`
+- Codex: `~/.codex/`
+
+顶层配置文件已存在且内容不同时，会先生成 `.bak.<timestamp>` 备份再覆盖；目录内容按仓库版本同步。
+
+## 手动安装
 
 ### Windows
 
@@ -74,6 +117,8 @@ claude-everything-Workflow/
 │   └── review.md               # 审查模式
 │
 ├── scripts/                    # 跨平台脚本
+│   ├── install.sh              # macOS / Linux / Git Bash / WSL 一键安装
+│   ├── install.ps1             # Windows PowerShell 一键安装
 │   ├── lib/                    # 共享工具库
 │   │   ├── utils.js            # 路径/stdin/日期/frontmatter 工具
 │   │   └── hook-flags.js       # Hook Profile 控制
