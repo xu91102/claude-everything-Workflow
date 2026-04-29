@@ -48,10 +48,21 @@ function findInstinctsPath(customPath) {
 }
 
 /**
- * 获取学习技能目录
+ * 获取学习技能根目录
  */
-function getLearnedSkillsDir() {
-    return path.join(getClaudeDir(), 'skills', 'learned')
+function getLearnedSkillsRootDir() {
+    return path.join(getClaudeDir(), 'skills', 'learn')
+}
+
+/**
+ * 获取学习技能目录
+ * @param {string} category - 可选分类，如 pr、testing、debugging
+ */
+function getLearnedSkillsDir(category) {
+    if (!category) {
+        return getLearnedSkillsRootDir()
+    }
+    return path.join(getLearnedSkillsRootDir(), category)
 }
 
 // --- 文件工具 ---
@@ -298,6 +309,7 @@ module.exports = {
     getHomeDir,
     getClaudeDir,
     findInstinctsPath,
+    getLearnedSkillsRootDir,
     getLearnedSkillsDir,
     ensureDir,
     scanInstinctsDir,

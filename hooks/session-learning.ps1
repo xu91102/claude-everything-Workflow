@@ -13,11 +13,11 @@ $transcript_path = $hook_input.transcript_path
 
 # 配置路径
 $skills_dir = "$env:USERPROFILE\.claude\skills\continuous-learning"
-$learned_dir = "$env:USERPROFILE\.claude\skills\learned"
+$learned_dir = "$env:USERPROFILE\.claude\skills\learn"
 $config_path = "$skills_dir\config.json"
 $extract_script = "$skills_dir\scripts\extract_patterns.py"
 
-# 确保 learned 目录存在
+# 确保学习技能根目录存在；具体技能保存到分类子目录
 if (-not (Test-Path $learned_dir)) {
     New-Item -ItemType Directory -Path $learned_dir -Force | Out-Null
 }
@@ -87,7 +87,7 @@ if ($detected_patterns.Count -gt 0) {
     }
     
     if ($has_extractor) {
-        $context += "`nUse /learn to extract and save these patterns."
+        $context += "`nUse /learn to extract and save these patterns under skills/learn/<category>/."
         $context += "`nUse /evolve to combine similar patterns into skills."
     } else {
         $context += "`nExtraction script not found. Consider running /learn manually."

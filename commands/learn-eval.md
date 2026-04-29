@@ -25,10 +25,13 @@ description: 从当前会话中提取模式，经质量门评估后保存
 ### 1. 提取模式
 分析会话中最有价值的可复用洞察。
 
-### 2. 确定保存位置
-- **全局** (`~/.claude/skills/learned/`): 跨项目可复用的通用模式
-- **项目** (`.claude/skills/learned/`): 项目特定的知识
+### 2. 确定保存位置与分类
+- **全局** (`~/.claude/skills/learn/<category>/`): 跨项目可复用的通用模式
+- **项目** (`.claude/skills/learn/<category>/`): 项目特定的知识
 - 拿不准时选全局（全局迁移到项目比反向更容易）
+- 必须选择一个分类子目录，禁止直接保存到 `skills/learn/` 根目录。
+- 常用分类: `pr`、`testing`、`debugging`、`docs`、`frontend`、`backend`、`devops`、`architecture`、`workflow`、`tools`、`project`、`general`。
+- 文件路径格式: `skills/learn/<category>/<pattern-name>.md`，例如 `skills/learn/pr/auto-pr-confirmation.md`。
 
 ### 3. 草拟技能文件
 
@@ -58,10 +61,11 @@ origin: auto-extracted
 
 执行以下检查清单:
 
-- [ ] Grep `skills/learned/` 检查关键词重叠
+- [ ] 递归 grep `skills/learn/` 检查关键词重叠
 - [ ] 确认是可复用模式而非一次性修复
 - [ ] 检查是否应合并到已有技能中
 - [ ] 验证描述具体且可操作
+- [ ] 确认已选择合适分类，且不会保存到 `skills/learn/` 根目录
 
 ### 5. 判决
 

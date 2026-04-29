@@ -11,7 +11,7 @@ const fs = require('fs')
 const os = require('os')
 
 function getLearnedSkillsDir() {
-    return path.join(os.homedir(), '.claude', 'skills', 'learned')
+    return path.join(os.homedir(), '.claude', 'skills', 'learn')
 }
 
 function ensureDir(dir) {
@@ -25,7 +25,7 @@ async function main() {
     const minSessionLength = 10
     const learnedSkillsPath = getLearnedSkillsDir()
 
-    // 确保目录存在
+    // 确保学习技能根目录存在；具体技能保存到分类子目录
     ensureDir(learnedSkillsPath)
 
     // 获取会话记录路径
@@ -47,7 +47,7 @@ async function main() {
 
     // 提示开始评估
     console.error(`[ContinuousLearning] 会话有 ${messageCount} 消息 - 评估可提取模式`)
-    console.error(`[ContinuousLearning] 保存技能到: ${learnedSkillsPath}`)
+    console.error(`[ContinuousLearning] 保存技能到分类目录: ${path.join(learnedSkillsPath, '<category>')}`)
     console.error('[ContinuousLearning] 提示: 使用 /learn 手动提取有价值的模式')
 
     process.exit(0)

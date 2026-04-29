@@ -33,7 +33,24 @@
 
 ## 输出格式
 
-在 `~/.claude/skills/learned/[pattern-name].md` 创建技能文件：
+在 `~/.claude/skills/learn/<category>/[pattern-name].md` 创建技能文件。必须先选择分类子目录，禁止直接保存到 `skills/learn/` 根目录。
+
+常用分类：
+
+- `pr`：PR、提交、分支、审阅自动化
+- `testing`：测试、验证、质量门
+- `debugging`：错误诊断与修复
+- `docs`：文档、说明、知识整理
+- `frontend`：前端 UI、浏览器、交互
+- `backend`：服务端、接口、数据处理
+- `devops`：部署、CI、环境
+- `architecture`：架构、分层、边界
+- `workflow`：通用工作流程
+- `tools`：工具链、命令、脚本
+- `project`：项目特定约定
+- `general`：无法归入以上分类的通用模式
+
+示例路径：`~/.claude/skills/learn/pr/auto-pr-confirmation.md`
 
 ```markdown
 # [描述性模式名称]
@@ -60,7 +77,7 @@
 2. 识别最有价值/可复用的见解
 3. 起草技能文件
 4. 在保存前请求用户确认
-5. 保存到 `~/.claude/skills/learned/`
+5. 保存到 `~/.claude/skills/learn/<category>/`
 
 ## 注意事项
 

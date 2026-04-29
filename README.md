@@ -93,7 +93,10 @@ claude-everything-Workflow/
 │   │   ├── config.json         # 配置
 │   │   ├── agents/             # Observer Agent
 │   │   └── hooks/              # 增强观察脚本
-│   └── learned/                # 学习到的模式
+│   └── learn/                  # 学习到的模式，按分类保存
+│       ├── pr/
+│       ├── testing/
+│       └── debugging/
 │
 ├── hooks/                      # 钩子脚本
 │   ├── README.md               # Hook 文档
