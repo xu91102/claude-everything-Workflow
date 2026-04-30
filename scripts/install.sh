@@ -80,6 +80,43 @@ copy_file() {
     run cp "$src" "$dest"
 }
 
+copy_claude_settings() {
+    local src="$1"
+    local dest="$2"
+
+    backup_if_changed "$src" "$dest"
+    if [ "$DRY_RUN" -eq 1 ]; then
+        echo "[dry-run] merge '$src' into '$dest' preserving existing env and mcpServers"
+        return
+    fi
+
+    node - "$src" "$dest" <<'NODE'
+const fs = require('fs')
+
+const [, , sourcePath, destinationPath] = process.argv
+const source = JSON.parse(fs.readFileSync(sourcePath, 'utf8'))
+const existing = fs.existsSync(destinationPath)
+    ? JSON.parse(fs.readFileSync(destinationPath, 'utf8'))
+    : {}
+
+const merged = {
+    ...existing,
+    ...source,
+    env: {
+        ...(source.env || {}),
+        ...(existing.env || {})
+    },
+    mcpServers: {
+        ...(source.mcpServers || {}),
+        ...(existing.mcpServers || {})
+    }
+}
+
+fs.writeFileSync(destinationPath, JSON.stringify(merged, null, 2) + '\n')
+NODE
+    chmod 600 "$dest"
+}
+
 copy_dir() {
     local name="$1"
     local dest_root="$2"
@@ -118,7 +155,7 @@ install_claude() {
     echo "Installing Claude workflow to $dest"
     run mkdir -p "$dest"
     copy_file "$ROOT_DIR/CLAUDE.md" "$dest/CLAUDE.md"
-    copy_file "$ROOT_DIR/settings.json" "$dest/settings.json"
+    copy_claude_settings "$ROOT_DIR/settings.json" "$dest/settings.json"
     install_shared_dirs "$dest"
 }
 

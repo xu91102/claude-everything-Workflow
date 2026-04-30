@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run-with-flags.js session:start scripts/hooks/session-start.js minimal,standard,strict",
+            "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" session:start \"$HOME/.claude/scripts/hooks/session-start.js\" minimal,standard,strict",
             "timeout": 5
           }
         ]
@@ -20,7 +20,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run-with-flags.js post:edit:console-log hooks/check-console-log.js standard,strict",
+            "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" post:edit:console-log \"$HOME/.claude/hooks/check-console-log.js\" standard,strict",
             "timeout": 5
           }
         ]
@@ -30,7 +30,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run-with-flags.js post:write:console-log hooks/check-console-log.js standard,strict",
+            "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" post:write:console-log \"$HOME/.claude/hooks/check-console-log.js\" standard,strict",
             "timeout": 5
           }
         ]
@@ -40,7 +40,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run-with-flags.js post:multiedit:console-log hooks/check-console-log.js standard,strict",
+            "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" post:multiedit:console-log \"$HOME/.claude/hooks/check-console-log.js\" standard,strict",
             "timeout": 5
           }
         ]
@@ -50,7 +50,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run-with-flags.js post:observe hooks/observe.js strict post",
+            "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" post:observe \"$HOME/.claude/hooks/observe.js\" strict post",
             "async": true,
             "timeout": 10
           }
@@ -63,7 +63,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run-with-flags.js stop:evaluate-session hooks/evaluate-session.js standard,strict",
+            "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" stop:evaluate-session \"$HOME/.claude/hooks/evaluate-session.js\" standard,strict",
             "timeout": 10
           }
         ]
@@ -75,7 +75,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run-with-flags.js session:end scripts/hooks/session-end.js minimal,standard,strict",
+            "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" session:end \"$HOME/.claude/scripts/hooks/session-end.js\" minimal,standard,strict",
             "timeout": 5
           }
         ]
@@ -87,7 +87,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node scripts/hooks/run-with-flags.js precompact:save-context hooks/pre-compact.js minimal,standard,strict",
+            "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" precompact:save-context \"$HOME/.claude/hooks/pre-compact.js\" minimal,standard,strict",
             "timeout": 5
           }
         ]

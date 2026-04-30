@@ -65,6 +65,111 @@ function Copy-ConfigFile {
         -Action { Copy-Item -LiteralPath $Source -Destination $Destination -Force }
 }
 
+function Copy-ClaudeSettings {
+    param(
+        [string]$Source,
+        [string]$Destination
+    )
+
+    Backup-IfChanged -Source $Source -Destination $Destination
+
+    if ($DryRun) {
+        Write-Host "[dry-run] Merge '$Source' into '$Destination' preserving existing env and mcpServers"
+        return
+    }
+
+    $sourceSettings = Get-Content -LiteralPath $Source -Raw | ConvertFrom-Json
+    $existingSettings = if (Test-Path -LiteralPath $Destination) {
+        Get-Content -LiteralPath $Destination -Raw | ConvertFrom-Json
+    } else {
+        [pscustomobject]@{}
+    }
+
+    $merged = [ordered]@{}
+
+    foreach ($property in $existingSettings.PSObject.Properties) {
+        $merged[$property.Name] = $property.Value
+    }
+
+    foreach ($property in $sourceSettings.PSObject.Properties) {
+        $merged[$property.Name] = $property.Value
+    }
+
+    $env = [ordered]@{}
+    if ($sourceSettings.PSObject.Properties.Name -contains "env") {
+        foreach ($property in $sourceSettings.env.PSObject.Properties) {
+            $env[$property.Name] = $property.Value
+        }
+    }
+    if ($existingSettings.PSObject.Properties.Name -contains "env") {
+        foreach ($property in $existingSettings.env.PSObject.Properties) {
+            $env[$property.Name] = $property.Value
+        }
+    }
+    if ($env.Count -gt 0) {
+        $merged["env"] = $env
+    }
+
+    $mcpServers = [ordered]@{}
+    if ($sourceSettings.PSObject.Properties.Name -contains "mcpServers") {
+        foreach ($property in $sourceSettings.mcpServers.PSObject.Properties) {
+            $mcpServers[$property.Name] = $property.Value
+        }
+    }
+    if ($existingSettings.PSObject.Properties.Name -contains "mcpServers") {
+        foreach ($property in $existingSettings.mcpServers.PSObject.Properties) {
+            $mcpServers[$property.Name] = $property.Value
+        }
+    }
+    if ($mcpServers.Count -gt 0) {
+        $merged["mcpServers"] = $mcpServers
+    }
+
+    [pscustomobject]$merged | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $Destination -Encoding UTF8
+}
+
+function Convert-ClaudeSettingsHookPaths {
+    param([string]$SettingsPath)
+
+    if ($DryRun) {
+        Write-Host "[dry-run] Convert hook paths in '$SettingsPath' to Windows absolute paths"
+        return
+    }
+
+    $settings = Get-Content -LiteralPath $SettingsPath -Raw | ConvertFrom-Json
+    $claudeHome = Join-Path $HomeDir ".claude"
+
+    function Update-Commands {
+        param($Value)
+
+        if ($null -eq $Value) {
+            return
+        }
+
+        if ($Value -is [System.Array]) {
+            foreach ($item in $Value) {
+                Update-Commands -Value $item
+            }
+            return
+        }
+
+        if ($Value -isnot [psobject]) {
+            return
+        }
+
+        if ($Value.PSObject.Properties.Name -contains "command" -and $Value.command -is [string]) {
+            $Value.command = $Value.command.Replace('$HOME/.claude', $claudeHome)
+        }
+
+        foreach ($property in $Value.PSObject.Properties) {
+            Update-Commands -Value $property.Value
+        }
+    }
+
+    Update-Commands -Value $settings.hooks
+    $settings | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $SettingsPath -Encoding UTF8
+}
+
 function Copy-DirectoryMerge {
     param(
         [string]$Name,
@@ -114,7 +219,9 @@ function Install-ClaudeWorkflow {
         -Action { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
 
     Copy-ConfigFile -Source (Join-Path $RootDir "CLAUDE.md") -Destination (Join-Path $dest "CLAUDE.md")
-    Copy-ConfigFile -Source (Join-Path $RootDir "settings.json") -Destination (Join-Path $dest "settings.json")
+    $settingsPath = Join-Path $dest "settings.json"
+    Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath
+    Convert-ClaudeSettingsHookPaths -SettingsPath $settingsPath
     Install-SharedDirs -Destination $dest
 }
 
