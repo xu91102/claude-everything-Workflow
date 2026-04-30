@@ -1,6 +1,6 @@
 ﻿---
 name: tdd-guide
-description: 测试驱动开发专家
+description: 当实现新功能或修复 bug 需要测试先行时使用。帮助定义接口、编写失败测试、规划最小实现和重构检查；默认只指导和运行相关测试，不直接写业务代码。
 tools: ["Read", "Grep", "Glob", "Bash"]
 model: opus
 ---

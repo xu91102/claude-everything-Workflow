@@ -130,6 +130,10 @@ copy_dir() {
 }
 
 require_rsync() {
+    if [ "$DRY_RUN" -eq 1 ]; then
+        return
+    fi
+
     if ! command -v rsync >/dev/null 2>&1; then
         echo "rsync is required. Please install rsync and retry." >&2
         exit 1
@@ -142,11 +146,11 @@ install_shared_dirs() {
     copy_dir rules "$dest"
     copy_dir agents "$dest"
     copy_dir commands "$dest"
-    copy_dir contexts "$dest"
     copy_dir scripts "$dest"
     copy_dir hooks "$dest"
     copy_dir skills "$dest"
     copy_dir homunculus "$dest"
+    copy_dir references "$dest"
 }
 
 install_claude() {

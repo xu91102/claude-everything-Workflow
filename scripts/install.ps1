@@ -198,11 +198,11 @@ function Install-SharedDirs {
         "rules",
         "agents",
         "commands",
-        "contexts",
         "scripts",
         "hooks",
         "skills",
-        "homunculus"
+        "homunculus",
+        "references"
     )
 
     foreach ($dir in $dirs) {

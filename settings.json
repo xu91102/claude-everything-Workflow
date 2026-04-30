@@ -50,7 +50,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" post:observe \"$HOME/.claude/hooks/observe.js\" strict post",
+            "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" post:observe \"$HOME/.claude/skills/continuous-learning-v2/hooks/observe-v2.js\" strict post",
             "async": true,
             "timeout": 10
           }

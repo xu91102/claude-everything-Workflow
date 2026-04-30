@@ -18,7 +18,8 @@ export ECC_DISABLED_HOOKS="hook-id"    # 逗号分隔禁用列表
 
 | 脚本 | 用途 | Hook 类型 | ID |
 |------|------|-----------|----|
-| `observe.js` | 观察工具调用 | PreToolUse/PostToolUse | `pre:observe` / `post:observe` |
+| `observe.js` | 旧版工具调用观察，默认未接入 | PreToolUse/PostToolUse | `pre:observe` / `post:observe` |
+| `skills/continuous-learning-v2/hooks/observe-v2.js` | v2 工具调用观察 | PostToolUse | `post:observe` |
 | `check-console-log.js` | 检测 console.log | PostToolUse | `post:edit:console-log` |
 | `evaluate-session.js` | 会话结束评估 | Stop | `stop:evaluate-session` |
 | `pre-compact.js` | 上下文压缩前保存信息 | PreCompact | `precompact:save-context` |
@@ -29,9 +30,15 @@ export ECC_DISABLED_HOOKS="hook-id"    # 逗号分隔禁用列表
 | 脚本 | 用途 | Hook 类型 | ID |
 |------|------|-----------|----|
 | `run-with-flags.js` | Hook 运行时控制器 | 基础设施 | - |
-| `commit-quality.js` | Pre-commit 质量门 | PreToolUse | `pre:bash:commit-quality` |
+| `commit-quality.js` | 可选 Pre-commit 质量门，默认未启用 | PreToolUse | `pre:bash:commit-quality` |
 | `session-start.js` | 会话启动上下文 | SessionStart | `session:start` |
 | `session-end.js` | 会话结束持久化 | SessionEnd | `session:end` |
+
+## commit-quality.js
+
+`commit-quality.js` 会在 `git commit` 前检查提交信息、疑似密钥和调试代码，并可能以退出码 2 阻止提交。当前默认不接入 `settings.json`，避免自动阻止用户提交。
+
+如团队需要强制质量门，可手动把它接入 `PreToolUse` 的 `Bash` matcher，并通过 `ECC_DISABLED_HOOKS=pre:bash:commit-quality` 临时关闭。
 
 ## review-confidence.js
 

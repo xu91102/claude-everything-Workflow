@@ -1,6 +1,6 @@
 # Claude Everything Workflow
 
-> 一套通用的 Prompt 工程模板，可直接复制到 `~/.claude/` 使用。
+> 一套通用的 Agent Harness 工程模板，可直接复制到 `~/.claude/` 使用。
 > 学习 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) 的最佳 Harness 工程实践。
 
 ## 一键安装
@@ -79,6 +79,8 @@ claude-everything-Workflow/
 │   ├── 08-ecc-integration.md   # ECC 集成索引
 │   ├── agents.md               # 代理使用规则
 │   └── common/                 # 通用最佳实践
+│       ├── harness-engineering.md # Agent Harness 六层与执行循环
+│       ├── context-hygiene.md   # 上下文卫生与 Subagent 边界
 │       ├── agent-orchestration.md # Agent 编排
 │       ├── performance.md      # Token 优化 & 模型选择
 │       ├── hooks.md            # Hook 系统最佳实践
@@ -98,23 +100,21 @@ claude-everything-Workflow/
 │
 ├── commands/                   # 命令（斜杠快捷入口）
 │   ├── docs.md                 # /docs → documentation-lookup（兼容入口）
+│   ├── harness-audit.md        # /harness-audit → Harness 配置审计
 │   ├── learn-eval.md           # /learn-eval 提取模式 (含质量门)
 │   ├── evolve.md               # /evolve 演化
 │   ├── prune.md                # /prune 清理过期直觉
 │   ├── instinct-status.md      # /instinct-status 状态
 │   ├── instinct-export.md      # /instinct-export 导出
 │   ├── instinct-import.md      # /instinct-import 导入
-│   ├── plan.md                 # /plan 实施计划
 │   ├── pr.md                   # /pr 提交与创建 PR
 │   ├── verify.md               # /verify 验证
 │   ├── code-review.md          # /code-review 审查
 │   ├── tdd.md                  # /tdd 测试驱动开发
 │   └── e2e.md                  # /e2e 端到端（Playwright）
 │
-├── contexts/                   # 上下文（模式切换）
-│   ├── dev.md                  # 开发模式
-│   ├── research.md             # 研究模式
-│   └── review.md               # 审查模式
+├── references/                 # 按需加载的长参考材料
+│   └── agents/                 # Agent 详细检查清单与示例
 │
 ├── scripts/                    # 跨平台脚本
 │   ├── install.sh              # macOS / Linux / Git Bash / WSL 一键安装
@@ -137,7 +137,7 @@ claude-everything-Workflow/
 │   │   ├── SKILL.md            # 技能说明
 │   │   ├── config.json         # 配置
 │   │   ├── agents/             # Observer Agent
-│   │   └── hooks/              # 增强观察脚本
+│   │   └── hooks/              # observe-v2.js 增强观察脚本
 │   └── learn/                  # 学习到的模式，按分类保存
 │       ├── pr/
 │       ├── testing/
@@ -147,7 +147,7 @@ claude-everything-Workflow/
 │   ├── README.md               # Hook 文档
 │   ├── check-console-log.js    # console.log 检测
 │   ├── evaluate-session.js     # 会话评估
-│   ├── observe.js              # 工具调用观察
+│   ├── observe.js              # 旧版工具调用观察（默认未接入）
 │   └── review-confidence.js    # 置信度审查报告
 │
 └── homunculus/                 # 自主学习系统
@@ -208,7 +208,7 @@ claude-everything-Workflow/
 | 命令               | 功能                                                                |
 | ------------------ | ------------------------------------------------------------------- |
 | `/docs`            | 库/API 文档查询（委托 `documentation-lookup`，需启用 Context7 MCP） |
-| `/plan`            | 创建实施计划，等待确认                                              |
+| `/harness-audit`   | 审计 Agent Harness 配置：主循环、工具、上下文、状态、权限、验证 |
 | `/tdd`             | 测试驱动开发流程                                                    |
 | `/e2e`             | 端到端测试（Playwright；可配合 e2e-runner）                         |
 | `/verify`          | 运行全面验证检查                                                    |
@@ -230,7 +230,7 @@ claude-everything-Workflow/
 export ECC_HOOK_PROFILE=standard
 
 # 禁用特定 Hook (逗号分隔 ID)
-export ECC_DISABLED_HOOKS="pre:bash:commit-quality"
+export ECC_DISABLED_HOOKS="post:edit:console-log"
 ```
 
 当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录只保存脚本实现。若后续恢复 `hooks/hooks.json`，需要同时更新本目录结构说明，避免配置漂移。
@@ -266,7 +266,7 @@ export ECC_DISABLED_HOOKS="pre:bash:commit-quality"
 
 ```
 1. 复制到 ~/.claude/
-2. 使用 /plan 规划功能
+2. 复杂任务使用工具原生 Plan Mode 或委派 planner agent
 3. 使用 /tdd 实现代码
 4. 关键路径使用 /e2e 或委派 e2e-runner 维护 Playwright
 5. 使用 /verify 验证

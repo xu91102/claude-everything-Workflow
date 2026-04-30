@@ -1,6 +1,6 @@
 ﻿---
 name: code-reviewer
-description: 代码质量审查专家
+description: 当已有代码改动需要审查时使用。只读取变更相关文件和必要引用，按严重性返回问题、证据位置、风险和测试缺口；不直接修改代码。
 tools: ["Read", "Grep", "Glob"]
 model: sonnet
 ---

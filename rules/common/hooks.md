@@ -26,7 +26,7 @@
 export ECC_HOOK_PROFILE=standard
 
 # 禁用特定 Hook (逗号分隔 ID)
-export ECC_DISABLED_HOOKS="pre:bash:commit-quality,post:edit:console-log"
+export ECC_DISABLED_HOOKS="post:edit:console-log"
 ```
 
 | Profile | 说明 |
@@ -75,3 +75,4 @@ Todo 列表可以揭示:
 - 探索性工作时禁用
 - 不使用 `dangerously-skip-permissions` 标志
 - 在 `~/.claude.json` 中配置 `allowedTools`
+- 会阻止提交的质量门 Hook 默认不启用；只有团队明确需要时再接入

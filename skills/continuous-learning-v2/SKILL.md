@@ -101,14 +101,14 @@ source: "session-observation"
       "matcher": "*",
       "hooks": [{
         "type": "command",
-        "command": "node scripts/hooks/run-with-flags.js pre:observe hooks/observe.js standard,strict pre"
+        "command": "node scripts/hooks/run-with-flags.js pre:observe skills/continuous-learning-v2/hooks/observe-v2.js standard,strict pre"
       }]
     }],
     "PostToolUse": [{
       "matcher": "*",
       "hooks": [{
         "type": "command",
-        "command": "node scripts/hooks/run-with-flags.js post:observe hooks/observe.js standard,strict post"
+        "command": "node scripts/hooks/run-with-flags.js post:observe skills/continuous-learning-v2/hooks/observe-v2.js standard,strict post"
       }]
     }],
     "Stop": [{

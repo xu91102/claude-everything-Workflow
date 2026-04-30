@@ -1,7 +1,7 @@
 {
     "version": "2.0",
     "observation": {
-        "enabled": false,
+        "enabled": true,
         "store_path": "~/.claude/homunculus/observations.jsonl",
         "project_scoped": true,
         "max_file_size_mb": 10,
