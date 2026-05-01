@@ -159,6 +159,7 @@ install_claude() {
     echo "Installing Claude workflow to $dest"
     run mkdir -p "$dest"
     copy_file "$ROOT_DIR/CLAUDE.md" "$dest/CLAUDE.md"
+    copy_file "$ROOT_DIR/README.md" "$dest/README.md"
     copy_claude_settings "$ROOT_DIR/settings.json" "$dest/settings.json"
     install_shared_dirs "$dest"
 }
@@ -169,6 +170,7 @@ install_codex() {
     echo "Installing Codex workflow to $dest"
     run mkdir -p "$dest"
     copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
+    copy_file "$ROOT_DIR/README.md" "$dest/README.md"
     install_shared_dirs "$dest"
 }
 

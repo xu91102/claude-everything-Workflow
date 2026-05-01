@@ -8,6 +8,18 @@ const { spawnSync } = require('child_process')
 const root = path.resolve(__dirname, '..')
 const errors = []
 const warnings = []
+const expectedCommands = [
+    'code-review.md',
+    'e2e.md',
+    'evolve.md',
+    'harness-audit.md',
+    'instinct-status.md',
+    'learn-eval.md',
+    'pr.md',
+    'prune.md',
+    'tdd.md',
+    'verify.md'
+].sort()
 
 function rel(...parts) {
     return path.join(root, ...parts)
@@ -39,6 +51,32 @@ function walk(dir = '') {
     return out
 }
 
+function managedFiles() {
+    const roots = [
+        'README.md',
+        'AGENTS.md',
+        'CLAUDE.md',
+        'settings.json',
+        'commands',
+        'agents',
+        'skills/continuous-learning-v2',
+        'skills/test-driven-development',
+        'skills/e2e-testing',
+        'skills/brainstorming',
+        'hooks',
+        'scripts',
+        'rules'
+    ]
+
+    return roots.flatMap(item => {
+        const full = rel(item)
+        if (!fs.existsSync(full)) return []
+
+        if (fs.statSync(full).isDirectory()) return walk(item)
+        return [item]
+    })
+}
+
 function fail(message) {
     errors.push(message)
 }
@@ -53,11 +91,12 @@ function checkCommands() {
         ? fs.readdirSync(commandsDir).filter(file => file.endsWith('.md')).sort()
         : []
 
-    const readme = read('README.md')
-    const listed = Array.from(readme.matchAll(/`\/([^`\s]+)`/g))
-        .map(match => `${match[1]}.md`)
-        .filter((value, index, array) => array.indexOf(value) === index)
-        .sort()
+    const listed = exists('README.md')
+        ? Array.from(read('README.md').matchAll(/`\/([^`\s]+)`/g))
+            .map(match => `${match[1]}.md`)
+            .filter((value, index, array) => array.indexOf(value) === index)
+            .sort()
+        : expectedCommands
 
     for (const file of listed) {
         if (!commands.includes(file)) {
@@ -144,7 +183,7 @@ function checkForbiddenCommandDrift() {
         [/清理过期/, 'expired-instinct cleanup wording']
     ]
 
-    for (const file of walk()) {
+    for (const file of managedFiles()) {
         if (file === 'scripts/verify-harness.js') continue
         if (!/\.(md|json|js|ps1|sh)$/.test(file)) continue
 
@@ -221,6 +260,16 @@ function checkObserveV2() {
 }
 
 function checkGitDiffWhitespace() {
+    const isRepo = spawnSync('git', ['rev-parse', '--is-inside-work-tree'], {
+        cwd: root,
+        encoding: 'utf8',
+        timeout: 30000
+    })
+
+    if (isRepo.status !== 0) {
+        return
+    }
+
     const result = spawnSync('git', ['diff', '--check'], {
         cwd: root,
         encoding: 'utf8',
