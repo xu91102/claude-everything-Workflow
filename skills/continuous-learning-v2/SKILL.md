@@ -127,10 +127,9 @@ source: "session-observation"
 | 命令 | 功能 |
 |------|------|
 | `/learn-eval` | 手动分析当前会话 (含质量门) |
-| `/instinct-status` | 查看所有直觉及其置信度 |
-| `/evolve` | 将相关直觉聚类为 skills/commands/agents |
-| `/instinct-export` | 导出直觉分享 |
-| `/instinct-import` | 导入他人直觉 |
+| `/instinct-status` | 查看所有直觉、置信度和待审查状态 |
+| `/evolve` | 评估相关直觉是否值得演化为 skill、agent 或 command |
+| `/prune` | 清理已人工标记删除、拒绝或归档的直觉 |
 
 ### 3. 置信度系统
 
@@ -157,7 +156,6 @@ source: "session-observation"
 ## 相关命令
 
 - `/learn-eval` - 提取模式 (含质量门)
-- `/evolve` - 聚类演化
+- `/evolve` - 演化评估
 - `/instinct-status` - 查看学习状态
-- `/instinct-export` - 导出直觉
-- `/instinct-import` - 导入直觉
+- `/prune` - 清理已人工标记删除的直觉

@@ -25,8 +25,9 @@ description: 运行全面验证检查
    - 确认包管理器、monorepo package、已有脚本
 
 2. **仓库卫生**
-   - 检查临时文件、备份文件、调试残留
-   - 检查 hooks / command / agent 配置引用是否存在
+    - 检查临时文件、备份文件、调试残留
+    - 检查 hooks / command / agent 配置引用是否存在
+    - 对本仓库 Harness 配置运行 `node scripts/verify-harness.js`
 
 3. **Lint 检查**
    - 运行代码检查器

@@ -99,19 +99,16 @@ claude-everything-Workflow/
 │   └── ...                     # 其他专业代理
 │
 ├── commands/                   # 命令（斜杠快捷入口）
-│   ├── docs.md                 # /docs → documentation-lookup（兼容入口）
-│   ├── harness-audit.md        # /harness-audit → Harness 配置审计
-│   ├── learn-eval.md           # /learn-eval 提取模式 (含质量门)
-│   ├── evolve.md               # /evolve 演化
-│   ├── prune.md                # /prune 清理过期直觉
-│   ├── instinct-status.md      # /instinct-status 状态
-│   ├── instinct-export.md      # /instinct-export 导出
-│   ├── instinct-import.md      # /instinct-import 导入
 │   ├── pr.md                   # /pr 提交与创建 PR
 │   ├── verify.md               # /verify 验证
-│   ├── code-review.md          # /code-review 审查
-│   ├── tdd.md                  # /tdd 测试驱动开发
-│   └── e2e.md                  # /e2e 端到端（Playwright）
+│   ├── learn-eval.md           # /learn-eval 提取模式 (含质量门)
+│   ├── instinct-status.md      # /instinct-status 状态与待审查
+│   ├── prune.md                # /prune 清理已标记直觉
+│   ├── evolve.md               # /evolve 演化评估
+│   ├── code-review.md          # /code-review → code-reviewer
+│   ├── tdd.md                  # /tdd → tdd-guide
+│   ├── e2e.md                  # /e2e → e2e-runner
+│   └── harness-audit.md        # /harness-audit → harness-optimizer
 │
 ├── references/                 # 按需加载的长参考材料
 │   └── agents/                 # Agent 详细检查清单与示例
@@ -138,6 +135,7 @@ claude-everything-Workflow/
 │   │   ├── config.json         # 配置
 │   │   ├── agents/             # Observer Agent
 │   │   └── hooks/              # observe-v2.js 增强观察脚本
+│   ├── test-driven-development/ # TDD 测试先行规则
 │   └── learn/                  # 学习到的模式，按分类保存
 │       ├── pr/
 │       ├── testing/
@@ -147,7 +145,6 @@ claude-everything-Workflow/
 │   ├── README.md               # Hook 文档
 │   ├── check-console-log.js    # console.log 检测
 │   ├── evaluate-session.js     # 会话评估
-│   ├── observe.js              # 旧版工具调用观察（默认未接入）
 │   └── review-confidence.js    # 置信度审查报告
 │
 └── homunculus/                 # 自主学习系统
@@ -162,7 +159,7 @@ claude-everything-Workflow/
 
 ## 与主仓对齐：Context7 MCP、`~/.claude` 用户级配置与省 Token
 
-本目录已含 **`skills/documentation-lookup/`** 与 **`/docs`**，行为与 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) 主仓一致：通过 Context7 的 **`resolve-library-id` → `query-docs`** 查第三方库最新文档。技能不负责启动 MCP，需在 **Claude Code** 或 **Cursor** 中启用。
+本目录已含 **`skills/documentation-lookup/`**，行为与 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) 主仓一致：通过 Context7 的 **`resolve-library-id` → `query-docs`** 查第三方库最新文档。技能不负责启动 MCP，需在 **Claude Code** 或 **Cursor** 中启用。
 
 ### 1. Claude Code：用户级 `~/.claude/settings.json`
 
@@ -207,19 +204,26 @@ claude-everything-Workflow/
 
 | 命令               | 功能                                                                |
 | ------------------ | ------------------------------------------------------------------- |
-| `/docs`            | 库/API 文档查询（委托 `documentation-lookup`，需启用 Context7 MCP） |
-| `/harness-audit`   | 审计 Agent Harness 配置：主循环、工具、上下文、状态、权限、验证 |
-| `/tdd`             | 测试驱动开发流程                                                    |
-| `/e2e`             | 端到端测试（Playwright；可配合 e2e-runner）                         |
-| `/verify`          | 运行全面验证检查                                                    |
 | `/pr`              | 提交、推送和创建 PR 的标准工作流                                    |
-| `/code-review`     | 代码审查                                                            |
+| `/verify`          | 运行全面验证检查                                                    |
 | `/learn-eval`      | 从会话提取模式 (含质量门评估)                                       |
-| `/evolve`          | 演化模式为高级结构                                                  |
-| `/prune`           | 清理过期待定直觉                                                    |
-| `/instinct-status` | 查看学习状态                                                        |
-| `/instinct-export` | 导出直觉分享                                                        |
-| `/instinct-import` | 导入他人直觉                                                        |
+| `/instinct-status` | 查看学习状态和待审查报告                                            |
+| `/prune`           | 清理已人工标记删除、拒绝或归档的直觉                                |
+| `/evolve`          | 评估模式是否值得演化为 skill、agent 或 command                      |
+| `/code-review`     | 薄封装入口，委派 `code-reviewer` agent                              |
+| `/tdd`             | 薄封装入口，委派 `tdd-guide` agent                                  |
+| `/e2e`             | 薄封装入口，委派 `e2e-runner` agent 和 `e2e-testing` skill          |
+| `/harness-audit`   | 薄封装入口，委派 `harness-optimizer` agent                          |
+
+## 验证 Harness
+
+```bash
+node scripts/verify-harness.js
+bash scripts/install.sh --dry-run
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
+```
+
+`verify-harness.js` 会检查 README 与 `commands/` 是否一致、薄封装 command 是否指向存在的 agent/skill、旧命令和旧衰减语义是否残留，并运行 `observe-v2` 最小 smoke test。
 
 ## Hook Profile 控制
 
@@ -267,12 +271,11 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 ```
 1. 复制到 ~/.claude/
 2. 复杂任务使用工具原生 Plan Mode 或委派 planner agent
-3. 使用 /tdd 实现代码
-4. 关键路径使用 /e2e 或委派 e2e-runner 维护 Playwright
+3. 使用 /tdd 委派 tdd-guide 规划测试先行实现
+4. 关键路径使用 /e2e 委派 e2e-runner 维护 Playwright
 5. 使用 /verify 验证
-6. 使用 /code-review 审查
+6. 使用 /code-review 委派 code-reviewer 审查
 7. 使用 /learn-eval 积累模式
-8. 使用 /evolve 演化
-9. 使用 /prune 定期清理
-10. 使用 /instinct-export 分享
+8. 使用 /evolve 评估是否演化
+9. 使用 /prune 清理已人工标记删除的直觉
 ```

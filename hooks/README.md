@@ -18,7 +18,6 @@ export ECC_DISABLED_HOOKS="hook-id"    # 逗号分隔禁用列表
 
 | 脚本 | 用途 | Hook 类型 | ID |
 |------|------|-----------|----|
-| `observe.js` | 旧版工具调用观察，默认未接入 | PreToolUse/PostToolUse | `pre:observe` / `post:observe` |
 | `skills/continuous-learning-v2/hooks/observe-v2.js` | v2 工具调用观察 | PostToolUse | `post:observe` |
 | `check-console-log.js` | 检测 console.log | PostToolUse | `post:edit:console-log` |
 | `evaluate-session.js` | 会话结束评估 | Stop | `stop:evaluate-session` |

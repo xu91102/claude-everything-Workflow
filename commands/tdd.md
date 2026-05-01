@@ -1,80 +1,27 @@
 ---
-description: 测试驱动开发工作流
+description: TDD 入口，薄封装委派 tdd-guide agent
 ---
 
 # /tdd - 测试驱动开发
 
-使用 TDD 方法实现功能。
-
-## TDD 循环
-
-```
-RED → GREEN → REFACTOR → REPEAT
-
-RED:      编写失败的测试
-GREEN:    编写最少的代码使测试通过
-REFACTOR: 改进代码，保持测试通过
-```
+这是 `agents/tdd-guide.md` 的 slash 入口，不重复维护 TDD 流程细节。
+TDD 方法以 `skills/test-driven-development/SKILL.md` 为准。
 
 ## 使用方式
 
-```
-/tdd 用户登录功能          # 使用 TDD 实现
-/tdd --coverage 80%       # 要求 80% 覆盖率
-```
-
-## 流程
-
-### Step 1: 定义接口
-
-```typescript
-export interface LoginService {
-  login(email: string, password: string): Promise<User>
-}
+```text
+/tdd 用户登录功能
+/tdd 修复订单状态边界条件
 ```
 
-### Step 2: 编写测试 (RED)
+## 执行规则
 
-```typescript
-describe('LoginService', () => {
-  it('should return user on valid credentials', async () => {
-    const user = await loginService.login('test@example.com', 'password')
-    expect(user.email).toBe('test@example.com')
-  })
+1. 优先委派 `tdd-guide` agent。
+2. 传入目标功能、已有测试位置、相关文件和约束。
+3. 默认先定义行为和失败测试，再做最小实现建议。
+4. 只运行或建议运行与本次目标相关的测试。
+5. 如果无法委派 agent，主模型按 RED/GREEN/REFACTOR 顺序执行。
 
-  it('should throw on invalid credentials', async () => {
-    await expect(
-      loginService.login('test@example.com', 'wrong')
-    ).rejects.toThrow('Invalid credentials')
-  })
-})
-```
+## 参数
 
-### Step 3: 运行测试 (验证失败)
-
-```bash
-npm test -- --grep "LoginService"
-```
-
-### Step 4: 实现代码 (GREEN)
-
-实现最少的代码使测试通过。
-
-### Step 5: 重构
-
-改进代码质量，保持测试通过。
-
-### Step 6: 检查覆盖率
-
-```bash
-npm test -- --coverage
-```
-
-## 覆盖率目标
-
-| 类型 | 最低要求 |
-|------|----------|
-| 语句 | 80% |
-| 分支 | 75% |
-| 函数 | 80% |
-| 行 | 80% |
+`$ARGUMENTS`

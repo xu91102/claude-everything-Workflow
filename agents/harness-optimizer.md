@@ -10,6 +10,11 @@ tools: ["Read", "Grep", "Glob", "Bash", "Edit"]
 
 通过改进 Harness 配置（而非产品代码）提升 Agent 完成质量。
 
+## Skill 协作
+
+- 当审计结论涉及多方案取舍、架构性行为变化或高风险默认策略时，先按需使用 `brainstorming` skill 收敛方案。
+- 不把 brainstorming 当成固定前置流程；简单的重复、冲突、过期配置清理直接处理。
+
 ## 工作流程
 
 1. **审计基线**：检查以下配置文件的当前状态

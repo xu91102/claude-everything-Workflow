@@ -1,63 +1,46 @@
 ---
-description: 删除超过指定天数未审批的待定直觉
+description: 清理人工标记为删除或已拒绝的直觉
 ---
 
-# /prune - 清理过期直觉
+# /prune - 清理待删除直觉
 
-删除长期未审批、未验证的待定直觉文件。
-与"不自动衰减置信度"理念配合: 不悄悄降级，而是主动清理。
+清理已经被人工标记为删除、拒绝或归档的直觉文件。
+长期无观察只进入待审查，不因时间自动删除。
 
 ## 使用方式
 
-```
-/prune                    # 删除超过 30 天未审批的直觉
-/prune --max-age 60      # 自定义天数阈值
-/prune --dry-run         # 预览不删除
+```text
+/prune
+/prune --reviewed-only
+/prune --dry-run
 ```
 
 ## 清理规则
 
-**删除条件** (全部满足):
-1. 置信度 <= 0.3 (试探性)
-2. 最后观察日期超过阈值天数
-3. 无人工标记为"保留"
+删除条件满足任一项:
 
-**保留条件** (任一满足):
-- 置信度 > 0.3
-- 有 `keep: true` 标记
-- 在阈值天数内有观察记录
+- `delete: true`
+- `status: rejected`
+- `status: archived`
+- `review_decision: delete`
+
+保留条件满足任一项:
+
+- `keep: true`
+- `status: active`
+- `review_decision: keep`
+- 只是长期无观察，但没有明确删除、拒绝或归档标记
 
 ## 执行流程
 
-1. 扫描 `homunculus/instincts/personal/` 和 `inherited/`
-2. 解析每个直觉的 frontmatter
-3. 按清理规则筛选过期直觉
-4. 展示待删除列表
-5. 确认后删除
-
-## 输出格式
-
-```
-清理预览
-==================
-
-将删除 3 个过期直觉:
-
-| 直觉 | 置信度 | 天数 | 原因 |
-|------|--------|------|------|
-| temp-pattern-1 | 0.3 | 45 | 试探性 + 超期 |
-| old-fix-2 | 0.3 | 62 | 试探性 + 超期 |
-| untested-3 | 0.3 | 38 | 试探性 + 超期 |
-
-保留 12 个直觉 (活跃或高置信度)
-
-确认删除? (y/n)
-```
+1. 扫描 `homunculus/instincts/personal/` 和 `homunculus/instincts/inherited/`。
+2. 解析 frontmatter，筛选明确标记为可删除的直觉。
+3. 展示待删除列表和保留原因摘要。
+4. `--dry-run` 只预览，不删除。
+5. 真正删除前必须向用户确认。
 
 ## 注意
 
-- 此命令在删除前**始终要求确认**
-- 使用 `--dry-run` 安全预览
-- 高置信度直觉永远不会被清理
-- 使用 `/instinct-status` 查看全部直觉状态
-- 使用 `review-confidence.js` 审查报告辅助决策
+- 置信度和时间不能单独作为删除依据。
+- 长期无观察先用 `/instinct-status --review` 标记待审查。
+- 此命令不能执行自动衰减。
