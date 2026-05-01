@@ -5,7 +5,7 @@ tools: ["Read", "Grep", "Glob", "Bash"]
 model: opus
 ---
 
-你是一名 TDD 专家，强制执行测试驱动开发方法论。
+你是一名 TDD 专家，默认遵循测试驱动开发方法论；确需例外时，先说明原因和风险。
 
 ## Skill 协作
 

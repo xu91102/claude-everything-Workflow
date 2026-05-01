@@ -18,6 +18,7 @@
 ## 可用工具
 
 ### 数据库分析命令
+
 ```bash
 # 连接到数据库
 psql $DATABASE_URL
@@ -126,12 +127,12 @@ CREATE INDEX orders_customer_id_idx ON orders (customer_id);
 
 ### 2. 选择正确的索引类型
 
-| 索引类型 | 使用场景 | 操作符 |
-|------------|----------|--------------|
-| **B-tree**（默认） | 等值、范围查询 | `=`, `<`, `>`, `BETWEEN`, `IN` |
-| **GIN** | 数组、JSONB、全文搜索 | `@>`, `?`, `?&`, `?\|`, `@@` |
-| **BRIN** | 大型时序表 | 排序数据的范围查询 |
-| **Hash** | 仅等值查询 | `=`（比 B-tree 略快） |
+| 索引类型           | 使用场景              | 操作符                         |
+| ------------------ | --------------------- | ------------------------------ |
+| **B-tree**（默认） | 等值、范围查询        | `=`, `<`, `>`, `BETWEEN`, `IN` |
+| **GIN**            | 数组、JSONB、全文搜索 | `@>`, `?`, `?&`, `?\|`, `@@`   |
+| **BRIN**           | 大型时序表            | 排序数据的范围查询             |
+| **Hash**           | 仅等值查询            | `=`（比 B-tree 略快）          |
 
 ```sql
 -- ❌ 错误：对 JSONB 包含查询使用 B-tree
@@ -156,6 +157,7 @@ CREATE INDEX orders_status_created_idx ON orders (status, created_at);
 ```
 
 **最左前缀规则：**
+
 - 索引 `(status, created_at)` 适用于：
   - `WHERE status = 'pending'`
   - `WHERE status = 'pending' AND created_at > '2024-01-01'`
@@ -188,6 +190,7 @@ CREATE INDEX users_active_email_idx ON users (email) WHERE deleted_at IS NULL;
 ```
 
 **常见模式：**
+
 - 软删除：`WHERE deleted_at IS NULL`
 - 状态过滤：`WHERE status = 'pending'`
 - 非空值：`WHERE sku IS NOT NULL`
@@ -532,12 +535,12 @@ EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
 SELECT * FROM orders WHERE customer_id = 123;
 ```
 
-| 指标 | 问题 | 解决方案 |
-|-----------|---------|----------|
-| 大表上的 `Seq Scan` | 缺少索引 | 在过滤列上添加索引 |
-| `Rows Removed by Filter` 高 | 选择性差 | 检查 WHERE 子句 |
-| `Buffers: read >> hit` | 数据未缓存 | 增加 `shared_buffers` |
-| `Sort Method: external merge` | `work_mem` 太低 | 增加 `work_mem` |
+| 指标                          | 问题            | 解决方案              |
+| ----------------------------- | --------------- | --------------------- |
+| 大表上的 `Seq Scan`           | 缺少索引        | 在过滤列上添加索引    |
+| `Rows Removed by Filter` 高   | 选择性差        | 检查 WHERE 子句       |
+| `Buffers: read >> hit`        | 数据未缓存      | 增加 `shared_buffers` |
+| `Sort Method: external merge` | `work_mem` 太低 | 增加 `work_mem`       |
 
 ### 3. 维护统计信息
 
@@ -603,6 +606,7 @@ ORDER BY rank DESC;
 ## 需要标记的反模式
 
 ### ❌ 查询反模式
+
 - 生产代码中的 `SELECT *`
 - WHERE/JOIN 列上缺少索引
 - 大表上的 OFFSET 分页
@@ -610,6 +614,7 @@ ORDER BY rank DESC;
 - 未参数化的查询（SQL 注入风险）
 
 ### ❌ 模式反模式
+
 - ID 使用 `int`（应使用 `bigint`）
 - 无理由使用 `varchar(255)`（应使用 `text`）
 - 无时区的 `timestamp`（应使用 `timestamptz`）
@@ -617,12 +622,14 @@ ORDER BY rank DESC;
 - 需要引号的混合大小写标识符
 
 ### ❌ 安全反模式
+
 - 应用用户使用 `GRANT ALL`
 - 多租户表缺少 RLS
 - RLS 策略每行调用函数（未用 SELECT 包装）
 - RLS 策略列未建索引
 
 ### ❌ 连接反模式
+
 - 无连接池
 - 无空闲超时
 - 事务模式连接池使用预处理语句
@@ -633,6 +640,7 @@ ORDER BY rank DESC;
 ## 审查清单
 
 ### 批准数据库更改前：
+
 - [ ] 所有 WHERE/JOIN 列已建索引
 - [ ] 复合索引列顺序正确
 - [ ] 使用适当的数据类型（bigint、text、timestamptz、numeric）
@@ -647,5 +655,3 @@ ORDER BY rank DESC;
 ---
 
 **记住**：数据库问题通常是应用性能问题的根本原因。尽早优化查询和模式设计。使用 EXPLAIN ANALYZE 验证假设。始终为外键和 RLS 策略列建立索引。
-
-*模式改编自 [Supabase Agent Skills](https://github.com/supabase/agent-skills)，遵循 MIT 许可证。*
