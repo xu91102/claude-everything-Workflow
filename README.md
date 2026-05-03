@@ -68,7 +68,7 @@ claude-everything-Workflow/
 ├── CLAUDE.md                   # 全局配置入口
 ├── settings.json               # 旧版 Hooks 配置 (向后兼容)
 │
-├── rules/                      # 规则（始终遵循）
+├── rules/                      # 规则索引与按需加载规则
 │   ├── 01-base.md              # 基础设定
 │   ├── 02-code-size.md         # 代码规模约束
 │   ├── 03-architecture.md      # 架构原则
@@ -157,6 +157,12 @@ claude-everything-Workflow/
         └── agents/
 ```
 
+## 规则加载策略
+
+- 默认入口只加载 `AGENTS.md` 或 `CLAUDE.md` 中的硬规则和索引。
+- 简单问答、解释、格式调整、翻译或只读查看，不读取额外规则。
+- `rules/common/` 是专项参考区，只在命令、agent、skill 或当前任务明确触发时读取。
+
 ## 与主仓对齐：Context7 MCP、`~/.claude` 用户级配置与省 Token
 
 本目录已含 **`skills/documentation-lookup/`**，行为与 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) 主仓一致：通过 Context7 的 **`resolve-library-id` → `query-docs`** 查第三方库最新文档。技能不负责启动 MCP，需在 **Claude Code** 或 **Cursor** 中启用。
@@ -190,7 +196,13 @@ claude-everything-Workflow/
 
 ```json
 {
-  "disabledMcpServers": ["github", "exa", "playwright", "sequential-thinking", "memory"]
+  "disabledMcpServers": [
+    "github",
+    "exa",
+    "playwright",
+    "sequential-thinking",
+    "memory"
+  ]
 }
 ```
 
