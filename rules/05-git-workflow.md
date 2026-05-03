@@ -44,5 +44,5 @@ fix bug
 
 - 用户要求提交、推送、创建 PR 时，读取 `commands/pr.md` 和 `rules/common/pr-automation.md`。
 - 不在 `main`、`master`、`prod` 等受保护分支直接提交。
-- 推送分支、创建 PR、合并 PR 前必须向用户确认。
+- 用户明确要求推送分支时可直接执行；创建 PR、合并 PR 前必须向用户确认。
 - PR 描述必须包含背景、核心改动、验证结果、风险与回滚。
