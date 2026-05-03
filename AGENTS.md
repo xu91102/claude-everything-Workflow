@@ -26,9 +26,3 @@
 | `06-comments.md`        | 注释规范                                          |
 | `07-forbidden.md`       | 禁止事项清单                                      |
 | `08-ecc-integration.md` | ECC 集成索引，按需跳转到 `rules/common/` 专项规则 |
-
-## 常见触发
-
-- 用户要求提交、推送、创建 PR 或整理可审阅提交时，优先读取 `commands/pr.md` 和 `rules/common/pr-automation.md`。
-- 用户明确要求推送时，可直接执行 `git push`；创建 PR、合并 PR 前仍需再次确认。
-- 新功能、bug 修复、重构或行为变化优先使用 `/tdd`，并按需读取 `skills/test-driven-development/SKILL.md`。
