@@ -219,7 +219,6 @@ function Install-ClaudeWorkflow {
         -Action { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
 
     Copy-ConfigFile -Source (Join-Path $RootDir "CLAUDE.md") -Destination (Join-Path $dest "CLAUDE.md")
-    Copy-ConfigFile -Source (Join-Path $RootDir "README.md") -Destination (Join-Path $dest "README.md")
     $settingsPath = Join-Path $dest "settings.json"
     Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath
     Convert-ClaudeSettingsHookPaths -SettingsPath $settingsPath
@@ -235,7 +234,6 @@ function Install-CodexWorkflow {
         -Action { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
 
     Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
-    Copy-ConfigFile -Source (Join-Path $RootDir "README.md") -Destination (Join-Path $dest "README.md")
     Install-SharedDirs -Destination $dest
 }
 

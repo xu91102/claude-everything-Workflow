@@ -214,18 +214,18 @@ claude-everything-Workflow/
 
 ## 可用命令
 
-| 命令               | 功能                                                                |
-| ------------------ | ------------------------------------------------------------------- |
-| `/pr`              | 提交、推送和创建 PR 的标准工作流                                    |
-| `/verify`          | 运行全面验证检查                                                    |
-| `/learn-eval`      | 从会话提取模式 (含质量门评估)                                       |
-| `/instinct-status` | 查看学习状态和待审查报告                                            |
-| `/prune`           | 清理已人工标记删除、拒绝或归档的直觉                                |
-| `/evolve`          | 评估模式是否值得演化为 skill、agent 或 command                      |
-| `/code-review`     | 薄封装入口，委派 `code-reviewer` agent                              |
-| `/tdd`             | 薄封装入口，委派 `tdd-guide` agent                                  |
-| `/e2e`             | 薄封装入口，委派 `e2e-runner` agent 和 `e2e-testing` skill          |
-| `/harness-audit`   | 薄封装入口，委派 `harness-optimizer` agent                          |
+| 命令               | 功能                                                       |
+| ------------------ | ---------------------------------------------------------- |
+| `/pr`              | 提交、推送和创建 PR 的标准工作流                           |
+| `/verify`          | 运行全面验证检查                                           |
+| `/learn-eval`      | 从会话提取模式 (含质量门评估)                              |
+| `/instinct-status` | 查看学习状态和待审查报告                                   |
+| `/prune`           | 清理已人工标记删除、拒绝或归档的直觉                       |
+| `/evolve`          | 评估模式是否值得演化为 skill、agent 或 command             |
+| `/code-review`     | 薄封装入口，委派 `code-reviewer` agent                     |
+| `/tdd`             | 薄封装入口，委派 `tdd-guide` agent                         |
+| `/e2e`             | 薄封装入口，委派 `e2e-runner` agent 和 `e2e-testing` skill |
+| `/harness-audit`   | 薄封装入口，委派 `harness-optimizer` agent                 |
 
 ## 验证 Harness
 
