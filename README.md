@@ -161,6 +161,9 @@ claude-everything-Workflow/
 
 - 默认入口只加载 `AGENTS.md` 或 `CLAUDE.md` 中的硬规则和索引。
 - 简单问答、解释、格式调整、翻译或只读查看，不读取额外规则。
+- 规则路径解析顺序：先检查当前项目根目录 `rules/`；若项目无 `rules/` 或目标规则文件不存在，必须回退到用户级规则目录：Codex 使用 `~/.codex/rules/`，Claude Code 使用 `~/.claude/rules/`。
+- 当用户级 Workflow 注入到没有 `rules/` 的项目时，不能把项目规则目录缺失等同于“无规则”；必须继续检查对应的用户级规则目录。
+- 回退只改变查找位置，不改变按需读取原则；仍然只读取当前任务直接相关的规则文件，不要默认全量加载 `rules/` 或 `rules/common/`。
 - `rules/common/` 是专项参考区，只在命令、agent、skill 或当前任务明确触发时读取。
 
 ## 与主仓对齐：Context7 MCP、`~/.claude` 用户级配置与省 Token

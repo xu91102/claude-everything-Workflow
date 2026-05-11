@@ -197,6 +197,15 @@ function checkRuleLoadingPolicy() {
     if (!body.includes("不要默认全量加载 `rules/`")) {
       fail(`${file} should forbid loading all rules by default`);
     }
+    if (!body.includes("~/.codex/rules/")) {
+      fail(`${file} should mention Codex user-level rules fallback`);
+    }
+    if (!body.includes("~/.claude/rules/")) {
+      fail(`${file} should mention Claude Code user-level rules fallback`);
+    }
+    if (!body.includes("不能把项目规则目录缺失等同于“无规则”")) {
+      fail(`${file} should forbid treating a missing project rules directory as no rules`);
+    }
   }
 
   if (!exists("rules/08-ecc-integration.md")) {
