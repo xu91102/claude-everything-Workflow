@@ -49,7 +49,7 @@ This structure informs the task decomposition. Each task should produce self-con
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** Implement this plan task-by-task. Keep checkbox (`- [ ]`) status updated. For substantial plans, prefer the project-agent loop: one fresh implementation subagent per task, then requirement/spec compliance review, then code quality review.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -137,16 +137,39 @@ After saving the plan, offer execution choice:
 
 **"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Two execution options:**
 
-**1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
+**1. Project-Agent Loop (recommended for substantial plans)** - Use this project's existing agents. Dispatch one fresh implementation subagent per task, then run two reviews before marking the task complete.
 
-**2. Inline Execution** - Execute tasks in this session using executing-plans, batch execution with checkpoints
+**2. Inline Execution (lightweight)** - Execute tasks in this session, task-by-task, with checkpoints. Use this for small, clear, tightly coupled work.
 
 **Which approach?"**
 
-**If Subagent-Driven chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
-- Fresh subagent per task + two-stage review
+**If Project-Agent Loop chosen:**
+- Read the full plan once and extract each task with its files, tests, commands, and acceptance criteria.
+- For each task, dispatch a fresh implementation subagent with only that task plus the necessary project context. Before dispatching, read the matching `agents/*.md` file and use its role, process, and constraints as the subagent prompt. In runtimes that do not expose custom agent names directly, dispatch a generic worker and seed it with the selected project-agent prompt.
+- Pick the implementation agent by task shape:
+  - `agents/tdd-guide.md` for new behavior, bug fixes, or behavior changes that need tests first
+  - `agents/refactor-cleaner.md` for focused refactors
+  - `agents/e2e-runner.md` for Playwright or user-flow verification tasks
+  - a general worker if no specialized project agent fits
+- Review stage 1: requirement/spec compliance. Use `agents/planner.md` or a generic review worker seeded with the spec and plan. Compare the implementation against the spec and this plan before judging style. If there is a gap, send it back to the same task implementer.
+- Review stage 2: code quality. Use `agents/code-reviewer.md`, plus `agents/security-reviewer.md` or `agents/database-reviewer.md` when the touched area warrants it. If issues remain, send them back to the same task implementer and re-review.
+- Mark the task checkbox complete only after tests pass and both review stages pass.
 
 **If Inline Execution chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
-- Batch execution with checkpoints for review
+- Execute the plan in the current session.
+- Keep the same order: implement one task, run its tests, do a requirement/spec compliance check, do a code quality check, then update the checkbox.
+
+## Debugging Detour
+
+If any task hits a bug, failing test, flaky behavior, or unexpected result, pause implementation and use `skills/systematic-debugging/SKILL.md`.
+
+Do not stack quick fixes. Complete the four debugging phases, document the root cause briefly in the task notes, then return to the same task and re-run its required verification.
+
+## Completion Loop
+
+After all plan tasks are complete:
+
+1. Run the project's verification flow (`/verify` or equivalent commands).
+2. If verification fails, use `skills/systematic-debugging/SKILL.md` for each failure class before changing code.
+3. Run a final code review over the whole diff using `agents/code-reviewer.md`, adding `agents/security-reviewer.md` or `agents/database-reviewer.md` when relevant.
+4. Use `/pr` when the user wants commit, push, or PR handling.

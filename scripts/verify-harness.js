@@ -63,6 +63,8 @@ function managedFiles() {
     "skills/test-driven-development",
     "skills/e2e-testing",
     "skills/brainstorming",
+    "skills/writing-plans",
+    "skills/systematic-debugging",
     "hooks",
     "scripts",
     "rules",
@@ -179,6 +181,53 @@ function checkSkillLinks() {
 
     if (!read(agent).includes("brainstorming")) {
       fail(`${agent} should reference brainstorming skill`);
+    }
+  }
+
+  if (!exists("skills/writing-plans/SKILL.md")) {
+    fail("skills/writing-plans/SKILL.md is missing");
+  } else {
+    const writingPlans = read("skills/writing-plans/SKILL.md");
+    const requiredTokens = [
+      "Project-Agent Loop",
+      "agents/tdd-guide.md",
+      "agents/code-reviewer.md",
+      "skills/systematic-debugging/SKILL.md",
+      "Completion Loop",
+      "`/verify`",
+      "`/pr`",
+    ];
+
+    for (const token of requiredTokens) {
+      if (!writingPlans.includes(token)) {
+        fail(`skills/writing-plans/SKILL.md should include ${token}`);
+      }
+    }
+
+    for (const forbidden of [
+      "superpowers:subagent-driven-development",
+      "superpowers:executing-plans",
+    ]) {
+      if (writingPlans.includes(forbidden)) {
+        fail(`skills/writing-plans/SKILL.md contains dangling ${forbidden}`);
+      }
+    }
+  }
+
+  if (!exists("skills/systematic-debugging/SKILL.md")) {
+    fail("skills/systematic-debugging/SKILL.md is missing");
+  } else {
+    const debugging = read("skills/systematic-debugging/SKILL.md");
+    for (const token of [
+      "Phase 1: Root Cause Investigation",
+      "Phase 2: Pattern Analysis",
+      "Phase 3: Hypothesis Test",
+      "Phase 4: Fix And Verify",
+      "Return To Plan",
+    ]) {
+      if (!debugging.includes(token)) {
+        fail(`skills/systematic-debugging/SKILL.md should include ${token}`);
+      }
     }
   }
 }
