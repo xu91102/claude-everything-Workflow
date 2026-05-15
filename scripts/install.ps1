@@ -219,6 +219,7 @@ function Install-ClaudeWorkflow {
         -Action { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
 
     Copy-ConfigFile -Source (Join-Path $RootDir "CLAUDE.md") -Destination (Join-Path $dest "CLAUDE.md")
+    Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
     $settingsPath = Join-Path $dest "settings.json"
     Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath
     Convert-ClaudeSettingsHookPaths -SettingsPath $settingsPath
