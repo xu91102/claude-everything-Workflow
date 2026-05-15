@@ -254,6 +254,37 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 
 当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录只保存脚本实现。若后续恢复 `hooks/hooks.json`，需要同时更新本目录结构说明，避免配置漂移。
 
+## Superpowers 风格开发闭环
+
+复杂任务默认参考 [obra/superpowers](https://github.com/obra/superpowers) 的门禁结构，但不复制外部仓库文件。本仓的主线是：
+
+```text
+复杂任务
+  -> brainstorming 澄清需求
+  -> 写 design spec
+  -> 用户审核 spec
+  -> writing-plans 写实施计划
+  -> 用户确认执行方式
+  -> TDD 红绿重构
+  -> 需求符合性审查
+  -> 代码质量审查
+  -> /verify 质量门
+  -> /pr 提交/PR
+  -> /learn-eval --preview 学习沉淀
+```
+
+硬门禁：
+
+- 没有 spec，不进入 plan。
+- 没有用户审核，不进入实现。
+- 没有 failing test，不写行为代码。
+- 没有 review，不标记任务完成。
+- 没有 verify，不进入 PR。
+
+复杂任务包括新功能、架构调整、多文件行为变化、高风险实现，以及需求存在多种合理解释的工作。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
+
+收尾阶段按 `/verify` -> `/pr` -> `/learn-eval --preview` 推进。`/learn-eval --preview` 是非阻塞学习建议门，只在模式高频、稳定、可复用时保存。
+
 ## Continuous Learning v2
 
 ### 工作流程

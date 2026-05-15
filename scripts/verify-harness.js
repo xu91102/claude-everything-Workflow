@@ -243,7 +243,17 @@ function checkRuleLoadingPolicy() {
     if (!body.includes("规则加载策略")) {
       fail(`${file} should include a rule loading policy section`);
     }
-    if (!body.includes("不要默认全量加载 `rules/`")) {
+    const forbidsFullRulesLoad =
+      body.includes("不要默认全量加载 `rules/`") ||
+      body.includes("不要默认全量加载`rules/`") ||
+      body.includes("仍然只读取当前任务直接相关的规则文件");
+
+    const forbidsFullCommonLoad =
+      body.includes("不要默认全量加载 `rules/common/`") ||
+      body.includes("不要默认全量加载`rules/common/`") ||
+      body.includes("`rules/common/` 是专项参考区");
+
+    if (!forbidsFullRulesLoad || !forbidsFullCommonLoad) {
       fail(`${file} should forbid loading all rules by default`);
     }
     if (!body.includes("~/.codex/rules/")) {
@@ -270,6 +280,76 @@ function checkRuleLoadingPolicy() {
     fail(
       "rules/08-ecc-integration.md should forbid full rules loading just because it might be useful",
     );
+  }
+}
+
+function requireTokens(file, tokens) {
+  if (!exists(file)) {
+    fail(`${file} is missing`);
+    return;
+  }
+
+  const body = read(file);
+  for (const token of tokens) {
+    if (!body.includes(token)) {
+      fail(`${file} should include ${token}`);
+    }
+  }
+}
+
+function checkSuperpowersDevLoop() {
+  requireTokens("README.md", [
+    "Superpowers 风格开发闭环",
+    "没有 spec，不进入 plan",
+    "没有用户审核，不进入实现",
+    "没有 failing test，不写行为代码",
+    "没有 review，不标记任务完成",
+    "没有 verify，不进入 PR",
+    "`/learn-eval --preview` 是非阻塞学习建议门",
+  ]);
+
+  requireTokens("rules/01-base.md", [
+    "Spec Gate",
+    "User Review Gate",
+    "Plan Gate",
+    "Red Test Gate",
+    "Task Review Gate",
+    "Verify Gate",
+    "PR Gate",
+  ]);
+
+  requireTokens("skills/brainstorming/SKILL.md", [
+    "Spec Gate",
+    "reviewed and approved the saved spec",
+  ]);
+
+  requireTokens("skills/writing-plans/SKILL.md", [
+    "## Preconditions",
+    "approved spec",
+    "Plan Gate",
+  ]);
+
+  requireTokens("skills/test-driven-development/SKILL.md", [
+    "## Red Test Gate",
+    "失败测试",
+    "替代验证",
+  ]);
+
+  requireTokens("commands/verify.md", [
+    "Verify Gate",
+    "已运行检查",
+    "未运行检查",
+    "是否可以进入 `/pr`",
+  ]);
+
+  requireTokens("commands/pr.md", [
+    "PR Gate",
+    "`/verify` 或等价验证结果",
+    "先回到验证和修复阶段",
+  ]);
+
+  if (!exists("docs/superpowers/specs/2026-05-15-superpowers-dev-loop-design.md")) {
+    fail("Superpowers dev loop design spec is missing");
   }
 }
 
@@ -409,6 +489,7 @@ function main() {
   checkRouterTargets();
   checkSkillLinks();
   checkRuleLoadingPolicy();
+  checkSuperpowersDevLoop();
   checkForbiddenCommandDrift();
   checkObserveV2();
   checkGitDiffWhitespace();

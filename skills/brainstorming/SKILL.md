@@ -12,6 +12,7 @@ Start by deciding whether the request needs brainstorming. If it does, understan
 <HARD-GATE>
 When this skill applies, do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it.
 When this skill applies, writing the design doc/spec and passing the user review gate are mandatory; do NOT invoke writing-plans or output an implementation plan before the written spec exists and the user has approved it.
+For this repository, the written spec is the Spec Gate. Do not move to `writing-plans`, implementation, review, or PR work until the user has reviewed and approved the saved spec.
 </HARD-GATE>
 
 ## Trigger Policy

@@ -4,6 +4,8 @@ description: 提交、推送和创建 Pull Request 的标准工作流
 
 # /pr - 提交与创建 PR
 
+`/pr` 是 Superpowers 风格闭环中的 PR Gate。进入本命令前必须已有 `/verify` 或等价验证结果；如果验证失败或未运行关键检查，先回到验证和修复阶段，除非用户明确授权带风险继续。
+
 把当前工作区中的有效改动整理成可提交、可审阅、可追踪的 PR。
 
 ## 使用方式
@@ -23,6 +25,7 @@ description: 提交、推送和创建 Pull Request 的标准工作流
 2. 运行 `git status --short --branch`，确认当前不在 `main`、`master`、`prod` 等受保护分支。
 3. 区分本次任务改动与无关脏文件；不要擅自回滚或混入用户改动。
 4. 查看 `package.json`、CI 配置和 README，识别项目使用的包管理器与验证命令。
+5. 确认已有 `/verify` 或等价验证结果；若没有，先运行匹配改动范围的验证并记录结果。
 
 ## 默认流程
 
