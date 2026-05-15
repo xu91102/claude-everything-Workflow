@@ -127,6 +127,10 @@ claude-everything-Workflow/
 │       └── session-end.js      # 会话结束持久化
 │
 ├── skills/
+│   ├── using-git-worktrees/    # 隔离式 worktree 执行准备
+│   │   └── SKILL.md
+│   ├── executing-plans/        # 按计划执行、检查点、审查与验证
+│   │   └── SKILL.md
 │   ├── documentation-lookup/   # Context7：库/API 实时文档（resolve → query）
 │   │   └── SKILL.md
 │   ├── e2e-testing/            # Playwright E2E 模式（POM、CI、制品）
@@ -267,8 +271,9 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
   -> brainstorming 澄清需求
   -> 写 design spec
   -> 用户审核 spec
+  -> using-git-worktrees 按需创建隔离工作区
   -> writing-plans 写实施计划
-  -> 用户确认执行方式
+  -> executing-plans 按计划执行
   -> TDD 红绿重构
   -> 需求符合性审查
   -> 代码质量审查
@@ -284,6 +289,7 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 - 没有 failing test，不写行为代码。
 - 没有 review，不标记任务完成。
 - 没有 verify，不进入 PR。
+- 有脏工作区、并行任务或高风险改动时，先考虑 `using-git-worktrees`。
 
 复杂任务包括新功能、架构调整、多文件行为变化、高风险实现，以及需求存在多种合理解释的工作。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
 
@@ -320,12 +326,15 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 
 ```
 1. 复制到 ~/.claude/
-2. 复杂任务使用工具原生 Plan Mode 或委派 planner agent
-3. 使用 /tdd 委派 tdd-guide 规划测试先行实现
-4. 关键路径使用 /e2e 委派 e2e-runner 维护 Playwright
-5. 使用 /verify 验证
-6. 使用 /code-review 委派 code-reviewer 审查
-7. 使用 /learn-eval 积累模式
-8. 使用 /evolve 评估是否演化
-9. 使用 /prune 清理已人工标记删除的直觉
+2. 复杂任务用 `brainstorming` 写 design spec 并让用户审核
+3. 高风险或并行实现前，用 `using-git-worktrees` 隔离工作区
+4. 用 `writing-plans` 写实施计划
+5. 用 `executing-plans` 按计划执行
+6. 使用 /tdd 委派 tdd-guide 规划测试先行实现
+7. 关键路径使用 /e2e 委派 e2e-runner 维护 Playwright
+8. 使用 /verify 验证
+9. 使用 /code-review 委派 code-reviewer 审查
+10. 使用 /learn-eval 积累模式
+11. 使用 /evolve 评估是否演化
+12. 使用 /prune 清理已人工标记删除的直觉
 ```

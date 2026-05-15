@@ -63,6 +63,8 @@ function managedFiles() {
     "skills/test-driven-development",
     "skills/e2e-testing",
     "skills/brainstorming",
+    "skills/using-git-worktrees",
+    "skills/executing-plans",
     "skills/writing-plans",
     "skills/systematic-debugging",
     "hooks",
@@ -190,6 +192,8 @@ function checkSkillLinks() {
     const writingPlans = read("skills/writing-plans/SKILL.md");
     const requiredTokens = [
       "Project-Agent Loop",
+      "skills/using-git-worktrees/SKILL.md",
+      "skills/executing-plans/SKILL.md",
       "agents/tdd-guide.md",
       "agents/code-reviewer.md",
       "skills/systematic-debugging/SKILL.md",
@@ -230,6 +234,19 @@ function checkSkillLinks() {
       }
     }
   }
+
+  requireTokens("skills/using-git-worktrees/SKILL.md", [
+    "git worktree add",
+    "git worktree remove",
+    "Do not create a worktree for simple single-file edits",
+  ]);
+
+  requireTokens("skills/executing-plans/SKILL.md", [
+    "approved implementation plan",
+    "Inline Execution",
+    "Project-Agent Loop",
+    "skills/systematic-debugging/SKILL.md",
+  ]);
 }
 
 function checkRuleLoadingPolicy() {
@@ -300,6 +317,8 @@ function requireTokens(file, tokens) {
 function checkSuperpowersDevLoop() {
   requireTokens("README.md", [
     "Superpowers 风格开发闭环",
+    "using-git-worktrees",
+    "executing-plans",
     "没有 spec，不进入 plan",
     "没有用户审核，不进入实现",
     "没有 failing test，不写行为代码",
