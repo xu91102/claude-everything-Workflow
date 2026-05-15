@@ -65,7 +65,8 @@ cp -r ./claude-everything-Workflow/* ~/.claude/
 ```
 claude-everything-Workflow/
 ├── README.md                   # 本文档
-├── CLAUDE.md                   # 全局配置入口
+├── AGENTS.md                   # Codex 与通用权威规则入口
+├── CLAUDE.md                   # Claude Code 最小 bootstrap 入口
 ├── settings.json               # 旧版 Hooks 配置 (向后兼容)
 │
 ├── rules/                      # 规则索引与按需加载规则
@@ -159,7 +160,8 @@ claude-everything-Workflow/
 
 ## 规则加载策略
 
-- 默认入口只加载 `AGENTS.md` 或 `CLAUDE.md` 中的硬规则和索引。
+- 默认入口只加载 `AGENTS.md` 或 `CLAUDE.md` 中的硬规则和最小索引。
+- `AGENTS.md` 是权威规则入口；`CLAUDE.md` 是 Claude Code bootstrap，只保留启动必需规则和回退策略，避免两份完整规则漂移。
 - 简单问答、解释、格式调整、翻译或只读查看，不读取额外规则。
 - 规则路径解析顺序：先检查当前项目根目录 `rules/`；若项目无 `rules/` 或目标规则文件不存在，必须回退到用户级规则目录：Codex 使用 `~/.codex/rules/`，Claude Code 使用 `~/.claude/rules/`。
 - 当用户级 Workflow 注入到没有 `rules/` 的项目时，不能把项目规则目录缺失等同于“无规则”；必须继续检查对应的用户级规则目录。
@@ -195,6 +197,8 @@ claude-everything-Workflow/
 
 - MCP 工具描述会占用上下文；建议**同时启用的 MCP 少于 10 个**，并控制活跃工具数量。
 - **策略**：从 **0 个或只开 Context7** 开始，需要再加其它 MCP。
+- **缓存命中策略**：保持入口文件前缀稳定，默认只加载小型 bootstrap 和规则索引；长参考材料、专项规则、agent 详细清单和学习材料必须按需加载。
+- **入口预算**：`CLAUDE.md` 控制在约 1.5K 字符内，`AGENTS.md` 控制在约 3.6K 字符内；超过预算时优先把细节下沉到 `rules/`、`references/` 或专项 skill。
 - **按项目禁用**（Claude Code）：在具体仓库的 **`.claude/settings.json`** 中使用 **`disabledMcpServers`**，写上全局已启用、但本项目不用的服务名（与 `mcpServers` 的**键名**一致），例如：
 
 ```json

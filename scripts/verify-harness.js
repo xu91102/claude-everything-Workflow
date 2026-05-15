@@ -348,9 +348,10 @@ function checkSuperpowersDevLoop() {
     "先回到验证和修复阶段",
   ]);
 
-  if (!exists("docs/superpowers/specs/2026-05-15-superpowers-dev-loop-design.md")) {
-    fail("Superpowers dev loop design spec is missing");
-  }
+  requireTokens("skills/brainstorming/SKILL.md", [
+    "docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md",
+    "Write design doc",
+  ]);
 }
 
 function checkForbiddenCommandDrift() {
