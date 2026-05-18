@@ -63,7 +63,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" stop:evaluate-session \"$HOME/.claude/hooks/evaluate-session.js\" standard,strict",
+            "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" stop:evaluate-session \"$HOME/.claude/hooks/evaluate-session.js\" strict",
             "timeout": 10
           }
         ]
