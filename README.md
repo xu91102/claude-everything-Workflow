@@ -104,6 +104,8 @@ claude-everything-Workflow/
 │   ├── verify.md               # /verify 验证
 │   ├── learn-eval.md           # /learn-eval 提取模式 (含质量门)
 │   ├── instinct-status.md      # /instinct-status 状态与待审查
+│   ├── projects.md             # /projects 查看学习项目注册表
+│   ├── promote.md              # /promote 预览/推广项目直觉
 │   ├── prune.md                # /prune 清理已标记直觉
 │   ├── evolve.md               # /evolve 演化评估
 │   ├── code-review.md          # /code-review → code-reviewer
@@ -117,14 +119,8 @@ claude-everything-Workflow/
 ├── scripts/                    # 跨平台脚本
 │   ├── install.sh              # macOS / Linux / Git Bash / WSL 一键安装
 │   ├── install.ps1             # Windows PowerShell 一键安装
-│   ├── lib/                    # 共享工具库
-│   │   ├── utils.js            # 路径/stdin/日期/frontmatter 工具
-│   │   └── hook-flags.js       # Hook Profile 控制
-│   └── hooks/                  # Hook 实现
-│       ├── run-with-flags.js   # Hook 运行时控制器
-│       ├── commit-quality.js   # Pre-commit 质量门
-│       ├── session-start.js    # 会话启动上下文
-│       └── session-end.js      # 会话结束持久化
+│   └── learning/               # 学习系统手动维护脚本
+│       └── review-confidence.js # 置信度审查报告
 │
 ├── skills/
 │   ├── using-git-worktrees/    # 隔离式 worktree 执行准备
@@ -148,9 +144,16 @@ claude-everything-Workflow/
 │
 ├── hooks/                      # 钩子脚本
 │   ├── README.md               # Hook 文档
+│   ├── runtime/                # Hook 运行时与 Profile 控制
+│   │   ├── run-with-flags.js
+│   │   ├── hook-flags.js
+│   │   └── session-utils.js
+│   ├── session-start.js        # 会话启动上下文
+│   ├── session-end.js          # 会话结束持久化
+│   ├── commit-quality.js       # 可选 Pre-commit 质量门
 │   ├── check-console-log.js    # console.log 检测
 │   ├── evaluate-session.js     # 会话评估
-│   └── review-confidence.js    # 置信度审查报告
+│   └── pre-compact.js          # 压缩前保存上下文
 │
 └── homunculus/                 # 自主学习系统
     ├── instincts/
@@ -231,6 +234,8 @@ claude-everything-Workflow/
 | `/verify`          | 运行全面验证检查                                           |
 | `/learn-eval`      | 从会话提取模式 (含质量门评估)                              |
 | `/instinct-status` | 查看学习状态和待审查报告                                   |
+| `/projects`        | 查看 Continuous Learning 项目注册表                        |
+| `/promote`         | 预览或推广项目级直觉到全局直觉                             |
 | `/prune`           | 清理已人工标记删除、拒绝或归档的直觉                       |
 | `/evolve`          | 评估模式是否值得演化为 skill、agent 或 command             |
 | `/code-review`     | 薄封装入口，委派 `code-reviewer` agent                     |
@@ -260,7 +265,7 @@ export ECC_HOOK_PROFILE=standard
 export ECC_DISABLED_HOOKS="post:edit:console-log"
 ```
 
-当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录只保存脚本实现。若后续恢复 `hooks/hooks.json`，需要同时更新本目录结构说明，避免配置漂移。
+当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录统一保存 Hook 运行时和脚本实现。`scripts/learning/` 只保存手动学习治理脚本，不作为 Hook 自动触发。
 
 ## Superpowers 风格开发闭环
 
@@ -300,16 +305,18 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 ### 工作流程
 
 ```
-会话活动 → Hooks 观察 → observations.jsonl（含 project_root/project_id）
+会话活动 → Hooks 观察 → projects/<project-id>/observations.jsonl
                             ↓
                      Observer Agent (Haiku)
                             ↓
-                     instincts/personal/
+               projects/<project-id>/instincts/
                   ↓                    ↓
-           /evolve 聚类        /prune 清理
+       /promote 预览推广      /prune 清理
                   ↓
-           evolved/skills/commands/agents/
+        global/instincts 或 evolved/skills/commands/agents/
 ```
+
+默认学习数据根目录为 `${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus`。旧版 `~/.claude/homunculus` 可用 `node scripts/learning/migrate-homunculus.js --dry-run` 预览迁移。
 
 ### 置信度系统
 
@@ -320,7 +327,7 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 | 0.7  | 强     | 主动应用     |
 | 0.9  | 核心   | 始终应用     |
 
-> 置信度不会因时间流逝自动衰减。使用 `review-confidence.js` 审查、`/prune` 清理。
+> 置信度不会因时间流逝自动衰减。使用 `scripts/learning/review-confidence.js` 审查、`/prune` 清理。
 
 ## 使用流程
 
@@ -335,6 +342,8 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 8. 使用 /verify 验证
 9. 使用 /code-review 委派 code-reviewer 审查
 10. 使用 /learn-eval 积累模式
-11. 使用 /evolve 评估是否演化
-12. 使用 /prune 清理已人工标记删除的直觉
+11. 使用 /projects 查看项目级学习来源
+12. 使用 /promote --dry-run 评估是否推广为全局直觉
+13. 使用 /evolve 评估是否演化
+14. 使用 /prune 清理已人工标记删除的直觉
 ```

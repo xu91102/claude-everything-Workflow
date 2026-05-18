@@ -1,8 +1,12 @@
 {
-    "version": "2.0",
+    "version": "2.1",
+    "homunculus": {
+        "data_root": "~/.local/share/ecc-homunculus",
+        "legacy_root": "~/.claude/homunculus"
+    },
     "observation": {
         "enabled": true,
-        "store_path": "~/.claude/homunculus/observations.jsonl",
+        "store_path": "~/.local/share/ecc-homunculus",
         "project_scoped": true,
         "max_file_size_mb": 10,
         "max_tool_input_chars": 2000,
@@ -18,8 +22,10 @@
         ]
     },
     "instincts": {
-        "personal_path": "~/.claude/homunculus/instincts/personal/",
-        "inherited_path": "~/.claude/homunculus/instincts/inherited/",
+        "global_path": "~/.local/share/ecc-homunculus/global/instincts/",
+        "project_path": "~/.local/share/ecc-homunculus/projects/<project-id>/instincts/",
+        "legacy_personal_path": "~/.claude/homunculus/instincts/personal/",
+        "legacy_inherited_path": "~/.claude/homunculus/instincts/inherited/",
         "min_confidence": 0.3,
         "auto_approve_threshold": 0.7,
         "stale_threshold_days": 30,
@@ -41,7 +47,8 @@
     },
     "evolution": {
         "cluster_threshold": 3,
-        "evolved_path": "~/.claude/homunculus/evolved/",
+        "evolved_path": "~/.local/share/ecc-homunculus/evolved/",
+        "promotion_min_confidence": 0.7,
         "auto_evolve": false
     },
     "integration": {

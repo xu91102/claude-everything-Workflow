@@ -210,6 +210,41 @@ function Install-SharedDirs {
     }
 }
 
+function Remove-ObsoleteWorkflowPaths {
+    param([string]$Destination)
+
+    $obsoleteFiles = @(
+        "scripts\hooks\run-with-flags.js",
+        "scripts\hooks\commit-quality.js",
+        "scripts\hooks\session-start.js",
+        "scripts\hooks\session-end.js",
+        "scripts\lib\hook-flags.js",
+        "scripts\lib\utils.js",
+        "hooks\review-confidence.js"
+    )
+
+    foreach ($relative in $obsoleteFiles) {
+        $target = Join-Path $Destination $relative
+        if (Test-Path -LiteralPath $target -PathType Leaf) {
+            Invoke-InstallCommand `
+                -Description "Remove-Item '$target'" `
+                -Action { Remove-Item -LiteralPath $target -Force }
+        }
+    }
+
+    foreach ($relative in @("scripts\hooks", "scripts\lib")) {
+        $target = Join-Path $Destination $relative
+        if (Test-Path -LiteralPath $target -PathType Container) {
+            $children = Get-ChildItem -LiteralPath $target -Force
+            if ($children.Count -eq 0) {
+                Invoke-InstallCommand `
+                    -Description "Remove-Item '$target'" `
+                    -Action { Remove-Item -LiteralPath $target -Force }
+            }
+        }
+    }
+}
+
 function Install-ClaudeWorkflow {
     $dest = Join-Path $HomeDir ".claude"
 
@@ -218,6 +253,7 @@ function Install-ClaudeWorkflow {
         -Description "New-Item -ItemType Directory '$dest'" `
         -Action { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
 
+    Remove-ObsoleteWorkflowPaths -Destination $dest
     Copy-ConfigFile -Source (Join-Path $RootDir "CLAUDE.md") -Destination (Join-Path $dest "CLAUDE.md")
     Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
     $settingsPath = Join-Path $dest "settings.json"
@@ -234,6 +270,7 @@ function Install-CodexWorkflow {
         -Description "New-Item -ItemType Directory '$dest'" `
         -Action { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
 
+    Remove-ObsoleteWorkflowPaths -Destination $dest
     Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
     Install-SharedDirs -Destination $dest
 }

@@ -13,6 +13,8 @@ description: 查看学习到的模式、置信度和待审查状态
 /instinct-status --domain testing
 /instinct-status --high
 /instinct-status --review
+/instinct-status --review --scope project
+/instinct-status --review --scope global
 ```
 
 ## 状态规则
@@ -25,12 +27,12 @@ description: 查看学习到的模式、置信度和待审查状态
 ## 输出内容
 
 - 总直觉数量和按置信度分布。
+- project/global/legacy 分层统计。
 - 高置信度、低置信度和待审查列表。
 - 每项的证据数量、最后观察时间和建议动作。
 - `/evolve` 候选建议。
 
 ## 审查模式
 
-`--review` 调用 `hooks/review-confidence.js` 生成审查报告。
+`--review` 调用 `scripts/learning/review-confidence.js` 生成审查报告。
 报告只标记待审查，不修改置信度。
-

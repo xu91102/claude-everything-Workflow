@@ -1,161 +1,74 @@
 ---
 name: continuous-learning-v2
-description: 基于直觉的学习系统，通过 Hooks 观察会话，创建带置信度的原子直觉，并演化为 skills/commands/agents。
-version: 2.0.0
+description: 基于直觉的学习系统。用于配置或审查 Hook 观察、project/global instinct、置信度、项目推广、迁移和演化为 skills/commands/agents 的流程。
+version: 2.1.0
 ---
 
-# Continuous Learning v2 - 直觉架构
+# Continuous Learning v2.1
 
-将 Claude Code 会话转化为可复用知识的高级学习系统，通过原子级"直觉"实现，带有置信度评分。
+本 skill 只保留使用决策和关键边界；实现细节在 `scripts/learning/`、`hooks/`、`commands/` 和 `config.json` 中。
 
-## v2 新特性
+## 何时使用
 
-| 特性 | v1 | v2 |
-|---------|----|-------|
-| 观察方式 | Stop hook | PreToolUse/PostToolUse (100% 可靠) |
-| 分析方式 | 主上下文 | 后台 Agent (Haiku) |
-| 粒度 | 完整技能 | 原子级"直觉" |
-| 置信度 | 无 | 0.3-0.9 加权 |
-| 演化 | 直接变技能 | 直觉 → 聚类 → skill/command/agent |
-| 分享 | 无 | 导出/导入直觉 |
+- 配置或排查自动观察 Hook。
+- 查看、审查、迁移 project/global instincts。
+- 判断 project instinct 是否应推广到 global。
+- 评估 instinct 是否应演化为 skill、command 或 agent。
 
-## 直觉模型
+## 核心模型
 
-直觉是一个小型学习行为：
+- **Observation**：Hook 记录工具调用，默认写入 `${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus/projects/<project-id>/observations.jsonl`。
+- **Project instinct**：默认作用域，只服务当前项目，避免跨项目污染。
+- **Global instinct**：经用户确认后才跨项目应用。
+- **Confidence**：`0.3/0.5/0.7/0.9`，不会因时间自动衰减；长期未观察只进入待审查。
+- **Promotion**：先 `/promote --dry-run` 预览，再由用户确认是否 `--apply`。
 
-```yaml
----
-id: prefer-functional-style
-trigger: "编写新函数时"
-confidence: 0.7
-domain: "code-style"
-source: "session-observation"
----
+## 数据布局
 
-# 优先函数式风格
-
-## 行为
-适当时使用函数式模式代替类。
-
-## 证据
-- 观察到 5 次函数式模式偏好
-- 用户在 2026-01-15 将类方法改为函数式
+```text
+${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus/
+├── projects.json
+├── projects/<project-id>/
+│   ├── observations.jsonl
+│   └── instincts/{personal,inherited}/
+└── global/
+    └── instincts/{personal,inherited}/
 ```
 
-**属性:**
-- **原子性** — 一个触发器，一个行为
-- **置信度加权** — 0.3 = 试探性, 0.9 = 接近确定
-- **领域标签** — code-style, testing, git, debugging, workflow 等
-- **证据支持** — 追踪什么观察创建了它
+旧版 `~/.claude/homunculus/instincts` 作为 legacy 来源兼容；需要迁移时先 dry-run。
 
-## 工作流程
+## 命令
 
-```
-会话活动
-      │
-      │ Hooks 捕获提示 + 工具使用 (100% 可靠)
-      ▼
-┌─────────────────────────────────────────┐
-│         observations.jsonl              │
-│   (提示, 工具调用, 结果)                 │
-└─────────────────────────────────────────┘
-      │
-      │ Observer Agent 读取 (后台, Haiku)
-      ▼
-┌─────────────────────────────────────────┐
-│          模式检测                        │
-│   • 用户纠正 → 直觉                      │
-│   • 错误解决 → 直觉                      │
-│   • 重复工作流 → 直觉                    │
-└─────────────────────────────────────────┘
-      │
-      │ 创建/更新
-      ▼
-┌─────────────────────────────────────────┐
-│         instincts/personal/             │
-│   • prefer-functional.md (0.7)          │
-│   • always-test-first.md (0.9)          │
-│   • use-zod-validation.md (0.6)         │
-└─────────────────────────────────────────┘
-      │
-      │ /evolve 聚类
-      ▼
-┌─────────────────────────────────────────┐
-│              evolved/                   │
-│   • commands/new-feature.md             │
-│   • skills/testing-workflow.md          │
-│   • agents/refactor-specialist.md       │
-└─────────────────────────────────────────┘
+| 命令 | 作用 |
+| --- | --- |
+| `/learn-eval` | 从当前会话提取可复用模式，保存前走质量门 |
+| `/instinct-status --review` | 调用 `scripts/learning/review-confidence.js` 审查 project/global/legacy instincts |
+| `/projects` | 调用 `scripts/learning/projects.js` 查看项目注册表 |
+| `/promote --dry-run` | 调用 `scripts/learning/promote.js` 预览 project -> global |
+| `/evolve` | 聚类 instinct，评估是否演化为 skill/command/agent |
+| `/prune` | 只清理人工标记删除、拒绝或归档的 instinct |
+
+## 脚本入口
+
+- `skills/continuous-learning-v2/hooks/observe-v2.js`：Hook 观察入口。
+- `scripts/learning/project-utils.js`：项目检测、数据根目录、注册表和 frontmatter 工具。
+- `scripts/learning/review-confidence.js`：置信度审查报告。
+- `scripts/learning/projects.js`：项目注册表。
+- `scripts/learning/promote.js`：项目直觉推广预览/应用。
+- `scripts/learning/migrate-homunculus.js`：legacy 迁移，默认 dry-run。
+
+## 安全边界
+
+- 默认不启用后台 observer；`observer.enabled` 保持 `false`，避免额外 token 和误学习。
+- 不自动导入、导出、推广或删除 instinct。
+- 不把 raw observations 当作可共享知识；共享前只处理 instinct。
+- 不把 project instinct 自动提升为 global。
+
+## 迁移
+
+```bash
+node scripts/learning/migrate-homunculus.js --dry-run
+node scripts/learning/migrate-homunculus.js --scope project --apply
 ```
 
-## 快速开始
-
-### 1. 启用观察 Hooks
-
-添加到 `~/.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "PreToolUse": [{
-      "matcher": "*",
-      "hooks": [{
-        "type": "command",
-        "command": "node scripts/hooks/run-with-flags.js pre:observe skills/continuous-learning-v2/hooks/observe-v2.js standard,strict pre"
-      }]
-    }],
-    "PostToolUse": [{
-      "matcher": "*",
-      "hooks": [{
-        "type": "command",
-        "command": "node scripts/hooks/run-with-flags.js post:observe skills/continuous-learning-v2/hooks/observe-v2.js standard,strict post"
-      }]
-    }],
-    "Stop": [{
-      "matcher": "*",
-      "hooks": [{
-        "type": "command",
-        "command": "node scripts/hooks/run-with-flags.js stop:evaluate-session hooks/evaluate-session.js standard,strict"
-      }]
-    }]
-  }
-}
-```
-
-### 2. 可用命令
-
-| 命令 | 功能 |
-|------|------|
-| `/learn-eval` | 手动分析当前会话 (含质量门) |
-| `/instinct-status` | 查看所有直觉、置信度和待审查状态 |
-| `/evolve` | 评估相关直觉是否值得演化为 skill、agent 或 command |
-| `/prune` | 清理已人工标记删除、拒绝或归档的直觉 |
-
-### 3. 置信度系统
-
-| 分数 | 含义 | AI 行为 |
-|------|------|---------|
-| 0.3 | 试探性 | 建议但不强制 |
-| 0.5 | 中等 | 相关时提及 |
-| 0.7 | 强 | 主动应用 |
-| 0.9 | 核心 | 始终应用 |
-
-**置信度计算:**
-- 1-2 观察: 0.3
-- 3-5 观察: 0.5
-- 6-10 观察: 0.7
-- 11+ 观察: 0.85
-
-**动态调整:**
-- +0.05: 每次确认观察
-- -0.10: 每次矛盾观察
-- 定期审查: 使用 `review-confidence.js` 生成报告，由用户决定是否调整
-
-> 注意: 置信度不会因时间流逝自动衰减。所有变更由证据和用户决策驱动。
-
-## 相关命令
-
-- `/learn-eval` - 提取模式 (含质量门)
-- `/evolve` - 演化评估
-- `/instinct-status` - 查看学习状态
-- `/prune` - 清理已人工标记删除的直觉
+迁移只复制，不删除旧数据。需要全局化时先运行 `--scope global --dry-run`。

@@ -12,7 +12,7 @@ const fs = require('fs')
 const path = require('path')
 
 function getSessionDir() {
-    const utils = require('../lib/utils')
+    const utils = require('./runtime/session-utils')
     return path.join(utils.getClaudeDir(), 'session-data')
 }
 

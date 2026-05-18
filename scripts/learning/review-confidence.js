@@ -16,6 +16,14 @@
 const fs = require('fs')
 const path = require('path')
 const os = require('os')
+const {
+    getDataRoot,
+    getGlobalInstinctsDir,
+    getProjectContext,
+    getProjectInstinctsDir,
+    loadConfig,
+    loadProjects
+} = require('./project-utils')
 
 const DEFAULT_STALE_DAYS = 30
 
@@ -32,7 +40,10 @@ function parseArgs() {
     return {
         staleDays: parseIntArg(args, '--stale', DEFAULT_STALE_DAYS),
         jsonOutput: args.includes('--json'),
-        customPath: parseStringArg(args, '--path')
+        customPath: parseStringArg(args, '--path'),
+        scope: parseStringArg(args, '--scope') || 'all',
+        projectId: parseStringArg(args, '--project-id'),
+        cwd: parseStringArg(args, '--cwd')
     }
 }
 
@@ -60,6 +71,9 @@ function printHelp() {
   --stale <天数>   过期阈值天数 (默认: ${DEFAULT_STALE_DAYS})
   --json           JSON 格式输出
   --path <目录>    指定直觉目录
+  --scope <范围>   all | project | global | legacy (默认: all)
+  --project-id <id> 指定项目 ID
+  --cwd <目录>     用目录推断当前项目
   --help           显示帮助
 
 报告分类:
@@ -147,7 +161,7 @@ function parseFrontmatter(content) {
 
 // --- 文件扫描 ---
 
-function scanInstinctsDir(basePath) {
+function scanInstinctsDir(basePath, scope = 'legacy', projectId = null) {
     const files = []
     for (const dir of ['personal', 'inherited']) {
         const dirPath = path.join(basePath, dir)
@@ -157,11 +171,63 @@ function scanInstinctsDir(basePath) {
             if (entry.endsWith('.md')) {
                 files.push({
                     path: path.join(dirPath, entry),
-                    category: dir
+                    category: dir,
+                    scope,
+                    projectId
                 })
             }
         }
     }
+    return files
+}
+
+function collectInstinctFiles(options) {
+    if (options.customPath) {
+        return scanInstinctsDir(findInstinctsPath(options.customPath), 'custom')
+    }
+
+    const config = loadConfig()
+    const dataRoot = getDataRoot(config)
+    const files = []
+
+    if (options.scope === 'all' || options.scope === 'global') {
+        files.push(...scanInstinctsDir(getGlobalInstinctsDir(dataRoot), 'global'))
+    }
+
+    if (options.scope === 'all' || options.scope === 'project') {
+        const currentProjectId = options.projectId ||
+            getProjectContext({ cwd: options.cwd || process.cwd() }).project_id
+        files.push(
+            ...scanInstinctsDir(
+                getProjectInstinctsDir(dataRoot, currentProjectId),
+                'project',
+                currentProjectId
+            )
+        )
+    }
+
+    if (options.scope === 'all' || options.scope === 'legacy') {
+        files.push(...scanInstinctsDir(findInstinctsPath(null), 'legacy'))
+    }
+
+    if (options.scope === 'all') {
+        const projects = loadProjects(dataRoot).projects || {}
+        for (const projectId of Object.keys(projects)) {
+            const alreadyCurrent = files.some(
+                file => file.scope === 'project' && file.projectId === projectId
+            )
+            if (!alreadyCurrent) {
+                files.push(
+                    ...scanInstinctsDir(
+                        getProjectInstinctsDir(dataRoot, projectId),
+                        'project',
+                        projectId
+                    )
+                )
+            }
+        }
+    }
+
     return files
 }
 
@@ -207,6 +273,8 @@ function analyzeInstinct(fileInfo, staleDays) {
         id: meta.id || path.basename(fileInfo.path, '.md'),
         file: path.basename(fileInfo.path),
         category: fileInfo.category,
+        scope: fileInfo.scope,
+        projectId: fileInfo.projectId,
         confidence,
         domain: meta.domain || 'unknown',
         lastObserved: meta.lastObserved || 'N/A',
@@ -263,6 +331,7 @@ function printTextReport(results, staleDays) {
     console.log('[Review] 置信度审查报告')
     console.log(`[Review] 过期阈值: ${staleDays} 天`)
     console.log(`[Review] 扫描直觉: ${results.length} 个`)
+    console.log(`[Review] 范围: ${formatScopes(results)}`)
     console.log('')
 
     printSection('活跃', grouped.active, '近期有观察证据')
@@ -288,17 +357,27 @@ function printTextReport(results, staleDays) {
     console.log('[Review] 注意: 此报告不会修改任何文件。')
 }
 
+function formatScopes(results) {
+    const counts = {}
+    for (const item of results) {
+        counts[item.scope || 'unknown'] = (counts[item.scope || 'unknown'] || 0) + 1
+    }
+    return Object.entries(counts)
+        .map(([scope, count]) => `${scope}=${count}`)
+        .join(', ') || 'none'
+}
+
 function printSection(label, items, description) {
     if (items.length === 0) return
 
     console.log(`## ${label} (${items.length}) - ${description}`)
     console.log('')
-    console.log('| 直觉 | 置信度 | 领域 | 最后观察 | 建议 |')
-    console.log('|------|--------|------|----------|------|')
+    console.log('| 直觉 | 范围 | 置信度 | 领域 | 最后观察 | 建议 |')
+    console.log('|------|------|--------|------|----------|------|')
 
     for (const item of items) {
         console.log(
-            `| ${item.id} | ${item.confidence} | ` +
+            `| ${item.id} | ${item.scope || 'unknown'} | ${item.confidence} | ` +
             `${item.domain} | ${item.lastObserved} | ` +
             `${item.suggestion} |`
         )
@@ -311,6 +390,11 @@ function printJsonReport(results, staleDays) {
         generated: new Date().toISOString(),
         staleThresholdDays: staleDays,
         totalInstincts: results.length,
+        scopes: results.reduce((acc, item) => {
+            const scope = item.scope || 'unknown'
+            acc[scope] = (acc[scope] || 0) + 1
+            return acc
+        }, {}),
         summary: {
             active: results.filter(r => r.status === 'active').length,
             stale: results.filter(r => r.status === 'stale').length,
@@ -325,16 +409,20 @@ function printJsonReport(results, staleDays) {
 // --- 主函数 ---
 
 function main() {
-    const { staleDays: cliStaleDays, jsonOutput, customPath } = parseArgs()
+    const options = parseArgs()
+    const { staleDays: cliStaleDays, jsonOutput, customPath } = options
     const staleDays = loadStaleDays(cliStaleDays)
     const instinctsPath = findInstinctsPath(customPath)
 
     if (!jsonOutput) {
-        console.log(`[Review] 直觉目录: ${instinctsPath}`)
+        console.log(customPath
+            ? `[Review] 直觉目录: ${instinctsPath}`
+            : `[Review] 数据根目录: ${getDataRoot(loadConfig())}`
+        )
         console.log('')
     }
 
-    const files = scanInstinctsDir(instinctsPath)
+    const files = collectInstinctFiles(options)
 
     if (files.length === 0) {
         if (jsonOutput) {

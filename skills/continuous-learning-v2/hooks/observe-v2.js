@@ -9,8 +9,12 @@
 const fs = require('fs')
 const path = require('path')
 const os = require('os')
-const crypto = require('crypto')
-const { execFileSync } = require('child_process')
+const {
+    ensureDir,
+    getDataRoot,
+    getProjectContext,
+    registerProject
+} = require('../../../scripts/learning/project-utils')
 
 function getConfig() {
     const configPath = path.join(os.homedir(), '.claude', 'skills', 'continuous-learning-v2', 'config.json')
@@ -30,14 +34,13 @@ function getConfig() {
 
 function getObservationsPath(config) {
     const storePath = config.observation?.store_path || '~/.claude/homunculus/observations.jsonl'
-    return storePath.replace('~', os.homedir())
-}
-
-function ensureDir(filePath) {
-    const dir = path.dirname(filePath)
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true })
+    if (storePath.endsWith('.jsonl')) {
+        return storePath.replace('~', os.homedir())
     }
+
+    const dataRoot = getDataRoot(config)
+    const context = getProjectContext({})
+    return path.join(dataRoot, 'projects', context.project_id, 'observations.jsonl')
 }
 
 function compactPayload(value, maxChars) {
@@ -57,36 +60,6 @@ function compactPayload(value, maxChars) {
         truncated: true,
         original_chars: serialized.length,
         preview: serialized.slice(0, maxChars)
-    }
-}
-
-function getProjectContext(input) {
-    const cwd = input.cwd || input.tool_input?.cwd || process.cwd()
-    let projectRoot = cwd
-
-    try {
-        projectRoot = execFileSync('git', ['rev-parse', '--show-toplevel'], {
-            cwd,
-            encoding: 'utf8',
-            timeout: 1000,
-            windowsHide: true,
-            stdio: ['ignore', 'pipe', 'ignore']
-        }).trim()
-    } catch {
-        projectRoot = path.resolve(cwd)
-    }
-
-    const projectId = crypto
-        .createHash('sha1')
-        .update(projectRoot.toLowerCase())
-        .digest('hex')
-        .slice(0, 12)
-
-    return {
-        cwd,
-        project_root: projectRoot,
-        project_name: path.basename(projectRoot),
-        project_id: projectId
     }
 }
 
@@ -121,14 +94,26 @@ async function main() {
                 return
             }
 
-            const observationsPath = getObservationsPath(config)
-            ensureDir(observationsPath)
+            const projectContext = getProjectContext(input)
+            const dataRoot = getDataRoot(config)
+            const explicitJsonlPath = config.observation?.store_path &&
+                config.observation.store_path.endsWith('.jsonl')
+            const observationsPath = explicitJsonlPath ||
+                config.observation?.project_scoped === false
+                ? getObservationsPath(config)
+                : path.join(dataRoot, 'projects', projectContext.project_id, 'observations.jsonl')
+
+            if (config.observation?.project_scoped !== false) {
+                registerProject(dataRoot, projectContext)
+            }
+
+            ensureDir(path.dirname(observationsPath))
 
             const observation = {
                 timestamp: new Date().toISOString(),
                 event: phase === 'pre' ? 'tool_start' : 'tool_complete',
                 session_id: input.session_id || process.env.CLAUDE_SESSION_ID,
-                ...getProjectContext(input),
+                ...projectContext,
                 tool: input.tool,
                 tool_input: phase === 'pre'
                     ? compactPayload(

@@ -153,11 +153,38 @@ install_shared_dirs() {
     copy_dir references "$dest"
 }
 
+remove_obsolete_workflow_paths() {
+    local dest="$1"
+    local file
+    local dir
+
+    for file in \
+        "scripts/hooks/run-with-flags.js" \
+        "scripts/hooks/commit-quality.js" \
+        "scripts/hooks/session-start.js" \
+        "scripts/hooks/session-end.js" \
+        "scripts/lib/hook-flags.js" \
+        "scripts/lib/utils.js" \
+        "hooks/review-confidence.js"
+    do
+        if [ -f "$dest/$file" ]; then
+            run rm -f "$dest/$file"
+        fi
+    done
+
+    for dir in "scripts/hooks" "scripts/lib"; do
+        if [ -d "$dest/$dir" ] && [ -z "$(find "$dest/$dir" -mindepth 1 -print -quit)" ]; then
+            run rmdir "$dest/$dir"
+        fi
+    done
+}
+
 install_claude() {
     local dest="$HOME_DIR/.claude"
 
     echo "Installing Claude workflow to $dest"
     run mkdir -p "$dest"
+    remove_obsolete_workflow_paths "$dest"
     copy_file "$ROOT_DIR/CLAUDE.md" "$dest/CLAUDE.md"
     copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
     copy_claude_settings "$ROOT_DIR/settings.json" "$dest/settings.json"
@@ -169,6 +196,7 @@ install_codex() {
 
     echo "Installing Codex workflow to $dest"
     run mkdir -p "$dest"
+    remove_obsolete_workflow_paths "$dest"
     copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
     install_shared_dirs "$dest"
 }

@@ -33,7 +33,7 @@ description: 清理人工标记为删除或已拒绝的直觉
 
 ## 执行流程
 
-1. 扫描 `homunculus/instincts/personal/` 和 `homunculus/instincts/inherited/`。
+1. 扫描当前 project instincts、global instincts 和 legacy `homunculus/instincts/`。
 2. 解析 frontmatter，筛选明确标记为可删除的直觉。
 3. 展示待删除列表和保留原因摘要。
 4. `--dry-run` 只预览，不删除。

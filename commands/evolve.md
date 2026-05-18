@@ -23,11 +23,17 @@ description: 评估学习模式是否值得演化为 skill、agent 或 command
 
 ## 执行流程
 
-1. 读取 `skills/learn/<category>/` 和 `homunculus/instincts/` 中的相关模式。
+1. 读取 `skills/learn/<category>/`、project instincts 和 global instincts 中的相关模式。
 2. 聚类相似触发条件、动作和证据。
 3. 输出候选演化类型、理由、风险和预计 token 影响。
 4. 默认只生成建议。
 5. 使用 `--apply` 时，也必须先展示将创建或修改的文件，得到用户确认后再写入。
+
+## 项目隔离
+
+- 默认优先分析当前 project instinct。
+- 只有跨项目复用价值明确时，才建议先走 `/promote --dry-run` 再演化。
+- legacy `~/.claude/homunculus/instincts` 仅作为迁移前兼容来源。
 
 ## 输出要求
 

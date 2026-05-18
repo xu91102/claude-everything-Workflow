@@ -12,7 +12,7 @@ const fs = require('fs')
 const path = require('path')
 
 function getSessionDir() {
-    const utils = require('../lib/utils')
+    const utils = require('./runtime/session-utils')
     return utils.ensureDir(
         path.join(utils.getClaudeDir(), 'session-data')
     )
@@ -35,7 +35,7 @@ function run() {
     const sessionDir = getSessionDir()
     const stateFile = path.join(sessionDir, 'last-state.json')
 
-    const utils = require('../lib/utils')
+    const utils = require('./runtime/session-utils')
     const state = {
         project: getProjectName(),
         lastActive: utils.getDateTimeString(),
