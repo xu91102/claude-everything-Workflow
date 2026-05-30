@@ -17,6 +17,7 @@
 - 解决非平凡问题后，优先使用 `/learn-eval --preview` 评估是否值得保存。
 - 确认模式可复用后，再运行 `/learn-eval` 保存。
 - 学习产物必须按分类保存到 `skills/learn/<category>/`，例如 `skills/learn/pr/xxx.md`；禁止直接平铺到 `skills/learn/` 根目录。
+- `homunculus`、project instincts、global instincts 和 `observations.jsonl` 只作为观察、候选或迁移来源；最终可复用学习产物以 `skills/learn/<category>/` 为准。
 - 后台观察或 observer 只在明确需要时开启。
 
 ## 外部 Skill 仓库学习

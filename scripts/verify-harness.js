@@ -69,6 +69,8 @@ function managedFiles() {
     "skills/executing-plans",
     "skills/writing-plans",
     "skills/systematic-debugging",
+    "skills/verification-before-completion",
+    "skills/learn",
     "hooks",
     "scripts",
     "rules",
@@ -122,6 +124,176 @@ function checkCommands() {
       );
     }
   }
+}
+
+function checkReadmeTreePaths() {
+  if (!exists("README.md")) return;
+
+  const body = read("README.md");
+  const treeMatch = body.match(/## 目录结构[\s\S]*?```([\s\S]*?)```/);
+  if (!treeMatch) {
+    fail("README.md should include a directory tree under ## 目录结构");
+    return;
+  }
+
+  const ignored = new Set([
+    "claude-everything-Workflow",
+    "agents/...",
+  ]);
+  const stack = [];
+
+  for (const rawLine of treeMatch[1].split(/\r?\n/)) {
+    const markerIndex = rawLine.search(/[├└]──/);
+    if (markerIndex < 0) continue;
+
+    const match = rawLine.match(/[├└]──\s+([^#\s]+)/);
+    if (!match) continue;
+
+    const normalized = match[1].replace(/\/$/, "");
+    if (!normalized || ignored.has(normalized)) continue;
+
+    const depth = Math.floor(markerIndex / 4);
+    stack[depth] = normalized;
+    stack.length = depth + 1;
+
+    const pathInTree = stack.join("/").replace(/\\/g, "/");
+    if (ignored.has(pathInTree)) continue;
+
+    if (!exists(pathInTree)) {
+      fail(`README directory tree lists missing path: ${pathInTree}`);
+    }
+  }
+}
+
+function checkInstallRuntimePolicy() {
+  requireTokens("README.md", [
+    "Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`",
+    "Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks",
+  ]);
+
+  requireTokens("scripts/install.ps1", [
+    "Copy-ClaudeSettings",
+    "Install-CodexWorkflow",
+    "Copy-ConfigFile -Source (Join-Path $RootDir \"AGENTS.md\")",
+  ]);
+  requireTokens("scripts/install.sh", [
+    "copy_claude_settings",
+    "install_codex()",
+    "copy_file \"$ROOT_DIR/AGENTS.md\" \"$dest/AGENTS.md\"",
+  ]);
+
+  const ps = read("scripts/install.ps1");
+  const sh = read("scripts/install.sh");
+  const sharedDirs = [
+    "rules",
+    "agents",
+    "commands",
+    "scripts",
+    "hooks",
+    "skills",
+    "homunculus",
+    "references",
+  ];
+
+  for (const dir of sharedDirs) {
+    if (!ps.includes(`"${dir}"`)) {
+      fail(`scripts/install.ps1 shared dirs should include ${dir}`);
+    }
+    if (!sh.includes(`copy_dir ${dir} "$dest"`)) {
+      fail(`scripts/install.sh shared dirs should include ${dir}`);
+    }
+  }
+
+  const psCodexBody = ps.match(/function Install-CodexWorkflow \{[\s\S]*?\n\}/);
+  if (psCodexBody && psCodexBody[0].includes("settings.json")) {
+    fail("Install-CodexWorkflow should not install Claude Code settings.json");
+  }
+
+  const shCodexBody = sh.match(/install_codex\(\) \{[\s\S]*?\n\}/);
+  if (shCodexBody && shCodexBody[0].includes("settings.json")) {
+    fail("install_codex should not install Claude Code settings.json");
+  }
+}
+
+function checkHookConfigReferences() {
+  if (!exists("settings.json")) {
+    fail("settings.json is missing");
+    return;
+  }
+
+  const settings = JSON.parse(read("settings.json"));
+  const commands = [];
+
+  function collect(value) {
+    if (!value) return;
+    if (Array.isArray(value)) {
+      value.forEach(collect);
+      return;
+    }
+    if (typeof value !== "object") return;
+    if (typeof value.command === "string") {
+      commands.push(value.command);
+    }
+    Object.values(value).forEach(collect);
+  }
+
+  collect(settings.hooks);
+
+  for (const command of commands) {
+    if (command.includes("$HOME/.codex")) {
+      fail("settings.json should not point hooks at ~/.codex");
+    }
+    const matches = [...command.matchAll(/\$HOME\/\.claude\/([^" ]+)/g)];
+    for (const match of matches) {
+      const referenced = match[1];
+      if (!exists(referenced)) {
+        fail(`settings.json references missing hook path: ${referenced}`);
+      }
+    }
+  }
+}
+
+function checkLearningPathPolicy() {
+  for (const dir of [
+    "skills/learn",
+    "skills/learn/pr",
+    "skills/learn/testing",
+    "skills/learn/debugging",
+  ]) {
+    if (!exists(dir)) {
+      fail(`${dir} is missing`);
+    }
+  }
+
+  if (exists("skills/learn")) {
+    const rootEntries = fs.readdirSync(rel("skills/learn"), {
+      withFileTypes: true,
+    });
+    for (const entry of rootEntries) {
+      if (entry.isFile() && ![".gitkeep", "README.md"].includes(entry.name)) {
+        fail(
+          `skills/learn root should not contain ${entry.name}; use a category directory`,
+        );
+      }
+    }
+  }
+
+  requireTokens("README.md", [
+    "skills/learn/<category>/",
+    "观察、候选和迁移来源",
+  ]);
+  requireTokens("commands/evolve.md", [
+    "skills/learn/<category>/",
+    "候选证据来源",
+  ]);
+  requireTokens("commands/learn-eval.md", [
+    "skills/learn/<category>/",
+    "权威学习产物",
+  ]);
+  requireTokens("rules/common/skills-learning.md", [
+    "skills/learn/<category>/",
+    "最终可复用学习产物",
+  ]);
 }
 
 function checkRouterTargets() {
@@ -199,6 +371,7 @@ function checkSkillLinks() {
       "agents/tdd-guide.md",
       "agents/code-reviewer.md",
       "skills/systematic-debugging/SKILL.md",
+      "skills/verification-before-completion/SKILL.md",
       "Completion Loop",
       "`/verify`",
       "`/pr`",
@@ -248,6 +421,14 @@ function checkSkillLinks() {
     "Inline Execution",
     "Project-Agent Loop",
     "skills/systematic-debugging/SKILL.md",
+    "skills/verification-before-completion/SKILL.md",
+  ]);
+
+  requireTokens("skills/verification-before-completion/SKILL.md", [
+    "fresh verification evidence",
+    "skills/systematic-debugging/SKILL.md",
+    "skipped checks",
+    "remaining risk",
   ]);
 }
 
@@ -321,10 +502,12 @@ function checkSuperpowersDevLoop() {
     "Superpowers 风格开发闭环",
     "using-git-worktrees",
     "executing-plans",
+    "verification-before-completion",
     "没有 spec，不进入 plan",
     "没有用户审核，不进入实现",
     "没有 failing test，不写行为代码",
     "没有 review，不标记任务完成",
+    "没有新鲜验证证据，不声明完成、通过、已修复或 ready",
     "没有 verify，不进入 PR",
     "`/learn-eval --preview` 是非阻塞学习建议门",
   ]);
@@ -628,6 +811,10 @@ function checkGitDiffWhitespace() {
 
 function main() {
   checkCommands();
+  checkReadmeTreePaths();
+  checkInstallRuntimePolicy();
+  checkHookConfigReferences();
+  checkLearningPathPolicy();
   checkRouterTargets();
   checkSkillLinks();
   checkRuleLoadingPolicy();
