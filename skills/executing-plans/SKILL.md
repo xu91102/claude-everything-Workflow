@@ -53,10 +53,11 @@ Subagents must return only conclusion, evidence paths, risks, and next steps. Do
 
 After all tasks are complete:
 
-1. Run `/verify` or the plan's equivalent verification commands.
-2. If verification fails, use `skills/systematic-debugging/SKILL.md` for each failure class before changing code.
-3. Run a final review over the full diff.
-4. Summarize files changed, tests run, remaining risk, and whether the work is ready for `/pr`.
+1. Apply `skills/verification-before-completion/SKILL.md`: identify the verification evidence required before any completion claim.
+2. Run `/verify` or the plan's equivalent verification commands to produce that fresh evidence.
+3. If verification fails, use `skills/systematic-debugging/SKILL.md` for each failure class before changing code.
+4. Run a final review over the full diff.
+5. Summarize files changed, tests run, skipped checks, remaining risk, and whether the work is ready for `/pr`.
 
 ## Boundaries
 

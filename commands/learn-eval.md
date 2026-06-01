@@ -26,12 +26,13 @@ description: 从当前会话中提取模式，经质量门评估后保存
 分析会话中最有价值的可复用洞察。
 
 ### 2. 确定保存位置与分类
-- **全局** (`~/.claude/skills/learn/<category>/`): 跨项目可复用的通用模式
-- **项目** (`.claude/skills/learn/<category>/`): 项目特定的知识
+- **全局** (`~/.claude/skills/learn/<category>/` 或 `~/.codex/skills/learn/<category>/`): 跨项目可复用的通用模式
+- **项目** (`.claude/skills/learn/<category>/` 或项目约定的等价目录): 项目特定的知识
 - 拿不准时选全局（全局迁移到项目比反向更容易）
 - 必须选择一个分类子目录，禁止直接保存到 `skills/learn/` 根目录。
 - 常用分类: `pr`、`testing`、`debugging`、`docs`、`frontend`、`backend`、`devops`、`architecture`、`workflow`、`tools`、`project`、`general`。
 - 文件路径格式: `skills/learn/<category>/<pattern-name>.md`，例如 `skills/learn/pr/auto-pr-confirmation.md`。
+- `homunculus`、project instincts、global instincts 和 `observations.jsonl` 只能作为候选来源；保存后的权威学习产物必须落在 `skills/learn/<category>/`。
 
 ### 3. 草拟技能文件
 

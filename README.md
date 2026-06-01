@@ -44,7 +44,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 - Claude Code: `~/.claude/`
 - Codex: `~/.codex/`
 
-顶层配置文件已存在且内容不同时，会先生成 `.bak.<timestamp>` 备份再覆盖；目录内容按仓库版本同步。
+Claude Code 会安装 `CLAUDE.md` 并合并 `settings.json` 作为 hooks 入口；Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`。顶层配置文件已存在且内容不同时，会先生成 `.bak.<timestamp>` 备份再覆盖；目录内容按仓库版本同步。
 
 ## 手动安装
 
@@ -67,7 +67,7 @@ claude-everything-Workflow/
 ├── README.md                   # 本文档
 ├── AGENTS.md                   # Codex 与通用权威规则入口
 ├── CLAUDE.md                   # Claude Code 最小 bootstrap 入口
-├── settings.json               # 旧版 Hooks 配置 (向后兼容)
+├── settings.json               # Claude Code Hooks 配置入口
 │
 ├── rules/                      # 规则索引与按需加载规则
 │   ├── 01-base.md              # 基础设定
@@ -127,6 +127,8 @@ claude-everything-Workflow/
 │   │   └── SKILL.md
 │   ├── executing-plans/        # 按计划执行、检查点、审查与验证
 │   │   └── SKILL.md
+│   ├── verification-before-completion/ # 完成声明前的新鲜验证门
+│   │   └── SKILL.md
 │   ├── documentation-lookup/   # Context7：库/API 实时文档（resolve → query）
 │   │   └── SKILL.md
 │   ├── e2e-testing/            # Playwright E2E 模式（POM、CI、制品）
@@ -143,7 +145,6 @@ claude-everything-Workflow/
 │       └── debugging/
 │
 ├── hooks/                      # 钩子脚本
-│   ├── README.md               # Hook 文档
 │   ├── runtime/                # Hook 运行时与 Profile 控制
 │   │   ├── run-with-flags.js
 │   │   ├── hook-flags.js
@@ -156,13 +157,8 @@ claude-everything-Workflow/
 │   └── pre-compact.js          # 压缩前保存上下文
 │
 └── homunculus/                 # 自主学习系统
-    ├── instincts/
-    │   ├── personal/           # 个人直觉
-    │   └── inherited/          # 导入直觉
-    └── evolved/
-        ├── skills/             # 演化的技能
-        ├── commands/
-        └── agents/
+    └── instincts/
+        └── personal/           # 个人直觉
 ```
 
 ## 规则加载策略
@@ -266,6 +262,7 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 ```
 
 当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录统一保存 Hook 运行时和脚本实现。`scripts/learning/` 只保存手动学习治理脚本，不作为 Hook 自动触发。
+Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks；如未来需要 Codex 原生自动化，应新增明确 adapter。
 
 ## Superpowers 风格开发闭环
 
@@ -282,6 +279,7 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
   -> TDD 红绿重构
   -> 需求符合性审查
   -> 代码质量审查
+  -> verification-before-completion 完成声明前确认新鲜验证证据
   -> /verify 质量门
   -> /pr 提交/PR
   -> /learn-eval --preview 学习沉淀
@@ -293,6 +291,7 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 - 没有用户审核，不进入实现。
 - 没有 failing test，不写行为代码。
 - 没有 review，不标记任务完成。
+- 没有新鲜验证证据，不声明完成、通过、已修复或 ready。
 - 没有 verify，不进入 PR。
 - 有脏工作区、并行任务或高风险改动时，先考虑 `using-git-worktrees`。
 
@@ -311,12 +310,16 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
                             ↓
                projects/<project-id>/instincts/
                   ↓                    ↓
-       /promote 预览推广      /prune 清理
+       /learn-eval 质量门     /promote 预览推广
+                  ↓                    ↓
+        skills/learn/<category>/   global/instincts
                   ↓
-        global/instincts 或 evolved/skills/commands/agents/
+        /evolve 评估是否升级为正式 skills/commands/agents
 ```
 
 默认学习数据根目录为 `${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus`。旧版 `~/.claude/homunculus` 可用 `node scripts/learning/migrate-homunculus.js --dry-run` 预览迁移。
+
+`observations.jsonl`、project instincts 和 global instincts 是观察、候选和迁移来源；经 `/learn-eval` 质量门确认后，最终学习产物以 `skills/learn/<category>/` 为权威路径。只有高频、稳定、可组合的模式才通过 `/evolve` 升级为正式 `skills/`、`commands/` 或 `agents/`。
 
 ### 置信度系统
 
@@ -341,7 +344,7 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 7. 关键路径使用 /e2e 委派 e2e-runner 维护 Playwright
 8. 使用 /verify 验证
 9. 使用 /code-review 委派 code-reviewer 审查
-10. 使用 /learn-eval 积累模式
+10. 使用 /learn-eval 将稳定模式沉淀到 skills/learn/<category>/
 11. 使用 /projects 查看项目级学习来源
 12. 使用 /promote --dry-run 评估是否推广为全局直觉
 13. 使用 /evolve 评估是否演化
