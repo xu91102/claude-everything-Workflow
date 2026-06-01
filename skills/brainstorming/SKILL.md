@@ -10,46 +10,20 @@ Help turn ideas into fully formed designs and specs through natural collaborativ
 Start by deciding whether the request needs the full brainstorming flow. If it does, understand the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
 
 <HARD-GATE>
-Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
+When this skill triggers, do not implement or invoke writing-plans until the saved spec has been reviewed and approved.
 </HARD-GATE>
 
 ## Trigger Policy
 
-Use the full brainstorming flow when any of these apply:
+Use the full flow for explicit Brainstorming/design-spec/Spec-Gate requests, or when work is ambiguous, high-risk, cross-file, architecture/API/data/security/integration/UI-workflow changing, or has multiple reasonable designs.
 
-- The user explicitly mentions Brainstorming, design spec, spec, Spec Gate, or asks to design before implementation
-- The work touches >1 repository top-level directory or involves multiple independent subsystems
-- The work modifies public APIs, shared CLI/agent contracts, or cross-module interfaces
-- The work impacts data persistence, schema, authentication/authorization, security, integrations, or release/migration behavior
-- The work changes UI/UX workflows, product behavior, verification strategy, or automation boundaries
-- The work spans files/modules where responsibilities, boundaries, or test strategy are not obvious
-- A wrong assumption could cause meaningful rework, regressions, or user-visible churn
+Skip the full flow for clear low-risk edits: button/copy/typo/formatting tweaks, mechanical replacements, small docs/config updates, obvious single-file changes, read-only inspection, command output, or explanations.
 
-Use a minimal design summary flow only if all of these are true:
-
-- single-file change
-- no API, data, UX, architecture, security, or integration impact
-- user provided exact diff, replacement text, or a fully specified implementation request
-- no tests, CI, release process, or migration work is required
-
-If the request looks simple but hides uncertainty, ask one targeted clarification before deciding. If the uncertainty affects architecture, data, integration, test scope, or release behavior, trigger brainstorming.
-
-If the user explicitly asks for code or implementation immediately, respond that you will first produce the design per the HARD-GATE and offer an expedited mini-design limited to 4 bullets if the user accepts.
-
-If repository files, docs, commits, or git history are inaccessible, respond:
-"I cannot access the repository. Provide a zip of relevant files or a short description of project structure. Proceed with limited context? (yes/no)"
+If a simple request hides uncertainty affecting architecture, data, integration, test scope, or release behavior, ask one targeted clarification before deciding.
 
 ## Repository Spec Profile
 
-For this repository, specs should default to infrastructure and workflow design documents, not product narrative specs.
-
-Bias every spec toward:
-
-- Repository workflow behavior and Superpowers gate interactions
-- Skill, command, hook, rule, agent, CLI, prompt, and artifact contracts
-- Failure modes, migration, rollback, verification commands, fixtures, dry-runs, and failure-path tests
-
-Avoid product-style narrative specs unless the user explicitly asks for product design. When the request sounds product-oriented, frame the spec around the workflow, adapter, automation, prompt, fixture, or infrastructure behavior this repository needs to support.
+For this repository, specs default to infrastructure/workflow design: Superpowers gates, skill/command/hook/rule/agent/tool contracts, failure modes, migration, rollback, fixtures, dry-runs, and verification. Avoid product narrative specs unless explicitly requested.
 
 ## Checklist
 
@@ -64,16 +38,6 @@ When this skill applies, you MUST create a task for each of these items and comp
 7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
 8. **User reviews written spec** — ask user to review the spec file before proceeding
 9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
-
-- If approval is partial, record per-section approval state and iterate only on sections marked 'revise'; do not proceed to write the spec file until all sections are approved or the user explicitly asks to finalize with known exceptions.
-- If writing-plans is unavailable, produce an equivalent JSON task list following the writing-plans schema and ask the user how they would like it delivered.
-
-### Priority
-
-1. HARD-GATE: no implementation until design approval.
-2. Checklist order: follow the steps in sequence.
-3. Visual Companion offer: send as a standalone message.
-4. If a rule conflicts with a higher-priority item, state the deviation and ask the user before proceeding.
 
 ## Process Flow
 
@@ -130,7 +94,7 @@ digraph brainstorming {
 **Presenting the design:**
 
 - Once you believe you understand what you're building, present the design
-- Scale each section to its complexity: for changes affecting <=3 files or <=200 LOC, target 2-5 sentences; for changes affecting >3 files or >200 LOC or involving architectural decisions, target 150-300 words per complex section
+- Scale each section to its complexity: a few sentences if straightforward, up to 200-300 words if nuanced
 - Ask after each section whether it looks right so far
 - Cover: architecture, components, data flow, error handling, testing
 - Be ready to go back and clarify if something doesn't make sense
@@ -154,7 +118,6 @@ digraph brainstorming {
 
 - Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
   - (User preferences for spec location override this default)
-- If writing the spec to the default path fails due to permission, branch protection, or conflict, notify the user and ask for an alternate path or permission to create a draft at `tmp/<filename>`.
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Do not commit silently or directly on protected branches; commit only when workflow/user intent allows it.
 
