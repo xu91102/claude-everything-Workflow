@@ -10,7 +10,7 @@ Help turn ideas into fully formed designs and specs through natural collaborativ
 Start by deciding whether the request needs the full brainstorming flow. If it does, understand the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
 
 <HARD-GATE>
-When this skill triggers, do not implement or invoke writing-plans until the saved spec has been reviewed and approved.
+Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
 </HARD-GATE>
 
 ## Trigger Policy
