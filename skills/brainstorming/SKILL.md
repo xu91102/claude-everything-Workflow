@@ -123,7 +123,7 @@ digraph brainstorming {
 
 **Required Spec Template:**
 
-Use these headings in order: `Background`, `Goals`, `Non-Goals`, `Requirements`, `Existing Context`, `Approaches Considered` with 2-3 options, `Recommended Approach`, `Architecture`, `Components and Files`, `Data Flow / Interfaces`, `Error Handling`, `Testing Strategy`, `Acceptance Criteria`, `Risks and Trade-offs`, `Open Questions`.
+Use the user's language for spec headings. For Chinese projects, use these headings in order: `背景`, `目标`, `非目标`, `需求`, `现有上下文`, `方案对比` with 2-3 options, `推荐方案`, `架构设计`, `组件与文件`, `数据流 / 接口`, `错误处理`, `测试策略`, `验收标准`, `风险与取舍`, `开放问题`.
 
 **Spec Quality Bar:**
 
