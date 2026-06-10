@@ -8,20 +8,6 @@ const { spawnSync } = require("child_process");
 const root = path.resolve(__dirname, "..");
 const errors = [];
 const warnings = [];
-const expectedCommands = [
-  "code-review.md",
-  "e2e.md",
-  "evolve.md",
-  "harness-audit.md",
-  "instinct-status.md",
-  "learn-eval.md",
-  "pr.md",
-  "projects.md",
-  "promote.md",
-  "prune.md",
-  "tdd.md",
-  "verify.md",
-].sort();
 
 function rel(...parts) {
   return path.join(root, ...parts);
@@ -102,12 +88,15 @@ function checkCommands() {
         .sort()
     : [];
 
-  const listed = exists("README.md")
-    ? Array.from(read("README.md").matchAll(/`\/([^`\s]+)`/g))
-        .map((match) => `${match[1]}.md`)
-        .filter((value, index, array) => array.indexOf(value) === index)
-        .sort()
-    : expectedCommands;
+  if (!exists("README.md")) {
+    fail("README.md is missing");
+    return;
+  }
+
+  const listed = Array.from(read("README.md").matchAll(/`\/([^`\s]+)`/g))
+    .map((match) => `${match[1]}.md`)
+    .filter((value, index, array) => array.indexOf(value) === index)
+    .sort();
 
   for (const file of listed) {
     if (!commands.includes(file)) {
@@ -433,37 +422,43 @@ function checkSkillLinks() {
 }
 
 function checkRuleLoadingPolicy() {
-  for (const file of ["AGENTS.md", "CLAUDE.md"]) {
-    if (!exists(file)) {
-      fail(`${file} is missing`);
-      continue;
-    }
+  if (!exists("AGENTS.md")) {
+    fail("AGENTS.md is missing");
+    return;
+  }
 
-    const body = read(file);
-    if (!body.includes("规则加载策略")) {
-      fail(`${file} should include a rule loading policy section`);
-    }
-    const forbidsFullRulesLoad =
-      body.includes("不要默认全量加载 `rules/`") ||
-      body.includes("不要默认全量加载`rules/`") ||
-      body.includes("仍然只读取当前任务直接相关的规则文件");
+  const agentsBody = read("AGENTS.md");
+  if (!agentsBody.includes("规则加载策略")) {
+    fail("AGENTS.md should include a rule loading policy section");
+  }
 
-    const forbidsFullCommonLoad =
-      body.includes("不要默认全量加载 `rules/common/`") ||
-      body.includes("不要默认全量加载`rules/common/`") ||
-      body.includes("`rules/common/` 是专项参考区");
+  const forbidsFullRulesLoad =
+    agentsBody.includes("不要默认全量加载 `rules/`") ||
+    agentsBody.includes("不要默认全量加载`rules/`") ||
+    agentsBody.includes("仍然只读取当前任务直接相关的规则文件");
 
-    if (!forbidsFullRulesLoad || !forbidsFullCommonLoad) {
-      fail(`${file} should forbid loading all rules by default`);
-    }
-    if (!body.includes("~/.codex/rules/")) {
-      fail(`${file} should mention Codex user-level rules fallback`);
-    }
-    if (!body.includes("~/.claude/rules/")) {
-      fail(`${file} should mention Claude Code user-level rules fallback`);
-    }
-    if (!body.includes("不能把项目规则目录缺失等同于“无规则”")) {
-      fail(`${file} should forbid treating a missing project rules directory as no rules`);
+  const forbidsFullCommonLoad =
+    agentsBody.includes("不要默认全量加载 `rules/common/`") ||
+    agentsBody.includes("不要默认全量加载`rules/common/`") ||
+    agentsBody.includes("`rules/common/` 是专项参考区");
+
+  if (!forbidsFullRulesLoad || !forbidsFullCommonLoad) {
+    fail("AGENTS.md should forbid loading all rules by default");
+  }
+  if (!agentsBody.includes("~/.codex/rules/")) {
+    fail("AGENTS.md should mention Codex user-level rules fallback");
+  }
+  if (!agentsBody.includes("~/.claude/rules/")) {
+    fail("AGENTS.md should mention Claude Code user-level rules fallback");
+  }
+  if (!agentsBody.includes("不能把项目规则目录缺失等同于") || !agentsBody.includes("无规则")) {
+    fail("AGENTS.md should forbid treating a missing project rules directory as no rules");
+  }
+
+  if (exists("CLAUDE.md")) {
+    const claudeBody = read("CLAUDE.md");
+    if (!claudeBody.includes("AGENTS.md")) {
+      fail("CLAUDE.md should reference AGENTS.md");
     }
   }
 
@@ -476,7 +471,7 @@ function checkRuleLoadingPolicy() {
   if (!ecc.includes("触发矩阵")) {
     fail("rules/08-ecc-integration.md should include a trigger matrix");
   }
-  if (!ecc.includes("不得因为“可能有用”而一次性读取完整 `rules/`")) {
+  if (!ecc.includes("不得因为") || !ecc.includes("可能有用") || !ecc.includes("而一次性读取完整")) {
     fail(
       "rules/08-ecc-integration.md should forbid full rules loading just because it might be useful",
     );

@@ -10,7 +10,7 @@ Help turn ideas into fully formed designs and specs through natural collaborativ
 Start by deciding whether the request needs the full brainstorming flow. If it does, understand the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
 
 <HARD-GATE>
-Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
+Spec Gate: Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
 </HARD-GATE>
 
 ## Trigger Policy
@@ -146,7 +146,7 @@ After the spec review loop passes, ask the user to review the written spec befor
 
 > "Spec written to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
 
-Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
+Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user has reviewed and approved the saved spec.
 
 **Implementation:**
 

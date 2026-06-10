@@ -16,31 +16,11 @@
 
     "PostToolUse": [
       {
-        "matcher": "Edit",
+        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
             "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" post:edit:console-log \"$HOME/.claude/hooks/check-console-log.js\" standard,strict",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" post:write:console-log \"$HOME/.claude/hooks/check-console-log.js\" standard,strict",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" post:multiedit:console-log \"$HOME/.claude/hooks/check-console-log.js\" standard,strict",
             "timeout": 5
           }
         ]

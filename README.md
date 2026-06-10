@@ -78,7 +78,6 @@ claude-everything-Workflow/
 │   ├── 06-comments.md          # 注释规范
 │   ├── 07-forbidden.md         # 禁止事项
 │   ├── 08-ecc-integration.md   # ECC 集成索引
-│   ├── agents.md               # 代理使用规则
 │   └── common/                 # 通用最佳实践
 │       ├── harness-engineering.md # Agent Harness 六层与执行循环
 │       ├── context-hygiene.md   # 上下文卫生与 Subagent 边界
