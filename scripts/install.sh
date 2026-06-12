@@ -153,6 +153,19 @@ install_shared_dirs() {
     copy_dir references "$dest"
 }
 
+remove_package_only_paths() {
+    local dest="$1"
+
+    for file in \
+        "scripts/install.sh" \
+        "scripts/install.ps1"
+    do
+        if [ -f "$dest/$file" ]; then
+            run rm -f "$dest/$file"
+        fi
+    done
+}
+
 remove_obsolete_workflow_paths() {
     local dest="$1"
     local file
@@ -189,6 +202,7 @@ install_claude() {
     copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
     copy_claude_settings "$ROOT_DIR/settings.json" "$dest/settings.json"
     install_shared_dirs "$dest"
+    remove_package_only_paths "$dest"
 }
 
 install_codex() {
@@ -199,6 +213,7 @@ install_codex() {
     remove_obsolete_workflow_paths "$dest"
     copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
     install_shared_dirs "$dest"
+    remove_package_only_paths "$dest"
 }
 
 require_rsync

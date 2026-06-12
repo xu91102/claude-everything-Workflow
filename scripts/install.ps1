@@ -210,6 +210,24 @@ function Install-SharedDirs {
     }
 }
 
+function Remove-PackageOnlyPaths {
+    param([string]$Destination)
+
+    $packageOnlyFiles = @(
+        "scripts\install.sh",
+        "scripts\install.ps1"
+    )
+
+    foreach ($relative in $packageOnlyFiles) {
+        $target = Join-Path $Destination $relative
+        if (Test-Path -LiteralPath $target -PathType Leaf) {
+            Invoke-InstallCommand `
+                -Description "Remove-Item '$target'" `
+                -Action { Remove-Item -LiteralPath $target -Force }
+        }
+    }
+}
+
 function Remove-ObsoleteWorkflowPaths {
     param([string]$Destination)
 
@@ -260,6 +278,7 @@ function Install-ClaudeWorkflow {
     Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath
     Convert-ClaudeSettingsHookPaths -SettingsPath $settingsPath
     Install-SharedDirs -Destination $dest
+    Remove-PackageOnlyPaths -Destination $dest
 }
 
 function Install-CodexWorkflow {
@@ -273,6 +292,7 @@ function Install-CodexWorkflow {
     Remove-ObsoleteWorkflowPaths -Destination $dest
     Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
     Install-SharedDirs -Destination $dest
+    Remove-PackageOnlyPaths -Destination $dest
 }
 
 if ($InstallClaude) {

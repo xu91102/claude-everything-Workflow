@@ -164,11 +164,15 @@ function checkInstallRuntimePolicy() {
     "Copy-ClaudeSettings",
     "Install-CodexWorkflow",
     "Copy-ConfigFile -Source (Join-Path $RootDir \"AGENTS.md\")",
+    "Remove-PackageOnlyPaths",
+    "scripts\\install.ps1",
   ]);
   requireTokens("scripts/install.sh", [
     "copy_claude_settings",
     "install_codex()",
     "copy_file \"$ROOT_DIR/AGENTS.md\" \"$dest/AGENTS.md\"",
+    "remove_package_only_paths",
+    "scripts/install.sh",
   ]);
 
   const ps = read("scripts/install.ps1");
@@ -321,6 +325,36 @@ function checkRouterTargets() {
         fail(`${command} should mention ${target}`);
       }
     }
+  }
+}
+
+function checkNpmPackageSurface() {
+  requireTokens("package.json", [
+    '"name": "claude-everything-workflow"',
+    '"bin"',
+    '"claude-everything-workflow": "bin/claude-everything-workflow.js"',
+    '"cew": "bin/claude-everything-workflow.js"',
+    '"scripts/"',
+  ]);
+
+  requireTokens("bin/claude-everything-workflow.js", [
+    "cew install",
+    "cew verify",
+  ]);
+
+  const cliHelp = spawnSync(
+    process.execPath,
+    ["bin/claude-everything-workflow.js", "--help"],
+    {
+      cwd: root,
+      encoding: "utf8",
+      timeout: 10000,
+    },
+  );
+  if (cliHelp.status !== 0 || !cliHelp.stdout.includes("cew install")) {
+    fail(
+      `npm CLI help failed:\n${cliHelp.stdout}${cliHelp.stderr}`,
+    );
   }
 }
 
@@ -811,6 +845,7 @@ function main() {
   checkHookConfigReferences();
   checkLearningPathPolicy();
   checkRouterTargets();
+  checkNpmPackageSurface();
   checkSkillLinks();
   checkRuleLoadingPolicy();
   checkSuperpowersDevLoop();

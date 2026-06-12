@@ -39,6 +39,24 @@ bash scripts/install.sh --dry-run
 powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 ```
 
+## npm / npx 安装
+
+发布到 npm 后，可以不 clone 仓库，直接运行：
+
+```bash
+npx claude-everything-workflow install
+npx claude-everything-workflow install --claude-only
+npx claude-everything-workflow install --codex-only
+npx claude-everything-workflow verify
+```
+
+本地发布前检查：
+
+```bash
+npm pack --dry-run
+npm publish --dry-run
+```
+
 安装目标：
 
 - Claude Code: `~/.claude/`
