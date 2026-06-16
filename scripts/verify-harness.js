@@ -643,6 +643,7 @@ function checkScriptLayout() {
     "hooks/session-start.js",
     "hooks/session-end.js",
     "hooks/commit-quality.js",
+    "hooks/check-code-size.js",
     "scripts/learning/review-confidence.js",
     "scripts/learning/project-utils.js",
     "scripts/learning/projects.js",
