@@ -1,0 +1,23 @@
+{
+  "hooks": {
+    "preCompact": [
+      {
+        "id": "preserve-critical-rules",
+        "name": "保留硬性规则",
+        "command": "node",
+        "args": [".claude/hooks/preserve-rules.js"]
+      }
+    ],
+    "stop": [
+      {
+        "id": "final-size-check",
+        "name": "最终文件规模检查",
+        "command": "bash",
+        "args": [
+          "-c",
+          "find . -type f \\( -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.jsx' -o -name '*.vue' -o -name '*.py' -o -name '*.java' \\) -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/dist/*' -not -path '*/build/*' | xargs wc -l 2>/dev/null | awk '$1 > 600 && $2 != \"total\" {print \"⚠️  \" $2 \" 有 \" $1 \" 行，超过 600 行限制！\"}'"
+        ]
+      }
+    ]
+  }
+}
