@@ -39,16 +39,13 @@ async function main() {
     const content = fs.readFileSync(transcriptPath, 'utf8')
     const messageCount = (content.match(/"type":"user"/g) || []).length
 
-    // 跳过短会话
+    // 当前为占位实现：只统计消息数，不做自动提取。
+    // 遵循 rules/common/hooks.md「stdout 默认静默、stderr 只给必要提示」：
+    // 不在每次会话结束喷提示行污染 transcript。
+    // 短会话直接跳过；长会话保持静默，交给 /learn-eval 手动提取。
     if (messageCount < minSessionLength) {
-        console.error(`[ContinuousLearning] 会话过短 (${messageCount} 消息)，跳过`)
         process.exit(0)
     }
-
-    // 提示开始评估
-    console.error(`[ContinuousLearning] 会话有 ${messageCount} 消息 - 评估可提取模式`)
-    console.error(`[ContinuousLearning] 保存技能到分类目录: ${path.join(learnedSkillsPath, '<category>')}`)
-    console.error('[ContinuousLearning] 提示: 使用 /learn 手动提取有价值的模式')
 
     process.exit(0)
 }
