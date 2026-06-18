@@ -178,7 +178,12 @@ remove_obsolete_workflow_paths() {
         "scripts/hooks/session-end.js" \
         "scripts/lib/hook-flags.js" \
         "scripts/lib/utils.js" \
-        "hooks/review-confidence.js"
+        "hooks/review-confidence.js" \
+        "hooks/session-start.js" \
+        "hooks/session-end.js" \
+        "hooks/evaluate-session.js" \
+        "hooks/pre-compact.js" \
+        "hooks/runtime/session-utils.js"
     do
         if [ -f "$dest/$file" ]; then
             run rm -f "$dest/$file"

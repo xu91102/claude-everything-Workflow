@@ -630,6 +630,11 @@ function checkScriptLayout() {
     "scripts/lib/utils.js",
     "scripts/learning/utils.js",
     "hooks/review-confidence.js",
+    "hooks/session-start.js",
+    "hooks/session-end.js",
+    "hooks/evaluate-session.js",
+    "hooks/pre-compact.js",
+    "hooks/runtime/session-utils.js",
   ]) {
     if (exists(legacyPath)) {
       fail(`${legacyPath} should not exist after script layout cleanup`);
@@ -639,10 +644,8 @@ function checkScriptLayout() {
   for (const requiredPath of [
     "hooks/runtime/run-with-flags.js",
     "hooks/runtime/hook-flags.js",
-    "hooks/runtime/session-utils.js",
-    "hooks/session-start.js",
-    "hooks/session-end.js",
     "hooks/commit-quality.js",
+    "hooks/check-console-log.js",
     "hooks/check-code-size.js",
     "scripts/learning/review-confidence.js",
     "scripts/learning/project-utils.js",
@@ -657,8 +660,9 @@ function checkScriptLayout() {
 
   requireTokens("settings.json", [
     "hooks/runtime/run-with-flags.js",
-    "hooks/session-start.js",
-    "hooks/session-end.js",
+    "hooks/check-console-log.js",
+    "hooks/check-code-size.js",
+    "skills/continuous-learning-v2/hooks/observe-v2.js",
   ]);
 
   requireTokens("scripts/install.ps1", [
@@ -686,6 +690,11 @@ function checkScriptLayout() {
       "scripts/hooks/run-with-flags.js",
       "scripts/lib/hook-flags.js",
       "hooks/review-confidence.js",
+      "hooks/session-start.js",
+      "hooks/session-end.js",
+      "hooks/evaluate-session.js",
+      "hooks/pre-compact.js",
+      "hooks/runtime/session-utils.js",
     ]) {
       if (body.includes(forbidden)) {
         fail(`${file} references legacy path ${forbidden}`);

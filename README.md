@@ -164,14 +164,10 @@ claude-everything-Workflow/
 ├── hooks/                      # 钩子脚本
 │   ├── runtime/                # Hook 运行时与 Profile 控制
 │   │   ├── run-with-flags.js
-│   │   ├── hook-flags.js
-│   │   └── session-utils.js
-│   ├── session-start.js        # 会话启动上下文
-│   ├── session-end.js          # 会话结束持久化
+│   │   └── hook-flags.js
 │   ├── commit-quality.js       # 可选 Pre-commit 质量门
 │   ├── check-console-log.js    # console.log 检测
-│   ├── evaluate-session.js     # 会话评估
-│   └── pre-compact.js          # 压缩前保存上下文
+│   └── check-code-size.js      # 代码规模检测
 │
 └── homunculus/                 # 自主学习系统
     └── instincts/
@@ -278,7 +274,7 @@ export ECC_HOOK_PROFILE=standard
 export ECC_DISABLED_HOOKS="post:edit:console-log"
 ```
 
-当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录统一保存 Hook 运行时和脚本实现。`scripts/learning/` 只保存手动学习治理脚本，不作为 Hook 自动触发。
+当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录统一保存低噪音 Hook 运行时和脚本实现。默认不启用会话启动、会话结束、停止或压缩前的弱摘要 Hook，避免污染上下文。`scripts/learning/` 只保存手动学习治理脚本，不作为 Hook 自动触发。
 Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks；如未来需要 Codex 原生自动化，应新增明确 adapter。
 
 ## Superpowers 风格开发闭环
