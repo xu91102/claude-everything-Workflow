@@ -232,9 +232,29 @@ function checkHookConfigReferences() {
 
   collect(settings.hooks);
 
+  const LEGACY_HOOK_PATTERNS = [
+    "scripts/hooks/run-with-flags.js",
+    "scripts/hooks/commit-quality.js",
+    "scripts/hooks/session-start.js",
+    "scripts/hooks/session-end.js",
+    "scripts/lib/hook-flags.js",
+    "hooks/observe.js",
+    "hooks/review-confidence.js",
+    "hooks/session-start.js",
+    "hooks/session-end.js",
+    "hooks/evaluate-session.js",
+    "hooks/pre-compact.js",
+    "hooks/runtime/session-utils.js",
+  ];
+
   for (const command of commands) {
     if (command.includes("$HOME/.codex")) {
       fail("settings.json should not point hooks at ~/.codex");
+    }
+    for (const legacy of LEGACY_HOOK_PATTERNS) {
+      if (command.includes(legacy)) {
+        fail(`settings.json contains legacy hook path: ${legacy}`);
+      }
     }
     const matches = [...command.matchAll(/\$HOME\/\.claude\/([^" ]+)/g)];
     for (const match of matches) {
@@ -242,6 +262,15 @@ function checkHookConfigReferences() {
       if (!exists(referenced)) {
         fail(`settings.json references missing hook path: ${referenced}`);
       }
+    }
+  }
+
+  // 验证安装脚本包含旧版 Hook 清理逻辑
+  for (const installer of ["scripts/install.sh", "scripts/install.ps1"]) {
+    if (!exists(installer)) continue;
+    const body = read(installer);
+    if (!body.includes("LEGACY_HOOK_PATTERNS") && !body.includes("isLegacyHook")) {
+      fail(`${installer} should include legacy hook path cleanup logic`);
     }
   }
 }
@@ -662,6 +691,7 @@ function checkScriptLayout() {
     "hooks/runtime/run-with-flags.js",
     "hooks/check-console-log.js",
     "hooks/check-code-size.js",
+    "hooks/commit-quality.js",
     "skills/continuous-learning-v2/hooks/observe-v2.js",
   ]);
 
