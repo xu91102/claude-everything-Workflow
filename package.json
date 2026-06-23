@@ -1,6 +1,6 @@
 {
   "name": "claude-everything-workflow",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "Claude Code and Codex harness with rules, skills, agents, hooks, and verification gates.",
   "keywords": [
     "claude-code",
