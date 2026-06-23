@@ -86,7 +86,7 @@ copy_claude_settings() {
 
     backup_if_changed "$src" "$dest"
     if [ "$DRY_RUN" -eq 1 ]; then
-        echo "[dry-run] merge '$src' into '$dest' preserving existing env and mcpServers"
+        echo "[dry-run] merge '$src' into '$dest' preserving existing env and mcpServers, purging legacy hook paths"
         return
     fi
 
@@ -99,6 +99,49 @@ const existing = fs.existsSync(destinationPath)
     ? JSON.parse(fs.readFileSync(destinationPath, 'utf8'))
     : {}
 
+// 清理旧版 Hook 路径模式，避免合并后残留不存在的文件引用
+const LEGACY_HOOK_PATTERNS = [
+    'scripts/hooks/run-with-flags.js',
+    'scripts/hooks/commit-quality.js',
+    'scripts/hooks/session-start.js',
+    'scripts/hooks/session-end.js',
+    'scripts/lib/hook-flags.js',
+    'scripts/lib/utils.js',
+    'hooks/observe.js',
+    'hooks/review-confidence.js',
+    'hooks/session-start.js',
+    'hooks/session-end.js',
+    'hooks/evaluate-session.js',
+    'hooks/pre-compact.js',
+    'hooks/runtime/session-utils.js'
+]
+
+function isLegacyHook(hookDef) {
+    if (typeof hookDef !== 'object' || !hookDef.command) return false
+    return LEGACY_HOOK_PATTERNS.some(p => hookDef.command.includes(p))
+}
+
+function filterHooks(hooksArray) {
+    if (!Array.isArray(hooksArray)) return hooksArray
+    return hooksArray.map(entry => {
+        if (!entry || !Array.isArray(entry.hooks)) return entry
+        const filtered = entry.hooks.filter(h => !isLegacyHook(h))
+        return { ...entry, hooks: filtered }
+    }).filter(entry => entry.hooks && entry.hooks.length > 0)
+}
+
+function cleanHooks(hooksObj) {
+    if (!hooksObj || typeof hooksObj !== 'object') return hooksObj
+    const cleaned = {}
+    for (const [eventType, entries] of Object.entries(hooksObj)) {
+        const filtered = filterHooks(entries)
+        if (filtered.length > 0) {
+            cleaned[eventType] = filtered
+        }
+    }
+    return cleaned
+}
+
 const merged = {
     ...existing,
     ...source,
@@ -109,7 +152,12 @@ const merged = {
     mcpServers: {
         ...(source.mcpServers || {}),
         ...(existing.mcpServers || {})
-    }
+    },
+    // hooks 以 source 为权威，清理 existing 中的旧版残留
+    hooks: cleanHooks({
+        ...(existing.hooks || {}),
+        ...(source.hooks || {})
+    })
 }
 
 fs.writeFileSync(destinationPath, JSON.stringify(merged, null, 2) + '\n')

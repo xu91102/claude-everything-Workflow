@@ -28,6 +28,18 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" pre:bash:commit-quality \"$HOME/.claude/hooks/commit-quality.js\" standard,strict",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   }
 }
