@@ -63,6 +63,13 @@ Do not include commit steps by default. Add `git add` or `git commit` steps only
 
 **Tech Stack:** [Key technologies/libraries]
 
+## Global Constraints
+
+[The spec's project-wide requirements — version floors, dependency limits,
+naming and copy rules, platform requirements, commit/PR boundaries, exact
+values — one line each, copied verbatim from the spec or user instruction.
+Every task's requirements implicitly include this section.]
+
 ---
 ```
 
@@ -75,6 +82,10 @@ Do not include commit steps by default. Add `git add` or `git commit` steps only
 - Create: `exact/path/to/file.py`
 - Modify: `exact/path/to/existing.py:123-145`
 - Test: `tests/exact/path/to/test.py`
+
+**Interfaces:**
+- Consumes: [what this task uses from earlier tasks — exact signatures, file paths, commands, or data contracts]
+- Produces: [what later tasks rely on — exact function names, parameter and return types, CLI flags, file formats, or documented behavior. A task implementer may see only this task, so neighboring contracts must be explicit.]
 
 - [ ] **Step 1: Write the failing test**
 
@@ -118,12 +129,15 @@ Every step must contain the actual content an engineer needs. These are **plan f
 - "Similar to Task N" (repeat the code — the engineer may be reading tasks out of order)
 - Steps that describe what to do without showing how (code blocks required for code steps)
 - References to types, functions, or methods not defined in any task
+- Missing `Global Constraints` or per-task `Interfaces` blocks
 
 ## Remember
 - Exact file paths always
 - Complete code in every step — if a step changes code, show the code
 - Exact commands with expected output
 - DRY, YAGNI, TDD, verification checkpoints
+- Copy binding cross-task constraints into `Global Constraints`; do not assume implementers or reviewers will remember the spec.
+- Every task needs an `Interfaces` block, even if it says `Consumes: none` or `Produces: none`.
 - Do not default to commits; leave changes uncommitted unless the user explicitly asks for commit, push, PR, or an approved workflow includes commit handling.
 
 ## Self-Review
@@ -136,6 +150,8 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 
 **3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
 
+**4. Contract propagation:** Did every task get the relevant `Global Constraints` and the exact `Interfaces` it consumes and produces? If a later task depends on a name, format, flag, or file from an earlier task, both tasks must say so consistently.
+
 If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
 
 ## Execution Handoff
@@ -144,11 +160,18 @@ After saving the plan, offer execution choice:
 
 **"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. If you want me to execute it, I will use `skills/executing-plans/SKILL.md`. Two execution options:**
 
-**1. Project-Agent Loop (recommended for substantial plans)** - Use this project's existing agents. Dispatch one fresh implementation subagent per task, then run two reviews before marking the task complete.
+**1. Subagent-Driven Development (when commit handling is approved)** - Use `skills/subagent-driven-development/SKILL.md` for independent tasks, task briefs, implementer report files, review packages, and the `.superpowers/sdd` progress ledger.
 
-**2. Inline Execution (lightweight)** - Execute tasks in this session, task-by-task, with checkpoints. Use this for small, clear, tightly coupled work.
+**2. Project-Agent Loop (no commits by default)** - Use this project's existing agents. Dispatch one fresh implementation subagent per task, then run two reviews before marking the task complete.
+
+**3. Inline Execution (lightweight)** - Execute tasks in this session, task-by-task, with checkpoints. Use this for small, clear, tightly coupled work.
 
 **Which approach?"**
+
+**If Subagent-Driven Development chosen:**
+- Confirm the user has approved commit handling, PR handling, or SDD-style execution. If not, use Project-Agent Loop or Inline Execution instead.
+- Use `skills/subagent-driven-development/SKILL.md`.
+- The SDD progress ledger and scratch artifacts live under `.superpowers/sdd/` and must stay out of commits.
 
 **If Project-Agent Loop chosen:**
 - Read the full plan once and extract each task with its files, tests, commands, and acceptance criteria.

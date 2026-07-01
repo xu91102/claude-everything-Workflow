@@ -158,6 +158,13 @@ claude-everything-Workflow/
 │       └── review-confidence.js # 置信度审查报告
 │
 ├── skills/
+│   ├── using-superpowers/      # Skill 路由、优先级与门禁纪律
+│   │   └── SKILL.md
+│   ├── subagent-driven-development/ # SDD：task brief、review package、progress ledger
+│   │   ├── SKILL.md
+│   │   ├── implementer-prompt.md
+│   │   ├── task-reviewer-prompt.md
+│   │   └── scripts/
 │   ├── using-git-worktrees/    # 隔离式 worktree 执行准备
 │   │   └── SKILL.md
 │   ├── executing-plans/        # 按计划执行、检查点、审查与验证
@@ -275,6 +282,9 @@ claude-everything-Workflow/
 ```bash
 node scripts/verify-harness.js
 bash scripts/install.sh --dry-run
+```
+
+```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 ```
 
@@ -301,12 +311,13 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 ```text
 复杂任务
+  -> using-superpowers 先路由到相关 process skill
   -> brainstorming 澄清需求
   -> 写 design spec
   -> 用户审核 spec
   -> using-git-worktrees 按需创建隔离工作区
   -> writing-plans 写实施计划
-  -> executing-plans 按计划执行
+  -> subagent-driven-development 或 executing-plans 按计划执行
   -> TDD 红绿重构
   -> 需求符合性审查
   -> 代码质量审查
@@ -318,13 +329,23 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 硬门禁：
 
+- 开始非平凡任务前，先用 `using-superpowers` 判断并加载相关 process skill。
 - 没有 spec，不进入 plan。
 - 没有用户审核，不进入实现。
+- 计划必须包含 `Global Constraints` 和每任务 `Interfaces`，让 implementer/reviewer 不依赖父会话记忆。
 - 没有 failing test，不写行为代码。
 - 没有 review，不标记任务完成。
 - 没有新鲜验证证据，不声明完成、通过、已修复或 ready。
 - 没有 verify，不进入 PR。
 - 有脏工作区、并行任务或高风险改动时，先考虑 `using-git-worktrees`。
+- 只有用户明确批准 commit/PR/SDD 执行时，才使用 `subagent-driven-development` 的 per-task commit 流；否则用 `executing-plans` 或 inline execution。
+
+### 对齐 Superpowers v6.0.3 的能力
+
+- `subagent-driven-development` 使用 `.superpowers/sdd/` 保存 task brief、implementer report、review package 和 `progress.md`，避免把 scratch 写进 `.git/`。
+- 每个任务使用一个 `task-reviewer-prompt.md` 同时返回 spec compliance 和 code quality verdict，减少重复 reviewer 上下文。
+- `writing-plans` 强制 `Global Constraints` 和每任务 `Interfaces`，把跨任务约束、输入输出契约传给 implementer 和 reviewer。
+- Brainstorming visual companion 使用带 `?key=` 的 per-session URL，HTTP/WebSocket 请求都需要 session key；默认 idle timeout 为 4 小时，可用 `--idle-timeout-minutes` 调整。
 
 复杂任务包括新功能、架构调整、多文件行为变化、高风险实现，以及需求存在多种合理解释的工作。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
 
