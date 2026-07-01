@@ -50,6 +50,8 @@ function managedFiles() {
     "skills/continuous-learning-v2",
     "skills/test-driven-development",
     "skills/e2e-testing",
+    "skills/using-superpowers",
+    "skills/subagent-driven-development",
     "skills/brainstorming",
     "skills/using-git-worktrees",
     "skills/executing-plans",
@@ -416,6 +418,43 @@ function checkNpmPackageSurface() {
 }
 
 function checkSkillLinks() {
+  requireTokens("skills/using-superpowers/SKILL.md", [
+    "Skill Invocation Rule",
+    "Task arrives",
+    "approved plan + SDD/commit approved?",
+    "external skill learning or edit?",
+    "process skills before implementation skills",
+    "skills/brainstorming/SKILL.md",
+    "skills/systematic-debugging/SKILL.md",
+    "skills/verification-before-completion/SKILL.md",
+    "User instructions",
+  ]);
+
+  requireTokens("skills/subagent-driven-development/SKILL.md", [
+    ".superpowers/sdd/progress.md",
+    "scripts/task-brief",
+    "scripts/review-package BASE HEAD",
+    "task-reviewer-prompt.md",
+    "Local Git Boundary",
+    "skills/executing-plans/SKILL.md",
+  ]);
+
+  requireTokens("skills/subagent-driven-development/task-reviewer-prompt.md", [
+    "Spec Compliance",
+    "Task quality",
+    "Cannot verify from diff",
+    "[BRIEF_FILE]",
+    "[DIFF_FILE]",
+  ]);
+
+  for (const script of [
+    "skills/subagent-driven-development/scripts/sdd-workspace",
+    "skills/subagent-driven-development/scripts/task-brief",
+    "skills/subagent-driven-development/scripts/review-package",
+  ]) {
+    if (!exists(script)) fail(`${script} is missing`);
+  }
+
   const expected = [
     ["agents/e2e-runner.md", "skills/e2e-testing/SKILL.md"],
     ["agents/tdd-guide.md", "skills/test-driven-development/SKILL.md"],
@@ -452,6 +491,9 @@ function checkSkillLinks() {
       "agents/code-reviewer.md",
       "skills/systematic-debugging/SKILL.md",
       "skills/verification-before-completion/SKILL.md",
+      "skills/subagent-driven-development/SKILL.md",
+      "## Global Constraints",
+      "**Interfaces:**",
       "Completion Loop",
       "`/verify`",
       "`/pr`",
@@ -586,6 +628,13 @@ function requireTokens(file, tokens) {
 function checkSuperpowersDevLoop() {
   requireTokens("README.md", [
     "Superpowers 风格开发闭环",
+    "using-superpowers",
+    "subagent-driven-development",
+    ".superpowers/sdd",
+    "Global Constraints",
+    "Interfaces",
+    "?key=",
+    "4 小时",
     "using-git-worktrees",
     "executing-plans",
     "verification-before-completion",
@@ -608,6 +657,12 @@ function checkSuperpowersDevLoop() {
     "PR Gate",
   ]);
 
+  requireTokens("rules/common/skills-learning.md", [
+    "skills/using-superpowers/SKILL.md",
+    "process skill 优先于 implementation skill",
+    "不凭记忆执行 skill",
+  ]);
+
   requireTokens("skills/brainstorming/SKILL.md", [
     "Spec Gate",
     "reviewed and approved the saved spec",
@@ -617,6 +672,9 @@ function checkSuperpowersDevLoop() {
     "## Preconditions",
     "approved spec",
     "Plan Gate",
+    "## Global Constraints",
+    "**Interfaces:**",
+    "skills/subagent-driven-development/SKILL.md",
   ]);
 
   requireTokens("skills/test-driven-development/SKILL.md", [
@@ -641,6 +699,30 @@ function checkSuperpowersDevLoop() {
   requireTokens("skills/brainstorming/SKILL.md", [
     "docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md",
     "Write design doc",
+  ]);
+
+  requireTokens("skills/brainstorming/visual-companion.md", [
+    "session key",
+    "?key=",
+    "4 hours idle",
+    "--idle-timeout-minutes",
+    "same port",
+  ]);
+
+  requireTokens("skills/brainstorming/scripts/server.cjs", [
+    "BRAINSTORM_TOKEN",
+    "BRAINSTORM_TOKEN_FILE",
+    "timingSafeEqualStr",
+    "Cache-Control",
+    "X-Frame-Options",
+    "Default 4 hours",
+  ]);
+
+  requireTokens("skills/brainstorming/scripts/start-server.sh", [
+    "--idle-timeout-minutes",
+    "BRAINSTORM_TOKEN_FILE",
+    "umask 077",
+    ".last-token",
   ]);
 }
 
