@@ -57,6 +57,20 @@ npm pack --dry-run
 npm publish --dry-run
 ```
 
+## npm 自动发布
+
+合并到 `main` 后，GitHub Actions 会运行 `.github/workflows/npm-publish.yml`：
+
+1. 运行 `npm run verify` 和 `npm run pack:dry-run`。
+2. 默认执行 `npm version patch --no-git-tag-version`。
+3. 提交 `package.json` 版本号变更并打 `v<version>` tag。
+4. 把版本提交和 tag 推回 `main`。
+5. 通过 npm 受信任的发布商 OIDC 认证执行 `npm publish`。
+
+也可以在 Actions 页面手动触发 `Publish npm`，选择 `patch`、`minor` 或 `major`。
+
+npm 包设置里必须添加 GitHub Actions 受信任的发布商，仓库为 `xu91102/claude-everything-Workflow`，workflow 文件名为 `npm-publish.yml`，并允许 `npm publish`。
+
 安装目标：
 
 - Claude Code: `~/.claude/`
@@ -86,6 +100,10 @@ claude-everything-Workflow/
 ├── AGENTS.md                   # Codex 与通用权威规则入口
 ├── CLAUDE.md                   # Claude Code 最小 bootstrap 入口
 ├── settings.json               # Claude Code Hooks 配置入口
+├── .github/
+│   └── workflows/
+│       ├── ci.yml               # PR / main 校验
+│       └── npm-publish.yml      # main 合并后自动 bump version 并发布 npm
 │
 ├── rules/                      # 规则索引与按需加载规则
 │   ├── 01-base.md              # 基础设定

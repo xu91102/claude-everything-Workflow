@@ -275,6 +275,31 @@ function checkHookConfigReferences() {
   }
 }
 
+function checkGitHubWorkflows() {
+  requireTokens(".github/workflows/ci.yml", [
+    "pull_request",
+    "npm run verify",
+    "npm run pack:dry-run",
+  ]);
+
+  requireTokens(".github/workflows/npm-publish.yml", [
+    "workflow_dispatch",
+    "id-token: write",
+    "node-version: 22.14.0",
+    "package-manager-cache: false",
+    "npm version \"$BUMP_TYPE\" --no-git-tag-version",
+    "npm publish",
+    "git push --follow-tags origin HEAD:main",
+    "[skip npm]",
+  ]);
+
+  requireTokens("README.md", [
+    "npm 自动发布",
+    "受信任的发布商",
+    "npm version patch --no-git-tag-version",
+  ]);
+}
+
 function checkLearningPathPolicy() {
   for (const dir of [
     "skills/learn",
@@ -883,6 +908,7 @@ function main() {
   checkReadmeTreePaths();
   checkInstallRuntimePolicy();
   checkHookConfigReferences();
+  checkGitHubWorkflows();
   checkLearningPathPolicy();
   checkRouterTargets();
   checkNpmPackageSurface();
