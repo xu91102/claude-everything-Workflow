@@ -62,10 +62,10 @@ npm publish --dry-run
 合并到 `main` 后，GitHub Actions 会运行 `.github/workflows/npm-publish.yml`：
 
 1. 运行 `npm run verify` 和 `npm run pack:dry-run`。
-2. 默认执行 `npm version patch --no-git-tag-version`。
+2. 读取 npm registry 的当前 `latest` 版本，默认在此基础上计算下一个 patch 版本。
 3. 提交 `package.json` 版本号变更并打 `v<version>` tag。
-4. 把版本提交和 tag 推回 `main`。
-5. 通过 npm 受信任的发布商 OIDC 认证执行 `npm publish`。
+4. 通过 npm 受信任的发布商 OIDC 认证执行 `npm publish`。
+5. 发布成功后把版本提交和 tag 推回 `main`。
 
 也可以在 Actions 页面手动触发 `Publish npm`，选择 `patch`、`minor` 或 `major`。
 
