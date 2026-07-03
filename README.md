@@ -158,6 +158,7 @@ claude-everything-Workflow/
 │       └── review-confidence.js # 置信度审查报告
 │
 ├── skills/
+│   ├── README.md               # Skill 分类索引；物理目录保持平铺以兼容发现
 │   ├── using-superpowers/      # Skill 路由、优先级与门禁纪律
 │   │   └── SKILL.md
 │   ├── subagent-driven-development/ # SDD：task brief、review package、progress ledger
@@ -174,6 +175,10 @@ claude-everything-Workflow/
 │   ├── documentation-lookup/   # Context7：库/API 实时文档（resolve → query）
 │   │   └── SKILL.md
 │   ├── e2e-testing/            # Playwright E2E 模式（POM、CI、制品）
+│   │   └── SKILL.md
+│   ├── context-budget/          # 上下文与 MCP 常驻开销审计
+│   │   └── SKILL.md
+│   ├── iterative-retrieval/     # Subagent 迭代检索与上下文收敛
 │   │   └── SKILL.md
 │   ├── continuous-learning-v2/ # 自主学习系统
 │   │   ├── SKILL.md            # 技能说明
@@ -199,6 +204,8 @@ claude-everything-Workflow/
         └── personal/           # 个人直觉
 ```
 
+正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构，避免破坏 Claude Code、Codex 和安装脚本的发现方式；分类维护在 `skills/README.md`。只有学习产物使用物理分类目录 `skills/learn/<category>/`。
+
 ## 规则加载策略
 
 - 默认入口只加载 `AGENTS.md` 或 `CLAUDE.md` 中的硬规则和最小索引。
@@ -209,9 +216,11 @@ claude-everything-Workflow/
 - 回退只改变查找位置，不改变按需读取原则；仍然只读取当前任务直接相关的规则文件，不要默认全量加载 `rules/` 或 `rules/common/`。
 - `rules/common/` 是专项参考区，只在命令、agent、skill 或当前任务明确触发时读取。
 
-## 与主仓对齐：Context7 MCP、`~/.claude` 用户级配置与省 Token
+## 与主仓对齐：按需 MCP、Context7 与省 Token
 
 本目录已含 **`skills/documentation-lookup/`**，行为与 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) 主仓一致：通过 Context7 的 **`resolve-library-id` → `query-docs`** 查第三方库最新文档。技能不负责启动 MCP，需在 **Claude Code** 或 **Cursor** 中启用。
+
+本仓继续吸收 ECC 最新的 Context Budget 原则：默认 MCP 必须同时满足“通用”和“MCP 明显优于 CLI/API/原生能力”。GitHub、文档查询、Exa 搜索、Playwright E2E、memory 和 sequential-thinking 这类纯请求/响应或已有原生替代的能力，优先通过 skill、CLI/API 或 harness 原生能力按需触发，而不是默认常驻。需要审计本机上下文开销时，使用 `context-budget` skill。
 
 ### 1. Claude Code：用户级 `~/.claude/settings.json`
 
@@ -255,6 +264,7 @@ claude-everything-Workflow/
 ```
 
 - **跑 ECC 安装/同步且你已有同名自建 MCP**：可设置 `export ECC_DISABLED_MCPS="github,context7,exa,playwright,sequential-thinking,memory"`，避免重复写入（见主仓 README）。
+- **新增 MCP 前先审计**：使用 `context-budget` 判断它是否应该默认启用、按需启用，还是改为 CLI/API skill。
 
 ### 3. Cursor
 
@@ -330,6 +340,8 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 硬门禁：
 
 - 开始非平凡任务前，先用 `using-superpowers` 判断并加载相关 process skill。
+- 上下文或工具面变重时，先用 `context-budget` 找出常驻 Token 开销，再决定新增或删除 MCP/skill/agent。
+- 子代理需要探索大仓库时，先用 `iterative-retrieval` 的 Dispatch/Evaluate/Refine/Loop 闭环收敛上下文，再回传证据。
 - 没有 spec，不进入 plan。
 - 没有用户审核，不进入实现。
 - 计划必须包含 `Global Constraints` 和每任务 `Interfaces`，让 implementer/reviewer 不依赖父会话记忆。
