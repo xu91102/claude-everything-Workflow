@@ -2,6 +2,8 @@
 
 ## Skills 工作流
 
+正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构，以兼容 Claude Code、Codex 和安装脚本的发现方式；分类维护在 `skills/README.md`，不要把正式 skill 物理嵌套到分类目录下。
+
 每个 skill 应包含：
 
 - **When to Use**：何时使用。

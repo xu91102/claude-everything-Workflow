@@ -48,8 +48,11 @@ function managedFiles() {
     "commands",
     "agents",
     "skills/continuous-learning-v2",
+    "skills/README.md",
     "skills/test-driven-development",
     "skills/e2e-testing",
+    "skills/context-budget",
+    "skills/iterative-retrieval",
     "skills/using-superpowers",
     "skills/subagent-driven-development",
     "skills/brainstorming",
@@ -348,6 +351,55 @@ function checkLearningPathPolicy() {
   ]);
 }
 
+function checkSkillCategoryIndex() {
+  requireTokens("skills/README.md", [
+    "正式 skill 保持 `skills/<skill-name>/SKILL.md` 平铺结构",
+    "Process / 门禁",
+    "Engineering / 开发实践",
+    "Harness / 上下文与编排",
+    "Meta / Skill 管理",
+    "Learn / 学习沉淀",
+  ]);
+
+  const indexed = new Set(
+    [...read("skills/README.md").matchAll(/^- `([^`]+)`：/gm)].map(
+      (match) => match[1],
+    ),
+  );
+  const skillsDir = rel("skills");
+  const actual = fs
+    .readdirSync(skillsDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .filter((name) => name !== "learn")
+    .filter((name) => exists(path.join("skills", name, "SKILL.md")))
+    .sort();
+
+  for (const name of actual) {
+    if (!indexed.has(name)) {
+      fail(`skills/README.md should categorize skill ${name}`);
+    }
+  }
+
+  for (const name of indexed) {
+    if (name === "learn") continue;
+    if (!exists(path.join("skills", name, "SKILL.md"))) {
+      fail(`skills/README.md lists missing skill ${name}`);
+    }
+  }
+
+  requireTokens("README.md", [
+    "Skill 分类索引",
+    "物理目录保持平铺以兼容发现",
+    "只有学习产物使用物理分类目录 `skills/learn/<category>/`",
+  ]);
+
+  requireTokens("rules/common/skills-learning.md", [
+    "正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构",
+    "分类维护在 `skills/README.md`",
+  ]);
+}
+
 function checkRouterTargets() {
   const expected = [
     ["commands/code-review.md", ["agents/code-reviewer.md"]],
@@ -552,6 +604,21 @@ function checkSkillLinks() {
     "skipped checks",
     "remaining risk",
   ]);
+
+  requireTokens("skills/context-budget/SKILL.md", [
+    "MCP 默认策略",
+    "通用",
+    "MCP 明显优于 CLI/API/原生能力",
+    "报告格式",
+  ]);
+
+  requireTokens("skills/iterative-retrieval/SKILL.md", [
+    "Dispatch",
+    "Evaluate",
+    "Refine",
+    "最多跑 3 轮",
+    "回传格式",
+  ]);
 }
 
 function checkRuleLoadingPolicy() {
@@ -636,6 +703,8 @@ function checkSuperpowersDevLoop() {
     "?key=",
     "4 小时",
     "using-git-worktrees",
+    "context-budget",
+    "iterative-retrieval",
     "executing-plans",
     "verification-before-completion",
     "没有 spec，不进入 plan",
@@ -995,6 +1064,7 @@ function main() {
   checkHookConfigReferences();
   checkGitHubWorkflows();
   checkLearningPathPolicy();
+  checkSkillCategoryIndex();
   checkRouterTargets();
   checkNpmPackageSurface();
   checkSkillLinks();
