@@ -42,3 +42,4 @@
 | `06-comments.md`        | 注释规范                                          |
 | `07-forbidden.md`       | 禁止事项清单                                      |
 | `08-ecc-integration.md` | ECC 集成索引，按需跳转到 `rules/common/` 专项规则 |
+| `09-first-principles-adversarial-testing.md` | 第一性原则与对抗性测试，复杂/高风险任务按需加载 |
