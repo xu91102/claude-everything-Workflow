@@ -1,49 +1,40 @@
 ---
 name: brainstorming
-description: "Use before substantial or ambiguous development work: new features, UI/UX, architecture, data flow, public APIs, cross-file behavior changes, high-risk implementation, or unclear requirements. Do not use for clearly specified, simple, low-risk tasks such as typo fixes, mechanical edits, straightforward docs/config updates, or obvious single-file changes."
+description: "Use for explicit Brainstorming/design-spec/Spec-Gate requests, or before complex, ambiguous, high-risk, cross-file, architectural, integration, UI/UX, public API, data-flow, or behavior-changing development work. Skip for clearly specified low-risk edits such as button color tweaks, typo fixes, mechanical replacements, straightforward docs/config updates, or obvious single-file changes."
 ---
 
 # Brainstorming Ideas Into Designs
 
 Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
 
-Start by deciding whether the request needs brainstorming. If it does, understand the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
+Start by deciding whether the request needs the full brainstorming flow. If it does, understand the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
 
 <HARD-GATE>
-When this skill applies, do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it.
-When this skill applies, writing the design doc/spec and passing the user review gate are mandatory; do NOT invoke writing-plans or output an implementation plan before the written spec exists and the user has approved it.
-For this repository, the written spec is the Spec Gate. Do not move to `writing-plans`, implementation, review, or PR work until the user has reviewed and approved the saved spec.
+Spec Gate: Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
 </HARD-GATE>
 
 ## Trigger Policy
 
-Use this skill for development work that needs intent discovery, design trade-offs, or risk control:
+Use the full flow for explicit Brainstorming/design-spec/Spec-Gate requests, or when work is ambiguous, high-risk, cross-file, architecture/API/data/security/integration/UI-workflow changing, or has multiple reasonable designs.
 
-- New features, new components, or meaningful user-facing behavior changes
-- UI/UX, architecture, data model, data flow, public API, security, migration, or integration changes
-- Multi-file changes where boundaries, responsibilities, or test strategy are not obvious
-- Requirements that are ambiguous, incomplete, or likely to have multiple valid designs
-- Work where a wrong assumption could cause rework, regressions, or irreversible changes
+Skip the full flow for clear low-risk edits: button/copy/typo/formatting tweaks, mechanical replacements, small docs/config updates, obvious single-file changes, read-only inspection, command output, or explanations.
 
-Do not use this skill for clearly specified, simple, low-risk work:
+If a simple request hides uncertainty affecting architecture, data, integration, test scope, or release behavior, ask one targeted clarification before deciding.
 
-- Typo fixes, formatting, translation, summarization, or straightforward documentation edits
-- Mechanical replacements or small config changes with an obvious implementation
-- Read-only inspection, command output requests, or explanations
-- Narrow single-file changes where the requested behavior and implementation path are both clear
+## Repository Spec Profile
 
-If the request looks simple but hides uncertainty, ask one targeted clarification before deciding. If a reasonable implementation is obvious and low risk, proceed without the full brainstorming process.
+For this repository, specs default to infrastructure/workflow design: Superpowers gates, skill/command/hook/rule/agent/tool contracts, failure modes, migration, rollback, fixtures, dry-runs, and verification. Avoid product narrative specs unless explicitly requested.
 
 ## Checklist
 
 When this skill applies, you MUST create a task for each of these items and complete them in order:
 
 1. **Explore project context** — check files, docs, recent commits
-2. **Offer visual companion** (if topic will involve visual questions) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
+2. **Offer visual companion** (if task explicitly involves mockups, layouts, wireframes, screenshots, diagrams, or side-by-side visual comparisons) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
 3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
+6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` using the required template below
 7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
 8. **User reviews written spec** — ask user to review the spec file before proceeding
 9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
@@ -88,8 +79,8 @@ digraph brainstorming {
 
 - Check out the current project state first (files, docs, recent commits)
 - Before asking detailed questions, assess scope: if the request describes multiple independent subsystems (e.g., "build a platform with chat, file storage, billing, and analytics"), flag this immediately. Don't spend questions refining details of a project that needs to be decomposed first.
-- If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. Each sub-project gets its own spec → plan → implementation cycle.
-- For appropriately-scoped projects, ask questions one at a time to refine the idea
+- If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. If estimated scope exceeds 8 major components OR >20 affected files OR >2 weeks estimated effort, automatically propose decomposition into sub-projects with a recommended order and a brief spec for the first sub-project.
+- For appropriately scoped projects, ask questions one at a time to refine the idea
 - Prefer multiple choice questions when possible, but open-ended is fine too
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
@@ -128,7 +119,17 @@ digraph brainstorming {
 - Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
   - (User preferences for spec location override this default)
 - Use elements-of-style:writing-clearly-and-concisely skill if available
-- Commit the design document to git
+- Do not commit silently or directly on protected branches; commit only when workflow/user intent allows it.
+
+**Required Spec Template:**
+
+Use the user's language for spec headings. For Chinese projects, use these headings in order: `背景`, `目标`, `非目标`, `需求`, `现有上下文`, `方案对比` with 2-3 options, `推荐方案`, `架构设计`, `组件与文件`, `数据流 / 接口`, `错误处理`, `测试策略`, `验收标准`, `风险与取舍`, `开放问题`.
+
+**Spec Quality Bar:**
+
+- Write an engineering design document, not a loose product memo.
+- Make it specific enough for `writing-plans`; do not include implementation checkboxes.
+- Include concrete files/interfaces, alternatives, tests, and acceptance criteria.
 
 **Spec Self-Review:**
 After writing the spec document, look at it with fresh eyes:
@@ -143,9 +144,9 @@ Fix any issues inline. No need to re-review — just fix and move on.
 **User Review Gate:**
 After the spec review loop passes, ask the user to review the written spec before proceeding:
 
-> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
+> "Spec written to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
 
-Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
+Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user has reviewed and approved the saved spec.
 
 **Implementation:**
 
@@ -166,9 +167,12 @@ Wait for the user's response. If they request changes, make them and re-run the 
 A browser-based companion for showing mockups, diagrams, and visual options during brainstorming. Available as a tool — not a mode. Accepting the companion means it's available for questions that benefit from visual treatment; it does NOT mean every question goes through the browser.
 
 **Offering the companion:** When you anticipate that upcoming questions will involve visual content (mockups, layouts, diagrams), offer it once for consent:
+
 > "Some of what we're working on might be easier to explain if I can show it to you in a web browser. I can put together mockups, diagrams, comparisons, and other visuals as we go. This feature is still new and can be token-intensive. Want to try it? (Requires opening a local URL)"
 
 **This offer MUST be its own message.** Do not combine it with clarifying questions, context summaries, or any other content. The message should contain ONLY the offer above and nothing else. Wait for the user's response before continuing. If they decline, proceed with text-only brainstorming.
+
+If the user does not respond within 48 hours or a configured timeout, proceed with text-only brainstorming and note that the Visual Companion was not accepted.
 
 **Per-question decision:** Even after the user accepts, decide FOR EACH QUESTION whether to use the browser or the terminal. The test: **would the user understand this better by seeing it than reading it?**
 

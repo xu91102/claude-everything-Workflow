@@ -8,20 +8,6 @@ const { spawnSync } = require("child_process");
 const root = path.resolve(__dirname, "..");
 const errors = [];
 const warnings = [];
-const expectedCommands = [
-  "code-review.md",
-  "e2e.md",
-  "evolve.md",
-  "harness-audit.md",
-  "instinct-status.md",
-  "learn-eval.md",
-  "pr.md",
-  "projects.md",
-  "promote.md",
-  "prune.md",
-  "tdd.md",
-  "verify.md",
-].sort();
 
 function rel(...parts) {
   return path.join(root, ...parts);
@@ -62,8 +48,13 @@ function managedFiles() {
     "commands",
     "agents",
     "skills/continuous-learning-v2",
+    "skills/README.md",
     "skills/test-driven-development",
     "skills/e2e-testing",
+    "skills/context-budget",
+    "skills/iterative-retrieval",
+    "skills/using-superpowers",
+    "skills/subagent-driven-development",
     "skills/brainstorming",
     "skills/using-git-worktrees",
     "skills/executing-plans",
@@ -102,12 +93,15 @@ function checkCommands() {
         .sort()
     : [];
 
-  const listed = exists("README.md")
-    ? Array.from(read("README.md").matchAll(/`\/([^`\s]+)`/g))
-        .map((match) => `${match[1]}.md`)
-        .filter((value, index, array) => array.indexOf(value) === index)
-        .sort()
-    : expectedCommands;
+  if (!exists("README.md")) {
+    fail("README.md is missing");
+    return;
+  }
+
+  const listed = Array.from(read("README.md").matchAll(/`\/([^`\s]+)`/g))
+    .map((match) => `${match[1]}.md`)
+    .filter((value, index, array) => array.indexOf(value) === index)
+    .sort();
 
   for (const file of listed) {
     if (!commands.includes(file)) {
@@ -175,11 +169,15 @@ function checkInstallRuntimePolicy() {
     "Copy-ClaudeSettings",
     "Install-CodexWorkflow",
     "Copy-ConfigFile -Source (Join-Path $RootDir \"AGENTS.md\")",
+    "Remove-PackageOnlyPaths",
+    "scripts\\install.ps1",
   ]);
   requireTokens("scripts/install.sh", [
     "copy_claude_settings",
     "install_codex()",
     "copy_file \"$ROOT_DIR/AGENTS.md\" \"$dest/AGENTS.md\"",
+    "remove_package_only_paths",
+    "scripts/install.sh",
   ]);
 
   const ps = read("scripts/install.ps1");
@@ -239,9 +237,29 @@ function checkHookConfigReferences() {
 
   collect(settings.hooks);
 
+  const LEGACY_HOOK_PATTERNS = [
+    "scripts/hooks/run-with-flags.js",
+    "scripts/hooks/commit-quality.js",
+    "scripts/hooks/session-start.js",
+    "scripts/hooks/session-end.js",
+    "scripts/lib/hook-flags.js",
+    "hooks/observe.js",
+    "hooks/review-confidence.js",
+    "hooks/session-start.js",
+    "hooks/session-end.js",
+    "hooks/evaluate-session.js",
+    "hooks/pre-compact.js",
+    "hooks/runtime/session-utils.js",
+  ];
+
   for (const command of commands) {
     if (command.includes("$HOME/.codex")) {
       fail("settings.json should not point hooks at ~/.codex");
+    }
+    for (const legacy of LEGACY_HOOK_PATTERNS) {
+      if (command.includes(legacy)) {
+        fail(`settings.json contains legacy hook path: ${legacy}`);
+      }
     }
     const matches = [...command.matchAll(/\$HOME\/\.claude\/([^" ]+)/g)];
     for (const match of matches) {
@@ -251,6 +269,43 @@ function checkHookConfigReferences() {
       }
     }
   }
+
+  // 验证安装脚本包含旧版 Hook 清理逻辑
+  for (const installer of ["scripts/install.sh", "scripts/install.ps1"]) {
+    if (!exists(installer)) continue;
+    const body = read(installer);
+    if (!body.includes("LEGACY_HOOK_PATTERNS") && !body.includes("isLegacyHook")) {
+      fail(`${installer} should include legacy hook path cleanup logic`);
+    }
+  }
+}
+
+function checkGitHubWorkflows() {
+  requireTokens(".github/workflows/ci.yml", [
+    "pull_request",
+    "npm run verify",
+    "npm run pack:dry-run",
+  ]);
+
+  requireTokens(".github/workflows/npm-publish.yml", [
+    "workflow_dispatch",
+    "id-token: write",
+    "node-version: 22.14.0",
+    "package-manager-cache: false",
+    "npm install -g npm@11.5.1",
+    "npm view \"$PACKAGE_NAME\" version --registry=https://registry.npmjs.org",
+    "BASE_VERSION=\"${REGISTRY_VERSION:-$LOCAL_VERSION}\"",
+    "npm version \"$VERSION\" --no-git-tag-version",
+    "npm publish",
+    "git push --follow-tags origin HEAD:main",
+    "[skip npm]",
+  ]);
+
+  requireTokens("README.md", [
+    "npm 自动发布",
+    "受信任的发布商",
+    "npm registry 的当前 `latest` 版本",
+  ]);
 }
 
 function checkLearningPathPolicy() {
@@ -296,6 +351,55 @@ function checkLearningPathPolicy() {
   ]);
 }
 
+function checkSkillCategoryIndex() {
+  requireTokens("skills/README.md", [
+    "正式 skill 保持 `skills/<skill-name>/SKILL.md` 平铺结构",
+    "Process / 门禁",
+    "Engineering / 开发实践",
+    "Harness / 上下文与编排",
+    "Meta / Skill 管理",
+    "Learn / 学习沉淀",
+  ]);
+
+  const indexed = new Set(
+    [...read("skills/README.md").matchAll(/^- `([^`]+)`：/gm)].map(
+      (match) => match[1],
+    ),
+  );
+  const skillsDir = rel("skills");
+  const actual = fs
+    .readdirSync(skillsDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .filter((name) => name !== "learn")
+    .filter((name) => exists(path.join("skills", name, "SKILL.md")))
+    .sort();
+
+  for (const name of actual) {
+    if (!indexed.has(name)) {
+      fail(`skills/README.md should categorize skill ${name}`);
+    }
+  }
+
+  for (const name of indexed) {
+    if (name === "learn") continue;
+    if (!exists(path.join("skills", name, "SKILL.md"))) {
+      fail(`skills/README.md lists missing skill ${name}`);
+    }
+  }
+
+  requireTokens("README.md", [
+    "Skill 分类索引",
+    "物理目录保持平铺以兼容发现",
+    "只有学习产物使用物理分类目录 `skills/learn/<category>/`",
+  ]);
+
+  requireTokens("rules/common/skills-learning.md", [
+    "正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构",
+    "分类维护在 `skills/README.md`",
+  ]);
+}
+
 function checkRouterTargets() {
   const expected = [
     ["commands/code-review.md", ["agents/code-reviewer.md"]],
@@ -335,7 +439,74 @@ function checkRouterTargets() {
   }
 }
 
+function checkNpmPackageSurface() {
+  requireTokens("package.json", [
+    '"name": "claude-everything-workflow"',
+    '"bin"',
+    '"claude-everything-workflow": "bin/claude-everything-workflow.js"',
+    '"cew": "bin/claude-everything-workflow.js"',
+    '"scripts/"',
+  ]);
+
+  requireTokens("bin/claude-everything-workflow.js", [
+    "cew install",
+    "cew verify",
+  ]);
+
+  const cliHelp = spawnSync(
+    process.execPath,
+    ["bin/claude-everything-workflow.js", "--help"],
+    {
+      cwd: root,
+      encoding: "utf8",
+      timeout: 10000,
+    },
+  );
+  if (cliHelp.status !== 0 || !cliHelp.stdout.includes("cew install")) {
+    fail(
+      `npm CLI help failed:\n${cliHelp.stdout}${cliHelp.stderr}`,
+    );
+  }
+}
+
 function checkSkillLinks() {
+  requireTokens("skills/using-superpowers/SKILL.md", [
+    "Skill Invocation Rule",
+    "Task arrives",
+    "approved plan + SDD/commit approved?",
+    "external skill learning or edit?",
+    "process skills before implementation skills",
+    "skills/brainstorming/SKILL.md",
+    "skills/systematic-debugging/SKILL.md",
+    "skills/verification-before-completion/SKILL.md",
+    "User instructions",
+  ]);
+
+  requireTokens("skills/subagent-driven-development/SKILL.md", [
+    ".superpowers/sdd/progress.md",
+    "scripts/task-brief",
+    "scripts/review-package BASE HEAD",
+    "task-reviewer-prompt.md",
+    "Local Git Boundary",
+    "skills/executing-plans/SKILL.md",
+  ]);
+
+  requireTokens("skills/subagent-driven-development/task-reviewer-prompt.md", [
+    "Spec Compliance",
+    "Task quality",
+    "Cannot verify from diff",
+    "[BRIEF_FILE]",
+    "[DIFF_FILE]",
+  ]);
+
+  for (const script of [
+    "skills/subagent-driven-development/scripts/sdd-workspace",
+    "skills/subagent-driven-development/scripts/task-brief",
+    "skills/subagent-driven-development/scripts/review-package",
+  ]) {
+    if (!exists(script)) fail(`${script} is missing`);
+  }
+
   const expected = [
     ["agents/e2e-runner.md", "skills/e2e-testing/SKILL.md"],
     ["agents/tdd-guide.md", "skills/test-driven-development/SKILL.md"],
@@ -372,6 +543,9 @@ function checkSkillLinks() {
       "agents/code-reviewer.md",
       "skills/systematic-debugging/SKILL.md",
       "skills/verification-before-completion/SKILL.md",
+      "skills/subagent-driven-development/SKILL.md",
+      "## Global Constraints",
+      "**Interfaces:**",
       "Completion Loop",
       "`/verify`",
       "`/pr`",
@@ -430,40 +604,61 @@ function checkSkillLinks() {
     "skipped checks",
     "remaining risk",
   ]);
+
+  requireTokens("skills/context-budget/SKILL.md", [
+    "MCP 默认策略",
+    "通用",
+    "MCP 明显优于 CLI/API/原生能力",
+    "报告格式",
+  ]);
+
+  requireTokens("skills/iterative-retrieval/SKILL.md", [
+    "Dispatch",
+    "Evaluate",
+    "Refine",
+    "最多跑 3 轮",
+    "回传格式",
+  ]);
 }
 
 function checkRuleLoadingPolicy() {
-  for (const file of ["AGENTS.md", "CLAUDE.md"]) {
-    if (!exists(file)) {
-      fail(`${file} is missing`);
-      continue;
-    }
+  if (!exists("AGENTS.md")) {
+    fail("AGENTS.md is missing");
+    return;
+  }
 
-    const body = read(file);
-    if (!body.includes("规则加载策略")) {
-      fail(`${file} should include a rule loading policy section`);
-    }
-    const forbidsFullRulesLoad =
-      body.includes("不要默认全量加载 `rules/`") ||
-      body.includes("不要默认全量加载`rules/`") ||
-      body.includes("仍然只读取当前任务直接相关的规则文件");
+  const agentsBody = read("AGENTS.md");
+  if (!agentsBody.includes("规则加载策略")) {
+    fail("AGENTS.md should include a rule loading policy section");
+  }
 
-    const forbidsFullCommonLoad =
-      body.includes("不要默认全量加载 `rules/common/`") ||
-      body.includes("不要默认全量加载`rules/common/`") ||
-      body.includes("`rules/common/` 是专项参考区");
+  const forbidsFullRulesLoad =
+    agentsBody.includes("不要默认全量加载 `rules/`") ||
+    agentsBody.includes("不要默认全量加载`rules/`") ||
+    agentsBody.includes("仍然只读取当前任务直接相关的规则文件");
 
-    if (!forbidsFullRulesLoad || !forbidsFullCommonLoad) {
-      fail(`${file} should forbid loading all rules by default`);
-    }
-    if (!body.includes("~/.codex/rules/")) {
-      fail(`${file} should mention Codex user-level rules fallback`);
-    }
-    if (!body.includes("~/.claude/rules/")) {
-      fail(`${file} should mention Claude Code user-level rules fallback`);
-    }
-    if (!body.includes("不能把项目规则目录缺失等同于“无规则”")) {
-      fail(`${file} should forbid treating a missing project rules directory as no rules`);
+  const forbidsFullCommonLoad =
+    agentsBody.includes("不要默认全量加载 `rules/common/`") ||
+    agentsBody.includes("不要默认全量加载`rules/common/`") ||
+    agentsBody.includes("`rules/common/` 是专项参考区");
+
+  if (!forbidsFullRulesLoad || !forbidsFullCommonLoad) {
+    fail("AGENTS.md should forbid loading all rules by default");
+  }
+  if (!agentsBody.includes("~/.codex/rules/")) {
+    fail("AGENTS.md should mention Codex user-level rules fallback");
+  }
+  if (!agentsBody.includes("~/.claude/rules/")) {
+    fail("AGENTS.md should mention Claude Code user-level rules fallback");
+  }
+  if (!agentsBody.includes("不能把项目规则目录缺失等同于") || !agentsBody.includes("无规则")) {
+    fail("AGENTS.md should forbid treating a missing project rules directory as no rules");
+  }
+
+  if (exists("CLAUDE.md")) {
+    const claudeBody = read("CLAUDE.md");
+    if (!claudeBody.includes("AGENTS.md")) {
+      fail("CLAUDE.md should reference AGENTS.md");
     }
   }
 
@@ -476,7 +671,7 @@ function checkRuleLoadingPolicy() {
   if (!ecc.includes("触发矩阵")) {
     fail("rules/08-ecc-integration.md should include a trigger matrix");
   }
-  if (!ecc.includes("不得因为“可能有用”而一次性读取完整 `rules/`")) {
+  if (!ecc.includes("不得因为") || !ecc.includes("可能有用") || !ecc.includes("而一次性读取完整")) {
     fail(
       "rules/08-ecc-integration.md should forbid full rules loading just because it might be useful",
     );
@@ -500,7 +695,16 @@ function requireTokens(file, tokens) {
 function checkSuperpowersDevLoop() {
   requireTokens("README.md", [
     "Superpowers 风格开发闭环",
+    "using-superpowers",
+    "subagent-driven-development",
+    ".superpowers/sdd",
+    "Global Constraints",
+    "Interfaces",
+    "?key=",
+    "4 小时",
     "using-git-worktrees",
+    "context-budget",
+    "iterative-retrieval",
     "executing-plans",
     "verification-before-completion",
     "没有 spec，不进入 plan",
@@ -522,6 +726,12 @@ function checkSuperpowersDevLoop() {
     "PR Gate",
   ]);
 
+  requireTokens("rules/common/skills-learning.md", [
+    "skills/using-superpowers/SKILL.md",
+    "process skill 优先于 implementation skill",
+    "不凭记忆执行 skill",
+  ]);
+
   requireTokens("skills/brainstorming/SKILL.md", [
     "Spec Gate",
     "reviewed and approved the saved spec",
@@ -531,6 +741,9 @@ function checkSuperpowersDevLoop() {
     "## Preconditions",
     "approved spec",
     "Plan Gate",
+    "## Global Constraints",
+    "**Interfaces:**",
+    "skills/subagent-driven-development/SKILL.md",
   ]);
 
   requireTokens("skills/test-driven-development/SKILL.md", [
@@ -555,6 +768,30 @@ function checkSuperpowersDevLoop() {
   requireTokens("skills/brainstorming/SKILL.md", [
     "docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md",
     "Write design doc",
+  ]);
+
+  requireTokens("skills/brainstorming/visual-companion.md", [
+    "session key",
+    "?key=",
+    "4 hours idle",
+    "--idle-timeout-minutes",
+    "same port",
+  ]);
+
+  requireTokens("skills/brainstorming/scripts/server.cjs", [
+    "BRAINSTORM_TOKEN",
+    "BRAINSTORM_TOKEN_FILE",
+    "timingSafeEqualStr",
+    "Cache-Control",
+    "X-Frame-Options",
+    "Default 4 hours",
+  ]);
+
+  requireTokens("skills/brainstorming/scripts/start-server.sh", [
+    "--idle-timeout-minutes",
+    "BRAINSTORM_TOKEN_FILE",
+    "umask 077",
+    ".last-token",
   ]);
 }
 
@@ -601,6 +838,11 @@ function checkScriptLayout() {
     "scripts/lib/utils.js",
     "scripts/learning/utils.js",
     "hooks/review-confidence.js",
+    "hooks/session-start.js",
+    "hooks/session-end.js",
+    "hooks/evaluate-session.js",
+    "hooks/pre-compact.js",
+    "hooks/runtime/session-utils.js",
   ]) {
     if (exists(legacyPath)) {
       fail(`${legacyPath} should not exist after script layout cleanup`);
@@ -610,10 +852,9 @@ function checkScriptLayout() {
   for (const requiredPath of [
     "hooks/runtime/run-with-flags.js",
     "hooks/runtime/hook-flags.js",
-    "hooks/runtime/session-utils.js",
-    "hooks/session-start.js",
-    "hooks/session-end.js",
     "hooks/commit-quality.js",
+    "hooks/check-console-log.js",
+    "hooks/check-code-size.js",
     "scripts/learning/review-confidence.js",
     "scripts/learning/project-utils.js",
     "scripts/learning/projects.js",
@@ -627,8 +868,10 @@ function checkScriptLayout() {
 
   requireTokens("settings.json", [
     "hooks/runtime/run-with-flags.js",
-    "hooks/session-start.js",
-    "hooks/session-end.js",
+    "hooks/check-console-log.js",
+    "hooks/check-code-size.js",
+    "hooks/commit-quality.js",
+    "skills/continuous-learning-v2/hooks/observe-v2.js",
   ]);
 
   requireTokens("scripts/install.ps1", [
@@ -656,6 +899,11 @@ function checkScriptLayout() {
       "scripts/hooks/run-with-flags.js",
       "scripts/lib/hook-flags.js",
       "hooks/review-confidence.js",
+      "hooks/session-start.js",
+      "hooks/session-end.js",
+      "hooks/evaluate-session.js",
+      "hooks/pre-compact.js",
+      "hooks/runtime/session-utils.js",
     ]) {
       if (body.includes(forbidden)) {
         fail(`${file} references legacy path ${forbidden}`);
@@ -814,8 +1062,11 @@ function main() {
   checkReadmeTreePaths();
   checkInstallRuntimePolicy();
   checkHookConfigReferences();
+  checkGitHubWorkflows();
   checkLearningPathPolicy();
+  checkSkillCategoryIndex();
   checkRouterTargets();
+  checkNpmPackageSurface();
   checkSkillLinks();
   checkRuleLoadingPolicy();
   checkSuperpowersDevLoop();

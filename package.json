@@ -1,0 +1,48 @@
+{
+  "name": "claude-everything-workflow",
+  "version": "0.1.7",
+  "description": "Claude Code and Codex harness with rules, skills, agents, hooks, and verification gates.",
+  "keywords": [
+    "claude-code",
+    "codex",
+    "agents",
+    "harness",
+    "skills"
+  ],
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "claude-everything-workflow": "bin/claude-everything-workflow.js",
+    "cew": "bin/claude-everything-workflow.js"
+  },
+  "scripts": {
+    "verify": "node scripts/verify-harness.js",
+    "pack:dry-run": "npm pack --dry-run"
+  },
+  "files": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "LICENSE",
+    "README.md",
+    "settings.json",
+    "agents/",
+    "bin/",
+    "commands/",
+    "hooks/",
+    "homunculus/",
+    "references/",
+    "rules/",
+    "scripts/",
+    "skills/"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xu91102/claude-everything-Workflow.git"
+  }
+}

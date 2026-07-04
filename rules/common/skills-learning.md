@@ -2,6 +2,8 @@
 
 ## Skills 工作流
 
+正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构，以兼容 Claude Code、Codex 和安装脚本的发现方式；分类维护在 `skills/README.md`，不要把正式 skill 物理嵌套到分类目录下。
+
 每个 skill 应包含：
 
 - **When to Use**：何时使用。
@@ -10,6 +12,13 @@
 - **Codemaps**：代码库导航地图，可选。
 
 保持 skill 精简；详细参考内容应拆到 references，并按需读取。
+
+### Superpowers 路由纪律
+
+- 非平凡任务开始前，先用 `skills/using-superpowers/SKILL.md` 判断应加载的 process skill。
+- process skill 优先于 implementation skill：先决定工作方法，再做代码、文档、测试或 PR 动作。
+- 不凭记忆执行 skill；skill 可能已更新，必须读取当前 `SKILL.md`。
+- 用户直接指令、`AGENTS.md`、`CLAUDE.md` 和项目规则优先于 skill；冲突影响结果时要说明。
 
 ## 按需学习
 

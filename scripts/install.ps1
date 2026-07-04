@@ -74,58 +74,90 @@ function Copy-ClaudeSettings {
     Backup-IfChanged -Source $Source -Destination $Destination
 
     if ($DryRun) {
-        Write-Host "[dry-run] Merge '$Source' into '$Destination' preserving existing env and mcpServers"
+        Write-Host "[dry-run] Merge '$Source' into '$Destination' preserving existing env and mcpServers, purging legacy hook paths"
         return
     }
 
-    $sourceSettings = Get-Content -LiteralPath $Source -Raw | ConvertFrom-Json
-    $existingSettings = if (Test-Path -LiteralPath $Destination) {
-        Get-Content -LiteralPath $Destination -Raw | ConvertFrom-Json
-    } else {
-        [pscustomobject]@{}
-    }
+    # 使用 Node 脚本合并 settings.json，同时清理旧版 Hook 路径
+    $mergeScript = @'
+const fs = require('fs')
 
-    $merged = [ordered]@{}
+const [, , sourcePath, destinationPath] = process.argv
+const source = JSON.parse(fs.readFileSync(sourcePath, 'utf8'))
+const existing = fs.existsSync(destinationPath)
+    ? JSON.parse(fs.readFileSync(destinationPath, 'utf8'))
+    : {}
 
-    foreach ($property in $existingSettings.PSObject.Properties) {
-        $merged[$property.Name] = $property.Value
-    }
+const LEGACY_HOOK_PATTERNS = [
+    'scripts/hooks/run-with-flags.js',
+    'scripts/hooks/commit-quality.js',
+    'scripts/hooks/session-start.js',
+    'scripts/hooks/session-end.js',
+    'scripts/lib/hook-flags.js',
+    'scripts/lib/utils.js',
+    'hooks/observe.js',
+    'hooks/review-confidence.js',
+    'hooks/session-start.js',
+    'hooks/session-end.js',
+    'hooks/evaluate-session.js',
+    'hooks/pre-compact.js',
+    'hooks/runtime/session-utils.js'
+]
 
-    foreach ($property in $sourceSettings.PSObject.Properties) {
-        $merged[$property.Name] = $property.Value
-    }
+function isLegacyHook(hookDef) {
+    if (typeof hookDef !== 'object' || !hookDef.command) return false
+    return LEGACY_HOOK_PATTERNS.some(p => hookDef.command.includes(p))
+}
 
-    $env = [ordered]@{}
-    if ($sourceSettings.PSObject.Properties.Name -contains "env") {
-        foreach ($property in $sourceSettings.env.PSObject.Properties) {
-            $env[$property.Name] = $property.Value
+function filterHooks(hooksArray) {
+    if (!Array.isArray(hooksArray)) return hooksArray
+    return hooksArray.map(entry => {
+        if (!entry || !Array.isArray(entry.hooks)) return entry
+        const filtered = entry.hooks.filter(h => !isLegacyHook(h))
+        return { ...entry, hooks: filtered }
+    }).filter(entry => entry.hooks && entry.hooks.length > 0)
+}
+
+function cleanHooks(hooksObj) {
+    if (!hooksObj || typeof hooksObj !== 'object') return hooksObj
+    const cleaned = {}
+    for (const [eventType, entries] of Object.entries(hooksObj)) {
+        const filtered = filterHooks(entries)
+        if (filtered.length > 0) {
+            cleaned[eventType] = filtered
         }
     }
-    if ($existingSettings.PSObject.Properties.Name -contains "env") {
-        foreach ($property in $existingSettings.env.PSObject.Properties) {
-            $env[$property.Name] = $property.Value
-        }
-    }
-    if ($env.Count -gt 0) {
-        $merged["env"] = $env
-    }
+    return cleaned
+}
 
-    $mcpServers = [ordered]@{}
-    if ($sourceSettings.PSObject.Properties.Name -contains "mcpServers") {
-        foreach ($property in $sourceSettings.mcpServers.PSObject.Properties) {
-            $mcpServers[$property.Name] = $property.Value
-        }
-    }
-    if ($existingSettings.PSObject.Properties.Name -contains "mcpServers") {
-        foreach ($property in $existingSettings.mcpServers.PSObject.Properties) {
-            $mcpServers[$property.Name] = $property.Value
-        }
-    }
-    if ($mcpServers.Count -gt 0) {
-        $merged["mcpServers"] = $mcpServers
-    }
+const merged = {
+    ...existing,
+    ...source,
+    env: {
+        ...(source.env || {}),
+        ...(existing.env || {})
+    },
+    mcpServers: {
+        ...(source.mcpServers || {}),
+        ...(existing.mcpServers || {})
+    },
+    hooks: cleanHooks({
+        ...(existing.hooks || {}),
+        ...(source.hooks || {})
+    })
+}
 
-    [pscustomobject]$merged | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $Destination -Encoding UTF8
+fs.writeFileSync(destinationPath, JSON.stringify(merged, null, 2) + '\n')
+'@
+
+    $scriptFile = [System.IO.Path]::GetTempFileName()
+    Set-Content -LiteralPath $scriptFile -Value $mergeScript -Encoding UTF8
+
+    try {
+        & node $scriptFile $Source $Destination
+    } finally {
+        Remove-Item -LiteralPath $scriptFile -Force -ErrorAction SilentlyContinue
+    }
 }
 
 function Convert-ClaudeSettingsHookPaths {
@@ -210,6 +242,24 @@ function Install-SharedDirs {
     }
 }
 
+function Remove-PackageOnlyPaths {
+    param([string]$Destination)
+
+    $packageOnlyFiles = @(
+        "scripts\install.sh",
+        "scripts\install.ps1"
+    )
+
+    foreach ($relative in $packageOnlyFiles) {
+        $target = Join-Path $Destination $relative
+        if (Test-Path -LiteralPath $target -PathType Leaf) {
+            Invoke-InstallCommand `
+                -Description "Remove-Item '$target'" `
+                -Action { Remove-Item -LiteralPath $target -Force }
+        }
+    }
+}
+
 function Remove-ObsoleteWorkflowPaths {
     param([string]$Destination)
 
@@ -220,7 +270,12 @@ function Remove-ObsoleteWorkflowPaths {
         "scripts\hooks\session-end.js",
         "scripts\lib\hook-flags.js",
         "scripts\lib\utils.js",
-        "hooks\review-confidence.js"
+        "hooks\review-confidence.js",
+        "hooks\session-start.js",
+        "hooks\session-end.js",
+        "hooks\evaluate-session.js",
+        "hooks\pre-compact.js",
+        "hooks\runtime\session-utils.js"
     )
 
     foreach ($relative in $obsoleteFiles) {
@@ -260,6 +315,7 @@ function Install-ClaudeWorkflow {
     Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath
     Convert-ClaudeSettingsHookPaths -SettingsPath $settingsPath
     Install-SharedDirs -Destination $dest
+    Remove-PackageOnlyPaths -Destination $dest
 }
 
 function Install-CodexWorkflow {
@@ -273,6 +329,7 @@ function Install-CodexWorkflow {
     Remove-ObsoleteWorkflowPaths -Destination $dest
     Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
     Install-SharedDirs -Destination $dest
+    Remove-PackageOnlyPaths -Destination $dest
 }
 
 if ($InstallClaude) {

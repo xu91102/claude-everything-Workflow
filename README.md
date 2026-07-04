@@ -39,6 +39,38 @@ bash scripts/install.sh --dry-run
 powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 ```
 
+## npm / npx 安装
+
+发布到 npm 后，可以不 clone 仓库，直接运行：
+
+```bash
+npx claude-everything-workflow install
+npx claude-everything-workflow install --claude-only
+npx claude-everything-workflow install --codex-only
+npx claude-everything-workflow verify
+```
+
+本地发布前检查：
+
+```bash
+npm pack --dry-run
+npm publish --dry-run
+```
+
+## npm 自动发布
+
+合并到 `main` 后，GitHub Actions 会运行 `.github/workflows/npm-publish.yml`：
+
+1. 运行 `npm run verify` 和 `npm run pack:dry-run`。
+2. 读取 npm registry 的当前 `latest` 版本，默认在此基础上计算下一个 patch 版本。
+3. 提交 `package.json` 版本号变更并打 `v<version>` tag。
+4. 通过 npm 受信任的发布商 OIDC 认证执行 `npm publish`。
+5. 发布成功后把版本提交和 tag 推回 `main`。
+
+也可以在 Actions 页面手动触发 `Publish npm`，选择 `patch`、`minor` 或 `major`。
+
+npm 包设置里必须添加 GitHub Actions 受信任的发布商，仓库为 `xu91102/claude-everything-Workflow`，workflow 文件名为 `npm-publish.yml`，并允许 `npm publish`。
+
 安装目标：
 
 - Claude Code: `~/.claude/`
@@ -68,6 +100,10 @@ claude-everything-Workflow/
 ├── AGENTS.md                   # Codex 与通用权威规则入口
 ├── CLAUDE.md                   # Claude Code 最小 bootstrap 入口
 ├── settings.json               # Claude Code Hooks 配置入口
+├── .github/
+│   └── workflows/
+│       ├── ci.yml               # PR / main 校验
+│       └── npm-publish.yml      # main 合并后自动 bump version 并发布 npm
 │
 ├── rules/                      # 规则索引与按需加载规则
 │   ├── 01-base.md              # 基础设定
@@ -124,6 +160,14 @@ claude-everything-Workflow/
 │       └── review-confidence.js # 置信度审查报告
 │
 ├── skills/
+│   ├── README.md               # Skill 分类索引；物理目录保持平铺以兼容发现
+│   ├── using-superpowers/      # Skill 路由、优先级与门禁纪律
+│   │   └── SKILL.md
+│   ├── subagent-driven-development/ # SDD：task brief、review package、progress ledger
+│   │   ├── SKILL.md
+│   │   ├── implementer-prompt.md
+│   │   ├── task-reviewer-prompt.md
+│   │   └── scripts/
 │   ├── using-git-worktrees/    # 隔离式 worktree 执行准备
 │   │   └── SKILL.md
 │   ├── executing-plans/        # 按计划执行、检查点、审查与验证
@@ -133,6 +177,10 @@ claude-everything-Workflow/
 │   ├── documentation-lookup/   # Context7：库/API 实时文档（resolve → query）
 │   │   └── SKILL.md
 │   ├── e2e-testing/            # Playwright E2E 模式（POM、CI、制品）
+│   │   └── SKILL.md
+│   ├── context-budget/          # 上下文与 MCP 常驻开销审计
+│   │   └── SKILL.md
+│   ├── iterative-retrieval/     # Subagent 迭代检索与上下文收敛
 │   │   └── SKILL.md
 │   ├── continuous-learning-v2/ # 自主学习系统
 │   │   ├── SKILL.md            # 技能说明
@@ -148,19 +196,17 @@ claude-everything-Workflow/
 ├── hooks/                      # 钩子脚本
 │   ├── runtime/                # Hook 运行时与 Profile 控制
 │   │   ├── run-with-flags.js
-│   │   ├── hook-flags.js
-│   │   └── session-utils.js
-│   ├── session-start.js        # 会话启动上下文
-│   ├── session-end.js          # 会话结束持久化
+│   │   └── hook-flags.js
 │   ├── commit-quality.js       # 可选 Pre-commit 质量门
 │   ├── check-console-log.js    # console.log 检测
-│   ├── evaluate-session.js     # 会话评估
-│   └── pre-compact.js          # 压缩前保存上下文
+│   └── check-code-size.js      # 代码规模检测
 │
 └── homunculus/                 # 自主学习系统
     └── instincts/
         └── personal/           # 个人直觉
 ```
+
+正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构，避免破坏 Claude Code、Codex 和安装脚本的发现方式；分类维护在 `skills/README.md`。只有学习产物使用物理分类目录 `skills/learn/<category>/`。
 
 ## 规则加载策略
 
@@ -172,9 +218,11 @@ claude-everything-Workflow/
 - 回退只改变查找位置，不改变按需读取原则；仍然只读取当前任务直接相关的规则文件，不要默认全量加载 `rules/` 或 `rules/common/`。
 - `rules/common/` 是专项参考区，只在命令、agent、skill 或当前任务明确触发时读取。
 
-## 与主仓对齐：Context7 MCP、`~/.claude` 用户级配置与省 Token
+## 与主仓对齐：按需 MCP、Context7 与省 Token
 
 本目录已含 **`skills/documentation-lookup/`**，行为与 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) 主仓一致：通过 Context7 的 **`resolve-library-id` → `query-docs`** 查第三方库最新文档。技能不负责启动 MCP，需在 **Claude Code** 或 **Cursor** 中启用。
+
+本仓继续吸收 ECC 最新的 Context Budget 原则：默认 MCP 必须同时满足“通用”和“MCP 明显优于 CLI/API/原生能力”。GitHub、文档查询、Exa 搜索、Playwright E2E、memory 和 sequential-thinking 这类纯请求/响应或已有原生替代的能力，优先通过 skill、CLI/API 或 harness 原生能力按需触发，而不是默认常驻。需要审计本机上下文开销时，使用 `context-budget` skill。
 
 ### 1. Claude Code：用户级 `~/.claude/settings.json`
 
@@ -218,6 +266,7 @@ claude-everything-Workflow/
 ```
 
 - **跑 ECC 安装/同步且你已有同名自建 MCP**：可设置 `export ECC_DISABLED_MCPS="github,context7,exa,playwright,sequential-thinking,memory"`，避免重复写入（见主仓 README）。
+- **新增 MCP 前先审计**：使用 `context-budget` 判断它是否应该默认启用、按需启用，还是改为 CLI/API skill。
 
 ### 3. Cursor
 
@@ -245,6 +294,9 @@ claude-everything-Workflow/
 ```bash
 node scripts/verify-harness.js
 bash scripts/install.sh --dry-run
+```
+
+```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 ```
 
@@ -262,7 +314,7 @@ export ECC_HOOK_PROFILE=standard
 export ECC_DISABLED_HOOKS="post:edit:console-log"
 ```
 
-当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录统一保存 Hook 运行时和脚本实现。`scripts/learning/` 只保存手动学习治理脚本，不作为 Hook 自动触发。
+当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录统一保存低噪音 Hook 运行时和脚本实现。默认不启用会话启动、会话结束、停止或压缩前的弱摘要 Hook，避免污染上下文。`scripts/learning/` 只保存手动学习治理脚本，不作为 Hook 自动触发。
 Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks；如未来需要 Codex 原生自动化，应新增明确 adapter。
 
 ## Superpowers 风格开发闭环
@@ -271,12 +323,13 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 ```text
 复杂任务
+  -> using-superpowers 先路由到相关 process skill
   -> brainstorming 澄清需求
   -> 写 design spec
   -> 用户审核 spec
   -> using-git-worktrees 按需创建隔离工作区
   -> writing-plans 写实施计划
-  -> executing-plans 按计划执行
+  -> subagent-driven-development 或 executing-plans 按计划执行
   -> TDD 红绿重构
   -> 需求符合性审查
   -> 代码质量审查
@@ -288,13 +341,25 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 硬门禁：
 
+- 开始非平凡任务前，先用 `using-superpowers` 判断并加载相关 process skill。
+- 上下文或工具面变重时，先用 `context-budget` 找出常驻 Token 开销，再决定新增或删除 MCP/skill/agent。
+- 子代理需要探索大仓库时，先用 `iterative-retrieval` 的 Dispatch/Evaluate/Refine/Loop 闭环收敛上下文，再回传证据。
 - 没有 spec，不进入 plan。
 - 没有用户审核，不进入实现。
+- 计划必须包含 `Global Constraints` 和每任务 `Interfaces`，让 implementer/reviewer 不依赖父会话记忆。
 - 没有 failing test，不写行为代码。
 - 没有 review，不标记任务完成。
 - 没有新鲜验证证据，不声明完成、通过、已修复或 ready。
 - 没有 verify，不进入 PR。
 - 有脏工作区、并行任务或高风险改动时，先考虑 `using-git-worktrees`。
+- 只有用户明确批准 commit/PR/SDD 执行时，才使用 `subagent-driven-development` 的 per-task commit 流；否则用 `executing-plans` 或 inline execution。
+
+### 对齐 Superpowers v6.0.3 的能力
+
+- `subagent-driven-development` 使用 `.superpowers/sdd/` 保存 task brief、implementer report、review package 和 `progress.md`，避免把 scratch 写进 `.git/`。
+- 每个任务使用一个 `task-reviewer-prompt.md` 同时返回 spec compliance 和 code quality verdict，减少重复 reviewer 上下文。
+- `writing-plans` 强制 `Global Constraints` 和每任务 `Interfaces`，把跨任务约束、输入输出契约传给 implementer 和 reviewer。
+- Brainstorming visual companion 使用带 `?key=` 的 per-session URL，HTTP/WebSocket 请求都需要 session key；默认 idle timeout 为 4 小时，可用 `--idle-timeout-minutes` 调整。
 
 复杂任务包括新功能、架构调整、多文件行为变化、高风险实现，以及需求存在多种合理解释的工作。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
 
