@@ -115,7 +115,6 @@ claude-everything-Workflow/
 │   ├── 07-forbidden.md         # 禁止事项
 │   ├── 08-ecc-integration.md   # ECC 集成索引
 │   ├── 09-first-principles-adversarial-testing.md # 第一性原则与对抗性测试
-│   ├── agents.md               # 代理使用规则
 │   └── common/                 # 通用最佳实践
 │       ├── harness-engineering.md # Agent Harness 六层与执行循环
 │       ├── context-hygiene.md   # 上下文卫生与 Subagent 边界
