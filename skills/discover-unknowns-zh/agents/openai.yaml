@@ -1,0 +1,4 @@
+interface:
+  display_name: "发现未知项"
+  short_description: "复杂工作前，先暴露盲点"
+  default_prompt: "用 $discover-unknowns-zh 在实现这次复杂改动前先暴露盲点。"

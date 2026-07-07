@@ -10,6 +10,7 @@
 - `executing-plans`：按已批准计划顺序执行。
 - `subagent-driven-development`：用户批准 commit/PR/SDD handling 后的任务拆分、审查和进度账本。
 - `using-git-worktrees`：脏工作区、高风险或并行任务的隔离工作区准备。
+- `discover-unknowns-zh`：复杂、模糊或高风险任务前的未知项、盲点和低成本工件发现流程。
 - `verification-before-completion`：完成、通过、已修复或 ready 声明前的新鲜验证门。
 
 ## Engineering / 开发实践
