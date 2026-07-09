@@ -27,7 +27,6 @@
 
 ## Meta / Skill 管理
 
-- `skill-creator`：创建或更新 skill 的结构和质量规则。
 - `find-skills`：查找可安装或本地已有 skill。
 
 ## Learn / 学习沉淀
