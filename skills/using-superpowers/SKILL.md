@@ -43,7 +43,7 @@ Task arrives
   -> behavior change with test path?        -> test-driven-development
   -> dirty worktree / risky branch work?    -> using-git-worktrees
   -> completion / fixed / ready claim?      -> verification-before-completion
-  -> external skill learning or edit?       -> skill-creator + skills-learning
+  -> external skill learning or edit?       -> skills-learning
 ```
 
 - Complex, ambiguous, architectural, integration, high-risk, cross-file, or behavior-changing work: use `skills/brainstorming/SKILL.md` first.
@@ -54,7 +54,7 @@ Task arrives
 - Behavior-changing implementation with a viable test path: use `skills/test-driven-development/SKILL.md`.
 - Risky branch work, dirty worktree, parallel effort, or PR cleanup: consider `skills/using-git-worktrees/SKILL.md`.
 - Completion, fixed, passing, ready, or PR-readiness claims: use `skills/verification-before-completion/SKILL.md`.
-- External skill learning or skill edits: use `skills/skill-creator/SKILL.md` and `rules/common/skills-learning.md`.
+- External skill learning or skill edits: use `rules/common/skills-learning.md`.
 
 Then apply domain skills such as documentation lookup, E2E testing, or workflow engineering as needed.
 
