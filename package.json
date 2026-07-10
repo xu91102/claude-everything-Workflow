@@ -16,8 +16,9 @@
     "cew": "bin/claude-everything-workflow.js"
   },
   "scripts": {
-    "verify": "node scripts/verify-harness.js",
-    "pack:dry-run": "npm pack --dry-run"
+    "verify": "npm test && node scripts/verify-harness.js",
+    "pack:dry-run": "npm pack --dry-run",
+    "test": "node --test scripts/tests/*.test.js"
   },
   "files": [
     "AGENTS.md",

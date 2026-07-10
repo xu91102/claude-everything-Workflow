@@ -39,6 +39,18 @@ bash scripts/install.sh --dry-run
 powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 ```
 
+选择安装能力集：
+
+```bash
+bash scripts/install.sh --profile core
+bash scripts/install.sh --profile coding
+bash scripts/install.sh --profile full
+```
+
+- `core`：规则、Hook 运行时和核心开发流程 skill；不启用持续学习观察 Hook。
+- `coding`：完整编码能力，排除 `homunculus/` 与详细 `references/`。
+- `full`：安装全部能力，保持向后兼容，也是默认值。
+
 ## npm / npx 安装
 
 发布到 npm 后，可以不 clone 仓库，直接运行：
@@ -47,6 +59,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 npx claude-everything-workflow install
 npx claude-everything-workflow install --claude-only
 npx claude-everything-workflow install --codex-only
+npx claude-everything-workflow install --profile coding
+npx claude-everything-workflow doctor
 npx claude-everything-workflow verify
 ```
 
@@ -76,9 +90,21 @@ npm 包设置里必须添加 GitHub Actions 受信任的发布商，仓库为 `x
 - Claude Code: `~/.claude/`
 - Codex: `~/.codex/`
 
-Claude Code 会安装 `CLAUDE.md` 并合并 `settings.json` 作为 hooks 入口；Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`。顶层配置文件已存在且内容不同时，会先生成 `.bak.<timestamp>` 备份再覆盖；目录内容按仓库版本同步。
+Claude Code 会安装 `CLAUDE.md` 并合并 `settings.json` 作为 hooks 入口；Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`。安装器通过目标目录下的 `.cew-manifest.json` 记录受管文件、hash、Hook 和 profile。更新只删除旧 manifest 中记录且未被用户修改的废弃文件；用户修改过的文件会保留并提示。Claude Code Hook 按条目合并，同事件下的用户 Hook 不会被 CEW 整组覆盖。
+
+## 安装诊断
+
+```bash
+cew doctor
+cew doctor --claude-only
+cew doctor --codex-only
+```
+
+`doctor` 会报告已安装版本、profile、受管文件数量以及缺失或被修改的文件。旧版安装首次迁移到 manifest 时，已知废弃路径会移动到 `.cew-backups/<timestamp>/`，避免继续被 skill 发现，同时保留回滚副本。用户修改过、但新版本已废弃的受管文件也使用同一安全备份区。
 
 ## 手动安装
+
+手动复制不会执行安全 Hook 合并、manifest 清理和 profile 过滤，只适合明确了解覆盖风险的场景；常规安装优先使用脚本或 `npx`。
 
 ### Windows
 
@@ -124,7 +150,8 @@ claude-everything-Workflow/
 │       ├── security.md         # 安全优先原则
 │       ├── testing.md          # 测试与验证
 │       ├── pr-automation.md    # PR 自动化与 CI 质量门
-│       └── implementation.md   # 实施实践
+│       ├── implementation.md   # 实施实践
+│       └── language-quality.md # 按项目加载的语言、lint 与日志策略
 │
 ├── agents/                     # 代理（专业任务委托）
 │   ├── architect.md            # 架构师
@@ -152,13 +179,18 @@ claude-everything-Workflow/
 │   └── agents/                 # Agent 详细检查清单与示例
 │
 ├── scripts/                    # 跨平台脚本
-│   ├── install.sh              # macOS / Linux / Git Bash / WSL 一键安装
-│   ├── install.ps1             # Windows PowerShell 一键安装
+│   ├── install.sh              # macOS / Linux / Git Bash / WSL 入口
+│   ├── install.ps1             # Windows PowerShell 入口
+│   ├── install-manager.js      # 跨平台安装、profile 与 doctor CLI
+│   ├── lib/                    # Hook 合并与受管文件同步核心
+│   ├── tests/                  # 临时 HOME 安装集成测试
+│   ├── verify/                 # 模块化 Harness 静态验证
 │   └── learning/               # 学习系统手动维护脚本
 │       └── review-confidence.js # 置信度审查报告
 │
 ├── skills/
 │   ├── README.md               # Skill 分类索引；物理目录保持平铺以兼容发现
+│   ├── sources.json            # Skill 来源与 upstream/overlay 策略
 │   ├── using-superpowers/      # Skill 路由、优先级与门禁纪律
 │   │   └── SKILL.md
 │   ├── subagent-driven-development/ # SDD：task brief、review package、progress ledger
@@ -290,6 +322,7 @@ claude-everything-Workflow/
 ## 验证 Harness
 
 ```bash
+npm test
 node scripts/verify-harness.js
 bash scripts/install.sh --dry-run
 ```
@@ -301,6 +334,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 `verify-harness.js` 会检查 README 与 `commands/` 是否一致、薄封装 command 是否指向存在的 agent/skill、旧命令和旧衰减语义是否残留，并运行 `observe-v2` 最小 smoke test。
 
 ## Hook Profile 控制
+
+安装 profile 决定落盘的能力集合；本节的 Hook Profile 只决定已安装 Hook 的运行严格度，两者相互独立。
 
 通过环境变量控制 Hook 行为:
 
@@ -352,12 +387,14 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 - 有脏工作区、并行任务或高风险改动时，先考虑 `using-git-worktrees`。
 - 只有用户明确批准 commit/PR/SDD 执行时，才使用 `subagent-driven-development` 的 per-task commit 流；否则用 `executing-plans` 或 inline execution。
 
-### 对齐 Superpowers v6.0.3 的能力
+### Superpowers 方法论映射（非版本镜像）
 
 - `subagent-driven-development` 使用 `.superpowers/sdd/` 保存 task brief、implementer report、review package 和 `progress.md`，避免把 scratch 写进 `.git/`。
 - 每个任务使用一个 `task-reviewer-prompt.md` 同时返回 spec compliance 和 code quality verdict，减少重复 reviewer 上下文。
 - `writing-plans` 强制 `Global Constraints` 和每任务 `Interfaces`，把跨任务约束、输入输出契约传给 implementer 和 reviewer。
 - Brainstorming visual companion 使用带 `?key=` 的 per-session URL，HTTP/WebSocket 请求都需要 session key；默认 idle timeout 为 4 小时，可用 `--idle-timeout-minutes` 调整。
+
+本仓定位为 Superpowers 方法论的 CEW overlay，而不是外部仓库的完整版本镜像：通用流程尽量保持可追踪映射，CEW 只维护中文规则、上下文治理、持续学习和本仓质量门等差异能力。每次同步上游前应先判断能力属于“跟随、overlay、独立维护或废弃”，避免同名 skill 出现多个路由来源。
 
 复杂任务包括新功能、架构调整、多文件行为变化、高风险实现，以及需求存在多种合理解释的工作。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
 
