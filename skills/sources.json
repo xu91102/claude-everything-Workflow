@@ -8,6 +8,7 @@
     "brainstorming": { "origin": "upstream", "strategy": "overlay" },
     "context-budget": { "origin": "cew", "strategy": "own" },
     "continuous-learning-v2": { "origin": "cew", "strategy": "own" },
+    "discover-unknowns-zh": { "origin": "cew", "strategy": "own" },
     "documentation-lookup": { "origin": "cew", "strategy": "own" },
     "e2e-testing": { "origin": "cew", "strategy": "own" },
     "executing-plans": { "origin": "upstream", "strategy": "overlay" },
