@@ -79,7 +79,10 @@ function main() {
   if (command === "doctor") {
     const reports = doctorWorkflow({ homeDir, targets: options.targets });
     const hasDrift = reports.some(
-      (report) => !report.installed || report.missing.length > 0,
+      (report) =>
+        !report.installed ||
+        report.missing.length > 0 ||
+        report.modified.length > 0,
     );
     if (hasDrift) process.exitCode = 1;
     return;

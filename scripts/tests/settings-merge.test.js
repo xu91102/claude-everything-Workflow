@@ -91,3 +91,23 @@ test("清理旧版 Hook 路径但保留同 matcher 的用户 Hook", () => {
 
   assert.deepEqual(commands, [userHook.command, sourceHook.command]);
 });
+
+test("首次安装不会因通用遗留路径片段删除用户 Hook", () => {
+  const userHook = hook("node /opt/acme/scripts/lib/utils.js --audit");
+  const sourceHook = hook(
+    'node "$HOME/.claude/hooks/runtime/run-with-flags.js" post:edit:code-size current.js standard,strict',
+  );
+  const result = mergeClaudeSettings({
+    existing: {
+      hooks: { PostToolUse: [entry("Edit", [userHook])] },
+    },
+    source: {
+      hooks: { PostToolUse: [entry("Edit", [sourceHook])] },
+    },
+  });
+  const commands = result.settings.hooks.PostToolUse.flatMap((item) =>
+    item.hooks.map((itemHook) => itemHook.command),
+  );
+
+  assert.deepEqual(commands, [userHook.command, sourceHook.command]);
+});

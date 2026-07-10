@@ -72,3 +72,24 @@ test("dry-run 不创建目标目录或 manifest", () => {
   assert.equal(fs.existsSync(path.join(home, ".codex")), false);
   assert.match(result.stdout, /\[dry-run\]/);
 });
+
+function runManager(home, args) {
+  return spawnSync(process.execPath, [path.join(root, "scripts", "install-manager.js"), ...args], {
+    cwd: root,
+    env: { ...process.env, HOME: home },
+    encoding: "utf8",
+    timeout: 30000,
+  });
+}
+
+test("doctor 在发现受管文件被修改时以失败退出", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "cew-doctor-"));
+  const install = runInstall(home, ["--codex-only", "--profile", "core"]);
+  assert.equal(install.status, 0, install.stderr);
+  fs.appendFileSync(path.join(home, ".codex", "AGENTS.md"), "modified\n");
+
+  const doctor = runManager(home, ["doctor", "--codex-only"]);
+
+  assert.equal(doctor.status, 1, doctor.stderr);
+  assert.match(doctor.stdout, /已修改：AGENTS\.md/);
+});

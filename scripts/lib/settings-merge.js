@@ -41,8 +41,9 @@ function isLegacyHook(hookDefinition) {
   if (!hookDefinition || typeof hookDefinition.command !== "string") {
     return false;
   }
+  const command = hookDefinition.command.replace(/\\/g, "/");
   return LEGACY_HOOK_PATTERNS.some((pattern) =>
-    hookDefinition.command.includes(pattern),
+    command.includes(`.claude/${pattern}`),
   );
 }
 
