@@ -58,6 +58,10 @@ monorepo 中先识别 package 依赖。若内部 package 以 `dist/` 暴露，co
 | 关键路径 | 合并前覆盖或明确缺口      |
 | 提交前   | 运行与改动范围匹配的验证  |
 
+## 对抗性测试
+
+复杂、高风险或涉及行为变化的任务，应按需读取 `rules/09-first-principles-adversarial-testing.md`，把边界输入、异常状态、重复执行、跨平台路径、权限失败和外部依赖异常纳入验证设计。
+
 ## 端到端测试
 
 - 技能：`skills/e2e-testing/SKILL.md`，包含 Playwright 目录结构、POM、配置、CI、制品、flake 处理。
