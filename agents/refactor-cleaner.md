@@ -1,7 +1,7 @@
 ---
 name: refactor-cleaner
-description: 当需要删除死代码、清理未使用依赖、合并重复实现或做低风险重构时使用。先做只读影响面分析和风险分级；只有用户明确要求执行时才编辑或删除文件。
-tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
+description: 当需要删除死代码、清理未使用依赖、合并重复实现或做低风险重构时使用。先做只读影响面分析和风险分级；用户明确要求执行时，提供计划并移交具备写权限的执行者。
+tools: ["Read", "Grep", "Glob"]
 model: opus
 ---
 

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "repository": "obra/superpowers",
+    "policy": "方法论映射，不把 CEW 声明为上游版本镜像"
+  },
+  "skills": {
+    "brainstorming": { "origin": "upstream", "strategy": "overlay" },
+    "context-budget": { "origin": "cew", "strategy": "own" },
+    "continuous-learning-v2": { "origin": "cew", "strategy": "own" },
+    "discover-unknowns-zh": { "origin": "cew", "strategy": "own" },
+    "documentation-lookup": { "origin": "cew", "strategy": "own" },
+    "e2e-testing": { "origin": "cew", "strategy": "own" },
+    "executing-plans": { "origin": "upstream", "strategy": "overlay" },
+    "find-skills": { "origin": "cew", "strategy": "own" },
+    "iterative-retrieval": { "origin": "cew", "strategy": "own" },
+    "subagent-driven-development": { "origin": "upstream", "strategy": "overlay" },
+    "systematic-debugging": { "origin": "upstream", "strategy": "overlay" },
+    "test-driven-development": { "origin": "upstream", "strategy": "overlay" },
+    "using-git-worktrees": { "origin": "upstream", "strategy": "overlay" },
+    "using-superpowers": { "origin": "upstream", "strategy": "overlay" },
+    "verification-before-completion": { "origin": "upstream", "strategy": "overlay" },
+    "writing-plans": { "origin": "upstream", "strategy": "overlay" }
+  }
+}

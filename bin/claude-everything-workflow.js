@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 "use strict";
 
-const path = require("path");
-const { spawnSync } = require("child_process");
+const path = require("node:path");
+const { spawnSync } = require("node:child_process");
 
 const root = path.resolve(__dirname, "..");
 
@@ -14,8 +14,8 @@ function main() {
     process.exit(0);
   }
 
-  if (command === "install") {
-    runInstall(args);
+  if (command === "install" || command === "doctor") {
+    runNodeScript("scripts/install-manager.js", [command, ...args]);
     return;
   }
 
@@ -24,66 +24,38 @@ function main() {
     return;
   }
 
-  process.stderr.write(`Unknown command: ${command}\n\n`);
+  process.stderr.write(`未知命令：${command}\n\n`);
   printHelp();
   process.exit(1);
 }
 
-function runInstall(args) {
-  if (process.platform === "win32") {
-    const script = path.join(root, "scripts", "install.ps1");
-    const psArgs = [
-      "-NoProfile",
-      "-ExecutionPolicy",
-      "Bypass",
-      "-File",
-      script,
-      ...toPowerShellArgs(args),
-    ];
-    run("powershell", psArgs);
-    return;
-  }
-
-  run("bash", [path.join(root, "scripts", "install.sh"), ...args]);
-}
-
 function runNodeScript(relativeScript, args) {
-  run(process.execPath, [path.join(root, relativeScript), ...args]);
-}
-
-function run(command, args) {
-  const result = spawnSync(command, args, {
-    cwd: root,
-    stdio: "inherit",
-  });
+  const result = spawnSync(
+    process.execPath,
+    [path.join(root, relativeScript), ...args],
+    { cwd: root, stdio: "inherit" },
+  );
 
   if (result.error) {
-    process.stderr.write(`${command} failed: ${result.error.message}\n`);
+    process.stderr.write(`${relativeScript} 执行失败：${result.error.message}\n`);
     process.exit(1);
   }
 
   process.exit(typeof result.status === "number" ? result.status : 1);
 }
 
-function toPowerShellArgs(args) {
-  return args.map((arg) => {
-    if (arg === "--claude-only") return "-ClaudeOnly";
-    if (arg === "--codex-only") return "-CodexOnly";
-    if (arg === "--dry-run") return "-DryRun";
-    return arg;
-  });
-}
-
 function printHelp() {
   process.stdout.write(`claude-everything-workflow
 
-Usage:
-  cew install [--claude-only|--codex-only] [--dry-run]
+用法：
+  cew install [--claude-only|--codex-only] [--profile core|coding|full] [--dry-run]
+  cew doctor [--claude-only|--codex-only]
   cew verify
 
-Examples:
+示例：
   npx claude-everything-workflow install
-  npx claude-everything-workflow install --codex-only
+  npx claude-everything-workflow install --profile coding --codex-only
+  npx claude-everything-workflow doctor
   npx claude-everything-workflow verify
 `);
 }

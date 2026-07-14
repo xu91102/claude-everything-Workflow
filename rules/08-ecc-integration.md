@@ -22,6 +22,7 @@
 | `common/testing.md`             | TDD、E2E、验证策略                                   |
 | `common/pr-automation.md`       | PR 自动化、CI 质量门、验证制品                       |
 | `common/implementation.md`      | 不可变性、跨平台、实施阶段控制                       |
+| `common/language-quality.md`  | 语言、lint、类型与日志策略，按项目配置加载            |
 
 ## 默认原则
 
@@ -44,3 +45,4 @@
 | 提交、推送、PR、CI 质量门                | `common/pr-automation.md`                                               |
 | 安全敏感实现或安全审查                   | `common/security.md`                                                    |
 | 跨平台脚本、不可变性、实施阶段控制       | `common/implementation.md`                                              |
+| 语言 lint、类型严格度、日志与格式策略    | `common/language-quality.md`                                            |

@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" post:edit:console-log \"$HOME/.claude/hooks/check-console-log.js\" standard,strict",
+            "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" post:edit:console-log \"$HOME/.claude/hooks/check-console-log.js\" strict",
             "timeout": 5
           },
           {

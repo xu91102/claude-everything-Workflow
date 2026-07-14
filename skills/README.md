@@ -2,6 +2,10 @@
 
 正式 skill 保持 `skills/<skill-name>/SKILL.md` 平铺结构，兼容 Claude Code、Codex 和打包安装的发现方式。分类只在本索引维护，不用物理嵌套目录；需要长材料时，放到对应 skill 的 `references/`。
 
+## 来源治理
+
+`skills/sources.json` 是 skill 来源与同步策略的机器可读事实来源。`origin=upstream` 表示能力映射自 Superpowers 方法论，`strategy=overlay` 表示 CEW 只维护可说明的差异；`origin=cew` 与 `strategy=own` 表示本仓独立能力。新增、重命名或删除正式 skill 时必须同步更新该文件，避免同名能力出现多个事实来源。
+
 ## Process / 门禁
 
 - `using-superpowers`：非平凡任务的 skill 路由、优先级和完成声明纪律。
@@ -28,7 +32,6 @@
 
 ## Meta / Skill 管理
 
-- `skill-creator`：创建或更新 skill 的结构和质量规则。
 - `find-skills`：查找可安装或本地已有 skill。
 
 ## Learn / 学习沉淀
