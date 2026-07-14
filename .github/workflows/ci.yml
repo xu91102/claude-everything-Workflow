@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -27,3 +28,114 @@ jobs:
 
       - name: Validate npm package
         run: npm run pack:dry-run
+
+  publish:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    concurrency:
+      group: npm-publish-main
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.14.0
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Setup npm
+        run: |
+          npm install -g npm@11.5.1
+          npm --version
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine release state
+        id: release
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          PACKAGE_NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
+          TAG="v$VERSION"
+
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "package.json version must be stable major.minor.patch: $VERSION" >&2
+            exit 1
+          fi
+
+          set +e
+          EXACT_LOOKUP="$(npm view "$PACKAGE_NAME@$VERSION" version --registry=https://registry.npmjs.org 2>&1)"
+          EXACT_STATUS=$?
+          set -e
+
+          if [ "$EXACT_STATUS" -eq 0 ]; then
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "create_tag=false" >> "$GITHUB_OUTPUT"
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ "$EXACT_LOOKUP" != *"E404"* ]]; then
+            echo "$EXACT_LOOKUP" >&2
+            exit "$EXACT_STATUS"
+          fi
+
+          TAG_SHA=""
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            TAG_SHA="$(git rev-list -n 1 "$TAG")"
+            if [ "$TAG_SHA" != "$GITHUB_SHA" ]; then
+              echo "$TAG already points to $TAG_SHA, not $GITHUB_SHA" >&2
+              exit 1
+            fi
+          fi
+
+          REGISTRY_VERSION="$(npm view "$PACKAGE_NAME" version --registry=https://registry.npmjs.org)"
+          node - "$VERSION" "$REGISTRY_VERSION" <<'NODE'
+          const [version, latest] = process.argv.slice(2);
+          const parse = (value) => {
+            const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(value);
+            if (!match) throw new Error(`Expected stable semver, got ${value}`);
+            return match.slice(1).map(Number);
+          };
+          const current = parse(version);
+          const published = parse(latest);
+          for (let index = 0; index < current.length; index += 1) {
+            if (current[index] > published[index]) process.exit(0);
+            if (current[index] < published[index]) break;
+          }
+          throw new Error(`${version} must be greater than npm latest ${latest}`);
+          NODE
+
+          echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          echo "create_tag=$([ -z "$TAG_SHA" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create release tag
+        if: steps.release.outputs.create_tag == 'true'
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          TAG="v$VERSION"
+          git tag -a "$TAG" "$GITHUB_SHA" -m "chore(release): $TAG"
+          git push origin "$TAG"
+
+      - name: Publish to npm
+        if: steps.release.outputs.should_publish == 'true'
+        run: npm publish

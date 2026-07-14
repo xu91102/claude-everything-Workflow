@@ -51,7 +51,6 @@ function managedFiles() {
     "skills/README.md",
     "skills/test-driven-development",
     "skills/e2e-testing",
-    "skills/context-budget",
     "skills/iterative-retrieval",
     "skills/using-superpowers",
     "skills/subagent-driven-development",
@@ -281,30 +280,36 @@ function checkHookConfigReferences() {
 }
 
 function checkGitHubWorkflows() {
+  const ci = read(".github/workflows/ci.yml");
+
   requireTokens(".github/workflows/ci.yml", [
     "pull_request",
+    "workflow_dispatch:",
     "npm run verify",
     "npm run pack:dry-run",
-  ]);
-
-  requireTokens(".github/workflows/npm-publish.yml", [
-    "workflow_dispatch",
+    "publish:",
+    "needs: verify",
     "id-token: write",
     "node-version: 22.14.0",
     "package-manager-cache: false",
     "npm install -g npm@11.5.1",
-    "npm view \"$PACKAGE_NAME\" version --registry=https://registry.npmjs.org",
-    "BASE_VERSION=\"${REGISTRY_VERSION:-$LOCAL_VERSION}\"",
-    "npm version \"$VERSION\" --no-git-tag-version",
+    "git config user.name \"github-actions[bot]\"",
     "npm publish",
-    "git push --follow-tags origin HEAD:main",
-    "[skip npm]",
+    "git push origin \"$TAG\"",
   ]);
 
+  if (ci.includes("npm version \"$VERSION\"") || ci.includes("HEAD:main")) {
+    fail("ci.yml must not rewrite or push main during publish");
+  }
+  if (exists(".github/workflows/npm-publish.yml")) {
+    fail("legacy npm-publish workflow must be removed");
+  }
+
   requireTokens("README.md", [
-    "npm 自动发布",
+    "npm 发布",
+    "版本号通过 PR",
+    "ci.yml",
     "受信任的发布商",
-    "npm registry 的当前 `latest` 版本",
   ]);
 }
 
@@ -605,13 +610,6 @@ function checkSkillLinks() {
     "remaining risk",
   ]);
 
-  requireTokens("skills/context-budget/SKILL.md", [
-    "MCP 默认策略",
-    "通用",
-    "MCP 明显优于 CLI/API/原生能力",
-    "报告格式",
-  ]);
-
   requireTokens("skills/iterative-retrieval/SKILL.md", [
     "Dispatch",
     "Evaluate",
@@ -703,7 +701,6 @@ function checkSuperpowersDevLoop() {
     "?key=",
     "4 小时",
     "using-git-worktrees",
-    "context-budget",
     "iterative-retrieval",
     "executing-plans",
     "verification-before-completion",
@@ -793,6 +790,17 @@ function checkSuperpowersDevLoop() {
     "umask 077",
     ".last-token",
   ]);
+}
+
+function checkRemovedSkillReferences() {
+  for (const skill of ["context-budget", "documentation-lookup"]) {
+    for (const file of managedFiles()) {
+      if (file === "scripts/verify-harness.js") continue;
+      if (read(file).includes(skill)) {
+        fail(`${file} still references removed skill ${skill}`);
+      }
+    }
+  }
 }
 
 function checkForbiddenCommandDrift() {
@@ -1070,6 +1078,7 @@ function main() {
   checkSkillLinks();
   checkRuleLoadingPolicy();
   checkSuperpowersDevLoop();
+  checkRemovedSkillReferences();
   checkForbiddenCommandDrift();
   checkScriptLayout();
   checkContinuousLearningV21();
