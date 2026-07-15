@@ -617,6 +617,16 @@ function checkSkillLinks() {
     "最多跑 3 轮",
     "回传格式",
   ]);
+
+  requireTokens("skills/feature-acceptance/SKILL.md", [
+    "PASS / FAIL / BLOCKED / NOT RUN",
+    "用例矩阵",
+    "keyNodes",
+    "evidenceMedium",
+    "二次审核",
+    "skills/e2e-testing/SKILL.md",
+    "敏感信息",
+  ]);
 }
 
 function checkRuleLoadingPolicy() {

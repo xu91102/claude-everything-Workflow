@@ -18,6 +18,7 @@
 - `test-driven-development`：行为变化的 Red Test Gate。
 - `systematic-debugging`：失败、异常结果和 flaky 行为的根因调试。
 - `e2e-testing`：Playwright E2E 模式、CI、制品和 flaky 处理。
+- `feature-acceptance`：以真实证据、用例矩阵和二次审核完成用户功能验收。
 
 ## Harness / 上下文与编排
 
