@@ -57,19 +57,15 @@ npm pack --dry-run
 npm publish --dry-run
 ```
 
-## npm 自动发布
+## npm 发布
 
-合并到 `main` 后，GitHub Actions 会运行 `.github/workflows/npm-publish.yml`：
+版本号通过 PR 更新 `package.json`，并与功能改动一起接受审查。PR 合并到 `main` 后，`.github/workflows/ci.yml` 会先运行 `npm run verify` 与 `npm run pack:dry-run`，只有 `verify` 成功时才发布该提交中的版本。
 
-1. 运行 `npm run verify` 和 `npm run pack:dry-run`。
-2. 读取 npm registry 的当前 `latest` 版本，默认在此基础上计算下一个 patch 版本。
-3. 提交 `package.json` 版本号变更并打 `v<version>` tag。
-4. 通过 npm 受信任的发布商 OIDC 认证执行 `npm publish`。
-5. 发布成功后把版本提交和 tag 推回 `main`。
+发布会拒绝不高于 npm `latest` 的新版本，创建指向当前提交的 `v<version>` tag，然后通过 npm 受信任的发布商 OIDC 执行 `npm publish`。当前版本已在 npm 时会安全跳过；待发布版本的 tag 已指向其他提交时会失败，要求先审计。
 
-也可以在 Actions 页面手动触发 `Publish npm`，选择 `patch`、`minor` 或 `major`。
+如需重试发布，可在 `main` 上手动触发 `CI`；流程不会修改、提交或推送 `main`。
 
-npm 包设置里必须添加 GitHub Actions 受信任的发布商，仓库为 `xu91102/claude-everything-Workflow`，workflow 文件名为 `npm-publish.yml`，并允许 `npm publish`。
+npm 包设置里必须添加 GitHub Actions 受信任的发布商，仓库为 `xu91102/claude-everything-Workflow`，workflow 文件名为 `ci.yml`，并允许 `npm publish`。
 
 安装目标：
 
@@ -102,8 +98,7 @@ claude-everything-Workflow/
 ├── settings.json               # Claude Code Hooks 配置入口
 ├── .github/
 │   └── workflows/
-│       ├── ci.yml               # PR / main 校验
-│       └── npm-publish.yml      # main 合并后自动 bump version 并发布 npm
+│       └── ci.yml               # PR / main 校验与 verify 后发布 npm
 │
 ├── rules/                      # 规则索引与按需加载规则
 │   ├── 01-base.md              # 基础设定
@@ -173,11 +168,7 @@ claude-everything-Workflow/
 │   │   └── SKILL.md
 │   ├── verification-before-completion/ # 完成声明前的新鲜验证门
 │   │   └── SKILL.md
-│   ├── documentation-lookup/   # Context7：库/API 实时文档（resolve → query）
-│   │   └── SKILL.md
 │   ├── e2e-testing/            # Playwright E2E 模式（POM、CI、制品）
-│   │   └── SKILL.md
-│   ├── context-budget/          # 上下文与 MCP 常驻开销审计
 │   │   └── SKILL.md
 │   ├── iterative-retrieval/     # Subagent 迭代检索与上下文收敛
 │   │   └── SKILL.md
@@ -217,11 +208,9 @@ claude-everything-Workflow/
 - 回退只改变查找位置，不改变按需读取原则；仍然只读取当前任务直接相关的规则文件，不要默认全量加载 `rules/` 或 `rules/common/`。
 - `rules/common/` 是专项参考区，只在命令、agent、skill 或当前任务明确触发时读取。
 
-## 与主仓对齐：按需 MCP、Context7 与省 Token
+## 按需 MCP 与上下文控制
 
-本目录已含 **`skills/documentation-lookup/`**，行为与 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) 主仓一致：通过 Context7 的 **`resolve-library-id` → `query-docs`** 查第三方库最新文档。技能不负责启动 MCP，需在 **Claude Code** 或 **Cursor** 中启用。
-
-本仓继续吸收 ECC 最新的 Context Budget 原则：默认 MCP 必须同时满足“通用”和“MCP 明显优于 CLI/API/原生能力”。GitHub、文档查询、Exa 搜索、Playwright E2E、memory 和 sequential-thinking 这类纯请求/响应或已有原生替代的能力，优先通过 skill、CLI/API 或 harness 原生能力按需触发，而不是默认常驻。需要审计本机上下文开销时，使用 `context-budget` skill。
+默认 MCP 必须同时满足“通用”和“MCP 明显优于 CLI/API/原生能力”。GitHub、文档查询、Exa 搜索、Playwright E2E、memory 和 sequential-thinking 这类纯请求/响应或已有原生替代的能力，优先通过 skill、CLI/API 或 harness 原生能力按需触发，而不是默认常驻。
 
 ### 1. Claude Code：用户级 `~/.claude/settings.json`
 
@@ -265,7 +254,7 @@ claude-everything-Workflow/
 ```
 
 - **跑 ECC 安装/同步且你已有同名自建 MCP**：可设置 `export ECC_DISABLED_MCPS="github,context7,exa,playwright,sequential-thinking,memory"`，避免重复写入（见主仓 README）。
-- **新增 MCP 前先审计**：使用 `context-budget` 判断它是否应该默认启用、按需启用，还是改为 CLI/API skill。
+- **新增 MCP 前先评估**：判断它是否应该默认启用、按需启用，还是改为 CLI/API skill。
 
 ### 3. Cursor
 
@@ -341,7 +330,7 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 硬门禁：
 
 - 开始非平凡任务前，先用 `using-superpowers` 判断并加载相关 process skill。
-- 上下文或工具面变重时，先用 `context-budget` 找出常驻 Token 开销，再决定新增或删除 MCP/skill/agent。
+- 上下文或工具面变重时，先盘点常驻 Token 开销，再决定新增或删除 MCP/skill/agent。
 - 子代理需要探索大仓库时，先用 `iterative-retrieval` 的 Dispatch/Evaluate/Refine/Loop 闭环收敛上下文，再回传证据。
 - 没有 spec，不进入 plan。
 - 没有用户审核，不进入实现。

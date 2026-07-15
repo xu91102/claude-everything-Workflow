@@ -18,11 +18,10 @@
 - `test-driven-development`：行为变化的 Red Test Gate。
 - `systematic-debugging`：失败、异常结果和 flaky 行为的根因调试。
 - `e2e-testing`：Playwright E2E 模式、CI、制品和 flaky 处理。
-- `documentation-lookup`：第三方库/API 的最新文档查询。
+- `feature-acceptance`：以真实证据、用例矩阵和二次审核完成用户功能验收。
 
 ## Harness / 上下文与编排
 
-- `context-budget`：审计上下文、MCP、agent 和 skill 常驻开销。
 - `iterative-retrieval`：subagent 和大仓库探索的迭代检索闭环。
 - `continuous-learning-v2`：Hook 观察、project/global instinct、学习评估和演化。
 
