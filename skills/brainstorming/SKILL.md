@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: "Use for explicit Brainstorming/design-spec/Spec-Gate requests, or before complex, ambiguous, high-risk, cross-file, architectural, integration, UI/UX, public API, data-flow, or behavior-changing development work. Skip for clearly specified low-risk edits such as button color tweaks, typo fixes, mechanical replacements, straightforward docs/config updates, or obvious single-file changes."
+description: "Use for explicit Brainstorming/design-spec/Spec-Gate requests, or before ambiguous, unclear, or complex development work. Do not use for clearly specified work, simple work, or simple UI changes."
 ---
 
 # Brainstorming Ideas Into Designs
