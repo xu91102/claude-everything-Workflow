@@ -16,7 +16,9 @@
     "cew": "bin/claude-everything-workflow.js"
   },
   "scripts": {
-    "verify": "node scripts/verify-harness.js",
+    "verify": "npm test && node scripts/verify-harness.js",
+    "eval": "node scripts/eval/cli.js",
+    "test": "node --test",
     "pack:dry-run": "npm pack --dry-run"
   },
   "files": [
