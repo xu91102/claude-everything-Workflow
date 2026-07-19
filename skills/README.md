@@ -4,9 +4,10 @@
 
 ## Process / 门禁
 
-- `using-superpowers`：非平凡任务的 skill 路由、优先级和完成声明纪律。
-- `brainstorming`：复杂/高风险任务的 Spec Gate。
-- `writing-plans`：已批准 spec 到实施计划的 Plan Gate。
+- `using-superpowers`：按风险选择直接执行、关键追问或正式设计，并保留完成声明纪律。
+- `grill-me`：一次只追问一个会改变实现的关键未知点，达到问题预算或退出条件后立即交回执行。
+- `brainstorming`：显式正式设计或不可逆高风险任务的 Formal Spec Gate。
+- `writing-plans`：execution-ready 工作在确有协调价值时使用的 Plan Gate，不强制前置 spec。
 - `executing-plans`：按已批准计划顺序执行。
 - `subagent-driven-development`：用户批准 commit/PR/SDD handling 后的任务拆分、审查和进度账本。
 - `using-git-worktrees`：脏工作区、高风险或并行任务的隔离工作区准备。

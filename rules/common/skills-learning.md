@@ -15,8 +15,9 @@
 
 ### Superpowers 路由纪律
 
-- 非平凡任务开始前，先用 `skills/using-superpowers/SKILL.md` 判断应加载的 process skill。
-- process skill 优先于 implementation skill：先决定工作方法，再做代码、文档、测试或 PR 动作。
+- 非平凡任务先用 `skills/using-superpowers/SKILL.md` 做风险分级，但不因任务非平凡、多文件或行为变化就自动加载完整 process skill 链。
+- 目标清楚且可回退时直接执行；只有关键未知点才用 `grill-me`，显式正式设计或高风险决策才用 `brainstorming`。
+- 路由选中 process skill 后，它才优先于 implementation skill；未选中时不制造 spec、plan 或重复批准。
 - 不凭记忆执行 skill；skill 可能已更新，必须读取当前 `SKILL.md`。
 - 用户直接指令、`AGENTS.md`、`CLAUDE.md` 和项目规则优先于 skill；冲突影响结果时要说明。
 

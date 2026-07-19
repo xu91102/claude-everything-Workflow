@@ -1,185 +1,66 @@
 ---
 name: brainstorming
-description: "Use for explicit Brainstorming/design-spec/Spec-Gate requests, or before complex, ambiguous, high-risk, cross-file, architectural, integration, UI/UX, public API, data-flow, or behavior-changing development work. Skip for clearly specified low-risk edits such as button color tweaks, typo fixes, mechanical replacements, straightforward docs/config updates, or obvious single-file changes."
+description: 用于用户明确要求 Brainstorming、design spec 或方案评审，或任务包含不可逆/高代价的架构、数据迁移、安全权限、公共 API、跨系统集成决策。提供一次设计批准和按需落盘；不因普通行为变化、多文件修改或可回退实现自动触发。
 ---
 
 # Brainstorming Ideas Into Designs
 
-Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
+把高风险或明确要求设计的想法收敛为可执行设计，同时避免重复确认和强制文档税。
 
-Start by deciding whether the request needs the full brainstorming flow. If it does, understand the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
+## Formal Spec Gate
 
-<HARD-GATE>
-Spec Gate: Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
-</HARD-GATE>
+只有本 skill 的触发条件成立时，才启用 Formal Spec Gate：在用户批准所呈现的设计前，不修改实现代码。普通清晰任务应回到 direct implementation，而不是扩大本门禁的适用范围。
 
-## Trigger Policy
+## Flow
 
-Use the full flow for explicit Brainstorming/design-spec/Spec-Gate requests, or when work is ambiguous, high-risk, cross-file, architecture/API/data/security/integration/UI-workflow changing, or has multiple reasonable designs.
+1. **Explore**：检查相关代码、文档、约束和最近变更，先自行回答可发现的问题。
+2. **Clarify**：若存在少量关键未知点，使用 `skills/grill-me/SKILL.md`；不要重复已经确认的内容。
+3. **Compare**：只有存在至少两个可信方案时才比较 2-3 个方案，并先给推荐及理由。
+4. **Design**：一次性呈现足够决策的设计，覆盖边界、组件、接口/数据流、错误处理、迁移和验证。大型设计可分节，但不要逐段索要形式化确认。
+5. **Approve once**：让用户对完整设计做一次批准。用户要求修改时，修订受影响部分后再批准。
+6. **Persist when useful**：满足落盘条件时写设计文档并自审。
+7. **Handoff**：清晰且耦合可控时进入 direct implementation；需要任务交接、复杂依赖或长期进度跟踪时才使用 `skills/writing-plans/SKILL.md`。
 
-Skip the full flow for clear low-risk edits: button/copy/typo/formatting tweaks, mechanical replacements, small docs/config updates, obvious single-file changes, read-only inspection, command output, or explanations.
+## 一次批准
 
-If a simple request hides uncertainty affecting architecture, data, integration, test scope, or release behavior, ask one targeted clarification before deciding.
+- 用户批准完整设计后即可继续。
+- 若落盘文档只是忠实记录已批准内容，不要求二次审核。
+- 只有落盘时引入了实质性新决策、扩大范围或改变风险边界，才需要用户重新批准。
+- 用户已明确要求实现时，不再额外询问“是否开始实现”。
 
-## Repository Spec Profile
+## 按需落盘
 
-For this repository, specs default to infrastructure/workflow design: Superpowers gates, skill/command/hook/rule/agent/tool contracts, failure modes, migration, rollback, fixtures, dry-runs, and verification. Avoid product narrative specs unless explicitly requested.
+出现以下任一条件时，将设计保存到 `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`：
 
-## Checklist
+- 用户明确要求 spec 或设计文档。
+- 设计涉及不可逆迁移、安全/权限边界、公共 API 兼容或跨系统契约。
+- 后续需要跨会话、多人或 subagent 交接。
+- `writing-plans` 需要稳定输入，且对话摘要不足以承载约束。
 
-When this skill applies, you MUST create a task for each of these items and complete them in order:
+其他情况保留对话中的批准设计即可，不创建文档。
 
-1. **Explore project context** — check files, docs, recent commits
-2. **Offer visual companion** (if task explicitly involves mockups, layouts, wireframes, screenshots, diagrams, or side-by-side visual comparisons) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
-3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-4. **Propose 2-3 approaches** — with trade-offs and your recommendation
-5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` using the required template below
-7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
-8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+### Spec Template
 
-## Process Flow
+按需落盘时使用用户语言，并覆盖：`背景`、`目标`、`非目标`、`需求与约束`、`方案对比`、`推荐方案`、`组件与接口`、`数据流`、`错误处理`、`迁移与回滚`、`测试策略`、`验收标准`、`风险`、`开放问题`。
 
-```dot
-digraph brainstorming {
-    "Explore project context" [shape=box];
-    "Visual questions ahead?" [shape=diamond];
-    "Offer Visual Companion\n(own message, no other content)" [shape=box];
-    "Ask clarifying questions" [shape=box];
-    "Propose 2-3 approaches" [shape=box];
-    "Present design sections" [shape=box];
-    "User approves design?" [shape=diamond];
-    "Write design doc" [shape=box];
-    "Spec self-review\n(fix inline)" [shape=box];
-    "User reviews spec?" [shape=diamond];
-    "Invoke writing-plans skill" [shape=doublecircle];
+文档应记录最终决策，不复述完整问答过程。具体到足以执行，但不要提前写逐步实施清单。
 
-    "Explore project context" -> "Visual questions ahead?";
-    "Visual questions ahead?" -> "Offer Visual Companion\n(own message, no other content)" [label="yes"];
-    "Visual questions ahead?" -> "Ask clarifying questions" [label="no"];
-    "Offer Visual Companion\n(own message, no other content)" -> "Ask clarifying questions";
-    "Ask clarifying questions" -> "Propose 2-3 approaches";
-    "Propose 2-3 approaches" -> "Present design sections";
-    "Present design sections" -> "User approves design?";
-    "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Write design doc" [label="yes"];
-    "Write design doc" -> "Spec self-review\n(fix inline)";
-    "Spec self-review\n(fix inline)" -> "User reviews spec?";
-    "User reviews spec?" -> "Write design doc" [label="changes requested"];
-    "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
-}
-```
+## Self-Review
 
-**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
+落盘后自行检查并直接修正：
 
-## The Process
-
-**Understanding the idea:**
-
-- Check out the current project state first (files, docs, recent commits)
-- Before asking detailed questions, assess scope: if the request describes multiple independent subsystems (e.g., "build a platform with chat, file storage, billing, and analytics"), flag this immediately. Don't spend questions refining details of a project that needs to be decomposed first.
-- If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. If estimated scope exceeds 8 major components OR >20 affected files OR >2 weeks estimated effort, automatically propose decomposition into sub-projects with a recommended order and a brief spec for the first sub-project.
-- For appropriately scoped projects, ask questions one at a time to refine the idea
-- Prefer multiple choice questions when possible, but open-ended is fine too
-- Only one question per message - if a topic needs more exploration, break it into multiple questions
-- Focus on understanding: purpose, constraints, success criteria
-
-**Exploring approaches:**
-
-- Propose 2-3 different approaches with trade-offs
-- Present options conversationally with your recommendation and reasoning
-- Lead with your recommended option and explain why
-
-**Presenting the design:**
-
-- Once you believe you understand what you're building, present the design
-- Scale each section to its complexity: a few sentences if straightforward, up to 200-300 words if nuanced
-- Ask after each section whether it looks right so far
-- Cover: architecture, components, data flow, error handling, testing
-- Be ready to go back and clarify if something doesn't make sense
-
-**Design for isolation and clarity:**
-
-- Break the system into smaller units that each have one clear purpose, communicate through well-defined interfaces, and can be understood and tested independently
-- For each unit, you should be able to answer: what does it do, how do you use it, and what does it depend on?
-- Can someone understand what a unit does without reading its internals? Can you change the internals without breaking consumers? If not, the boundaries need work.
-- Smaller, well-bounded units are also easier for you to work with - you reason better about code you can hold in context at once, and your edits are more reliable when files are focused. When a file grows large, that's often a signal that it's doing too much.
-
-**Working in existing codebases:**
-
-- Explore the current structure before proposing changes. Follow existing patterns.
-- Where existing code has problems that affect the work (e.g., a file that's grown too large, unclear boundaries, tangled responsibilities), include targeted improvements as part of the design - the way a good developer improves code they're working in.
-- Don't propose unrelated refactoring. Stay focused on what serves the current goal.
-
-## After the Design
-
-**Documentation:**
-
-- Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
-  - (User preferences for spec location override this default)
-- Use elements-of-style:writing-clearly-and-concisely skill if available
-- Do not commit silently or directly on protected branches; commit only when workflow/user intent allows it.
-
-**Required Spec Template:**
-
-Use the user's language for spec headings. For Chinese projects, use these headings in order: `背景`, `目标`, `非目标`, `需求`, `现有上下文`, `方案对比` with 2-3 options, `推荐方案`, `架构设计`, `组件与文件`, `数据流 / 接口`, `错误处理`, `测试策略`, `验收标准`, `风险与取舍`, `开放问题`.
-
-**Spec Quality Bar:**
-
-- Write an engineering design document, not a loose product memo.
-- Make it specific enough for `writing-plans`; do not include implementation checkboxes.
-- Include concrete files/interfaces, alternatives, tests, and acceptance criteria.
-
-**Spec Self-Review:**
-After writing the spec document, look at it with fresh eyes:
-
-1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
-2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
-3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
-4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
-
-Fix any issues inline. No need to re-review — just fix and move on.
-
-**User Review Gate:**
-After the spec review loop passes, ask the user to review the written spec before proceeding:
-
-> "Spec written to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
-
-Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user has reviewed and approved the saved spec.
-
-**Implementation:**
-
-- Invoke the writing-plans skill to create a detailed implementation plan
-- Do NOT invoke any other skill. writing-plans is the next step.
-
-## Key Principles
-
-- **One question at a time** - Don't overwhelm with multiple questions
-- **Multiple choice preferred** - Easier to answer than open-ended when possible
-- **YAGNI ruthlessly** - Remove unnecessary features from all designs
-- **Explore alternatives** - Always propose 2-3 approaches before settling
-- **Incremental validation** - Present design, get approval before moving on
-- **Be flexible** - Go back and clarify when something doesn't make sense
+1. 是否存在 `TBD`、`TODO`、占位符或两种解释。
+2. 组件、接口、迁移、测试和验收标准是否一致。
+3. 是否混入与用户目标无关的重构或未来扩展。
+4. 文档是否忠实反映已批准设计；若否，回到用户批准。
 
 ## Visual Companion
 
-A browser-based companion for showing mockups, diagrams, and visual options during brainstorming. Available as a tool — not a mode. Accepting the companion means it's available for questions that benefit from visual treatment; it does NOT mean every question goes through the browser.
+只有问题确实依赖 mockup、布局、截图、图表或并排视觉比较时，才单独询问用户是否启用视觉 companion。用户同意后再读取 `skills/brainstorming/visual-companion.md`。概念选择和文本权衡继续使用普通对话。
 
-**Offering the companion:** When you anticipate that upcoming questions will involve visual content (mockups, layouts, diagrams), offer it once for consent:
+## Boundaries
 
-> "Some of what we're working on might be easier to explain if I can show it to you in a web browser. I can put together mockups, diagrams, comparisons, and other visuals as we go. This feature is still new and can be token-intensive. Want to try it? (Requires opening a local URL)"
-
-**This offer MUST be its own message.** Do not combine it with clarifying questions, context summaries, or any other content. The message should contain ONLY the offer above and nothing else. Wait for the user's response before continuing. If they decline, proceed with text-only brainstorming.
-
-If the user does not respond within 48 hours or a configured timeout, proceed with text-only brainstorming and note that the Visual Companion was not accepted.
-
-**Per-question decision:** Even after the user accepts, decide FOR EACH QUESTION whether to use the browser or the terminal. The test: **would the user understand this better by seeing it than reading it?**
-
-- **Use the browser** for content that IS visual — mockups, wireframes, layout comparisons, architecture diagrams, side-by-side visual designs
-- **Use the terminal** for content that is text — requirements questions, conceptual choices, tradeoff lists, A/B/C/D text options, scope decisions
-
-A question about a UI topic is not automatically a visual question. "What does personality mean in this context?" is a conceptual question — use the terminal. "Which wizard layout works better?" is a visual question — use the browser.
-
-If they agree to the companion, read the detailed guide before proceeding:
-`skills/brainstorming/visual-companion.md`
+- 多文件、代码量大或“新功能”标签本身不触发本 skill。
+- 不要求每个任务都提出多个方案；只有真实取舍才比较方案。
+- 不强制先写 spec 再写 plan，也不强制 plan 后才能实现。
+- TDD、验证、安全确认、Git 权限边界仍由各自 skill 和项目规则负责。

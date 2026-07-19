@@ -53,6 +53,7 @@ function managedFiles() {
     "skills/e2e-testing",
     "skills/iterative-retrieval",
     "skills/using-superpowers",
+    "skills/grill-me",
     "skills/subagent-driven-development",
     "skills/brainstorming",
     "skills/using-git-worktrees",
@@ -478,13 +479,23 @@ function checkSkillLinks() {
   requireTokens("skills/using-superpowers/SKILL.md", [
     "Skill Invocation Rule",
     "Task arrives",
+    "direct execution",
+    "skills/grill-me/SKILL.md",
+    "multi-file changes alone",
     "approved plan + SDD/commit approved?",
     "external skill learning or edit?",
-    "process skills before implementation skills",
     "skills/brainstorming/SKILL.md",
     "skills/systematic-debugging/SKILL.md",
     "skills/verification-before-completion/SKILL.md",
     "User instructions",
+  ]);
+
+  requireTokens("skills/grill-me/SKILL.md", [
+    "答案会改变实现",
+    "一次只问一个问题",
+    "问题预算",
+    "退出条件",
+    "skills/brainstorming/SKILL.md",
   ]);
 
   requireTokens("skills/subagent-driven-development/SKILL.md", [
@@ -596,7 +607,10 @@ function checkSkillLinks() {
   ]);
 
   requireTokens("skills/executing-plans/SKILL.md", [
-    "approved implementation plan",
+    "implementation plan",
+    "separate approval",
+    "already requested implementation",
+    "proportional review",
     "Inline Execution",
     "Project-Agent Loop",
     "skills/systematic-debugging/SKILL.md",
@@ -702,8 +716,14 @@ function requireTokens(file, tokens) {
 
 function checkSuperpowersDevLoop() {
   requireTokens("README.md", [
-    "Superpowers 风格开发闭环",
+    "风险分级开发闭环",
     "using-superpowers",
+    "grill-me",
+    "直接执行",
+    "正式门禁",
+    "多文件改动本身不触发",
+    "验证始终保留",
+    "完整 Superpowers 流程",
     "subagent-driven-development",
     ".superpowers/sdd",
     "Global Constraints",
@@ -714,18 +734,18 @@ function checkSuperpowersDevLoop() {
     "iterative-retrieval",
     "executing-plans",
     "verification-before-completion",
-    "没有 spec，不进入 plan",
-    "没有用户审核，不进入实现",
     "没有 failing test，不写行为代码",
-    "没有 review，不标记任务完成",
     "没有新鲜验证证据，不声明完成、通过、已修复或 ready",
     "没有 verify，不进入 PR",
     "`/learn-eval --preview` 是非阻塞学习建议门",
   ]);
 
   requireTokens("rules/01-base.md", [
+    "快速通道",
+    "追问通道",
+    "正式通道",
+    "多文件",
     "Spec Gate",
-    "User Review Gate",
     "Plan Gate",
     "Red Test Gate",
     "Task Review Gate",
@@ -735,18 +755,24 @@ function checkSuperpowersDevLoop() {
 
   requireTokens("rules/common/skills-learning.md", [
     "skills/using-superpowers/SKILL.md",
-    "process skill 优先于 implementation skill",
+    "风险分级",
+    "不因任务非平凡",
     "不凭记忆执行 skill",
   ]);
 
   requireTokens("skills/brainstorming/SKILL.md", [
-    "Spec Gate",
-    "reviewed and approved the saved spec",
+    "Formal Spec Gate",
+    "一次批准",
+    "不要求二次审核",
+    "按需落盘",
+    "skills/grill-me/SKILL.md",
   ]);
 
   requireTokens("skills/writing-plans/SKILL.md", [
     "## Preconditions",
+    "execution-ready",
     "approved spec",
+    "No Spec Tax",
     "Plan Gate",
     "## Global Constraints",
     "**Interfaces:**",
@@ -774,7 +800,7 @@ function checkSuperpowersDevLoop() {
 
   requireTokens("skills/brainstorming/SKILL.md", [
     "docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md",
-    "Write design doc",
+    "direct implementation",
   ]);
 
   requireTokens("skills/brainstorming/visual-companion.md", [

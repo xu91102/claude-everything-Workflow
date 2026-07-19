@@ -157,6 +157,8 @@ claude-everything-Workflow/
 │   ├── README.md               # Skill 分类索引；物理目录保持平铺以兼容发现
 │   ├── using-superpowers/      # Skill 路由、优先级与门禁纪律
 │   │   └── SKILL.md
+│   ├── grill-me/               # 只追问会改变实现的关键未知点
+│   │   └── SKILL.md
 │   ├── subagent-driven-development/ # SDD：task brief、review package、progress ledger
 │   │   ├── SKILL.md
 │   │   ├── implementer-prompt.md
@@ -305,53 +307,48 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录统一保存低噪音 Hook 运行时和脚本实现。默认不启用会话启动、会话结束、停止或压缩前的弱摘要 Hook，避免污染上下文。`scripts/learning/` 只保存手动学习治理脚本，不作为 Hook 自动触发。
 Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks；如未来需要 Codex 原生自动化，应新增明确 adapter。
 
-## Superpowers 风格开发闭环
+## 风险分级开发闭环
 
-复杂任务默认参考 [obra/superpowers](https://github.com/obra/superpowers) 的门禁结构，但不复制外部仓库文件。本仓的主线是：
+本仓保留 [obra/superpowers](https://github.com/obra/superpowers) 的高风险门禁能力，同时吸收 [mattpocock/skills 的 grill-me](https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me) 所代表的轻量追问思路：一次只问一个会改变实现的关键问题，信息足够就停止。默认流程不再由“复杂”标签驱动，而由决策风险驱动。
 
 ```text
-复杂任务
-  -> using-superpowers 先路由到相关 process skill
-  -> brainstorming 澄清需求
-  -> 写 design spec
-  -> 用户审核 spec
-  -> using-git-worktrees 按需创建隔离工作区
-  -> writing-plans 写实施计划
-  -> subagent-driven-development 或 executing-plans 按计划执行
-  -> TDD 红绿重构
-  -> 需求符合性审查
-  -> 代码质量审查
-  -> verification-before-completion 完成声明前确认新鲜验证证据
-  -> /verify 质量门
-  -> /pr 提交/PR
-  -> /learn-eval --preview 学习沉淀
+任务到达
+  -> using-superpowers 做风险分级
+  -> 目标清楚且可回退：直接执行
+  -> 存在关键未知点：grill-me（默认最多 3 问）-> 直接执行或升级
+  -> 显式正式设计 / 不可逆高风险：正式门禁
+       -> brainstorming 提交完整设计并获得一次批准
+       -> design spec 按需落盘
+       -> writing-plans 仅在协调复杂时使用
+       -> subagent-driven-development / executing-plans / inline execution
+  -> 行为变化按需 TDD
+  -> verification-before-completion 检查新鲜证据
+  -> /verify -> 按需 /pr -> /learn-eval --preview
 ```
 
-硬门禁：
+路由边界：
 
-- 开始非平凡任务前，先用 `using-superpowers` 判断并加载相关 process skill。
-- 上下文或工具面变重时，先盘点常驻 Token 开销，再决定新增或删除 MCP/skill/agent。
-- 子代理需要探索大仓库时，先用 `iterative-retrieval` 的 Dispatch/Evaluate/Refine/Loop 闭环收敛上下文，再回传证据。
-- 没有 spec，不进入 plan。
-- 没有用户审核，不进入实现。
-- 计划必须包含 `Global Constraints` 和每任务 `Interfaces`，让 implementer/reviewer 不依赖父会话记忆。
-- 没有 failing test，不写行为代码。
-- 没有 review，不标记任务完成。
-- 没有新鲜验证证据，不声明完成、通过、已修复或 ready。
-- 没有 verify，不进入 PR。
-- 有脏工作区、并行任务或高风险改动时，先考虑 `using-git-worktrees`。
-- 只有用户明确批准 commit/PR/SDD 执行时，才使用 `subagent-driven-development` 的 per-task commit 流；否则用 `executing-plans` 或 inline execution。
+- 多文件改动本身不触发 spec、plan 或 brainstorming；普通新功能和可回退行为变化也可以直接执行。
+- 只有答案会改变实现、接口、数据、安全边界或用户体验时才追问；能从仓库查明的事实由 agent 自行查明。
+- 完整 Superpowers 流程保留给用户明确要求的正式设计，以及数据迁移、安全权限、公共 API、跨系统契约等不可逆或高代价工作。
+- 已批准设计按原样落盘时不要求二次审核；没有实质新决策就不重复确认。
+- `writing-plans` 接受 execution-ready 的用户需求、已批准设计或 approved spec；没有协调和交接价值时不写 plan。
+- 计划仍包含 `Global Constraints` 和每任务 `Interfaces`，让 implementer/reviewer 不依赖父会话记忆。
+- 没有 failing test，不写行为代码；无自动测试路径时记录替代验证。
+- review 范围与风险匹配，不再要求每个小任务都经过双重审查。
+- 验证始终保留：没有新鲜验证证据，不声明完成、通过、已修复或 ready；没有 verify，不进入 PR。
+- 有脏工作区、并行任务或高风险改动时，才考虑 `using-git-worktrees`。
+- 只有用户明确批准 commit/PR/SDD handling 时，才使用 `subagent-driven-development` 的 per-task commit 流；否则使用 `executing-plans` 或 inline execution。
+- 上下文或工具面变重时，先盘点常驻 Token 开销；子代理探索大仓库时，按需使用 `iterative-retrieval` 的 Dispatch/Evaluate/Refine/Loop 闭环。
 
-### 对齐 Superpowers v6.0.3 的能力
+### 保留的正式流程能力
 
 - `subagent-driven-development` 使用 `.superpowers/sdd/` 保存 task brief、implementer report、review package 和 `progress.md`，避免把 scratch 写进 `.git/`。
-- 每个任务使用一个 `task-reviewer-prompt.md` 同时返回 spec compliance 和 code quality verdict，减少重复 reviewer 上下文。
-- `writing-plans` 强制 `Global Constraints` 和每任务 `Interfaces`，把跨任务约束、输入输出契约传给 implementer 和 reviewer。
+- 每个正式任务可用一个 `task-reviewer-prompt.md` 同时返回 spec compliance 和 code quality verdict，减少重复 reviewer 上下文。
+- `writing-plans` 使用 `Global Constraints` 和每任务 `Interfaces` 传播跨任务契约。
 - Brainstorming visual companion 使用带 `?key=` 的 per-session URL，HTTP/WebSocket 请求都需要 session key；默认 idle timeout 为 4 小时，可用 `--idle-timeout-minutes` 调整。
 
-复杂任务包括新功能、架构调整、多文件行为变化、高风险实现，以及需求存在多种合理解释的工作。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
-
-收尾阶段按 `/verify` -> `/pr` -> `/learn-eval --preview` 推进。`/learn-eval --preview` 是非阻塞学习建议门，只在模式高频、稳定、可复用时保存。
+收尾阶段按需使用 `/verify`、`/pr` 和 `/learn-eval --preview`。`/learn-eval --preview` 是非阻塞学习建议门，只在模式高频、稳定、可复用时保存。
 
 ## Continuous Learning v2
 
@@ -390,17 +387,15 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 ```
 1. 复制到 ~/.claude/
-2. 复杂任务用 `brainstorming` 写 design spec 并让用户审核
-3. 高风险或并行实现前，用 `using-git-worktrees` 隔离工作区
-4. 用 `writing-plans` 写实施计划
-5. 用 `executing-plans` 按计划执行
-6. 使用 /tdd 委派 tdd-guide 规划测试先行实现
-7. 关键路径使用 /e2e 委派 e2e-runner 维护 Playwright
-8. 使用 /verify 验证
-9. 使用 /code-review 委派 code-reviewer 审查
-10. 使用 /learn-eval 将稳定模式沉淀到 skills/learn/<category>/
-11. 使用 /projects 查看项目级学习来源
-12. 使用 /promote --dry-run 评估是否推广为全局直觉
-13. 使用 /evolve 评估是否演化
-14. 使用 /prune 清理已人工标记删除的直觉
+2. 默认让 `using-superpowers` 选择最短路径；需求清楚时直接实现
+3. 只有关键未知点才用 `grill-me`，正式高风险设计才用 `brainstorming`
+4. 有交接或复杂依赖时才用 `writing-plans` 与 `executing-plans`
+5. 高风险或并行实现前，按需用 `using-git-worktrees` 隔离工作区
+6. 行为变化按需使用 /tdd，关键用户路径按需使用 /e2e
+7. 使用 /verify 验证，按风险使用 /code-review
+8. 使用 /learn-eval 将稳定模式沉淀到 skills/learn/<category>/
+9. 使用 /projects 查看项目级学习来源
+10. 使用 /promote --dry-run 评估是否推广为全局直觉
+11. 使用 /evolve 评估是否演化
+12. 使用 /prune 清理已人工标记删除的直觉
 ```

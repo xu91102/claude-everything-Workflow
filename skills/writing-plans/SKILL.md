@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Use when you have a spec or requirements for a multi-step task, before touching code
+description: Use when an execution-ready task benefits from a persisted multi-step implementation plan because of coordination, handoff, dependencies, or user request. Accepts clear requirements, an approved design, or an approved spec; do not require a spec for its own sake.
 ---
 
 # Writing Plans
@@ -20,11 +20,15 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 ## Preconditions
 
-Only write an implementation plan after a design spec exists and the user has approved it. If the request is complex and no approved spec exists, return to `skills/brainstorming/SKILL.md` instead of creating a plan. The approved spec is the Plan Gate input.
+Only write an implementation plan when the work is execution-ready: goals, binding constraints, success criteria, and implementation-changing decisions are stable. The Plan Gate input may be clear user requirements, an approved design, or an approved spec.
+
+## No Spec Tax
+
+Do not require an approved spec merely because a task is large or touches multiple files. If one consequential unknown remains, use `skills/grill-me/SKILL.md`. Use `skills/brainstorming/SKILL.md` only for explicit formal design or high-risk decisions. If direct implementation is easier to understand and verify than a persisted plan, do not write a plan.
 
 ## Scope Check
 
-If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
+If the source requirements cover multiple independent subsystems, split them into separate plans when each can produce working, testable software on its own. Do not force this decomposition when one short plan remains clearer.
 
 ## File Structure
 
@@ -65,9 +69,9 @@ Do not include commit steps by default. Add `git add` or `git commit` steps only
 
 ## Global Constraints
 
-[The spec's project-wide requirements — version floors, dependency limits,
+[The project-wide requirements — version floors, dependency limits,
 naming and copy rules, platform requirements, commit/PR boundaries, exact
-values — one line each, copied verbatim from the spec or user instruction.
+values — one line each, copied verbatim from the approved design, spec, or user instruction.
 Every task's requirements implicitly include this section.]
 
 ---
@@ -136,15 +140,15 @@ Every step must contain the actual content an engineer needs. These are **plan f
 - Complete code in every step — if a step changes code, show the code
 - Exact commands with expected output
 - DRY, YAGNI, TDD, verification checkpoints
-- Copy binding cross-task constraints into `Global Constraints`; do not assume implementers or reviewers will remember the spec.
+- Copy binding cross-task constraints into `Global Constraints`; do not assume implementers or reviewers will remember the source conversation or spec.
 - Every task needs an `Interfaces` block, even if it says `Consumes: none` or `Produces: none`.
 - Do not default to commits; leave changes uncommitted unless the user explicitly asks for commit, push, PR, or an approved workflow includes commit handling.
 
 ## Self-Review
 
-After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
+After writing the complete plan, check it against its source requirements, approved design, or spec. This is a checklist you run yourself, not a subagent dispatch.
 
-**1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
+**1. Requirement coverage:** Skim each binding requirement. Can you point to a task that implements it? List any gaps.
 
 **2. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
 
@@ -152,13 +156,11 @@ After writing the complete plan, look at the spec with fresh eyes and check the 
 
 **4. Contract propagation:** Did every task get the relevant `Global Constraints` and the exact `Interfaces` it consumes and produces? If a later task depends on a name, format, flag, or file from an earlier task, both tasks must say so consistently.
 
-If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
+If you find issues, fix them inline. No need to re-review; fix and move on. If you find a binding requirement with no task, add the task.
 
 ## Execution Handoff
 
-After saving the plan, offer execution choice:
-
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. If you want me to execute it, I will use `skills/executing-plans/SKILL.md`. Two execution options:**
+After saving the plan, choose the smallest execution mode supported by the user's request and Git permissions. If the user asked only for a plan, stop after reporting its path. If the user already asked for implementation, continue without another approval prompt:
 
 **1. Subagent-Driven Development (when commit handling is approved)** - Use `skills/subagent-driven-development/SKILL.md` for independent tasks, task briefs, implementer report files, review packages, and the `.superpowers/sdd` progress ledger.
 
@@ -166,7 +168,7 @@ After saving the plan, offer execution choice:
 
 **3. Inline Execution (lightweight)** - Execute tasks in this session, task-by-task, with checkpoints. Use this for small, clear, tightly coupled work.
 
-**Which approach?"**
+Default to Inline Execution for small, clear, tightly coupled work through `skills/executing-plans/SKILL.md`. Use the Project-Agent Loop when independent tasks materially benefit from context isolation. Ask the user only when commit/PR permission or a genuinely user-owned trade-off is missing.
 
 **If Subagent-Driven Development chosen:**
 - Confirm the user has approved commit handling, PR handling, or SDD-style execution. If not, use Project-Agent Loop or Inline Execution instead.
