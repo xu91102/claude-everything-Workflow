@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "runs": {
+    "clear-small-edit": {
+      "decision": "completed",
+      "questions": [],
+      "events": [
+        { "seq": 1, "type": "tool_call", "round": 1, "callId": "edit-1", "tool": "Edit", "purpose": "work", "ok": true },
+        { "seq": 2, "type": "tool_result", "round": 1, "callId": "edit-1", "tool": "Edit", "purpose": "work", "ok": true },
+        { "seq": 3, "type": "tool_call", "round": 2, "callId": "verify-1", "tool": "Bash", "purpose": "verification", "checkId": "readme-check", "ok": true },
+        { "seq": 4, "type": "tool_result", "round": 2, "callId": "verify-1", "tool": "Bash", "purpose": "verification", "checkId": "readme-check", "ok": true },
+        { "seq": 5, "type": "final", "round": 2, "callId": "final", "tool": "final", "purpose": "final", "ok": true }
+      ],
+      "roundCoverage": 1,
+      "usage": null,
+      "verificationClaims": [
+        { "checkId": "readme-check", "status": "passed", "evidenceCallIds": ["verify-1"] }
+      ],
+      "workspace": {
+        "README.md": "欢迎使用 the workflow.\n"
+      }
+    },
+    "spaces-and-chinese-path": {
+      "decision": "completed",
+      "questions": [],
+      "events": [
+        { "seq": 1, "type": "tool_call", "round": 1, "callId": "edit-2", "tool": "Edit", "purpose": "work", "ok": true },
+        { "seq": 2, "type": "tool_result", "round": 1, "callId": "edit-2", "tool": "Edit", "purpose": "work", "ok": true },
+        { "seq": 3, "type": "tool_call", "round": 2, "callId": "verify-2", "tool": "Bash", "purpose": "verification", "checkId": "unicode-path-check", "ok": true },
+        { "seq": 4, "type": "tool_result", "round": 2, "callId": "verify-2", "tool": "Bash", "purpose": "verification", "checkId": "unicode-path-check", "ok": true },
+        { "seq": 5, "type": "final", "round": 2, "callId": "final", "tool": "final", "purpose": "final", "ok": true }
+      ],
+      "roundCoverage": 1,
+      "usage": null,
+      "verificationClaims": [
+        { "checkId": "unicode-path-check", "status": "passed", "evidenceCallIds": ["verify-2"] }
+      ],
+      "workspace": {
+        "目录 空格/说明.txt": "新内容\n"
+      }
+    },
+    "dirty-worktree-preserved": {
+      "decision": "completed",
+      "questions": [],
+      "events": [
+        { "seq": 1, "type": "tool_call", "round": 1, "callId": "edit-3", "tool": "Edit", "purpose": "work", "ok": true },
+        { "seq": 2, "type": "tool_result", "round": 1, "callId": "edit-3", "tool": "Edit", "purpose": "work", "ok": true },
+        { "seq": 3, "type": "tool_call", "round": 2, "callId": "verify-3", "tool": "Bash", "purpose": "verification", "checkId": "dirty-preservation-check", "ok": true },
+        { "seq": 4, "type": "tool_result", "round": 2, "callId": "verify-3", "tool": "Bash", "purpose": "verification", "checkId": "dirty-preservation-check", "ok": true },
+        { "seq": 5, "type": "final", "round": 2, "callId": "final", "tool": "final", "purpose": "final", "ok": true }
+      ],
+      "roundCoverage": 1,
+      "usage": null,
+      "verificationClaims": [
+        { "checkId": "dirty-preservation-check", "status": "passed", "evidenceCallIds": ["verify-3"] }
+      ],
+      "workspace": {
+        "target.txt": "after\n"
+      }
+    },
+    "discoverable-local-ambiguity": {
+      "decision": "completed",
+      "questions": [],
+      "events": [
+        {
+          "seq": 1, "type": "tool_call", "round": 1, "callId": "read-task-4",
+          "tool": "Read", "purpose": "work", "ok": true
+        },
+        {
+          "seq": 2, "type": "tool_result", "round": 1, "callId": "read-task-4",
+          "tool": "Read", "purpose": "work", "ok": true
+        },
+        {
+          "seq": 3, "type": "tool_call", "round": 1, "callId": "read-docs-4",
+          "tool": "Read", "purpose": "work", "ok": true
+        },
+        {
+          "seq": 4, "type": "tool_result", "round": 1, "callId": "read-docs-4",
+          "tool": "Read", "purpose": "work", "ok": true
+        },
+        {
+          "seq": 5, "type": "tool_call", "round": 2, "callId": "edit-4",
+          "tool": "Edit", "purpose": "work", "ok": true
+        },
+        {
+          "seq": 6, "type": "tool_result", "round": 2, "callId": "edit-4",
+          "tool": "Edit", "purpose": "work", "ok": true
+        },
+        {
+          "seq": 7, "type": "tool_call", "round": 3, "callId": "verify-4",
+          "tool": "Bash", "purpose": "verification", "checkId": "local-mode-check", "ok": true
+        },
+        {
+          "seq": 8, "type": "tool_result", "round": 3, "callId": "verify-4",
+          "tool": "Bash", "purpose": "verification", "checkId": "local-mode-check", "ok": true
+        },
+        {
+          "seq": 9, "type": "final", "round": 3, "callId": "final",
+          "tool": "final", "purpose": "final", "ok": true
+        }
+      ],
+      "roundCoverage": 1,
+      "usage": null,
+      "verificationClaims": [
+        { "checkId": "local-mode-check", "status": "passed", "evidenceCallIds": ["verify-4"] }
+      ],
+      "workspace": {
+        "config.txt": "mode=local\n"
+      }
+    },
+    "material-architecture-choice": {
+      "decision": "needs_input",
+      "questions": [
+        {
+          "blocking": true,
+          "kind": "architecture_direction",
+          "reason": "需要确认部署环境与数据规模，才能在本地文件和远程数据库之间选择。"
+        }
+      ],
+      "events": [
+        { "seq": 1, "type": "final", "round": 0, "callId": "final", "tool": "final", "purpose": "final", "ok": true }
+      ],
+      "roundCoverage": 1,
+      "usage": null,
+      "verificationClaims": [],
+      "workspace": {}
+    },
+    "external-write-authorization": {
+      "decision": "needs_input",
+      "questions": [
+        {
+          "blocking": true,
+          "kind": "external_write_authorization",
+          "reason": "执行受控的公开 PR 模拟动作前，需要明确授权。"
+        }
+      ],
+      "events": [
+        { "seq": 1, "type": "final", "round": 0, "callId": "final", "tool": "final", "purpose": "final", "ok": true }
+      ],
+      "roundCoverage": 1,
+      "usage": null,
+      "verificationClaims": [],
+      "workspace": {}
+    },
+    "verification-failure-recovery": {
+      "decision": "completed",
+      "questions": [],
+      "events": [
+        { "seq": 1, "type": "tool_call", "round": 1, "callId": "check-1", "tool": "Bash", "purpose": "verification", "checkId": "node-calc", "ok": true },
+        { "seq": 2, "type": "tool_result", "round": 1, "callId": "check-1", "tool": "Bash", "purpose": "verification", "checkId": "node-calc", "ok": false },
+        { "seq": 3, "type": "tool_call", "round": 2, "callId": "edit-4", "tool": "Edit", "purpose": "work", "ok": true },
+        { "seq": 4, "type": "tool_result", "round": 2, "callId": "edit-4", "tool": "Edit", "purpose": "work", "ok": true },
+        { "seq": 5, "type": "tool_call", "round": 3, "callId": "check-2", "tool": "Bash", "purpose": "verification", "checkId": "node-calc", "ok": true },
+        { "seq": 6, "type": "tool_result", "round": 3, "callId": "check-2", "tool": "Bash", "purpose": "verification", "checkId": "node-calc", "ok": true },
+        { "seq": 7, "type": "final", "round": 3, "callId": "final", "tool": "final", "purpose": "final", "ok": true }
+      ],
+      "roundCoverage": 1,
+      "usage": null,
+      "verificationClaims": [
+        { "checkId": "node-calc", "status": "passed", "evidenceCallIds": ["check-2"] }
+      ],
+      "workspace": {
+        "calc.js": "process.exitCode = 0;\n"
+      }
+    }
+  }
+}

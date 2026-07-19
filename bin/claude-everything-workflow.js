@@ -24,6 +24,11 @@ function main() {
     return;
   }
 
+  if (command === "eval") {
+    runNodeScript("scripts/eval/cli.js", args, process.cwd());
+    return;
+  }
+
   process.stderr.write(`Unknown command: ${command}\n\n`);
   printHelp();
   process.exit(1);
@@ -47,13 +52,13 @@ function runInstall(args) {
   run("bash", [path.join(root, "scripts", "install.sh"), ...args]);
 }
 
-function runNodeScript(relativeScript, args) {
-  run(process.execPath, [path.join(root, relativeScript), ...args]);
+function runNodeScript(relativeScript, args, cwd = root) {
+  run(process.execPath, [path.join(root, relativeScript), ...args], cwd);
 }
 
-function run(command, args) {
+function run(command, args, cwd = root) {
   const result = spawnSync(command, args, {
-    cwd: root,
+    cwd,
     stdio: "inherit",
   });
 
@@ -80,11 +85,15 @@ function printHelp() {
 Usage:
   cew install [--claude-only|--codex-only] [--dry-run]
   cew verify
+  cew eval [--adapter replay|codex|claude] [--live] [--json]
+           [--suite PATH] [--replay PATH] [--output PATH]
+           [--allow-suite-code] [--trust-replay] [--keep-fixtures]
 
 Examples:
   npx claude-everything-workflow install
   npx claude-everything-workflow install --codex-only
   npx claude-everything-workflow verify
+  npx claude-everything-workflow eval --json
 `);
 }
 

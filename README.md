@@ -290,6 +290,88 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 
 `verify-harness.js` 会检查 README 与 `commands/` 是否一致、薄封装 command 是否指向存在的 agent/skill、旧命令和旧衰减语义是否残留，并运行 `observe-v2` 最小 smoke test。
 
+## Behavior Eval
+
+Behavior Eval 为后续衡量 Harness 是否真的帮助模型完成任务提供可执行地基，而不是只检查配置文本。
+内置 `quality-autonomy` profile 对齐当前使用习惯：范围明确、可逆且在本地的工作直接执行并自证；
+本地可查明的歧义先只读探索再行动；只有关键架构信息缺失、外部写入或不可逆动作才阻塞询问。
+七个内置场景覆盖明确小改动、中文与空格路径、脏工作区保护、本地歧义探索、关键架构选择、
+外部写入授权和首次验证失败后的恢复。
+其中本地歧义场景启用 `readBeforeWrite` 独立 oracle：结构化 `Read` 类工具的成功结果必须先于明确的
+Edit/Write/file_change 写入调用；Bash/command execution 的语义不可证明，不能充当读取证据，verification
+命令也不计作探索。Codex 当前事件协议缺少结构化读取证据；Claude 的内置 `Read` 又不受 Bash sandbox
+约束，因此安全 profile 不开放它。两种完整 live suite 都会在启动前返回 `E_ADAPTER_CAPABILITY`、
+`complete=false`，不会把不可观测性算成模型失败；可用 `--scenario` 运行其余场景。
+七场景尚未覆盖“本地不可逆动作授权”，所以不能声称已完整覆盖所有 `ask` 边界。
+
+默认离线运行内置 replay，不访问 Codex 或 Claude，也不产生模型费用：
+
+```bash
+npm run eval -- --json
+cew eval --json
+cew eval --list
+```
+
+离线 replay 只验证 evaluator、fixture、独立 oracle、指标和质量门本身，分数不等于真实模型质量。
+内置 replay 是随包审查的可信自测；自定义 replay 的验证证据默认不计入真实性门。只有确认 trace 来源可信时，
+才显式增加 `--trust-replay`。
+真实评测必须显式授权 `--live`，并选择宿主 adapter：
+
+```bash
+cew eval --adapter codex --live --json
+cew eval --adapter claude --live --json
+```
+
+live 不传模型降级参数。为避免用户配置合并后重新开启 MCP、Hook、连接器或重定向 provider，Codex 使用
+`--ignore-user-config` 和专用最小权限 profile，Claude 使用 `--safe-mode`。因此模型由厂商 CLI 的内置默认值
+选择；Foundation 不能在不新增可信模型选择输入的情况下证明它一定是本机“最强”模型。
+
+prompt 只通过 stdin 传入，并明确编码 `act / explore_then_act / ask` 使用习惯。两个宿主命令都会先从去除
+相对项和 fixture 项的宿主 PATH 解析为绝对可执行文件，再以各自最小环境启动；这能阻止 fixture-cwd
+劫持，但调用者仍需信任自己的宿主 PATH。Codex 顶层环境不继承
+`NODE_OPTIONS`、动态加载器或 shell 启动注入变量。Codex 只允许 fixture 写入、把 `.git` 限为只读、关闭
+命令网络，并拒绝读取用户主目录和 fixture 外临时目录。
+
+Claude 只向模型暴露并显式允许 sandboxed `Bash`，在 `dontAsk` 下读、改、建文件都走同一个 OS sandbox
+边界，避免内置 Read/Edit 绕过或依赖旧版权限语义。会话的 `TMP/TEMP/TMPDIR` 和 Claude 专用 temp root
+指向宿主短临时根下随机、私有的短生命周期目录（POSIX 为 `0700`），仅精确加入 sandbox allow，并在
+成功或失败后清理；同一临时根的其它路径仍不可读写。sandbox 还拒绝读取用户主目录与常见 Unix socket
+目录，fixture 写入使用 cwd 默认边界、显式 fixture allow 和 `.git` deny。
+`CLAUDE_CONFIG_DIR` 与凭据环境变量动态加入保护。网络、hooks、MCP、连接器、后台 agent 与会话持久化均关闭。
+所以本阶段 live 衡量的是受控决策策略，不是当前候选 Harness 的 skills、plugins、hooks 或多 agent 集成能力，
+也不能用来证明本分支已让真实模型达到最大能力；候选/基线真实对照属于下一阶段。
+
+live 会把场景 prompt 发送给所选模型供应商；“不保存原始 prompt”只约束本地评测报告，不等于不向模型
+供应商发送。宿主 sandbox 也不是完整 OS 安全边界，尤其 Claude 在部分 Linux 环境中的 Unix-socket
+seccomp 保护可能不可用。live 只应用于可信 fixture，涉及不可信输入时应放进一次性容器和受控账号；
+默认离线 replay 不进行模型请求。
+
+Windows Node 22 CI 只验证包内协议与路径测试；真实 Windows live 尚未运行。live 解析器只接受能被
+`shell:false` 直接启动的原生 `.exe`，不会执行 npm 的 `.cmd` / `.bat` shim；只有 shim 的安装会返回
+`E_ADAPTER_MISSING`，不能把 CI 绿灯当作 Windows live 已可用。
+
+自定义 suite 中的 `verification.command` 是本地代码执行入口，默认拒绝。只有在审查并信任 suite 后才使用
+`--allow-suite-code`；启用后，独立 oracle 会以当前用户权限执行这些命令。`--keep-fixtures` 会在评测流程正常
+结束时保留临时工作区，包括行为或 gate 失败的现场，并在终端和报告的 `fixturePaths` 中给出路径；adapter、
+oracle、报告写入等基础设施异常始终清理。
+
+内置“外部写入授权”场景只使用临时目录内的受控模拟脚本，不连接 GitHub 或其它外部服务。
+
+报告包含六组信号：
+
+- `taskSuccessRate`：adapter 正常完成且决策、独立文件与行为顺序 oracle 都正确的比例。
+- `unnecessaryQuestionRate`：本应直接完成的场景中，模型提出任何问题的比例；非阻塞追问同样不能绕过门禁。
+- `falseGateRate`：本应直接完成的场景被错误判定为 `blocked` 的比例。
+- `toolRoundTrips`：工具调用轮次、均值、P50、P95 与调用总数，用来观察流程摩擦；`roundCoverage`
+  表示真实轮次数据覆盖率，宿主不提供轮次时保持 `null`，不伪造轮次。
+- `contextCost`：fresh/cache input 与 output token；`usageCoverage` 表示有真实 usage 的场景覆盖率。
+  缺失时保持 `null`，不猜测 token。
+- `verificationTruthfulness`：声称验证通过时，是否能按 `checkId` 关联到完整且成功的可信工具结果，
+  且同时通过独立 oracle；恢复场景还要求成功证据之前真实出现过失败结果。
+
+默认报告不保存原始 prompt、tool output 或环境变量；
+adapter 错误也只返回稳定错误码和裁剪后的安全信息。
+
 ## Hook Profile 控制
 
 通过环境变量控制 Hook 行为:
