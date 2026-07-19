@@ -17,6 +17,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Save plans to:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
 - (User preferences for plan location override this default)
+- **Local-only artifact policy:** Treat every generated implementation plan as a local workflow artifact. Do not stage or commit it. The default `docs/superpowers/` path is ignored.
 
 ## Preconditions
 

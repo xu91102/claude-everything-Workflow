@@ -35,18 +35,29 @@ Use process skills before implementation skills:
 
 ```text
 Task arrives
-  -> unclear / high-risk / multi-file?      -> brainstorming
-  -> approved spec, no plan?                -> writing-plans
-  -> approved plan + SDD/commit approved?   -> subagent-driven-development
-  -> approved plan, no commit approval?     -> executing-plans
-  -> bug / failing test / unexpected result -> systematic-debugging
-  -> behavior change with test path?        -> test-driven-development
-  -> dirty worktree / risky branch work?    -> using-git-worktrees
-  -> completion / fixed / ready claim?      -> verification-before-completion
-  -> external skill learning or edit?       -> skill-creator + skills-learning
+  -> explicit full Superpowers / spec request?       -> brainstorming
+  -> explicit grill request?                         -> grilling (explicit session)
+  -> bug / failing test / unexpected result?         -> systematic-debugging
+  -> discoverable fact?                              -> inspect; do not ask
+  -> systematic fact / blind-spot gap?               -> discover-unknowns-zh
+  -> costly-to-reverse high-risk boundary?            -> brainstorming
+  -> key unresolved user-owned decision?             -> grilling (inline uncertainty)
+  -> approved spec, no plan?                         -> writing-plans
+  -> approved plan + SDD/commit approved?            -> subagent-driven-development
+  -> approved plan, no commit approval?              -> executing-plans
+  -> behavior change with test path?                 -> test-driven-development
+  -> dirty worktree / risky branch work?             -> using-git-worktrees
+  -> completion / fixed / ready claim?               -> verification-before-completion
+  -> external skill learning or edit?                -> skill-creator + skills-learning
+  -> otherwise                                       -> shortest applicable loop
 ```
 
-- Complex, ambiguous, architectural, integration, high-risk, cross-file, or behavior-changing work: use `skills/brainstorming/SKILL.md` first.
+- An explicit full Superpowers, brainstorming, design-spec, or Spec Gate request: use `skills/brainstorming/SKILL.md`.
+- Explicit `/grill`, grill-me, challenge, 拷问, or 压力测试 requests: use `skills/grilling/SKILL.md`.
+- A discoverable fact is inspected with the filesystem, documentation, logs, or tools rather than asked of the user.
+- Systematic evidence and blind-spot gaps: use `skills/discover-unknowns-zh/SKILL.md`.
+- A high-risk boundary is a costly-to-reverse architecture or service-boundary choice, a public-contract compatibility change, an authentication or authorization boundary, a persistent data/schema migration, or an irreversible external side effect. Use `skills/brainstorming/SKILL.md` for these even without explicit opt-in.
+- After high-risk classification is ruled out, a key unresolved user-owned decision uses the inline uncertainty mode in `skills/grilling/SKILL.md`; stop interviewing as soon as the information is sufficient.
 - Approved spec that needs an implementation plan: use `skills/writing-plans/SKILL.md`.
 - Approved plan with independent tasks and approved commit/PR/SDD handling: use `skills/subagent-driven-development/SKILL.md`.
 - Approved plan without commit handling or with tightly coupled tasks: use `skills/executing-plans/SKILL.md`.
@@ -56,14 +67,17 @@ Task arrives
 - Completion, fixed, passing, ready, or PR-readiness claims: use `skills/verification-before-completion/SKILL.md`.
 - External skill learning or skill edits: use `skills/skill-creator/SKILL.md` and `rules/common/skills-learning.md`.
 
+File count, code size, ordinary behavior change, and a “new feature” label are risk signals, not sufficient triggers for grilling or the full Spec Gate. Clear tasks use direct implementation plus proportionate verification: the shortest applicable loop.
+
 Then apply domain skills such as documentation lookup, E2E testing, or workflow engineering as needed.
 
 ## Red Flags
 
 Stop and check skills before continuing if you think:
 
-- "This is just a quick code change."
-- "I need to inspect files before deciding."
+- "This spans multiple files, so it needs the full workflow."
+- "I can ask the user instead of inspecting a discoverable fact."
+- "Every behavior change needs brainstorming."
 - "I remember what this skill says."
 - "The user asked for the outcome, so the workflow gate can be skipped."
 - "The verification should pass."

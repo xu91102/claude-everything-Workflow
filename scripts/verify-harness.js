@@ -53,6 +53,7 @@ function managedFiles() {
     "skills/e2e-testing",
     "skills/iterative-retrieval",
     "skills/using-superpowers",
+    "skills/grilling",
     "skills/subagent-driven-development",
     "skills/brainstorming",
     "skills/using-git-worktrees",
@@ -417,6 +418,7 @@ function checkRouterTargets() {
       ["agents/e2e-runner.md", "skills/e2e-testing/SKILL.md"],
     ],
     ["commands/harness-audit.md", ["agents/harness-optimizer.md"]],
+    ["commands/grill.md", ["skills/grilling/SKILL.md"]],
   ];
 
   for (const [command, targets] of expected) {
@@ -714,10 +716,11 @@ function checkSuperpowersDevLoop() {
     "iterative-retrieval",
     "executing-plans",
     "verification-before-completion",
-    "没有 spec，不进入 plan",
-    "没有用户审核，不进入实现",
+    "完整流程适用时",
+    "没有 spec 不进入 plan",
+    "没有用户审核不进入实现",
     "没有 failing test，不写行为代码",
-    "没有 review，不标记任务完成",
+    "没有 review 不标记任务完成",
     "没有新鲜验证证据，不声明完成、通过、已修复或 ready",
     "没有 verify，不进入 PR",
     "`/learn-eval --preview` 是非阻塞学习建议门",
@@ -799,6 +802,160 @@ function checkSuperpowersDevLoop() {
     "BRAINSTORM_TOKEN_FILE",
     "umask 077",
     ".last-token",
+  ]);
+}
+
+function checkSuperpowersArtifactPolicy() {
+  requireTokens("rules/05-git-workflow.md", [
+    "## Superpowers 本地工件",
+    "Superpowers 生成的 spec 和 plan 仅用于本地工作流",
+    "无论保存位置都不得暂存或提交",
+  ]);
+  requireTokens("skills/brainstorming/SKILL.md", [
+    "Local-only artifact policy",
+    "Treat every generated design spec as a local workflow artifact",
+    "Do not stage or commit it.",
+  ]);
+  requireTokens("skills/writing-plans/SKILL.md", [
+    "Local-only artifact policy",
+    "Treat every generated implementation plan as a local workflow artifact",
+    "Do not stage or commit it.",
+  ]);
+
+  const repoRoot = spawnSync("git", ["rev-parse", "--show-toplevel"], {
+    cwd: root,
+    encoding: "utf8",
+    timeout: 30000,
+  });
+
+  if (
+    repoRoot.status !== 0 ||
+    path.resolve(repoRoot.stdout.trim()) !== path.resolve(root)
+  ) {
+    return;
+  }
+
+  requireTokens(".gitignore", ["/docs/superpowers/"]);
+
+  const tracked = spawnSync("git", ["ls-files", "docs/superpowers"], {
+    cwd: root,
+    encoding: "utf8",
+    timeout: 30000,
+  });
+
+  if (tracked.status !== 0) {
+    fail(`unable to inspect tracked Superpowers artifacts: ${tracked.stderr}`);
+  } else if (tracked.stdout.trim()) {
+    fail(
+      `docs/superpowers artifacts must not be tracked:\n${tracked.stdout.trim()}`,
+    );
+  }
+}
+
+function checkGrillingWorkflow() {
+  requireTokens("skills/grilling/SKILL.md", [
+    "one question per turn",
+    "recommended answer",
+    "reversal evidence",
+    "shared understanding",
+    "Do not ask for discoverable facts",
+    "Inline uncertainty mode",
+    "Explicit grilling session",
+    "Use only after high-risk classification is ruled out",
+    "Each resolved decision and delegated default must include",
+    "Reversal evidence:",
+    "return to `skills/using-superpowers/SKILL.md` for routing",
+  ]);
+  requireTokens("skills/using-superpowers/SKILL.md", [
+    "discoverable fact",
+    "user-owned decision",
+    "skills/grilling/SKILL.md",
+    "shortest applicable loop",
+    "explicit full Superpowers",
+    "high-risk boundary",
+  ]);
+
+  const router = read("skills/using-superpowers/SKILL.md");
+  const highRiskRoute = router.indexOf(
+    "costly-to-reverse high-risk boundary?",
+  );
+  const inlineRoute = router.indexOf(
+    "key unresolved user-owned decision?",
+  );
+  if (
+    highRiskRoute === -1 ||
+    inlineRoute === -1 ||
+    highRiskRoute > inlineRoute
+  ) {
+    fail(
+      "skills/using-superpowers/SKILL.md should route high-risk boundaries before inline user decisions",
+    );
+  }
+  requireTokens("skills/brainstorming/SKILL.md", [
+    "confirmed grilling handoff",
+    "Do not repeat resolved decisions",
+    "costly-to-reverse",
+    "listed reversal evidence appears",
+    "underlying premise is invalidated",
+    "Confirmed handoff still valid?",
+  ]);
+
+  const grillingContract = read("skills/grilling/SKILL.md");
+  if (
+    /^\s*(?:recommended )?next skill:/im.test(grillingContract) ||
+    /^\s*推荐下一 skill：/m.test(grillingContract)
+  ) {
+    fail(
+      "skills/grilling/SKILL.md should return routing responsibility instead of recommending the next skill",
+    );
+  }
+  requireTokens("skills/discover-unknowns-zh/SKILL.md", [
+    "事实缺口",
+    "skills/grilling/SKILL.md",
+    "高风险类别直接交给 `skills/brainstorming/SKILL.md`",
+    "复杂、高风险、多文件或长周期本身不是触发条件",
+    "不要因为下一步会触碰生产代码或多文件改动就自动创建实施计划",
+  ]);
+  requireTokens("rules/01-base.md", [
+    "默认最短闭环、按风险逐级升级",
+    "显式完整 Superpowers",
+    "高风险边界优先于微型访谈",
+    "多文件、新功能、普通行为变化和复杂度本身都不是升级条件",
+    "信息足够后立即停止追问",
+    "Spec Gate",
+    "Plan Gate",
+    "Task Review Gate",
+  ]);
+  requireTokens("rules/common/skills-learning.md", [
+    "不自动加载完整 process skill 链",
+    "路由选中后",
+    "skills/grilling/SKILL.md",
+    "skills/brainstorming/SKILL.md",
+  ]);
+  requireTokens("agents/planner.md", [
+    "`grilling`",
+    "`brainstorming`",
+    "多模块本身不是",
+    "不重复已解决决策",
+  ]);
+
+  const baseRules = read("rules/01-base.md");
+  if (
+    baseRules.includes(
+      "复杂任务包括新功能、架构调整、多文件行为变化",
+    )
+  ) {
+    fail(
+      "rules/01-base.md should not classify new or multi-file behavior work as full-flow by default",
+    );
+  }
+  requireTokens("README.md", [
+    "`/grill`",
+    "grilling，替代 brainstorming 的澄清阶段",
+    "默认最短闭环",
+    "按风险逐级升级",
+    "完整流程适用时",
+    "未命中上述高风险或关键未知",
   ]);
 }
 
@@ -1088,6 +1245,8 @@ function main() {
   checkSkillLinks();
   checkRuleLoadingPolicy();
   checkSuperpowersDevLoop();
+  checkSuperpowersArtifactPolicy();
+  checkGrillingWorkflow();
   checkRemovedSkillReferences();
   checkForbiddenCommandDrift();
   checkScriptLayout();

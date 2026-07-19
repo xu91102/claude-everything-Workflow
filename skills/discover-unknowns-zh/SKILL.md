@@ -1,6 +1,6 @@
 ---
 name: discover-unknowns-zh
-description: Chinese workflow for surfacing and managing known/unknown gaps before, during, and after complex agentic work. Use for ambiguous, unfamiliar, high-risk, long-horizon, cross-domain, design-heavy, architecture-changing, or large implementation tasks; when the user asks for blind spot scans, unknown unknowns, interviews, prototypes, reference mapping, implementation notes, explainers, or quizzes; or when phrases like "I'll know it when I see it" or "teach me this domain" indicate unstated assumptions.
+description: Chinese workflow for surfacing systematic fact, evidence, context, and blind-spot gaps before, during, and after agentic work. Use when the user explicitly asks for a blind-spot scan, unknown unknowns, prototypes, reference mapping, implementation notes, explainers, or quizzes; when phrases like "I'll know it when I see it" or "teach me this domain" expose unstated assumptions; or when safe progress is blocked by evidence gaps that require multiple low-cost probes. Do not use merely because work is complex, high-risk, long-running, or spans multiple files.
 ---
 
 # 发现未知项
@@ -9,16 +9,16 @@ description: Chinese workflow for surfacing and managing known/unknown gaps befo
 
 当任务命中以下任一信号时启动本 skill：
 
-- **任务形态**：模糊、陌生、高风险、长周期、跨领域、重设计、改架构或大型实现。
+- **系统性缺口**：安全推进需要多次低成本调查才能补齐事实、证据、上下文或盲点。
 - **用户原话**：“我看到才知道”“教我这个领域”“做盲点扫描”“未知的未知”“先别动代码”。
 - **工件请求**：盲点扫描、访谈、原型、参考物映射、实施计划、实现记录、说明文档、变更测验。
 - **假设风险**：任务若不先澄清未知项，会迫使 agent 做大量未言明假设。
 
-任务很窄、未知项很少时，跳过本 skill，直接进入实现。
+复杂、高风险、多文件或长周期本身不是触发条件。任务很窄、未知项很少，或事实可由一次直接检索获得时，跳过本 skill，回到最短适用闭环。
 
 ## 概览
 
-使用这个 skill，把模糊、陌生或高风险任务拆成一组低成本工件，在真正修改生产代码前暴露假设、盲点和判断差异。
+使用这个 skill，把系统性事实、证据和盲点缺口拆成一组低成本调查工件，在真正修改生产代码前暴露假设和判断差异。
 
 把用户提示、计划、skills 和上下文视为“地图”。把真实代码库、用户、约束、质量标准和评审过程视为“领地”。地图和领地之间的差距，就是需要持续发现和管理的未知项。
 
@@ -59,7 +59,7 @@ description: Chinese workflow for surfacing and managing known/unknown gaps befo
    - 用户需要“看到才知道”时，用原型暴露未知的已知，例如视觉品味、交互手感、文案或流程形状。在实现阶段才发现这些代价相对较高——规格小改可能导致代码大改，且回滚更难。
    - 某个答案可能改变架构、数据模型、API、UX、灰度或风险策略时，用访谈。
    - 用户描述不清但能指出代码、文档、截图、示例或历史方案时，用参考物。源码是最强参考物。
-   - 下一步会触碰生产代码或多文件改动时，用实施计划。
+   - 任务已经因高风险或用户显式 opt-in 进入完整流程时，用实施计划；不要因为下一步会触碰生产代码或多文件改动就自动创建实施计划。
 
 4. **让计划保留转向空间**
    - 计划开头先放用户最可能调整的决策：数据模型、类型/接口、UX 流程、安全边界、灰度和兼容性。
@@ -79,11 +79,11 @@ description: Chinese workflow for surfacing and managing known/unknown gaps befo
 ## 决策规则
 
 - 小修小改、明确 bug、机械替换：不用本 skill，直接走最小实现闭环。
-- 模糊需求、陌生领域、架构改动、UI 品味、长任务，或用户说“先别动代码”“我看到才知道”时：使用本 skill。
-- 任务对用户或 agent 陌生时，先做盲点扫描。
+- 用户显式请求盲点/未知项工件，或安全推进被系统性事实、证据、上下文缺口阻塞时：使用本 skill。
+- 任务对用户或 agent 陌生且一次直接检索不足以补齐证据时，先做盲点扫描。
 - 用户不知道某领域“好的标准”长什么样时，先让 agent 教你这个领域，而不是让它生成一堆变体让你挑。
 - 用户表达“我看到就知道”时，先做原型再实现。
-- 单个答案可能改变架构时，先访谈再计划。
+- 单个答案暴露高风险边界时进入 `brainstorming`；排除高风险后仍阻塞实现的用户决策交给 `grilling`。
 - 有强参考物（尤其是源码）时，先读参考物再设计新模式。
 - 实现中暴露重大未知项时，更新工件链路，不要隐藏假设。
 - 长周期任务跑回来结果不对时，多花时间定义未知项或重写计划让 agent 能即兴处理，而不是直接重试。
@@ -110,3 +110,7 @@ description: Chinese workflow for surfacing and managing known/unknown gaps befo
 ## 协作
 
 当主要风险来自缺失上下文时，先使用本 skill，再进入 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans`。未知项澄清后，再交给更窄的 process skill 管理实现和验证。
+
+本 skill 负责可调查的事实缺口、证据缺口和盲点发现。能从代码、文档、日志或工具获得的事实由 agent 直接检索；不要把它们转问用户。
+
+当剩余缺口涉及高回滚成本的架构/服务边界、公共契约兼容、安全边界、持久数据迁移或不可逆外部副作用时，高风险类别直接交给 `skills/brainstorming/SKILL.md`。排除这些高风险后，仍会实质改变结果的用户决策交给 `skills/grilling/SKILL.md`。不要重复访谈：本 skill 找证据，后续 skill 收敛决策或形成规格。

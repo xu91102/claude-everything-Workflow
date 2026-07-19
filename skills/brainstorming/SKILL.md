@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: "Use for explicit Brainstorming/design-spec/Spec-Gate requests, or before complex, ambiguous, high-risk, cross-file, architectural, integration, UI/UX, public API, data-flow, or behavior-changing development work. Skip for clearly specified low-risk edits such as button color tweaks, typo fixes, mechanical replacements, straightforward docs/config updates, or obvious single-file changes."
+description: "Use when the user explicitly requests Brainstorming, a design spec, Spec Gate, or the full Superpowers workflow; also use automatically for costly-to-reverse high-risk work involving architecture or service boundaries, public-contract compatibility, authentication or authorization, persistent data/schema migration, or irreversible external side effects. Do not use for ordinary behavior changes or merely because work is new, complex, or spans multiple files."
 ---
 
 # Brainstorming Ideas Into Designs
@@ -10,16 +10,22 @@ Help turn ideas into fully formed designs and specs through natural collaborativ
 Start by deciding whether the request needs the full brainstorming flow. If it does, understand the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
 
 <HARD-GATE>
-Spec Gate: Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
+Spec Gate: Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to every task for which the full brainstorming flow applies.
 </HARD-GATE>
 
 ## Trigger Policy
 
-Use the full flow for explicit Brainstorming/design-spec/Spec-Gate requests, or when work is ambiguous, high-risk, cross-file, architecture/API/data/security/integration/UI-workflow changing, or has multiple reasonable designs.
+Use the full flow for explicit Brainstorming/design-spec/Spec-Gate/full-Superpowers requests, or for costly-to-reverse high-risk work involving architecture or service boundaries, public-contract compatibility, authentication or authorization, persistent data/schema migration, or irreversible external side effects.
 
-Skip the full flow for clear low-risk edits: button/copy/typo/formatting tweaks, mechanical replacements, small docs/config updates, obvious single-file changes, read-only inspection, command output, or explanations.
+Skip the full flow for clear or readily reversible work regardless of file count, including ordinary behavior changes, button/copy/typo/formatting tweaks, mechanical replacements, small docs/config updates, read-only inspection, command output, or explanations.
 
 If a simple request hides uncertainty affecting architecture, data, integration, test scope, or release behavior, ask one targeted clarification before deciding.
+
+## Confirmed Grilling Handoff
+
+If the conversation contains a confirmed grilling handoff, treat its resolved decisions and delegated defaults as approved input. Skip the clarification stage for those items and do not make grilling a mandatory predecessor.
+
+Do not repeat resolved decisions. Reopen only one decision at a time, and only when its listed reversal evidence appears or its underlying premise is invalidated by new evidence. A merely available alternative or a changed agent preference is not a conflict.
 
 ## Repository Spec Profile
 
@@ -31,7 +37,7 @@ When this skill applies, you MUST create a task for each of these items and comp
 
 1. **Explore project context** — check files, docs, recent commits
 2. **Offer visual companion** (if task explicitly involves mockups, layouts, wireframes, screenshots, diagrams, or side-by-side visual comparisons) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
-3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
+3. **Resolve remaining questions** — skip decisions in a confirmed grilling handoff unless their reversal evidence appears or a premise is invalidated; otherwise ask one at a time
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
 5. **Present design** — in sections scaled to their complexity, get user approval after each section
 6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` using the required template below
@@ -46,6 +52,7 @@ digraph brainstorming {
     "Explore project context" [shape=box];
     "Visual questions ahead?" [shape=diamond];
     "Offer Visual Companion\n(own message, no other content)" [shape=box];
+    "Confirmed handoff still valid?" [shape=diamond];
     "Ask clarifying questions" [shape=box];
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
@@ -57,8 +64,10 @@ digraph brainstorming {
 
     "Explore project context" -> "Visual questions ahead?";
     "Visual questions ahead?" -> "Offer Visual Companion\n(own message, no other content)" [label="yes"];
-    "Visual questions ahead?" -> "Ask clarifying questions" [label="no"];
-    "Offer Visual Companion\n(own message, no other content)" -> "Ask clarifying questions";
+    "Visual questions ahead?" -> "Confirmed handoff still valid?" [label="no"];
+    "Offer Visual Companion\n(own message, no other content)" -> "Confirmed handoff still valid?";
+    "Confirmed handoff still valid?" -> "Propose 2-3 approaches" [label="yes"];
+    "Confirmed handoff still valid?" -> "Ask clarifying questions" [label="no handoff or one decision reopened"];
     "Ask clarifying questions" -> "Propose 2-3 approaches";
     "Propose 2-3 approaches" -> "Present design sections";
     "Present design sections" -> "User approves design?";
@@ -81,6 +90,7 @@ digraph brainstorming {
 - Before asking detailed questions, assess scope: if the request describes multiple independent subsystems (e.g., "build a platform with chat, file storage, billing, and analytics"), flag this immediately. Don't spend questions refining details of a project that needs to be decomposed first.
 - If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. If estimated scope exceeds 8 major components OR >20 affected files OR >2 weeks estimated effort, automatically propose decomposition into sub-projects with a recommended order and a brief spec for the first sub-project.
 - For appropriately scoped projects, ask questions one at a time to refine the idea
+- If a confirmed grilling handoff exists, do not repeat resolved decisions; reopen only one at a time, and only when listed reversal evidence appears or an underlying premise is invalidated
 - Prefer multiple choice questions when possible, but open-ended is fine too
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
@@ -119,7 +129,7 @@ digraph brainstorming {
 - Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
   - (User preferences for spec location override this default)
 - Use elements-of-style:writing-clearly-and-concisely skill if available
-- Do not commit silently or directly on protected branches; commit only when workflow/user intent allows it.
+- **Local-only artifact policy:** Treat every generated design spec as a local workflow artifact. Do not stage or commit it. The default `docs/superpowers/` path is ignored.
 
 **Required Spec Template:**
 

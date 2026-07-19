@@ -142,6 +142,7 @@ claude-everything-Workflow/
 │   ├── code-review.md          # /code-review → code-reviewer
 │   ├── tdd.md                  # /tdd → tdd-guide
 │   ├── e2e.md                  # /e2e → e2e-runner
+│   ├── grill.md                # /grill → grilling
 │   └── harness-audit.md        # /harness-audit → harness-optimizer
 │
 ├── references/                 # 按需加载的长参考材料
@@ -156,6 +157,8 @@ claude-everything-Workflow/
 ├── skills/
 │   ├── README.md               # Skill 分类索引；物理目录保持平铺以兼容发现
 │   ├── using-superpowers/      # Skill 路由、优先级与门禁纪律
+│   │   └── SKILL.md
+│   ├── grilling/               # 重大用户决策的单问式压力测试
 │   │   └── SKILL.md
 │   ├── subagent-driven-development/ # SDD：task brief、review package、progress ledger
 │   │   ├── SKILL.md
@@ -307,12 +310,17 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 ## Superpowers 风格开发闭环
 
-复杂任务默认参考 [obra/superpowers](https://github.com/obra/superpowers) 的门禁结构，但不复制外部仓库文件。本仓的主线是：
+本仓默认最短闭环、按风险逐级升级。高风险任务或用户显式 opt-in 时参考 [obra/superpowers](https://github.com/obra/superpowers) 的门禁结构，但不复制外部仓库文件。主线是：
 
 ```text
-复杂任务
+任务
   -> using-superpowers 先路由到相关 process skill
-  -> brainstorming 澄清需求
+  -> 可查事实直接检索；系统性事实缺口用 discover-unknowns-zh
+  -> 高回滚成本的架构/公共契约、安全边界、持久数据迁移或不可逆副作用：进入完整流程
+  -> 排除上述高风险后，关键未知按需用 grilling，一次只问一个最高价值问题，信息足够立即停止
+  -> 未命中上述高风险或关键未知且需求清楚：直接实现并做相称验证
+  -> 用户显式要求 Superpowers/spec：进入完整流程
+  -> grilling，替代 brainstorming 的澄清阶段；brainstorming 不重复已确认决策
   -> 写 design spec
   -> 用户审核 spec
   -> using-git-worktrees 按需创建隔离工作区
@@ -327,16 +335,16 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
   -> /learn-eval --preview 学习沉淀
 ```
 
+需要显式压力测试计划、设计或重大决策时使用 `/grill`。显式会话保留共同理解确认；自动触发只使用更短的微型访谈。`grilling` 不是新门禁：明确任务、多文件任务、普通行为变化和可查事实不会因此增加交互轮数。
+
 硬门禁：
 
 - 开始非平凡任务前，先用 `using-superpowers` 判断并加载相关 process skill。
 - 上下文或工具面变重时，先盘点常驻 Token 开销，再决定新增或删除 MCP/skill/agent。
 - 子代理需要探索大仓库时，先用 `iterative-retrieval` 的 Dispatch/Evaluate/Refine/Loop 闭环收敛上下文，再回传证据。
-- 没有 spec，不进入 plan。
-- 没有用户审核，不进入实现。
+- 完整流程适用时：没有 spec 不进入 plan，没有用户审核不进入实现，没有 review 不标记任务完成。
 - 计划必须包含 `Global Constraints` 和每任务 `Interfaces`，让 implementer/reviewer 不依赖父会话记忆。
 - 没有 failing test，不写行为代码。
-- 没有 review，不标记任务完成。
 - 没有新鲜验证证据，不声明完成、通过、已修复或 ready。
 - 没有 verify，不进入 PR。
 - 有脏工作区、并行任务或高风险改动时，先考虑 `using-git-worktrees`。
@@ -349,7 +357,7 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 - `writing-plans` 强制 `Global Constraints` 和每任务 `Interfaces`，把跨任务约束、输入输出契约传给 implementer 和 reviewer。
 - Brainstorming visual companion 使用带 `?key=` 的 per-session URL，HTTP/WebSocket 请求都需要 session key；默认 idle timeout 为 4 小时，可用 `--idle-timeout-minutes` 调整。
 
-复杂任务包括新功能、架构调整、多文件行为变化、高风险实现，以及需求存在多种合理解释的工作。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
+复杂度只影响执行与验证强度，不自动触发完整流程。普通新功能、多文件行为变化和存在低风险关键未知的任务仍走最短适用闭环；只有上述高风险类别或显式 opt-in 才进入完整流程。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
 
 收尾阶段按 `/verify` -> `/pr` -> `/learn-eval --preview` 推进。`/learn-eval --preview` 是非阻塞学习建议门，只在模式高频、稳定、可复用时保存。
 
@@ -390,7 +398,7 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 ```
 1. 复制到 ~/.claude/
-2. 复杂任务用 `brainstorming` 写 design spec 并让用户审核
+2. 需求清楚时直接实现；关键未知按需用 `/grill`；仅高风险任务或显式 opt-in 用 `brainstorming` 写 design spec
 3. 高风险或并行实现前，用 `using-git-worktrees` 隔离工作区
 4. 用 `writing-plans` 写实施计划
 5. 用 `executing-plans` 按计划执行
