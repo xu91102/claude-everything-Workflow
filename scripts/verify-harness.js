@@ -865,6 +865,9 @@ function checkGrillingWorkflow() {
     "Each resolved decision and delegated default must include",
     "Reversal evidence:",
     "return to `skills/using-superpowers/SKILL.md` for routing",
+    "Existing Confirmed Handoff",
+    "Do not re-ask them",
+    "recorded reversal evidence appears",
   ]);
   requireTokens("skills/using-superpowers/SKILL.md", [
     "discoverable fact",
@@ -925,6 +928,9 @@ function checkGrillingWorkflow() {
     "Spec Gate",
     "Plan Gate",
     "Task Review Gate",
+    "Spec Gate -> brainstorming 澄清未决需求并写 design spec",
+    "若已有 confirmed grilling handoff，则复用已解决决策",
+    "仅在 reversal evidence 出现或基础前提失效时重开",
   ]);
   requireTokens("rules/common/skills-learning.md", [
     "不自动加载完整 process skill 链",
@@ -957,6 +963,43 @@ function checkGrillingWorkflow() {
     "完整流程适用时",
     "未命中上述高风险或关键未知",
   ]);
+}
+
+function checkSuperpowersRoutingConsistency() {
+  requireTokens("skills/discover-unknowns-zh/SKILL.md", [
+    "返回 `skills/using-superpowers/SKILL.md` 重新路由",
+    "不要用固定的后续 skill 枚举代替路由器",
+  ]);
+  requireTokens("rules/01-base.md", [
+    "高风险边界优先于微型访谈和“需求清楚/易回滚”短路",
+  ]);
+  requireTokens("skills/brainstorming/SKILL.md", [
+    "High-risk classification takes precedence over clarity or reversibility.",
+    "Only when neither explicit opt-in nor a high-risk boundary applies",
+  ]);
+
+  const unknowns = read("skills/discover-unknowns-zh/SKILL.md");
+  for (const staleRoute of [
+    "交接到 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans` skill",
+    "再进入 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans`",
+  ]) {
+    if (unknowns.includes(staleRoute)) {
+      fail(
+        `skills/discover-unknowns-zh/SKILL.md should return to the router instead of enumerating follow-up skills: ${staleRoute}`,
+      );
+    }
+  }
+
+  const brainstorming = read("skills/brainstorming/SKILL.md");
+  if (
+    brainstorming.includes(
+      "Skip the full flow for clear or readily reversible work regardless of file count",
+    )
+  ) {
+    fail(
+      "skills/brainstorming/SKILL.md should not let clarity bypass a high-risk boundary",
+    );
+  }
 }
 
 function checkRemovedSkillReferences() {
@@ -1247,6 +1290,7 @@ function main() {
   checkSuperpowersDevLoop();
   checkSuperpowersArtifactPolicy();
   checkGrillingWorkflow();
+  checkSuperpowersRoutingConsistency();
   checkRemovedSkillReferences();
   checkForbiddenCommandDrift();
   checkScriptLayout();

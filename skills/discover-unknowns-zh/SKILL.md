@@ -88,7 +88,7 @@ description: Chinese workflow for surfacing systematic fact, evidence, context, 
 - 实现中暴露重大未知项时，更新工件链路，不要隐藏假设。
 - 长周期任务跑回来结果不对时，多花时间定义未知项或重写计划让 agent 能即兴处理，而不是直接重试。
 - 任务简单时，只使用最小有用步骤，不做仪式化流程。
-- 当已知的未知已清空，或剩余未知项都有低成本检查路径且不会改变关键架构、数据、API、UX 或安全边界时，退出本 skill，交接到 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans` skill。
+- 当已知的未知已清空，或剩余未知项都有低成本检查路径且不会改变关键架构、数据、API、UX 或安全边界时，退出本 skill，返回 `skills/using-superpowers/SKILL.md` 重新路由；不要用固定的后续 skill 枚举代替路由器。
 
 ## 工件
 
@@ -109,7 +109,7 @@ description: Chinese workflow for surfacing systematic fact, evidence, context, 
 
 ## 协作
 
-当主要风险来自缺失上下文时，先使用本 skill，再进入 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans`。未知项澄清后，再交给更窄的 process skill 管理实现和验证。
+当主要风险来自缺失上下文时，先使用本 skill。未知项澄清后返回 `skills/using-superpowers/SKILL.md` 重新路由，再由更窄的 process skill 管理实现和验证。
 
 本 skill 负责可调查的事实缺口、证据缺口和盲点发现。能从代码、文档、日志或工具获得的事实由 agent 直接检索；不要把它们转问用户。
 

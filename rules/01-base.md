@@ -25,7 +25,7 @@
 
 ## 开发流程
 
-默认最短闭环、按风险逐级升级。先检查显式意图和高风险边界，再处理关键未知；高风险边界优先于微型访谈。
+默认最短闭环、按风险逐级升级。先检查显式意图和高风险边界，再处理关键未知；高风险边界优先于微型访谈和“需求清楚/易回滚”短路。
 
 ```text
 任务到达
@@ -64,7 +64,7 @@
 仅在用户显式完整 Superpowers、Brainstorming、design spec 或 Spec Gate 请求，或任务涉及高回滚成本的架构/服务边界、公共契约兼容、认证/授权边界、持久数据/schema 迁移或不可逆外部副作用时，进入完整 Superpowers 风格门禁闭环：
 
 ```text
-1. Spec Gate -> brainstorming 澄清需求并写 design spec
+1. Spec Gate -> brainstorming 澄清未决需求并写 design spec；若已有 confirmed grilling handoff，则复用已解决决策，仅在 reversal evidence 出现或基础前提失效时重开
 2. User Review Gate -> 用户确认 spec 后才能继续
 3. Plan Gate -> writing-plans 写实施计划
 4. Red Test Gate -> 行为变化先写失败测试并确认失败原因

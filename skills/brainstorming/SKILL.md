@@ -17,7 +17,9 @@ Spec Gate: Do NOT invoke any implementation skill, write any code, scaffold any 
 
 Use the full flow for explicit Brainstorming/design-spec/Spec-Gate/full-Superpowers requests, or for costly-to-reverse high-risk work involving architecture or service boundaries, public-contract compatibility, authentication or authorization, persistent data/schema migration, or irreversible external side effects.
 
-Skip the full flow for clear or readily reversible work regardless of file count, including ordinary behavior changes, button/copy/typo/formatting tweaks, mechanical replacements, small docs/config updates, read-only inspection, command output, or explanations.
+High-risk classification takes precedence over clarity or reversibility.
+
+Only when neither explicit opt-in nor a high-risk boundary applies, skip the full flow for clear or readily reversible work regardless of file count, including ordinary behavior changes, button/copy/typo/formatting tweaks, mechanical replacements, small docs/config updates, read-only inspection, command output, or explanations.
 
 If a simple request hides uncertainty affecting architecture, data, integration, test scope, or release behavior, ask one targeted clarification before deciding.
 
