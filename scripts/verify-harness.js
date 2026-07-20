@@ -959,6 +959,43 @@ function checkGrillingWorkflow() {
   ]);
 }
 
+function checkSuperpowersRoutingConsistency() {
+  requireTokens("skills/discover-unknowns-zh/SKILL.md", [
+    "返回 `skills/using-superpowers/SKILL.md` 重新路由",
+    "不要用固定的后续 skill 枚举代替路由器",
+  ]);
+  requireTokens("rules/01-base.md", [
+    "高风险边界优先于微型访谈和“需求清楚/易回滚”短路",
+  ]);
+  requireTokens("skills/brainstorming/SKILL.md", [
+    "High-risk classification takes precedence over clarity or reversibility.",
+    "Only when neither explicit opt-in nor a high-risk boundary applies",
+  ]);
+
+  const unknowns = read("skills/discover-unknowns-zh/SKILL.md");
+  for (const staleRoute of [
+    "交接到 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans` skill",
+    "再进入 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans`",
+  ]) {
+    if (unknowns.includes(staleRoute)) {
+      fail(
+        `skills/discover-unknowns-zh/SKILL.md should return to the router instead of enumerating follow-up skills: ${staleRoute}`,
+      );
+    }
+  }
+
+  const brainstorming = read("skills/brainstorming/SKILL.md");
+  if (
+    brainstorming.includes(
+      "Skip the full flow for clear or readily reversible work regardless of file count",
+    )
+  ) {
+    fail(
+      "skills/brainstorming/SKILL.md should not let clarity bypass a high-risk boundary",
+    );
+  }
+}
+
 function checkRemovedSkillReferences() {
   for (const skill of ["context-budget", "documentation-lookup"]) {
     for (const file of managedFiles()) {
@@ -1247,6 +1284,7 @@ function main() {
   checkSuperpowersDevLoop();
   checkSuperpowersArtifactPolicy();
   checkGrillingWorkflow();
+  checkSuperpowersRoutingConsistency();
   checkRemovedSkillReferences();
   checkForbiddenCommandDrift();
   checkScriptLayout();
