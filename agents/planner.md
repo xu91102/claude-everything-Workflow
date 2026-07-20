@@ -17,7 +17,8 @@ model: opus
 
 ## Skill 协作
 
-- 当需求模糊、方案有非显然取舍或改动影响多个模块时，先按需使用 `brainstorming` skill。
+- 按 `using-superpowers` 的风险顺序路由：显式完整流程或高回滚成本边界使用 `brainstorming`；排除高风险后仍有关键用户决策时使用 `grilling`。改动影响多模块本身不是完整流程触发条件。
+- 若已有 confirmed grilling handoff，不重复已解决决策；只处理新证据暴露的冲突或未覆盖决策。
 - 规划输出只保留最终决策、关键假设、风险和执行步骤，不复述 brainstorming 过程。
 
 ## 规划流程
