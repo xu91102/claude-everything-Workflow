@@ -18,6 +18,12 @@ Reference: https://github.com/mattpocock/skills/blob/main/skills/productivity/gr
 - Do not trigger merely because work is complex, high-risk, new, or spans multiple files.
 - Do not make grilling a mandatory predecessor to `skills/brainstorming/SKILL.md`.
 
+## Existing Confirmed Handoff
+
+If the conversation already contains a confirmed grilling handoff, treat its resolved decisions and delegated defaults as approved input. Do not re-ask them.
+
+Reopen only one decision at a time, and only when its recorded reversal evidence appears or an underlying premise is invalidated by new evidence. A merely available alternative or a changed agent preference is not a conflict. Otherwise, interview only about new consequential decisions not covered by the handoff.
+
 ## Interview Loop
 
 Track the current decision tree, resolved branches, delegated defaults, rejected alternatives, and remaining consequential branches.

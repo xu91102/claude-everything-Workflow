@@ -865,6 +865,9 @@ function checkGrillingWorkflow() {
     "Each resolved decision and delegated default must include",
     "Reversal evidence:",
     "return to `skills/using-superpowers/SKILL.md` for routing",
+    "Existing Confirmed Handoff",
+    "Do not re-ask them",
+    "recorded reversal evidence appears",
   ]);
   requireTokens("skills/using-superpowers/SKILL.md", [
     "discoverable fact",
@@ -925,6 +928,9 @@ function checkGrillingWorkflow() {
     "Spec Gate",
     "Plan Gate",
     "Task Review Gate",
+    "Spec Gate -> brainstorming 澄清未决需求并写 design spec",
+    "若已有 confirmed grilling handoff，则复用已解决决策",
+    "仅在 reversal evidence 出现或基础前提失效时重开",
   ]);
   requireTokens("rules/common/skills-learning.md", [
     "不自动加载完整 process skill 链",
