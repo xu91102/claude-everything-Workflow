@@ -1,33 +1,54 @@
 ---
 name: using-superpowers
-description: "Use when starting or routing a non-trivial task in this workflow harness, when the user references Superpowers, or when deciding which skill, command, rule, or agent should govern the work. Establishes skill invocation discipline: check relevant process skills before acting, follow user/project instructions first, and verify before completion."
+description: "Route non-trivial work through the smallest suitable workflow, including direct execution, grilling for unresolved user-owned decisions, and formal Spec Gate for explicitly requested or costly-to-reverse work. Use at task start, after a process Skill returns an outcome, and whenever continuation ownership is unclear."
 ---
 
 # Using Superpowers
 
-This is the workflow router for the local Superpowers-inspired harness. It keeps action disciplined while respecting this repository's Chinese communication rules and Git boundaries.
+Own routing and continuation for the workflow harness. Skills return outcomes here instead of directly invoking one another.
 
 ## Priority
 
 Follow instructions in this order:
 
-1. User instructions, including direct requests, `AGENTS.md`, `CLAUDE.md`, and repo-local rules.
-2. Applicable skills, commands, agents, and hooks from this repository.
-3. Default agent behavior.
+1. User instructions, `AGENTS.md`, `CLAUDE.md`, and repository rules.
+2. Applicable process Skills, commands, agents, and hooks.
+3. Implementation Skills and default agent behavior.
 
-If a skill conflicts with explicit User instructions or project instructions, follow the user/project instruction and state the conflict if it affects the outcome.
+If a Skill conflicts with an explicit higher-priority instruction, follow the higher-priority instruction and explain any material impact.
 
 ## Skill Invocation Rule
 
-Before taking action on a non-trivial task:
+Before acting on a non-trivial task:
 
-1. Decide whether a process skill applies.
-2. Load the applicable skill before exploration, implementation, clarification, or final claims.
-3. Announce briefly which skill is being used and why.
-4. Follow the skill's gate, checklist, and verification requirements.
-5. If the skill is not a fit after reading it, say so briefly and continue with the smallest suitable workflow.
+1. Classify explicit intent, high-risk boundaries, discoverable facts, and unresolved user-owned decisions.
+2. Load the narrowest applicable process Skill before exploration, implementation, clarification, or a final claim.
+3. Announce briefly which Skill is being used and why.
+4. Follow its gates, outcome contract, and verification requirements.
+5. Return here whenever continuation needs another Skill or path.
 
-Do not rely on memory of a skill. Skills evolve; use the current `SKILL.md` content.
+Do not rely on memory of a Skill. Skills evolve; read the current `SKILL.md`.
+
+Primary process definitions include `skills/grilling/SKILL.md`, `skills/spec-gate/SKILL.md`, `skills/systematic-debugging/SKILL.md`, and `skills/verification-before-completion/SKILL.md`.
+
+## Three Lanes
+
+The workflow has three lanes:
+
+```text
+direct
+  clear low-risk task -> implement -> proportionate verification
+
+needs-decision
+  unresolved user-owned decision -> grilling inline -> route again
+
+formal-spec
+  explicit formal Spec or high-risk boundary
+    -> grilling inline first only when a consequential decision is unresolved
+    -> spec-gate -> user review -> approved Spec -> writing-plans
+```
+
+File count, a new-feature label, ordinary behavior change, and normal code complexity do not upgrade a task. They affect implementation and verification intensity only.
 
 ## Routing
 
@@ -35,54 +56,66 @@ Use process skills before implementation skills:
 
 ```text
 Task arrives
-  -> explicit full Superpowers / spec request?       -> brainstorming
-  -> explicit grill request?                         -> grilling (explicit session)
-  -> bug / failing test / unexpected result?         -> systematic-debugging
-  -> discoverable fact?                              -> inspect; do not ask
-  -> systematic fact / blind-spot gap?               -> discover-unknowns-zh
-  -> costly-to-reverse high-risk boundary?            -> brainstorming
-  -> key unresolved user-owned decision?             -> grilling (inline uncertainty)
-  -> approved spec, no plan?                         -> writing-plans
-  -> approved plan + SDD/commit approved?            -> subagent-driven-development
-  -> approved plan, no commit approval?              -> executing-plans
-  -> behavior change with test path?                 -> test-driven-development
-  -> dirty worktree / risky branch work?             -> using-git-worktrees
-  -> completion / fixed / ready claim?               -> verification-before-completion
-  -> external skill learning or edit?                -> skill-creator + skills-learning
-  -> otherwise                                       -> shortest applicable loop
+  -> explicit /grill?                              -> grilling explicit
+  -> bug, failing test, or unexpected result?      -> systematic-debugging
+  -> discoverable fact?                            -> inspect it; do not ask
+  -> systematic evidence or blind-spot gap?        -> discover-unknowns-zh
+  -> unresolved user-owned decision?               -> grilling inline
+       high-risk or explicit formal Spec context?  -> resume_target: spec-gate
+  -> explicit formal Spec or high-risk boundary?   -> spec-gate
+  -> approved Spec, no plan?                       -> writing-plans
+  -> approved plan + SDD/commit approved?          -> subagent-driven-development
+  -> approved plan, no commit approval?            -> executing-plans
+  -> behavior change with a test path?             -> test-driven-development
+  -> dirty worktree or risky branch work?          -> consider using-git-worktrees
+  -> completion, fixed, or ready claim?            -> verification-before-completion
+  -> external skill learning or edit?              -> skill-creator + skills-learning
+  -> otherwise                                     -> shortest applicable loop
 ```
 
-- An explicit full Superpowers, brainstorming, design-spec, or Spec Gate request: use `skills/brainstorming/SKILL.md`.
-- Explicit `/grill`, grill-me, challenge, 拷问, or 压力测试 requests: use `skills/grilling/SKILL.md`.
-- A discoverable fact is inspected with the filesystem, documentation, logs, or tools rather than asked of the user.
-- Systematic evidence and blind-spot gaps: use `skills/discover-unknowns-zh/SKILL.md`.
-- A high-risk boundary is a costly-to-reverse architecture or service-boundary choice, a public-contract compatibility change, an authentication or authorization boundary, a persistent data/schema migration, or an irreversible external side effect. Use `skills/brainstorming/SKILL.md` for these even without explicit opt-in.
-- After high-risk classification is ruled out, a key unresolved user-owned decision uses the inline uncertainty mode in `skills/grilling/SKILL.md`; stop interviewing as soon as the information is sufficient.
-- Approved spec that needs an implementation plan: use `skills/writing-plans/SKILL.md`.
-- Approved plan with independent tasks and approved commit/PR/SDD handling: use `skills/subagent-driven-development/SKILL.md`.
-- Approved plan without commit handling or with tightly coupled tasks: use `skills/executing-plans/SKILL.md`.
-- Bug, failing test, flaky behavior, or unexpected result: use `skills/systematic-debugging/SKILL.md` before proposing a fix.
-- Behavior-changing implementation with a viable test path: use `skills/test-driven-development/SKILL.md`.
-- Risky branch work, dirty worktree, parallel effort, or PR cleanup: consider `skills/using-git-worktrees/SKILL.md`.
-- Completion, fixed, passing, ready, or PR-readiness claims: use `skills/verification-before-completion/SKILL.md`.
-- External skill learning or skill edits: use `skills/skill-creator/SKILL.md` and `rules/common/skills-learning.md`.
+A high-risk boundary is a costly-to-reverse architecture or service boundary, public-contract compatibility, authentication or authorization boundary, persistent data/schema migration, or irreversible external side effect. Record this classification before grilling so its handoff can resume `spec-gate`.
 
-File count, code size, ordinary behavior change, and a “new feature” label are risk signals, not sufficient triggers for grilling or the full Spec Gate. Clear tasks use direct implementation plus proportionate verification: the shortest applicable loop.
+## Process Outcomes
 
-Then apply domain skills such as documentation lookup, E2E testing, or workflow engineering as needed.
+### Grilling handoff
+
+Read `Risk classification` and `Resume target`. A non-formal task returns to direct or another narrow process. A high-risk/formal task with `resume_target: spec-gate` enters a fresh Spec Gate call.
+
+### Spec Gate ready
+
+`READY_FOR_USER_REVIEW` means the local artifact passed self-review but is not approved. Present the path and wait for explicit approval. Only an approved Spec may enter `writing-plans`.
+
+### Spec Gate blocked
+
+`BLOCKED_BY_UNRESOLVED_DECISION` is terminal for the current call chain:
+
+1. Stop without drafting, guessing, or automatically invoking another Skill.
+2. Present a decision map: confirmed decisions, unresolved decision, and blocking point.
+3. Let the user choose to continue clarification, reduce scope, or exit the formal flow.
+4. Only an explicit choice to continue starts a new grilling session.
+5. After that session completes, route again into a new Spec Gate; do not resume the old call stack.
+
+If the same confirmed `decision_id` blocks again with unchanged evidence, report a `Spec Gate contract conflict`. Do not repeat the question. Only reversal evidence or an invalidated premise can reopen the decision.
+
+### Spec Gate not applicable
+
+`NOT_APPLICABLE` returns control here. Select the shortest applicable path without asking the originating Skill to recommend a successor.
+
+## Compatibility Alias
+
+For one release cycle, interpret a user explicitly asking for the old name `brainstorming` as a formal Spec request. Explain that the entry moved to `/to-spec`; route through the same optional grilling and `spec-gate` path. Do not expose an old Skill shim or a second protocol source.
 
 ## Red Flags
 
-Stop and check skills before continuing if you think:
+Stop and reassess if you are about to:
 
-- "This spans multiple files, so it needs the full workflow."
-- "I can ask the user instead of inspecting a discoverable fact."
-- "Every behavior change needs brainstorming."
-- "I remember what this skill says."
-- "The user asked for the outcome, so the workflow gate can be skipped."
-- "The verification should pass."
-
-These are usually signs that a process skill should shape the next step.
+- ask for a fact that tools can discover;
+- add grilling because a task is merely complex or multi-file;
+- enter formal Spec Gate for an ordinary reversible change;
+- let Spec Gate interview the user;
+- automatically bounce from a blocked Spec Gate to grilling;
+- continue implementation without an approved required Spec;
+- claim completion without fresh verification evidence.
 
 ## Completion
 
