@@ -9,7 +9,7 @@
 
 const fs = require('fs')
 
-const DEFAULT_MAX_LINES = 600
+const CODE_TARGET_LINES = 800
 const TEST_MAX_LINES = 1000
 const CODE_EXTENSIONS = new Set([
     '.c',
@@ -52,8 +52,8 @@ function isTestFile(filePath) {
         /\.(test|spec)\.[^.\\/]+$/.test(filePath)
 }
 
-function getMaxLines(filePath) {
-    return isTestFile(filePath) ? TEST_MAX_LINES : DEFAULT_MAX_LINES
+function getLineThreshold(filePath) {
+    return isTestFile(filePath) ? TEST_MAX_LINES : CODE_TARGET_LINES
 }
 
 function countLines(content) {
@@ -82,18 +82,20 @@ function run(raw) {
         return { exitCode: 0 }
     }
 
-    const maxLines = getMaxLines(filePath)
+    const testFile = isTestFile(filePath)
+    const lineThreshold = getLineThreshold(filePath)
     const lineCount = countLines(content)
-    if (lineCount <= maxLines) {
+    if (lineCount <= lineThreshold) {
         return { exitCode: 0 }
     }
 
-    return {
-        exitCode: 0,
-        stderr:
-            `[Hook] 代码文件超过 ${maxLines} 行: ` +
-            `${filePath} (${lineCount} 行)，请拆分后继续。\n`
-    }
+    const message = testFile
+        ? `[Hook] 测试文件超过 ${lineThreshold} 行上限: ` +
+            `${filePath} (${lineCount} 行)，请拆分测试场景后继续。\n`
+        : `[Hook] 代码文件超过约 ${lineThreshold} 行的参考值: ` +
+            `${filePath} (${lineCount} 行)，请评估是否需要按职责拆分。\n`
+
+    return { exitCode: 0, stderr: message }
 }
 
 module.exports = { run }
