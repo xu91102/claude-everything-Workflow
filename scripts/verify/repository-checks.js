@@ -134,6 +134,72 @@ function checkDebuggingSkill() {
   }
 }
 
+function checkCodeReviewContracts() {
+  requireTokens("commands/code-review.md", [
+    "固定基点",
+    "`git diff <base>...HEAD`",
+    "--spec <path>",
+    "Spec 轴",
+  ]);
+
+  requireTokens("agents/code-reviewer.md", [
+    "`git diff <base>...HEAD`",
+    "## Standards",
+    "## Spec",
+    "NOT RUN",
+    "不得跨轴合并或重新排序",
+  ]);
+
+  requireTokens("README.md", [
+    "固定基点、Standards 轴与 Spec 轴",
+  ]);
+
+  requireTokens("skills/executing-plans/SKILL.md", [
+    "pre-plan commit as the fixed base",
+    "Spec source",
+  ]);
+
+  requireTokens("skills/writing-plans/SKILL.md", [
+    "pre-plan commit as its fixed base",
+    "Spec source",
+  ]);
+}
+
+function checkProjectContextContracts() {
+  requireTokens("skills/project-context/SKILL.md", [
+    "Only when the user explicitly asks",
+    "docs/agent-workflow/project-context.md",
+    "CONFIGURED",
+    "Do not create an empty `CONTEXT.md`",
+    "references/project-context-template.md",
+  ]);
+
+  requireTokens("commands/setup-workflow.md", [
+    "skills/project-context/SKILL.md",
+    "唯一事实来源",
+  ]);
+
+  requireTokens("skills/project-context/agents/openai.yaml", [
+    "display_name",
+    "default_prompt",
+    "allow_implicit_invocation: false",
+  ]);
+
+  requireTokens("skills/domain-modeling/SKILL.md", [
+    "docs/agent-workflow/project-context.md",
+  ]);
+
+  requireTokens("skills/using-superpowers/SKILL.md", [
+    "explicit /setup-workflow?",
+    "project-context",
+  ]);
+
+  requireTokens("README.md", [
+    "`/setup-workflow`",
+    "project-context",
+  ]);
+}
+
 function checkExecutionSupportSkills() {
   requireTokens("skills/using-git-worktrees/SKILL.md", [
     "git worktree add",
@@ -179,6 +245,8 @@ function checkSkillLinks() {
   checkRouterAndAgentLinks();
   checkWritingPlansSkill();
   checkDebuggingSkill();
+  checkCodeReviewContracts();
+  checkProjectContextContracts();
   checkExecutionSupportSkills();
 }
 

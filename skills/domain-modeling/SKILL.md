@@ -21,7 +21,9 @@ Do not trigger for ordinary code complexity, a new module that reuses the existi
 
 ## Inputs
 
-Consume verified repository facts, an optional confirmed grilling handoff, and the current approved or draft Spec. Do not ask the user for discoverable facts and do not own consequential user decisions.
+Consume verified repository facts, an optional confirmed grilling handoff, the current approved or
+draft Spec, and `docs/agent-workflow/project-context.md` when it exists. Do not ask the user for
+discoverable facts and do not own consequential user decisions.
 
 ## Workflow
 
@@ -64,7 +66,10 @@ If an unresolved item changes product meaning, ownership, a public contract, per
 
 Before an approved Spec exists, keep the output in the active handoff or Spec only. Do not modify tracked `CONTEXT.md`, ADRs, schemas, or code.
 
-After the user approves the Spec, persistence becomes an explicit implementation-plan task with its own verification. This preserves the distinction between modeling a decision and implementing it.
+After the user approves the Spec, persistence becomes an explicit implementation-plan task with its
+own verification. When `docs/agent-workflow/project-context.md` exists, use its confirmed context
+and ADR locations; otherwise do not invent a project-wide documentation layout. This preserves the
+distinction between modeling a decision and implementing it.
 
 ## Examples
 

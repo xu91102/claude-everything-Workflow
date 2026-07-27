@@ -203,5 +203,8 @@ After all plan tasks are complete:
 1. Apply `skills/verification-before-completion/SKILL.md`: identify the verification evidence required before any completion claim.
 2. Run the project's verification flow (`/verify` or equivalent commands) to produce that fresh evidence.
 3. If verification fails, use `skills/systematic-debugging/SKILL.md` for each failure class before changing code.
-4. Run a final code review over the whole diff using `agents/code-reviewer.md`, adding `agents/security-reviewer.md` or `agents/database-reviewer.md` when relevant.
+4. Run a final code review over the whole diff using `agents/code-reviewer.md`.
+   Pin the pre-plan commit as its fixed base and pass the approved Spec or this
+   plan as the Spec source; add `agents/security-reviewer.md` or
+   `agents/database-reviewer.md` when relevant.
 5. Use `/pr` when the user wants commit, push, or PR handling.

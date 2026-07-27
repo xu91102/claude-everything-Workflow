@@ -56,7 +56,9 @@ After all tasks are complete:
 1. Apply `skills/verification-before-completion/SKILL.md`: identify the verification evidence required before any completion claim.
 2. Run `/verify` or the plan's equivalent verification commands to produce that fresh evidence.
 3. If verification fails, use `skills/systematic-debugging/SKILL.md` for each failure class before changing code.
-4. Run a final review over the full diff.
+4. Run a final review over the full diff with `agents/code-reviewer.md`; pin the
+   pre-plan commit as the fixed base and pass the approved Spec or plan as the
+   Spec source so Standards and Spec results remain independent.
 5. Summarize files changed, tests run, skipped checks, remaining risk, and whether the work is ready for `/pr`.
 
 ## Boundaries
