@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Gate"
+  short_description: "生成、自审并请求批准正式工程 Spec"
+  default_prompt: "使用 $spec-gate 从已确认决策生成并自审正式工程 Spec。"

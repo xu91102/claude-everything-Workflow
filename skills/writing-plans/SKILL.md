@@ -21,11 +21,11 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 ## Preconditions
 
-Only write an implementation plan after a design spec exists and the user has approved it. If the request is complex and no approved spec exists, return to `skills/brainstorming/SKILL.md` instead of creating a plan. The approved spec is the Plan Gate input.
+Only write an implementation plan after a design Spec exists and the user has approved it. If a required approved Spec is missing, return to `skills/using-superpowers/SKILL.md`; the router decides whether `spec-gate` applies. The approved spec is the Plan Gate input.
 
 ## Scope Check
 
-If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
+If the Spec covers multiple independent subsystems, it should have been broken into sub-project Specs at the Spec Gate. If it was not, suggest separate plans — one per subsystem. Each plan should produce working, testable software on its own.
 
 ## File Structure
 

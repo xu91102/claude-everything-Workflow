@@ -25,14 +25,14 @@
 
 ## 开发流程
 
-默认最短闭环、按风险逐级升级。先检查显式意图和高风险边界，再处理关键未知；高风险边界优先于微型访谈和“需求清楚/易回滚”短路。
+默认最短闭环、按风险逐级升级。先检查显式意图和高风险边界，再处理关键未知；高风险边界识别优先于“需求清楚/易回滚”短路，并必须保留在后续 handoff 中。
 
 ```text
 任务到达
-  -> 显式完整 Superpowers / spec 请求？                         -> 完整流程
-  -> 高回滚成本架构/服务边界、公共契约、安全、持久数据迁移或不可逆副作用？ -> 完整流程
-  -> 仍有阻塞实现的关键用户决策？                                -> grilling 微型访谈
-  -> 需求清楚？                                                   -> 最小闭环
+  -> 标记显式 formal spec 或高风险边界
+  -> 仍有阻塞实现的关键用户决策？ -> grilling 微型访谈，并保留风险与 resume target
+  -> 已标记 formal spec / 高风险？ -> spec-gate
+  -> 需求清楚？                     -> 最小闭环
 ```
 
 多文件、新功能、普通行为变化和复杂度本身都不是升级条件，只影响实现与验证强度。
@@ -50,25 +50,28 @@
 
 ### 关键未知
 
-排除完整流程的高风险类别后，如果仍有一个由用户承担后果、不同答案会实质改变结果的关键决策，使用 `skills/grilling/SKILL.md` 的微型访谈：
+如果仍有一个由用户承担后果、不同答案会实质改变结果的关键决策，使用 `skills/grilling/SKILL.md` 的微型访谈。高风险或显式 formal spec 任务必须在 handoff 中记录 `resume_target: spec-gate`：
 
 ```text
 1. 可从代码、文档、日志或工具查明的事实由 agent 自行检索
 2. 一次只问一个最高价值问题，并给出推荐、理由和改变推荐的证据
 3. 信息足够后立即停止追问，不增加共同理解确认
-4. 回到最小闭环；若新证据暴露高风险边界，则升级完整流程
+4. 返回中央路由；低风险任务回到最小闭环，高风险/formal spec 任务进入新的 Spec Gate
 ```
 
 ### 完整流程
 
-仅在用户显式完整 Superpowers、Brainstorming、design spec 或 Spec Gate 请求，或任务涉及高回滚成本的架构/服务边界、公共契约兼容、认证/授权边界、持久数据/schema 迁移或不可逆外部副作用时，进入完整 Superpowers 风格门禁闭环：
+仅在用户显式完整 Superpowers、design spec、Spec Gate、`/to-spec` 请求，或任务涉及高回滚成本的架构/服务边界、公共契约兼容、认证/授权边界、持久数据/schema 迁移或不可逆外部副作用时，进入完整门禁闭环：
 
 ```text
-1. Spec Gate -> brainstorming 澄清未决需求并写 design spec；若已有 confirmed grilling handoff，则复用已解决决策，仅在 reversal evidence 出现或基础前提失效时重开
-2. User Review Gate -> 用户确认 spec 后才能继续
-3. Plan Gate -> writing-plans 写实施计划
-4. Red Test Gate -> 行为变化先写失败测试并确认失败原因
-5. Task Review Gate -> 每个任务完成后做需求符合性审查和代码质量审查
-6. Verify Gate -> /verify 或等价验证通过后才能进入 PR
-7. PR Gate -> /pr 只处理本次任务相关文件并记录验证与风险
+1. Clarification Gate -> 仅真实未决用户决策使用 grilling；已确认决策只在 reversal evidence 出现或基础前提失效时重开
+2. Spec Gate -> `spec-gate` 零访谈生成并自审 design spec；重大未决决策返回终止态 `BLOCKED_BY_UNRESOLVED_DECISION`
+3. User Review Gate -> 用户确认 spec 后才能继续
+4. Plan Gate -> writing-plans 写实施计划
+5. Red Test Gate -> 行为变化先写失败测试并确认失败原因
+6. Task Review Gate -> 每个任务完成后做需求符合性审查和代码质量审查
+7. Verify Gate -> /verify 或等价验证通过后才能进入 PR
+8. PR Gate -> /pr 只处理本次任务相关文件并记录验证与风险
 ```
+
+Spec Gate 阻塞时不得自动回到 grilling。中央路由必须停止当前调用链并展示决策地图；只有用户明确继续，才创建新 grilling 会话，结束后调用新的 Spec Gate，不恢复旧调用栈。

@@ -83,7 +83,7 @@ description: Chinese workflow for surfacing systematic fact, evidence, context, 
 - 任务对用户或 agent 陌生且一次直接检索不足以补齐证据时，先做盲点扫描。
 - 用户不知道某领域“好的标准”长什么样时，先让 agent 教你这个领域，而不是让它生成一堆变体让你挑。
 - 用户表达“我看到就知道”时，先做原型再实现。
-- 单个答案暴露高风险边界时进入 `brainstorming`；排除高风险后仍阻塞实现的用户决策交给 `grilling`。
+- 单个答案暴露高风险边界时返回中央路由并标记 formal-spec；仍阻塞实现的用户决策交给 `grilling`，否则进入 `spec-gate`。
 - 有强参考物（尤其是源码）时，先读参考物再设计新模式。
 - 实现中暴露重大未知项时，更新工件链路，不要隐藏假设。
 - 长周期任务跑回来结果不对时，多花时间定义未知项或重写计划让 agent 能即兴处理，而不是直接重试。
@@ -113,4 +113,4 @@ description: Chinese workflow for surfacing systematic fact, evidence, context, 
 
 本 skill 负责可调查的事实缺口、证据缺口和盲点发现。能从代码、文档、日志或工具获得的事实由 agent 直接检索；不要把它们转问用户。
 
-当剩余缺口涉及高回滚成本的架构/服务边界、公共契约兼容、安全边界、持久数据迁移或不可逆外部副作用时，高风险类别直接交给 `skills/brainstorming/SKILL.md`。排除这些高风险后，仍会实质改变结果的用户决策交给 `skills/grilling/SKILL.md`。不要重复访谈：本 skill 找证据，后续 skill 收敛决策或形成规格。
+当剩余缺口涉及高回滚成本的架构/服务边界、公共契约兼容、安全边界、持久数据迁移或不可逆外部副作用时，把 formal-spec 风险标记返回 `skills/using-superpowers/SKILL.md`。仍会实质改变结果的用户决策交给 `skills/grilling/SKILL.md`；没有未决决策时由中央路由调用 `skills/spec-gate/SKILL.md`。不要重复访谈：本 skill 找证据，grilling 收敛用户决策，Spec Gate 只形成规格。
