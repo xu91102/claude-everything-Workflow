@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Start the brainstorm server and output connection info
-# Usage: start-server.sh [--project-dir <path>] [--host <bind-host>] [--url-host <display-host>] [--foreground] [--background]
+# Usage: start-server.sh [--project-dir <path>] [--host <bind-host>]
+#        [--url-host <display-host>] [--foreground] [--background]
 #
 # Starts server on a random high port, outputs JSON with URL.
 # Each session gets its own directory to avoid conflicts.
@@ -168,7 +169,12 @@ fi
 
 # Foreground mode for environments that reap detached/background processes.
 if [[ "$FOREGROUND" == "true" ]]; then
-  env BRAINSTORM_DIR="$SESSION_DIR" BRAINSTORM_HOST="$BIND_HOST" BRAINSTORM_URL_HOST="$URL_HOST" BRAINSTORM_OWNER_PID="$OWNER_PID" node server.cjs "--brainstorm-server-id=$SERVER_ID" &
+  env \
+    BRAINSTORM_DIR="$SESSION_DIR" \
+    BRAINSTORM_HOST="$BIND_HOST" \
+    BRAINSTORM_URL_HOST="$URL_HOST" \
+    BRAINSTORM_OWNER_PID="$OWNER_PID" \
+    node server.cjs "--brainstorm-server-id=$SERVER_ID" &
   SERVER_PID=$!
   echo "$SERVER_PID" > "$PID_FILE"
   wait "$SERVER_PID"
@@ -177,7 +183,12 @@ fi
 
 # Start server, capturing output to log file
 # Use nohup to survive shell exit; disown to remove from job table
-nohup env BRAINSTORM_DIR="$SESSION_DIR" BRAINSTORM_HOST="$BIND_HOST" BRAINSTORM_URL_HOST="$URL_HOST" BRAINSTORM_OWNER_PID="$OWNER_PID" node server.cjs "--brainstorm-server-id=$SERVER_ID" > "$LOG_FILE" 2>&1 &
+nohup env \
+  BRAINSTORM_DIR="$SESSION_DIR" \
+  BRAINSTORM_HOST="$BIND_HOST" \
+  BRAINSTORM_URL_HOST="$URL_HOST" \
+  BRAINSTORM_OWNER_PID="$OWNER_PID" \
+  node server.cjs "--brainstorm-server-id=$SERVER_ID" > "$LOG_FILE" 2>&1 &
 SERVER_PID=$!
 disown "$SERVER_PID" 2>/dev/null
 echo "$SERVER_PID" > "$PID_FILE"
@@ -195,7 +206,10 @@ for _ in {1..50}; do
       sleep 0.1
     done
     if [[ "$alive" != "true" ]]; then
-      echo "{\"error\": \"Server started but was killed. Retry in a persistent terminal with: $SCRIPT_DIR/start-server.sh${PROJECT_DIR:+ --project-dir $PROJECT_DIR} --host $BIND_HOST --url-host $URL_HOST --foreground\"}"
+      persistent_command="$SCRIPT_DIR/start-server.sh"
+      persistent_command+="${PROJECT_DIR:+ --project-dir $PROJECT_DIR}"
+      persistent_command+=" --host $BIND_HOST --url-host $URL_HOST --foreground"
+      echo "{\"error\": \"Server started but was killed. Retry in a persistent terminal with: $persistent_command\"}"
       exit 1
     fi
     grep "server-started" "$LOG_FILE" | head -1

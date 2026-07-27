@@ -1,81 +1,83 @@
 ---
 name: grilling
-description: "Stress-test a plan, design, decision, or idea through a one-question-at-a-time interview. Use when the user invokes /grill, says grill me, asks to be challenged, 拷问, 压力测试, or wants a plan stress-tested; also use when progress is blocked by an unresolved user-owned decision whose alternatives materially change the outcome after high-risk classification is ruled out. Do not use merely because work is complex, high-risk, new, or spans multiple files."
+description: "Resolve consequential user-owned decisions through a one-question-at-a-time interview. Use when the user invokes /grill, says grill me, asks for challenge or pressure-testing, or when the central router finds an unresolved decision that materially changes the outcome; do not trigger for discoverable facts, ordinary complexity, file count, or high risk by itself."
 ---
 
 # Grilling
 
-Sharpen a plan or design by resolving consequential user decisions without turning every complex task into a longer workflow.
+Sharpen a plan, design, or task by resolving consequential user decisions without becoming a universal workflow gate.
 
 Reference: https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md
 
 ## Boundary
 
-- Do not ask for discoverable facts. Inspect the filesystem, documentation, logs, and available tools first.
-- Ask only about an unresolved user-owned decision whose alternatives materially change the outcome.
-- Route systematic evidence or blind-spot gaps to `skills/discover-unknowns-zh/SKILL.md`.
-- Route costly-to-reverse architecture or service boundaries, public-contract compatibility, security boundaries, persistent data/schema migrations, and irreversible external side effects directly to `skills/brainstorming/SKILL.md`; do not insert inline grilling first.
-- Do not trigger merely because work is complex, high-risk, new, or spans multiple files.
-- Do not make grilling a mandatory predecessor to `skills/brainstorming/SKILL.md`.
+- Do not ask for discoverable facts. Inspect files, documentation, logs, history, and tools first.
+- Ask only about a user-owned decision whose alternatives materially change the result.
+- Route systematic evidence or blind-spot gaps back through `skills/using-superpowers/SKILL.md` for `discover-unknowns-zh`.
+- High risk alone does not trigger an interview. If high-risk work has a real unresolved user decision, resolve it and record `resume_target: spec-gate`.
+- Do not generate or approve a Spec, implement code, or own workflow continuation.
 
 ## Existing Confirmed Handoff
 
-If the conversation already contains a confirmed grilling handoff, treat its resolved decisions and delegated defaults as approved input. Do not re-ask them.
+Treat confirmed decisions and delegated defaults from an existing handoff as approved input. Do not re-ask them.
 
-Reopen only one decision at a time, and only when its recorded reversal evidence appears or an underlying premise is invalidated by new evidence. A merely available alternative or a changed agent preference is not a conflict. Otherwise, interview only about new consequential decisions not covered by the handoff.
+Reopen one decision only when its recorded reversal evidence appears or an underlying premise is invalidated. A merely available alternative or changed agent preference is not new evidence.
 
 ## Interview Loop
 
-Track the current decision tree, resolved branches, delegated defaults, rejected alternatives, and remaining consequential branches.
+Track the decision tree, resolved branches, delegated defaults, rejected alternatives, and remaining consequential branches.
 
 Ask one question per turn. Each turn must:
 
 1. Explain why the decision changes the result.
 2. Present two or three mutually exclusive options.
-3. Give a recommended answer and a concise rationale.
-4. State the reversal evidence or condition that would change the recommendation.
+3. Give a recommended answer and concise rationale.
+4. State the reversal evidence that would change the recommendation.
 
-Mark the recommendation as tentative when evidence is weak. Wait for the user's answer before opening another branch.
+Mark weak-evidence recommendations as tentative. Wait for the user's answer before opening another branch.
 
 After each answer:
 
-- prune branches that are no longer relevant;
+- prune irrelevant branches;
 - accept a rejected recommendation without repeated persuasion;
-- when the user says “you decide,” adopt the recommended default and record it as delegated;
-- record reversal evidence for the accepted decision, not merely for the recommendation; if the user rejects the recommendation, derive the condition from the chosen option's stated premises, or mark it tentative and name the missing evidence rather than copying an inapplicable condition;
-- when an answer conflicts with an earlier decision, show the smallest conflict and ask one trade-off question;
-- when the user stops the session, stop immediately and list unresolved decisions without acting.
+- when the user says “you decide,” adopt the recommended default and mark it delegated;
+- record reversal evidence for the accepted choice, not only the original recommendation;
+- show the smallest conflict when an answer contradicts a confirmed decision;
+- stop immediately and list unresolved decisions when the user ends the session.
 
 ## Modes
 
 ### Inline uncertainty mode
 
-Use only after high-risk classification is ruled out. Use this mode when `using-superpowers` automatically routes a key unknown. Ask only the highest-value unresolved question. As soon as the answer provides enough information for the lowest-risk implementation path, stop interviewing and return to the shortest applicable workflow without an extra confirmation gate or handoff file.
+Use when the central router finds a consequential decision blocking the shortest safe path. Ask only the highest-value unresolved question and stop as soon as the answer is sufficient.
 
-If another consequential unknown still blocks safe action, ask that single next question in the following turn. If the answer reveals a costly-to-reverse architecture boundary, public-contract compatibility risk, security boundary, persistent data migration, or irreversible external side effect, recommend `skills/brainstorming/SKILL.md`.
+For a low-risk task, return the handoff for direct or narrow-process routing. For high-risk/formal work, preserve its prior classification and use `resume_target: spec-gate`; do not call Spec Gate directly.
 
 ### Explicit grilling session
 
-Use this mode when the user explicitly invokes `/grill` or asks for a plan, design, decision, or idea to be pressure-tested. Walk the consequential decision tree until its branches are resolved or delegated, then use the shared-understanding exit below.
+Use when the user explicitly invokes `/grill`, says grill me, or asks to challenge a plan, design, decision, or idea. Walk the consequential decision tree until branches are resolved or delegated, then use the shared-understanding gate.
 
-## Exit
+## Handoff
 
-For an explicit grilling session, when every consequential branch is resolved or has an accepted default, show one compact handoff:
-
-Each resolved decision and delegated default must include the accepted value and its own reversal evidence:
+All cross-Skill results use this structure:
 
 ```text
 Goal:
+Route context:
+- Risk classification:
+- Resume target:
 Resolved decisions:
 - Decision: <accepted value>
-  Reversal evidence: <new evidence or condition that would reopen it>
+  Reversal evidence: <evidence or condition that reopens it>
 Delegated defaults:
 - Default: <accepted default>
-  Reversal evidence: <new evidence or condition that would reopen it>
+  Reversal evidence: <evidence or condition that reopens it>
 Rejected alternatives:
 Remaining risks:
 ```
 
-Ask whether shared understanding has been reached. Do not act, write files, or enter implementation before confirmation.
+Use `resume_target: spec-gate` only when the router already classified the task as high-risk/formal. Do not invent a high-risk classification during handoff formatting.
 
-After confirmation, return to `skills/using-superpowers/SKILL.md` for routing without another handoff gate. If the result is high-risk or the user explicitly opted into a formal design, pass the confirmed handoff to `skills/brainstorming/SKILL.md`; otherwise the router selects the shortest applicable implementation or planning path. Resolved decisions must not be asked again unless their recorded reversal evidence appears or an underlying premise is invalidated.
+For an explicit session, ask whether shared understanding has been reached. Do not act, write files, or enter implementation before confirmation. Inline mode may return without an extra confirmation gate when the blocking decision is resolved.
+
+After exit, return to `skills/using-superpowers/SKILL.md` for routing. A fresh session created after `BLOCKED_BY_UNRESOLVED_DECISION` must not resume the old Spec Gate call stack; it returns a new handoff to the router.

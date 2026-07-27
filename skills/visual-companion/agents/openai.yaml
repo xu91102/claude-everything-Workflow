@@ -1,0 +1,4 @@
+interface:
+  display_name: "Visual Companion"
+  short_description: "在本地安全浏览器中展示视觉方案与图示"
+  default_prompt: "使用 $visual-companion 展示适合视觉比较的方案，并在启动前征得同意。"

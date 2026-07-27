@@ -2,10 +2,10 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Superpowers Brainstorming</title>
+  <title>Superpowers Visual Companion</title>
   <style>
     /*
-     * BRAINSTORM COMPANION FRAME TEMPLATE
+     * VISUAL COMPANION FRAME TEMPLATE
      *
      * This template provides a consistent frame with:
      * - OS-aware light/dark theming
@@ -63,15 +63,30 @@
     }
 
     /* ===== FRAME STRUCTURE ===== */
-    .brand { display: flex; align-items: center; min-width: 0; overflow: hidden; color: var(--text-secondary); line-height: 1; }
-    .brand a { color: inherit; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; min-width: 0; max-width: 100%; line-height: 1; }
-    .brand-copy { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 1; transform: translateY(-1px); }
+    .brand {
+      display: flex; align-items: center; min-width: 0; overflow: hidden;
+      color: var(--text-secondary); line-height: 1;
+    }
+    .brand a {
+      color: inherit; text-decoration: none; display: flex; align-items: center;
+      gap: 0.5rem; min-width: 0; max-width: 100%; line-height: 1;
+    }
+    .brand-copy {
+      display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+      white-space: nowrap; line-height: 1; transform: translateY(-1px);
+    }
     .brand-logo { display: block; height: 1em; width: auto; max-width: 180px; flex-shrink: 0; filter: invert(1); }
     @media (prefers-color-scheme: dark) {
       .brand-logo { filter: none; }
     }
-    .status { font-size: 0.7rem; color: var(--status-color, var(--success)); display: flex; align-items: center; gap: 0.4rem; justify-self: end; white-space: nowrap; line-height: 1; }
-    .status::before { content: ''; width: 6px; height: 6px; background: var(--status-color, var(--success)); border-radius: 50%; }
+    .status {
+      font-size: 0.7rem; color: var(--status-color, var(--success)); display: flex;
+      align-items: center; gap: 0.4rem; justify-self: end; white-space: nowrap; line-height: 1;
+    }
+    .status::before {
+      content: ''; width: 6px; height: 6px;
+      background: var(--status-color, var(--success)); border-radius: 50%;
+    }
 
     .main { flex: 1; overflow-y: auto; }
     #frame-content { padding: 2rem; min-height: 100%; }
@@ -103,7 +118,10 @@
     h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; }
     .subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; }
     .section { margin-bottom: 2rem; }
-    .label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+    .label {
+      font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 0.5rem;
+    }
 
     /* ===== OPTIONS (for A/B/C choices) ===== */
     .options { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -145,7 +163,10 @@
     }
     .card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .card.selected { border-color: var(--selected-border); border-width: 2px; }
-    .card-image { background: var(--bg-tertiary); aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center; }
+    .card-image {
+      background: var(--bg-tertiary); aspect-ratio: 16/10;
+      display: flex; align-items: center; justify-content: center;
+    }
     .card-body { padding: 1rem; }
     .card-body h3 { margin-bottom: 0.25rem; }
     .card-body p { color: var(--text-secondary); font-size: 0.85rem; }
@@ -190,11 +211,20 @@
     }
 
     /* ===== INLINE MOCKUP ELEMENTS ===== */
-    .mock-nav { background: var(--accent); color: white; padding: 0.75rem 1rem; display: flex; gap: 1.5rem; font-size: 0.9rem; }
+    .mock-nav {
+      background: var(--accent); color: white; padding: 0.75rem 1rem;
+      display: flex; gap: 1.5rem; font-size: 0.9rem;
+    }
     .mock-sidebar { background: var(--bg-tertiary); padding: 1rem; min-width: 180px; }
     .mock-content { padding: 1.5rem; flex: 1; }
-    .mock-button { background: var(--accent); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; }
-    .mock-input { background: var(--bg-primary); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem; width: 100%; }
+    .mock-button {
+      background: var(--accent); color: white; border: none;
+      padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem;
+    }
+    .mock-input {
+      background: var(--bg-primary); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.5rem; width: 100%;
+    }
   </style>
 </head>
 <body>

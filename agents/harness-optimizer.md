@@ -12,8 +12,9 @@ tools: ["Read", "Grep", "Glob", "Bash", "Edit"]
 
 ## Skill 协作
 
-- 当审计结论涉及多方案取舍、架构性行为变化或高风险默认策略时，先按需使用 `brainstorming` skill 收敛方案。
-- 不把 brainstorming 当成固定前置流程；简单的重复、冲突、过期配置清理直接处理。
+- 当审计结论存在真实用户未决决策时使用 `grilling`；涉及显式 formal spec 或高风险边界时使用 `spec-gate`。
+- 不把 grilling 或 Spec Gate 当成固定前置流程；简单的重复、冲突、过期配置清理直接处理。
+- 禁止引用已删除的旧需求澄清 Skill；所有 continuation 返回 `using-superpowers`。
 
 ## 工作流程
 

@@ -17,15 +17,16 @@ model: opus
 
 ## Skill 协作
 
-- 按 `using-superpowers` 的风险顺序路由：显式完整流程或高回滚成本边界使用 `brainstorming`；排除高风险后仍有关键用户决策时使用 `grilling`。改动影响多模块本身不是完整流程触发条件。
+- 按 `using-superpowers` 的三车道路由：真实用户未决决策使用 `grilling`，显式 formal spec 或高回滚成本边界使用 `spec-gate`，明确低风险任务直接执行。改动影响多模块本身不是完整流程触发条件。
 - 若已有 confirmed grilling handoff，不重复已解决决策；只处理新证据暴露的冲突或未覆盖决策。
-- 规划输出只保留最终决策、关键假设、风险和执行步骤，不复述 brainstorming 过程。
+- 规划输出只保留已批准 Spec 的最终决策、关键假设、风险和执行步骤，不复述需求澄清过程。
+- 禁止引用已删除的旧需求澄清 Skill；缺少批准 Spec 时返回中央路由。
 
 ## 规划流程
 
 ### 1. 需求分析
 - 完整理解功能需求
-- 必要时提出澄清问题
+- 发现会实质改变结果的用户未决决策时，返回 `using-superpowers` 交由 `grilling` 收敛
 - 识别成功标准
 - 列出假设和约束条件
 

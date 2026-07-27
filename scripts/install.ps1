@@ -74,90 +74,13 @@ function Copy-ClaudeSettings {
     Backup-IfChanged -Source $Source -Destination $Destination
 
     if ($DryRun) {
-        Write-Host "[dry-run] Merge '$Source' into '$Destination' preserving existing env and mcpServers, purging legacy hook paths"
+        Write-Host "[dry-run] Merge '$Source' into '$Destination' preserving existing env and mcpServers"
+        Write-Host "[dry-run] Purge legacy hook paths while merging Claude settings"
         return
     }
 
-    # 使用 Node 脚本合并 settings.json，同时清理旧版 Hook 路径
-    $mergeScript = @'
-const fs = require('fs')
-
-const [, , sourcePath, destinationPath] = process.argv
-const source = JSON.parse(fs.readFileSync(sourcePath, 'utf8'))
-const existing = fs.existsSync(destinationPath)
-    ? JSON.parse(fs.readFileSync(destinationPath, 'utf8'))
-    : {}
-
-const LEGACY_HOOK_PATTERNS = [
-    'scripts/hooks/run-with-flags.js',
-    'scripts/hooks/commit-quality.js',
-    'scripts/hooks/session-start.js',
-    'scripts/hooks/session-end.js',
-    'scripts/lib/hook-flags.js',
-    'scripts/lib/utils.js',
-    'hooks/observe.js',
-    'hooks/review-confidence.js',
-    'hooks/session-start.js',
-    'hooks/session-end.js',
-    'hooks/evaluate-session.js',
-    'hooks/pre-compact.js',
-    'hooks/runtime/session-utils.js'
-]
-
-function isLegacyHook(hookDef) {
-    if (typeof hookDef !== 'object' || !hookDef.command) return false
-    return LEGACY_HOOK_PATTERNS.some(p => hookDef.command.includes(p))
-}
-
-function filterHooks(hooksArray) {
-    if (!Array.isArray(hooksArray)) return hooksArray
-    return hooksArray.map(entry => {
-        if (!entry || !Array.isArray(entry.hooks)) return entry
-        const filtered = entry.hooks.filter(h => !isLegacyHook(h))
-        return { ...entry, hooks: filtered }
-    }).filter(entry => entry.hooks && entry.hooks.length > 0)
-}
-
-function cleanHooks(hooksObj) {
-    if (!hooksObj || typeof hooksObj !== 'object') return hooksObj
-    const cleaned = {}
-    for (const [eventType, entries] of Object.entries(hooksObj)) {
-        const filtered = filterHooks(entries)
-        if (filtered.length > 0) {
-            cleaned[eventType] = filtered
-        }
-    }
-    return cleaned
-}
-
-const merged = {
-    ...existing,
-    ...source,
-    env: {
-        ...(source.env || {}),
-        ...(existing.env || {})
-    },
-    mcpServers: {
-        ...(source.mcpServers || {}),
-        ...(existing.mcpServers || {})
-    },
-    hooks: cleanHooks({
-        ...(existing.hooks || {}),
-        ...(source.hooks || {})
-    })
-}
-
-fs.writeFileSync(destinationPath, JSON.stringify(merged, null, 2) + '\n')
-'@
-
-    $scriptFile = [System.IO.Path]::GetTempFileName()
-    Set-Content -LiteralPath $scriptFile -Value $mergeScript -Encoding UTF8
-
-    try {
-        & node $scriptFile $Source $Destination
-    } finally {
-        Remove-Item -LiteralPath $scriptFile -Force -ErrorAction SilentlyContinue
-    }
+    $mergeScript = Join-Path $RootDir "scripts\merge-claude-settings.cjs"
+    & node $mergeScript $Source $Destination
 }
 
 function Convert-ClaudeSettingsHookPaths {
@@ -300,6 +223,58 @@ function Remove-ObsoleteWorkflowPaths {
     }
 }
 
+function Remove-ObsoleteBrainstormingSkill {
+    param([string]$Destination)
+
+    $target = Join-Path $Destination "skills\brainstorming"
+    if (-not (Test-Path -LiteralPath $target -PathType Container)) {
+        return
+    }
+
+    $knownFiles = @(
+        "SKILL.md",
+        "spec-document-reviewer-prompt.md",
+        "visual-companion.md",
+        "agents\openai.yaml",
+        "scripts\frame-template.html",
+        "scripts\helper.js",
+        "scripts\server.cjs",
+        "scripts\start-server.sh",
+        "scripts\stop-server.sh"
+    )
+
+    foreach ($relative in $knownFiles) {
+        $file = Join-Path $target $relative
+        if (Test-Path -LiteralPath $file -PathType Leaf) {
+            Invoke-InstallCommand `
+                -Description "Remove-Item '$file'" `
+                -Action { Remove-Item -LiteralPath $file -Force }
+        }
+    }
+
+    if ($DryRun) {
+        Write-Host "[dry-run] Remove empty directories under '$target' after known files"
+        return
+    }
+
+    foreach ($relative in @("scripts", "agents")) {
+        $directory = Join-Path $target $relative
+        if (Test-Path -LiteralPath $directory -PathType Container) {
+            $children = Get-ChildItem -LiteralPath $directory -Force
+            if ($children.Count -eq 0) {
+                Remove-Item -LiteralPath $directory -Force
+            }
+        }
+    }
+
+    $remaining = Get-ChildItem -LiteralPath $target -Force
+    if ($remaining.Count -eq 0) {
+        Remove-Item -LiteralPath $target -Force
+    } else {
+        Write-Host "Preserving unknown files in obsolete brainstorming directory: $target"
+    }
+}
+
 function Install-ClaudeWorkflow {
     $dest = Join-Path $HomeDir ".claude"
 
@@ -315,6 +290,7 @@ function Install-ClaudeWorkflow {
     Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath
     Convert-ClaudeSettingsHookPaths -SettingsPath $settingsPath
     Install-SharedDirs -Destination $dest
+    Remove-ObsoleteBrainstormingSkill -Destination $dest
     Remove-PackageOnlyPaths -Destination $dest
 }
 
@@ -329,6 +305,7 @@ function Install-CodexWorkflow {
     Remove-ObsoleteWorkflowPaths -Destination $dest
     Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
     Install-SharedDirs -Destination $dest
+    Remove-ObsoleteBrainstormingSkill -Destination $dest
     Remove-PackageOnlyPaths -Destination $dest
 }
 
