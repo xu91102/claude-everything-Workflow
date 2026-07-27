@@ -16,6 +16,7 @@
 
 ## 旁路设计能力
 
+- `project-context`：显式配置项目工作追踪、领域文档和 ADR 的长期位置。
 - `domain-modeling`：领域术语、实体关系、不变量、生命周期和 bounded context 变化建模。
 - `visual-companion`：经用户同意后，在安全本地浏览器中展示视觉方案和图示。
 

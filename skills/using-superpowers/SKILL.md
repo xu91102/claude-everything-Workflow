@@ -56,6 +56,7 @@ Use process skills before implementation skills:
 
 ```text
 Task arrives
+  -> explicit /setup-workflow?                     -> project-context
   -> explicit /grill?                              -> grilling explicit
   -> bug, failing test, or unexpected result?      -> systematic-debugging
   -> discoverable fact?                            -> inspect it; do not ask

@@ -144,6 +144,7 @@ claude-everything-Workflow/
 │   ├── e2e.md                  # /e2e → e2e-runner
 │   ├── grill.md                # /grill → grilling
 │   ├── to-spec.md              # /to-spec → spec-gate
+│   ├── setup-workflow.md        # /setup-workflow → project-context
 │   └── harness-audit.md        # /harness-audit → harness-optimizer
 │
 ├── references/                 # 按需加载的长参考材料
@@ -165,6 +166,8 @@ claude-everything-Workflow/
 │   │   ├── SKILL.md
 │   │   └── references/
 │   ├── domain-modeling/        # 领域术语、关系、不变量和边界建模
+│   │   └── SKILL.md
+│   ├── project-context/        # 显式配置项目工作追踪、领域文档和 ADR 位置
 │   │   └── SKILL.md
 │   ├── visual-companion/       # 经同意后展示安全本地视觉方案
 │   │   ├── SKILL.md
@@ -285,10 +288,11 @@ claude-everything-Workflow/
 | `/promote`         | 预览或推广项目级直觉到全局直觉                             |
 | `/prune`           | 清理已人工标记删除、拒绝或归档的直觉                       |
 | `/evolve`          | 评估模式是否值得演化为 skill、agent 或 command             |
-| `/code-review`     | 薄封装入口，委派 `code-reviewer` agent                     |
+| `/code-review`     | 固定基点、Standards 轴与 Spec 轴的双轴审查，委派 `code-reviewer` agent |
 | `/tdd`             | 薄封装入口，委派 `tdd-guide` agent                         |
 | `/e2e`             | 薄封装入口，委派 `e2e-runner` agent 和 `e2e-testing` skill |
 | `/harness-audit`   | 薄封装入口，委派 `harness-optimizer` agent                 |
+| `/setup-workflow`  | 显式配置项目工作追踪、领域文档和 ADR 位置                  |
 
 ## 验证 Harness
 
@@ -409,14 +413,14 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 ```
 1. 复制到 ~/.claude/
-2. 需求清楚时直接实现；关键未知按需用 `/grill`；高风险任务或显式 opt-in 用 `/to-spec` 写 design spec
+2. 首次需要长期协作上下文时，用 `/setup-workflow` 配置工作追踪和领域文档位置；需求清楚时直接实现；关键未知按需用 `/grill`；高风险任务或显式 opt-in 用 `/to-spec` 写 design spec
 3. 高风险或并行实现前，用 `using-git-worktrees` 隔离工作区
 4. 用 `writing-plans` 写实施计划
 5. 用 `executing-plans` 按计划执行
 6. 使用 /tdd 委派 tdd-guide 规划测试先行实现
 7. 关键路径使用 /e2e 委派 e2e-runner 维护 Playwright
 8. 使用 /verify 验证
-9. 使用 /code-review 委派 code-reviewer 审查
+9. 使用 /code-review 基于固定基点委派 code-reviewer 做双轴审查
 10. 使用 /learn-eval 将稳定模式沉淀到 skills/learn/<category>/
 11. 使用 /projects 查看项目级学习来源
 12. 使用 /promote --dry-run 评估是否推广为全局直觉

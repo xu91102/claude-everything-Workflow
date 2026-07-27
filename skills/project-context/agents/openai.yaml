@@ -1,0 +1,6 @@
+interface:
+  display_name: "项目上下文初始化"
+  short_description: "为工程仓库配置长期领域术语、决策记录和工作追踪位置"
+  default_prompt: "Use $project-context to configure this repository's agent context."
+policy:
+  allow_implicit_invocation: false

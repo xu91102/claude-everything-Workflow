@@ -356,6 +356,7 @@ function checkRouterTargets() {
     ["commands/harness-audit.md", ["agents/harness-optimizer.md"]],
     ["commands/grill.md", ["skills/grilling/SKILL.md"]],
     ["commands/to-spec.md", ["skills/spec-gate/SKILL.md"]],
+    ["commands/setup-workflow.md", ["skills/project-context/SKILL.md"]],
   ];
 
   for (const [command, targets] of expected) {
