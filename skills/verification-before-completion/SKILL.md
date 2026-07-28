@@ -29,7 +29,7 @@ If verification cannot run, say that it was not run and explain the remaining ri
 | Build succeeds | Fresh build command output with exit code 0 |
 | Lint is clean | Fresh lint command output with zero reported errors |
 | Bug is fixed | Fresh reproduction or regression test showing the original symptom no longer occurs |
-| Task is complete | Spec, plan, or user request checklist verified against the changed files |
+| Task is complete | Spec, ticket, or user request checklist verified against the changed files |
 | Ready for `/pr` | `/verify` or equivalent checks with skipped checks and risks stated |
 | Agent work is done | Independent inspection of the diff and required verification, not only the agent report |
 

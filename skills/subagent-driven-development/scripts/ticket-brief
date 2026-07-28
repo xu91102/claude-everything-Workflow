@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Extract one ticket's full text from a combined ticket artifact into a file
+# the implementer reads in one call, so it is not pasted
+# through the controller's context.
+#
+# Usage: ticket-brief TICKETS_FILE TICKET_ID [OUTFILE]
+# Default OUTFILE: <repo-root>/.superpowers/sdd/ticket-<ID>-brief.md
+# (per worktree; concurrent runs in the same working tree share it).
+set -euo pipefail
+
+if [ $# -lt 2 ] || [ $# -gt 3 ]; then
+  echo "usage: ticket-brief TICKETS_FILE TICKET_ID [OUTFILE]" >&2
+  exit 2
+fi
+
+tickets=$1
+ticket_id=$2
+[ -f "$tickets" ] || { echo "no such tickets file: $tickets" >&2; exit 2; }
+
+case "$ticket_id" in
+  *[!A-Za-z0-9._-]*)
+    echo "invalid ticket id: $ticket_id" >&2
+    exit 2
+    ;;
+esac
+
+if [ $# -eq 3 ]; then
+  out=$3
+else
+  dir=$("$(cd "$(dirname "$0")" && pwd)/sdd-workspace")
+  out="$dir/ticket-${ticket_id}-brief.md"
+fi
+
+awk -v ticket_id="$ticket_id" '
+  /^```/ { infence = !infence }
+  !infence && /^#+[ \t]+/ {
+    inticket = ($0 ~ ("^#+[ \t]+" ticket_id "([ \t]|-|$)"))
+  }
+  inticket { print }
+' "$tickets" > "$out"
+
+if [ ! -s "$out" ]; then
+  echo "ticket ${ticket_id} not found in ${tickets}" >&2
+  exit 3
+fi
+
+echo "wrote ${out}: $(wc -l < "$out" | tr -d ' ') lines"

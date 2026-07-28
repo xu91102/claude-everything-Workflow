@@ -1,0 +1,4 @@
+interface:
+  display_name: "Verification Before Completion"
+  short_description: "用新鲜证据约束完成与 ready 声明"
+  default_prompt: "使用 $verification-before-completion 核验当前完成声明并报告剩余风险。"

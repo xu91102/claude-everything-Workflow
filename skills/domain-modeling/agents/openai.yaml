@@ -1,0 +1,4 @@
+interface:
+  display_name: "Domain Modeling"
+  short_description: "梳理领域术语、不变量、生命周期与边界"
+  default_prompt: "使用 $domain-modeling 收敛这次变更涉及的领域模型。"

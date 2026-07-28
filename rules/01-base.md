@@ -66,12 +66,16 @@
 ```text
 1. Clarification Gate -> 仅真实未决用户决策使用 grilling；已确认决策只在 reversal evidence 出现或基础前提失效时重开
 2. Spec Gate -> `spec-gate` 零访谈生成并自审 design spec；重大未决决策返回终止态 `BLOCKED_BY_UNRESOLVED_DECISION`
-3. User Review Gate -> 用户确认 spec 后才能继续
-4. Plan Gate -> writing-plans 写实施计划
-5. Red Test Gate -> 行为变化先写失败测试并确认失败原因
-6. Task Review Gate -> 每个任务完成后做需求符合性审查和代码质量审查
-7. Verify Gate -> /verify 或等价验证通过后才能进入 PR
-8. PR Gate -> /pr 只处理本次任务相关文件并记录验证与风险
+3. User Review Gate -> 用户确认 Spec 后才能继续
+4. Ticket Gate -> 显式 `/to-tickets` 生成 tracer-bullet tickets，用户确认 blocking edges 后发布
+5. Implement Gate -> 显式 `/implement` 一次只执行 frontier 上的一张 ticket
+6. Red Test Gate -> 行为变化先写失败测试并确认失败原因
+7. Task Review Gate -> 每张 ticket 完成后做需求符合性审查和代码质量审查
+8. Verify Gate -> /verify 或等价验证通过后才能进入 PR
+9. PR Gate -> /pr 只处理本次任务相关文件并记录验证与风险
 ```
+
+Formal lane 没有批准的 tickets 不进入实现。每张 ticket 从 fresh context 开始；默认不 commit，
+只有用户明确授权时才进入 commit-per-ticket 或 PR 流。
 
 Spec Gate 阻塞时不得自动回到 grilling。中央路由必须停止当前调用链并展示决策地图；只有用户明确继续，才创建新 grilling 会话，结束后调用新的 Spec Gate，不恢复旧调用栈。

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Using Git Worktrees"
+  short_description: "为高风险或并行工作准备隔离 worktree"
+  default_prompt: "使用 $using-git-worktrees 为当前任务准备安全的隔离工作区。"

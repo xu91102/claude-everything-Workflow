@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "retired_skills": {
+    "brainstorming": [
+      "SKILL.md",
+      "spec-document-reviewer-prompt.md",
+      "visual-companion.md",
+      "agents/openai.yaml",
+      "scripts/frame-template.html",
+      "scripts/helper.js",
+      "scripts/server.cjs",
+      "scripts/start-server.sh",
+      "scripts/stop-server.sh"
+    ],
+    "discover-unknowns-zh": [
+      "SKILL.md",
+      "agents/openai.yaml",
+      "references/prompt-patterns.md"
+    ],
+    "find-skills": [
+      "SKILL.md"
+    ],
+    "skill-creator": [
+      "LICENSE.txt",
+      "SKILL.md",
+      "references/output-patterns.md",
+      "references/workflows.md",
+      "scripts/init_skill.py",
+      "scripts/package_skill.py",
+      "scripts/quick_validate.py"
+    ],
+    "writing-plans": [
+      "SKILL.md",
+      "plan-document-reviewer-prompt.md"
+    ],
+    "executing-plans": [
+      "SKILL.md"
+    ]
+  },
+  "stale_skill_files": {
+    "subagent-driven-development": [
+      "implementer-prompt.md",
+      "task-reviewer-prompt.md",
+      "scripts/task-brief"
+    ]
+  }
+}

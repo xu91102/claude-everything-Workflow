@@ -101,6 +101,8 @@ function checkInstallRuntimePolicy() {
     "Install-CodexWorkflow",
     "Copy-ConfigFile -Source (Join-Path $RootDir \"AGENTS.md\")",
     "Remove-PackageOnlyPaths",
+    "Remove-RetiredSkills",
+    "cleanup-retired-skills.js",
     "scripts\\install.ps1",
   ]);
   requireTokens("scripts/install.sh", [
@@ -108,6 +110,8 @@ function checkInstallRuntimePolicy() {
     "install_codex()",
     "copy_file \"$ROOT_DIR/AGENTS.md\" \"$dest/AGENTS.md\"",
     "remove_package_only_paths",
+    "cleanup_retired_skills",
+    "cleanup-retired-skills.js",
     "scripts/install.sh",
   ]);
 
@@ -141,6 +145,26 @@ function checkInstallRuntimePolicy() {
   const shCodexBody = sh.match(/install_codex\(\) \{[\s\S]*?\n\}/);
   if (shCodexBody && shCodexBody[0].includes("settings.json")) {
     fail("install_codex should not install Claude Code settings.json");
+  }
+
+  const shPreflight = sh.lastIndexOf("\nvalidate_retired_skill_manifest\n");
+  const shFirstInstall = sh.indexOf('\nif [ "$INSTALL_CLAUDE" -eq 1 ]');
+  if (
+    shPreflight === -1 ||
+    shFirstInstall === -1 ||
+    shPreflight > shFirstInstall
+  ) {
+    fail("scripts/install.sh should validate the retired manifest before writes");
+  }
+
+  const psPreflight = ps.lastIndexOf("Test-RetiredSkillManifest");
+  const psFirstInstall = ps.indexOf("\nif ($InstallClaude)");
+  if (
+    psPreflight === -1 ||
+    psFirstInstall === -1 ||
+    psPreflight > psFirstInstall
+  ) {
+    fail("scripts/install.ps1 should validate the retired manifest before writes");
   }
 }
 
@@ -356,6 +380,8 @@ function checkRouterTargets() {
     ["commands/harness-audit.md", ["agents/harness-optimizer.md"]],
     ["commands/grill.md", ["skills/grilling/SKILL.md"]],
     ["commands/to-spec.md", ["skills/spec-gate/SKILL.md"]],
+    ["commands/to-tickets.md", ["skills/to-tickets/SKILL.md"]],
+    ["commands/implement.md", ["skills/implement/SKILL.md"]],
     ["commands/setup-workflow.md", ["skills/project-context/SKILL.md"]],
   ];
 

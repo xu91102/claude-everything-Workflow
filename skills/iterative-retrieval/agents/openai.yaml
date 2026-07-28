@@ -1,0 +1,4 @@
+interface:
+  display_name: "Iterative Retrieval"
+  short_description: "迭代收敛大仓库检索与事实缺口"
+  default_prompt: "使用 $iterative-retrieval 在有限轮次内收敛当前任务需要的代码事实。"

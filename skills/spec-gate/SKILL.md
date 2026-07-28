@@ -1,6 +1,6 @@
 ---
 name: spec-gate
-description: "Generate, self-review, persist, and request approval for a formal engineering design spec without interviewing the user. Use when the user explicitly requests a design spec, Spec Gate, /to-spec, or the full Superpowers workflow, and automatically for costly-to-reverse architecture or service boundaries, public-contract compatibility, authentication or authorization boundaries, persistent data/schema migrations, or irreversible external side effects."
+description: "Use for /to-spec, an explicit formal engineering Spec, the full Superpowers flow, or costly-to-reverse architecture, public contracts, auth boundaries, persistent-data migrations, and irreversible side effects. Draft and self-review without interviewing."
 ---
 
 # Spec Gate
@@ -9,7 +9,7 @@ Create an implementation-ready design artifact from resolved decisions and verif
 
 ## Hard Gate
 
-Do not invoke implementation skills, write implementation code, or generate an implementation plan until the saved Spec has passed self-review and the user has explicitly approved it.
+Do not invoke implementation skills, write implementation code, or generate tickets until the saved Spec has passed self-review and the user has explicitly approved it.
 
 Do not ask clarifying questions. If a user-owned decision can materially change the result, return `BLOCKED_BY_UNRESOLVED_DECISION` before drafting the document.
 
@@ -88,7 +88,7 @@ Before returning a review outcome:
 2. Verify every consequential choice is resolved or explicitly delegated.
 3. Verify architecture, interfaces, failure behavior, migration, tests, acceptance, risk, and rollback agree.
 4. Verify each acceptance criterion maps to a repeatable automated or manual check.
-5. Verify the scope can produce one coherent implementation plan.
+5. Verify the scope can produce one coherent ticket graph.
 6. For complex or high-risk specs, read `references/spec-document-reviewer-prompt.md` and apply its calibrated review.
 
 Fix non-decision defects inline and repeat the self-review. A newly exposed consequential decision returns the blocking contract instead of entering user review.
@@ -99,7 +99,8 @@ After self-review, show the saved path and a compact summary of decisions and no
 
 - If the user requests document changes, revise the Spec and self-review again.
 - If revision exposes a consequential decision, return `BLOCKED_BY_UNRESOLVED_DECISION`.
-- If the user approves, return control to `skills/using-superpowers/SKILL.md`; do not invoke planning directly.
+- If the user approves, return control to `skills/using-superpowers/SKILL.md`; it hands the user to
+  explicit `/to-tickets`. Do not invoke a user-invoked Skill implicitly.
 
 ## Outcomes
 

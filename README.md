@@ -144,6 +144,8 @@ claude-everything-Workflow/
 │   ├── e2e.md                  # /e2e → e2e-runner
 │   ├── grill.md                # /grill → grilling
 │   ├── to-spec.md              # /to-spec → spec-gate
+│   ├── to-tickets.md           # /to-tickets → to-tickets
+│   ├── implement.md            # /implement → implement
 │   ├── setup-workflow.md        # /setup-workflow → project-context
 │   └── harness-audit.md        # /harness-audit → harness-optimizer
 │
@@ -173,14 +175,14 @@ claude-everything-Workflow/
 │   │   ├── SKILL.md
 │   │   ├── references/
 │   │   └── scripts/
-│   ├── subagent-driven-development/ # SDD：task brief、review package、progress ledger
+│   ├── subagent-driven-development/ # SDD：ticket brief、review package、progress ledger
 │   │   ├── SKILL.md
-│   │   ├── implementer-prompt.md
-│   │   ├── task-reviewer-prompt.md
+│   │   ├── references/
 │   │   └── scripts/
 │   ├── using-git-worktrees/    # 隔离式 worktree 执行准备
 │   │   └── SKILL.md
-│   ├── executing-plans/        # 按计划执行、检查点、审查与验证
+│   ├── to-tickets/             # 获批 Spec → tracer-bullet tickets
+│   ├── implement/              # frontier ticket → TDD、审查与验证
 │   │   └── SKILL.md
 │   ├── verification-before-completion/ # 完成声明前的新鲜验证门
 │   │   └── SKILL.md
@@ -326,10 +328,12 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 本仓默认最短闭环、按风险逐级升级。高风险任务或用户显式 opt-in 时参考 [obra/superpowers](https://github.com/obra/superpowers) 的门禁结构，但不复制外部仓库文件。主线是：
 
+Formal lane 固定为 `to-spec → to-tickets → implement`：
+
 ```text
 任务
   -> using-superpowers 先路由到相关 process skill
-  -> 可查事实直接检索；系统性事实缺口用 discover-unknowns-zh
+  -> 可查事实直接检索；系统性事实缺口用 iterative-retrieval
   -> 标记用户显式 formal spec 或高回滚成本架构/公共契约、安全、持久数据、不可逆副作用
   -> 存在关键用户决策：grilling 一次只问一个最高价值问题，并返回结构化 handoff
   -> 明确低风险且无未决决策：direct，直接实现并做相称验证
@@ -337,8 +341,9 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
   -> Spec Gate 阻塞：停止并展示决策地图；用户明确继续才创建新 grilling 会话
   -> 用户审核并批准 spec
   -> using-git-worktrees 按需创建隔离工作区
-  -> writing-plans 写实施计划
-  -> subagent-driven-development 或 executing-plans 按计划执行
+  -> /to-tickets 拆成 tracer-bullet tickets 并确认 blocking edges
+  -> 从 frontier 显式 /implement 一张 ticket
+  -> 获批 commit-per-ticket 时可使用 subagent-driven-development
   -> TDD 红绿重构
   -> 需求符合性审查
   -> 代码质量审查
@@ -352,24 +357,34 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 旧入口名 `brainstorming` 兼容一个发布周期：中央路由会提示迁移并按 formal Spec 请求处理，但不再安装或发现同名 Skill。`grilling` 是唯一需求澄清引擎，`spec-gate` 只负责零访谈成稿、自审和用户批准。
 
+### Skill 迁移说明
+
+- `writing-plans` → `/to-tickets`
+- `executing-plans` → `/implement`
+- `discover-unknowns-zh` → `iterative-retrieval`
+- `find-skills` → 宿主提供的 Skill 发现/安装能力
+- `skill-creator` → 宿主提供的 Skill 创作能力
+
+升级安装会按精确退役清单删除上述旧分发文件；同名目录中的未知用户文件会被保留并报告。
+
 硬门禁：
 
 - 开始非平凡任务前，先用 `using-superpowers` 判断并加载相关 process skill。
 - 上下文或工具面变重时，先盘点常驻 Token 开销，再决定新增或删除 MCP/skill/agent。
 - 子代理需要探索大仓库时，先用 `iterative-retrieval` 的 Dispatch/Evaluate/Refine/Loop 闭环收敛上下文，再回传证据。
-- 完整流程适用时：没有 spec 不进入 plan，没有用户审核不进入实现，没有 review 不标记任务完成。
-- 计划必须包含 `Global Constraints` 和每任务 `Interfaces`，让 implementer/reviewer 不依赖父会话记忆。
+- 完整流程适用时：没有批准的 Spec 不生成 tickets；没有用户审核不进入实现；没有批准的 tickets 不进入实现；没有 review 不标记任务完成。
+- Ticket 使用 tracer-bullet vertical slice、显式 `Blocked by` 和 frontier；本地可单文件汇总或一票一文件。
 - 没有 failing test，不写行为代码。
 - 没有新鲜验证证据，不声明完成、通过、已修复或 ready。
 - 没有 verify，不进入 PR。
 - 有脏工作区、并行任务或高风险改动时，先考虑 `using-git-worktrees`。
-- 只有用户明确批准 commit/PR/SDD 执行时，才使用 `subagent-driven-development` 的 per-task commit 流；否则用 `executing-plans` 或 inline execution。
+- 只有用户明确批准 commit/PR/SDD 执行时，才使用 `subagent-driven-development` 的 per-ticket commit 流；否则 `/implement` 保持改动未提交。
 
 ### 对齐 Superpowers v6.0.3 的能力
 
-- `subagent-driven-development` 使用 `.superpowers/sdd/` 保存 task brief、implementer report、review package 和 `progress.md`，避免把 scratch 写进 `.git/`。
-- 每个任务使用一个 `task-reviewer-prompt.md` 同时返回 spec compliance 和 code quality verdict，减少重复 reviewer 上下文。
-- `writing-plans` 强制 `Global Constraints` 和每任务 `Interfaces`，把跨任务约束、输入输出契约传给 implementer 和 reviewer。
+- `subagent-driven-development` 使用 `.superpowers/sdd/` 保存 ticket brief、implementer report、review package 和 `progress.md`，避免把 scratch 写进 `.git/`。
+- 每张 ticket 使用一个 `ticket-reviewer-prompt.md` 同时返回 spec compliance 和 code quality verdict，减少重复 reviewer 上下文。
+- `to-tickets` 不复制预计实现代码；架构、testing seams 和全局约束留在 Spec，ticket 只保留 outcome、acceptance 与 blocking edges。
 - Visual Companion 使用带 `?key=` 的 per-session URL，HTTP/WebSocket 请求都需要 session key；默认 idle timeout 为 4 小时，可用 `--idle-timeout-minutes` 调整。
 
 复杂度只影响执行与验证强度，不自动触发完整流程。普通新功能、多文件行为变化和存在低风险关键未知的任务仍走最短适用闭环；只有上述高风险类别或显式 opt-in 才进入完整流程。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
@@ -415,8 +430,8 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 1. 复制到 ~/.claude/
 2. 首次需要长期协作上下文时，用 `/setup-workflow` 配置工作追踪和领域文档位置；需求清楚时直接实现；关键未知按需用 `/grill`；高风险任务或显式 opt-in 用 `/to-spec` 写 design spec
 3. 高风险或并行实现前，用 `using-git-worktrees` 隔离工作区
-4. 用 `writing-plans` 写实施计划
-5. 用 `executing-plans` 按计划执行
+4. 用 `/to-tickets` 把批准的 Spec 拆成 tracer-bullet tickets
+5. 从 frontier 选择一张 ticket，用 `/implement` 在 fresh context 中执行
 6. 使用 /tdd 委派 tdd-guide 规划测试先行实现
 7. 关键路径使用 /e2e 委派 e2e-runner 维护 Playwright
 8. 使用 /verify 验证

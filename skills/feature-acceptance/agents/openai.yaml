@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Acceptance"
+  short_description: "基于真实证据验收功能与修复结果"
+  default_prompt: "使用 $feature-acceptance 对这项功能做可复核的端到端验收。"

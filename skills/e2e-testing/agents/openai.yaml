@@ -1,0 +1,4 @@
+interface:
+  display_name: "E2E Testing"
+  short_description: "用 Playwright 验证关键用户旅程"
+  default_prompt: "使用 $e2e-testing 为这个关键用户旅程建立稳定的浏览器级验证。"

@@ -50,7 +50,7 @@ fix bug
 
 ## Superpowers 本地工件
 
-- Superpowers 生成的 spec 和 plan 仅用于本地工作流，无论保存位置都不得暂存或提交。
+- Superpowers 生成的 spec 和 tickets 仅用于本地工作流，无论保存位置都不得暂存或提交。
 - 默认目录 `docs/superpowers/` 由 `.gitignore` 保留在本地；PR 只包含实现、测试和长期维护文档。
 
 ## PR 工作流

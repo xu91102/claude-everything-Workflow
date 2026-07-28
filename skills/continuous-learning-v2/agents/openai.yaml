@@ -1,0 +1,6 @@
+interface:
+  display_name: "Continuous Learning v2"
+  short_description: "审查项目观察、直觉推广与学习演化"
+  default_prompt: "使用 $continuous-learning-v2 审查这个项目的学习数据与推广候选。"
+policy:
+  allow_implicit_invocation: false

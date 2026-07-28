@@ -1,6 +1,7 @@
 ---
 name: project-context
-description: "Configure a repository's durable agent context: issue-tracker location, domain-document layout, and ADR policy. Only when the user explicitly asks to set up project context, `/setup-workflow`, domain-document locations, or team tracking; do not invoke for ordinary implementation or domain-modeling work."
+description: 配置仓库长期使用的 tracker、领域文档与 ADR 位置。
+disable-model-invocation: true
 ---
 
 # Project Context

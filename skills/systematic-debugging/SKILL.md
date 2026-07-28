@@ -7,7 +7,7 @@ description: Use when encountering any bug, failing test, flaky behavior, or une
 
 Use this skill when implementation or verification reveals a bug, failing test, flaky behavior, or unexpected result.
 
-The goal is not to make debugging heavy. The goal is to stop guessing. Complete the four phases in order, then return to the active task or plan.
+The goal is not to make debugging heavy. The goal is to stop guessing. Complete the four phases in order, then return to the active ticket or task.
 
 <HARD-GATE>
 Do not propose or apply a fix until Phase 1 identifies a credible root cause and Phase 3 has tested the hypothesis with the smallest useful check.
@@ -44,7 +44,7 @@ Output: confirmed hypothesis or reason for returning to investigation.
 - Add or update the failing test first when the project has a suitable test path.
 - Apply one focused fix at the source of the root cause.
 - Run the failing test or reproduction command.
-- Run the task's required verification from the plan.
+- Run the ticket's or task's required verification.
 - Remove diagnostic logging or temporary probes.
 
 Output: root cause, fix summary, commands run, result, and remaining risk.

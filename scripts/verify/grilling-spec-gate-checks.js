@@ -214,23 +214,23 @@ function checkVisualCompanionSecurity({ requireTokens }) {
 
 function checkInstallerCleanupContract({ requireTokens }) {
   requireTokens("scripts/install.sh", [
-    "remove_obsolete_brainstorming_skill",
-    "$dest/skills/brainstorming",
+    "cleanup_retired_skills",
+    "scripts/cleanup-retired-skills.js",
+  ]);
+  requireTokens("scripts/install.ps1", [
+    "Remove-RetiredSkills",
+    "scripts\\cleanup-retired-skills.js",
+  ]);
+  requireTokens("scripts/retired-skill-files.json", [
+    "brainstorming",
     "SKILL.md",
     "scripts/server.cjs",
     "agents/openai.yaml",
-    "Preserving unknown files in obsolete brainstorming directory",
-    "find \"$target\" -mindepth 1 -print -quit",
-    "rmdir \"$target\"",
   ]);
-  requireTokens("scripts/install.ps1", [
-    "Remove-ObsoleteBrainstormingSkill",
-    "skills\\brainstorming",
-    "SKILL.md",
-    "scripts\\server.cjs",
-    "agents\\openai.yaml",
-    "Preserving unknown files in obsolete brainstorming directory",
-    "Get-ChildItem -LiteralPath $target -Force",
+  requireTokens("scripts/cleanup-retired-skills.js", [
+    "Preserving unknown files in retired skill",
+    "isSafeRelative",
+    "fs.rmdirSync",
   ]);
 }
 

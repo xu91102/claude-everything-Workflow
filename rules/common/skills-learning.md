@@ -13,11 +13,23 @@
 
 保持 skill 精简；详细参考内容应拆到 references，并按需读取。
 
+### Invocation
+
+- **User-invoked**：只由用户显式输入名称或 command 进入。Claude frontmatter 设置
+  `disable-model-invocation: true`，Codex `agents/openai.yaml` 设置
+  `policy.allow_implicit_invocation: false`；description 只写一行人类摘要。
+- **Model-invoked**：模型可按任务自动到达；description 只保留独立触发分支和必要 reach clause。
+- 两种宿主的 invocation mode 必须一致。User-invoked Skill 可以调用 model-invoked Skill，
+  不能隐式调用另一个 user-invoked Skill。
+- 同一触发只写在 description；正文保存执行步骤、完成标准和按需 reference pointer。
+
 ### Superpowers 路由纪律
 
 - 非平凡任务开始前，先用 `skills/using-superpowers/SKILL.md` 做风险路由；不因非平凡、多文件、新功能或普通行为变化就自动升级，不自动加载完整 process skill 链。
 - 显式完整流程或高回滚成本边界使用 `skills/spec-gate/SKILL.md`；若仍有阻塞实现的用户决策，先用 `skills/grilling/SKILL.md` 形成 handoff，再由中央路由调用新的 Spec Gate；需求清楚且低风险时走最短适用闭环。
 - `skills/spec-gate/SKILL.md` 不得形成提问循环或自动返回 grilling；阻塞 outcome 必须终止当前调用链。
+- Formal lane 使用 `to-spec → to-tickets → implement`：Spec 与 ticket graph 分别经用户批准，
+  每张 ticket 从 frontier 进入 fresh-context implementation。
 - 路由选中后，process skill 优先于 implementation skill；不要把完整流程当作所有任务的固定前置链。
 - 不凭记忆执行 skill；skill 可能已更新，必须读取当前 `SKILL.md`。
 - 用户直接指令、`AGENTS.md`、`CLAUDE.md` 和项目规则优先于 skill；冲突影响结果时要说明。

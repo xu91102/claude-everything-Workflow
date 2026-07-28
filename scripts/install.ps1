@@ -223,55 +223,29 @@ function Remove-ObsoleteWorkflowPaths {
     }
 }
 
-function Remove-ObsoleteBrainstormingSkill {
+function Remove-RetiredSkills {
     param([string]$Destination)
 
-    $target = Join-Path $Destination "skills\brainstorming"
-    if (-not (Test-Path -LiteralPath $target -PathType Container)) {
-        return
-    }
-
-    $knownFiles = @(
-        "SKILL.md",
-        "spec-document-reviewer-prompt.md",
-        "visual-companion.md",
-        "agents\openai.yaml",
-        "scripts\frame-template.html",
-        "scripts\helper.js",
-        "scripts\server.cjs",
-        "scripts\start-server.sh",
-        "scripts\stop-server.sh"
-    )
-
-    foreach ($relative in $knownFiles) {
-        $file = Join-Path $target $relative
-        if (Test-Path -LiteralPath $file -PathType Leaf) {
-            Invoke-InstallCommand `
-                -Description "Remove-Item '$file'" `
-                -Action { Remove-Item -LiteralPath $file -Force }
-        }
-    }
-
+    $cleanupScript = Join-Path $RootDir "scripts\cleanup-retired-skills.js"
     if ($DryRun) {
-        Write-Host "[dry-run] Remove empty directories under '$target' after known files"
+        & node $cleanupScript $Destination --dry-run
+        if ($LASTEXITCODE -ne 0) {
+            throw "Retired skill cleanup dry-run failed with exit code $LASTEXITCODE"
+        }
         return
     }
 
-    foreach ($relative in @("scripts", "agents")) {
-        $directory = Join-Path $target $relative
-        if (Test-Path -LiteralPath $directory -PathType Container) {
-            $children = Get-ChildItem -LiteralPath $directory -Force
-            if ($children.Count -eq 0) {
-                Remove-Item -LiteralPath $directory -Force
-            }
-        }
+    & node $cleanupScript $Destination
+    if ($LASTEXITCODE -ne 0) {
+        throw "Retired skill cleanup failed with exit code $LASTEXITCODE"
     }
+}
 
-    $remaining = Get-ChildItem -LiteralPath $target -Force
-    if ($remaining.Count -eq 0) {
-        Remove-Item -LiteralPath $target -Force
-    } else {
-        Write-Host "Preserving unknown files in obsolete brainstorming directory: $target"
+function Test-RetiredSkillManifest {
+    $cleanupScript = Join-Path $RootDir "scripts\cleanup-retired-skills.js"
+    & node $cleanupScript --validate
+    if ($LASTEXITCODE -ne 0) {
+        throw "Retired skill manifest validation failed with exit code $LASTEXITCODE"
     }
 }
 
@@ -290,7 +264,7 @@ function Install-ClaudeWorkflow {
     Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath
     Convert-ClaudeSettingsHookPaths -SettingsPath $settingsPath
     Install-SharedDirs -Destination $dest
-    Remove-ObsoleteBrainstormingSkill -Destination $dest
+    Remove-RetiredSkills -Destination $dest
     Remove-PackageOnlyPaths -Destination $dest
 }
 
@@ -305,9 +279,11 @@ function Install-CodexWorkflow {
     Remove-ObsoleteWorkflowPaths -Destination $dest
     Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
     Install-SharedDirs -Destination $dest
-    Remove-ObsoleteBrainstormingSkill -Destination $dest
+    Remove-RetiredSkills -Destination $dest
     Remove-PackageOnlyPaths -Destination $dest
 }
+
+Test-RetiredSkillManifest
 
 if ($InstallClaude) {
     Install-ClaudeWorkflow

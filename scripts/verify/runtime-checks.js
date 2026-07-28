@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
@@ -241,6 +242,142 @@ function checkObserveV2() {
   fs.rmSync(tempHome, { recursive: true, force: true });
 }
 
+function createRetiredSkillFixture() {
+  const tempRoot = fs.mkdtempSync(
+    path.join(os.tmpdir(), "cew-retired-skill cleanup-"),
+  );
+  const at = (...parts) => path.join(tempRoot, ...parts);
+  const fixture = {
+    tempRoot,
+    known: at("skills", "writing-plans", "SKILL.md"),
+    unknown: at("skills", "writing-plans", "user-notes.md"),
+    dryRunKnown: at("skills", "executing-plans", "SKILL.md"),
+    symlinkRoot: at("skills", "find-skills"),
+    externalKnown: at("outside-retired-skill", "SKILL.md"),
+    nestedSymlinkRoot: at("skills", "skill-creator", "references"),
+    nestedExternalKnown: at(
+      "outside-nested-directory",
+      "output-patterns.md",
+    ),
+    staleKnown: [
+      at("skills", "subagent-driven-development", "implementer-prompt.md"),
+      at("skills", "subagent-driven-development", "task-reviewer-prompt.md"),
+      at("skills", "subagent-driven-development", "scripts", "task-brief"),
+    ],
+    activeCurrent: at(
+      "skills",
+      "subagent-driven-development",
+      "references",
+      "implementer-prompt.md",
+    ),
+  };
+  for (const file of [
+    fixture.known,
+    fixture.unknown,
+    fixture.dryRunKnown,
+    ...fixture.staleKnown,
+    fixture.activeCurrent,
+  ]) {
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, "fixture");
+  }
+  fs.mkdirSync(path.dirname(fixture.externalKnown), { recursive: true });
+  fs.writeFileSync(fixture.externalKnown, "must stay");
+  fs.symlinkSync(
+    path.dirname(fixture.externalKnown),
+    fixture.symlinkRoot,
+    process.platform === "win32" ? "junction" : "dir",
+  );
+  fs.mkdirSync(path.dirname(fixture.nestedSymlinkRoot), { recursive: true });
+  fs.mkdirSync(path.dirname(fixture.nestedExternalKnown), { recursive: true });
+  fs.writeFileSync(fixture.nestedExternalKnown, "must also stay");
+  fs.symlinkSync(
+    path.dirname(fixture.nestedExternalKnown),
+    fixture.nestedSymlinkRoot,
+    process.platform === "win32" ? "junction" : "dir",
+  );
+  return fixture;
+}
+
+function runRetiredSkillCleanup(cleanup, args) {
+  return spawnSync(process.execPath, [cleanup, ...args], {
+    cwd: root,
+    encoding: "utf8",
+    timeout: 10000,
+  });
+}
+
+function assertRetiredSkillCleanup(fixture) {
+  if (
+    fs.existsSync(fixture.known) ||
+    fs.existsSync(fixture.dryRunKnown) ||
+    fixture.staleKnown.some((file) => fs.existsSync(file))
+  ) {
+    fail("retired skill cleanup did not remove known files");
+  }
+  if (!fs.existsSync(fixture.unknown)) {
+    fail("retired skill cleanup removed an unknown user file");
+  }
+  if (!fs.existsSync(fixture.activeCurrent)) {
+    fail("retired skill cleanup removed a current SDD file");
+  }
+  if (
+    !fs.existsSync(fixture.externalKnown) ||
+    !fs.lstatSync(fixture.symlinkRoot).isSymbolicLink()
+  ) {
+    fail("retired skill cleanup followed a symlink outside the retired directory");
+  }
+  if (
+    !fs.existsSync(fixture.nestedExternalKnown) ||
+    !fs.lstatSync(fixture.nestedSymlinkRoot).isSymbolicLink()
+  ) {
+    fail("retired skill cleanup followed a nested directory symlink");
+  }
+}
+
+function checkRetiredSkillCleanup() {
+  const cleanup = rel("scripts/cleanup-retired-skills.js");
+  const manifest = rel("scripts/retired-skill-files.json");
+  if (!fs.existsSync(cleanup)) return fail("retired skill cleanup script is missing");
+  if (!fs.existsSync(manifest)) return fail("retired skill manifest is missing");
+  const fixture = createRetiredSkillFixture();
+  const validation = spawnSync(process.execPath, [cleanup, "--validate"], {
+    cwd: root,
+    encoding: "utf8",
+    timeout: 10000,
+  });
+  if (validation.status !== 0) {
+    fail(`retired skill manifest validation failed: ${validation.stderr}`);
+  }
+
+  const dryRun = runRetiredSkillCleanup(cleanup, [
+    fixture.tempRoot,
+    "--dry-run",
+  ]);
+  if (dryRun.status !== 0) {
+    fail(`retired skill cleanup dry-run failed: ${dryRun.stderr}`);
+  }
+  if (!dryRun.stdout.includes("Preserve unknown retired skill path")) {
+    fail("retired skill cleanup dry-run did not report preserved unknown files");
+  }
+  if (
+    !fs.existsSync(fixture.known) ||
+    !fs.existsSync(fixture.dryRunKnown) ||
+    fixture.staleKnown.some((file) => !fs.existsSync(file))
+  ) {
+    fail("retired skill cleanup dry-run modified files");
+  }
+
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    const result = runRetiredSkillCleanup(cleanup, [fixture.tempRoot]);
+    if (result.status !== 0) {
+      fail(`retired skill cleanup attempt ${attempt} failed: ${result.stderr}`);
+    }
+  }
+  assertRetiredSkillCleanup(fixture);
+  fs.rmSync(fixture.tempRoot, { recursive: true, force: true });
+}
+
 function checkGitDiffWhitespace() {
   const isRepo = spawnSync("git", ["rev-parse", "--is-inside-work-tree"], {
     cwd: root,
@@ -270,6 +407,7 @@ function runRuntimeChecks(context) {
   checkScriptLayout();
   checkContinuousLearningV21();
   checkObserveV2();
+  checkRetiredSkillCleanup();
   checkGitDiffWhitespace();
 }
 
