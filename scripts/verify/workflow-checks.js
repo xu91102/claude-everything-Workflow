@@ -319,15 +319,11 @@ function checkRemovedSkillReferences() {
   for (const skill of [
     "context-budget",
     "documentation-lookup",
-    "discover-unknowns-zh",
-    "find-skills",
-    "skill-creator",
-    "writing-plans",
-    "executing-plans",
   ]) {
     for (const file of managedFiles()) {
       if (isVerifierImplementation(file)) continue;
       if (file === "scripts/retired-skill-files.json") continue;
+      if (file === "scripts/published-retirement-baselines.json") continue;
       const lines = read(file).split(/\r?\n/);
       const activeReferences = lines.filter(
         (line) =>

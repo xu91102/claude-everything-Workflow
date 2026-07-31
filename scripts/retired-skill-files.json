@@ -1,47 +1,62 @@
 {
-  "version": 1,
+  "version": 2,
   "retired_skills": {
     "brainstorming": [
-      "SKILL.md",
-      "spec-document-reviewer-prompt.md",
-      "visual-companion.md",
-      "agents/openai.yaml",
-      "scripts/frame-template.html",
-      "scripts/helper.js",
-      "scripts/server.cjs",
-      "scripts/start-server.sh",
-      "scripts/stop-server.sh"
-    ],
-    "discover-unknowns-zh": [
-      "SKILL.md",
-      "agents/openai.yaml",
-      "references/prompt-patterns.md"
-    ],
-    "find-skills": [
-      "SKILL.md"
-    ],
-    "skill-creator": [
-      "LICENSE.txt",
-      "SKILL.md",
-      "references/output-patterns.md",
-      "references/workflows.md",
-      "scripts/init_skill.py",
-      "scripts/package_skill.py",
-      "scripts/quick_validate.py"
-    ],
-    "writing-plans": [
-      "SKILL.md",
-      "plan-document-reviewer-prompt.md"
-    ],
-    "executing-plans": [
-      "SKILL.md"
+      {
+        "path": "SKILL.md",
+        "sha256": [
+          "f45375242a9a6b6de3660689f8c9c869086bc0ddfe992dd933d8f8e590228c50",
+          "7abfa1adfd596a5d62c8da0f7f664dd03151e92c0445f3877ba29bcd6d3b9d68"
+        ]
+      },
+      {
+        "path": "spec-document-reviewer-prompt.md",
+        "sha256": ["12cb5ed58aef41b8da6fbb505547c71ca3f5658c83b66ca6e556c936308b3189"]
+      },
+      {
+        "path": "visual-companion.md",
+        "sha256": ["60cbad29b9dd7eaf08da020e301c498a72230b2e13c1813fa967a135ffcc1d71"]
+      },
+      {
+        "path": "agents/openai.yaml",
+        "sha256": ["90585d2a09289aaff7eba1271596e8500c7328437b94839f2d39699a41689195"]
+      },
+      {
+        "path": "scripts/frame-template.html",
+        "sha256": ["6a8a4e58bd6a44b904e2e3c57de774481d909204597e1498de53f1b2fecc4c4e"]
+      },
+      {
+        "path": "scripts/helper.js",
+        "sha256": ["43c6d69954a46ec34a2a262bcc62a9a7e83e839c739f199cb72646d397c686e3"]
+      },
+      {
+        "path": "scripts/server.cjs",
+        "sha256": ["2d2961ea8d11f56c5f4c3a1a68d22709efa5d7601a2246d8c880774e7e9e8412"]
+      },
+      {
+        "path": "scripts/start-server.sh",
+        "sha256": ["a4e5ae84275bcaacd2f84345afeabe59cf7b00ba080e123da7cc1fb226f12847"]
+      },
+      {
+        "path": "scripts/stop-server.sh",
+        "sha256": ["0b5ccbbd57f62d3ed88993f7940b5ee0e5c0fc9b21c550c623da4f6292e47daf"]
+      }
     ]
   },
   "stale_skill_files": {
     "subagent-driven-development": [
-      "implementer-prompt.md",
-      "task-reviewer-prompt.md",
-      "scripts/task-brief"
+      {
+        "path": "implementer-prompt.md",
+        "sha256": ["49018b28dc11bc9f3d13a28959bb10ae1a96eabc5d8f19f4079d901f9ff2bf64"]
+      },
+      {
+        "path": "task-reviewer-prompt.md",
+        "sha256": ["2eb9d54373420de25bc0bd00635d3a3123a6c0eb30c881168e6f3348e2387331"]
+      },
+      {
+        "path": "scripts/task-brief",
+        "sha256": ["5380283f00bffa99ab82ae78482b7d248abe10655129c72ca7050bdc0b6a85e1"]
+      }
     ]
   }
 }

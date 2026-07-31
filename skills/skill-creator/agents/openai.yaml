@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Creator"
+  short_description: "创建并验证自包含 skill"
+  default_prompt: "使用 $skill-creator 创建或维护一个仓库自包含的 skill。"

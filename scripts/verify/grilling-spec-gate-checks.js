@@ -6,6 +6,7 @@ const BRAINSTORMING_REFERENCE_ALLOWLIST = new Set([
   "skills/using-superpowers/SKILL.md",
   "scripts/install.sh",
   "scripts/install.ps1",
+  "scripts/published-retirement-baselines.json",
 ]);
 
 const ROUTING_SCENARIOS = [
@@ -15,7 +16,12 @@ const ROUTING_SCENARIOS = [
   },
   {
     name: "ordinary task with one user decision",
-    checks: [{ file: "skills/using-superpowers/SKILL.md", tokens: ["grilling inline", "unresolved user-owned decision"] }],
+    checks: [
+      {
+        file: "skills/using-superpowers/SKILL.md",
+        tokens: ["grilling inline", "unresolved user-owned decision"],
+      },
+    ],
   },
   {
     name: "explicit /grill",

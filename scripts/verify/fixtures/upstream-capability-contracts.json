@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "fixtures": [
+    {
+      "upstream_id": "ask-matt",
+      "normal": {"input": "Which engineering flow fits this task?", "entrypoint": "commands/workflow-router.md"},
+      "invalid": {"input": "No engineering goal", "outcome": "NOT_APPLICABLE"},
+      "blocked": {"input": "Choose the next explicit flow for me", "outcome": "不隐式执行"},
+      "allowed_difference": "使用本地名称"
+    },
+    {
+      "upstream_id": "grill-with-docs",
+      "normal": {"input": "Grill this design and update our glossary", "entrypoint": "commands/documented-grill.md"},
+      "invalid": {"input": "No domain decision exists", "outcome": "NOT_APPLICABLE"},
+      "blocked": {"input": "Write unresolved options as facts", "outcome": "不写文档"},
+      "allowed_difference": "本地命名"
+    },
+    {
+      "upstream_id": "triage",
+      "normal": {"input": "Triage external issue 42", "entrypoint": "skills/issue-triage/SKILL.md"},
+      "invalid": {"input": "Triage an internally generated ticket", "outcome": "NOT_APPLICABLE"},
+      "blocked": {"input": "Apply conflicting labels without approval", "outcome": "BLOCKED"},
+      "allowed_difference": "远程写增加授权门"
+    },
+    {
+      "upstream_id": "improve-codebase-architecture",
+      "normal": {"input": "Find deepening opportunities in recent hotspots", "entrypoint": "skills/architecture-audit/SKILL.md"},
+      "invalid": {"input": "No evidence-backed architecture candidate", "outcome": "NO_RELIABLE_CANDIDATE"},
+      "blocked": {"input": "Select product semantics during an audit", "outcome": "grilling"},
+      "allowed_difference": "离线可读 HTML"
+    },
+    {
+      "upstream_id": "setup-matt-pocock-skills",
+      "normal": {"input": "Configure tracker, domain docs, ADR and triage roles", "entrypoint": "skills/project-context/SKILL.md"},
+      "invalid": {"input": "Existing configuration needs no change", "outcome": "NOT_APPLICABLE"},
+      "blocked": {"input": "Persist unconfirmed tracker settings", "outcome": "NEEDS_DECISION"},
+      "allowed_difference": "本地配置路径"
+    },
+    {
+      "upstream_id": "to-spec",
+      "normal": {"input": "Turn this conversation into an engineering Spec", "entrypoint": "commands/to-spec.md"},
+      "invalid": {"input": "Format a narrow typo fix as a formal Spec", "outcome": "NOT_APPLICABLE"},
+      "blocked": {"input": "Draft despite unresolved public contract policy", "outcome": "BLOCKED_BY_UNRESOLVED_DECISION"},
+      "allowed_difference": "本地审批门"
+    },
+    {
+      "upstream_id": "to-tickets",
+      "normal": {"input": "Split this approved Spec into tracer-bullet tickets", "entrypoint": "skills/to-tickets/SKILL.md"},
+      "invalid": {"input": "Publish formal tickets from an unapproved Spec", "outcome": "BLOCKED_BY_UNAPPROVED_SPEC"},
+      "blocked": {"input": "Publish before ticket graph review", "outcome": "READY_FOR_TICKET_REVIEW"},
+      "allowed_difference": "TNN 本地 schema"
+    },
+    {
+      "upstream_id": "implement",
+      "normal": {"input": "Implement the approved ticket set without committing", "entrypoint": "skills/implement/SKILL.md"},
+      "invalid": {"input": "Run a multi-session Spec with no tickets", "outcome": "NEEDS_TICKETS"},
+      "blocked": {"input": "Start a non-frontier ticket", "outcome": "BLOCKED"},
+      "allowed_difference": "持久 frontier"
+    },
+    {
+      "upstream_id": "wayfinder",
+      "normal": {"input": "Map decisions for a multi-session greenfield effort", "entrypoint": "skills/large-work-planning/SKILL.md"},
+      "invalid": {"input": "Create a map for a one-session clear task", "outcome": "常规流程"},
+      "blocked": {"input": "Resolve a HITL decision without a human", "outcome": "BLOCKED"},
+      "allowed_difference": "支持 persisted local tracker"
+    },
+    {
+      "upstream_id": "prototype",
+      "normal": {"input": "Prototype this order state model in a terminal", "entrypoint": "skills/rapid-prototyping/SKILL.md"},
+      "invalid": {"input": "Build without a design question", "outcome": "BLOCKED_BY_AMBIGUOUS_QUESTION"},
+      "blocked": {"input": "Run without an available runtime", "outcome": "BLOCKED"},
+      "allowed_difference": "不自动合入生产分支"
+    },
+    {
+      "upstream_id": "diagnosing-bugs",
+      "normal": {"input": "Diagnose this intermittent performance regression", "entrypoint": "skills/systematic-debugging/SKILL.md"},
+      "invalid": {"input": "Fix before reproducing", "outcome": "reproduction"},
+      "blocked": {"input": "Patch an untested hypothesis", "outcome": "调查阶段"},
+      "allowed_difference": "增加 Red Test Gate"
+    },
+    {
+      "upstream_id": "research",
+      "normal": {"input": "Research this API against first-party sources", "entrypoint": "skills/evidence-research/SKILL.md"},
+      "invalid": {"input": "Research a fact already proven locally", "outcome": "NOT_APPLICABLE"},
+      "blocked": {"input": "Claim evidence when sources are unreachable", "outcome": "NOT_RUN"},
+      "allowed_difference": "主 agent 可在无并行授权时执行"
+    },
+    {
+      "upstream_id": "tdd",
+      "normal": {"input": "Build this behavior red-green-refactor", "entrypoint": "skills/test-driven-development/SKILL.md"},
+      "invalid": {"input": "Apply production tests to a throwaway prototype", "outcome": "记录例外"},
+      "blocked": {"input": "Write behavior code without a red test", "outcome": "不写行为实现"},
+      "allowed_difference": "更严格 completion evidence"
+    },
+    {
+      "upstream_id": "domain-modeling",
+      "normal": {"input": "Define a new subscription lifecycle invariant", "entrypoint": "skills/domain-modeling/SKILL.md"},
+      "invalid": {"input": "Rename an internal helper with unchanged domain", "outcome": "NOT_APPLICABLE"},
+      "blocked": {"input": "Choose unresolved product semantics", "outcome": "router"},
+      "allowed_difference": "本地 persistence gate"
+    },
+    {
+      "upstream_id": "codebase-design",
+      "normal": {"input": "Design a deep payment authorization interface", "entrypoint": "skills/deep-module-design/SKILL.md"},
+      "invalid": {"input": "Add a seam for a hypothetical adapter", "outcome": "speculative seam"},
+      "blocked": {"input": "Pick an unresolved domain responsibility", "outcome": "BLOCKED_BY_DOMAIN_DECISION"},
+      "allowed_difference": "强制 expand-migrate-contract"
+    },
+    {
+      "upstream_id": "code-review",
+      "normal": {"input": "Review this diff from origin/main against the Spec", "entrypoint": "agents/code-reviewer.md"},
+      "invalid": {"input": "Review without a fixed point or diff", "outcome": "BLOCKED"},
+      "blocked": {"input": "Invent requirements when no Spec exists", "outcome": "NOT RUN"},
+      "allowed_difference": "使用本地专用审查 agents"
+    },
+    {
+      "upstream_id": "resolving-merge-conflicts",
+      "normal": {"input": "Resolve this in-progress rebase by both intents", "entrypoint": "skills/merge-conflict-resolution/SKILL.md"},
+      "invalid": {"input": "Resolve when Git has no conflict", "outcome": "NOT_APPLICABLE"},
+      "blocked": {"input": "Guess between incompatible product intents", "outcome": "BLOCKED"},
+      "allowed_difference": "增加权限和验证报告"
+    }
+  ]
+}

@@ -60,6 +60,14 @@ Use process skills before implementation skills:
 Task arrives
   -> explicit /setup-workflow?                     -> project-context
   -> explicit /grill?                              -> grilling explicit
+  -> explicit documented domain interview?         -> /documented-grill
+  -> external Issue/PR triage request?              -> issue-triage
+  -> huge effort whose path exceeds one session?   -> large-work-planning
+  -> architecture health/deepening scan?           -> architecture-audit
+  -> one runnable design question?                  -> rapid-prototyping
+  -> primary-source research request?               -> evidence-research
+  -> merge/rebase conflict already in progress?    -> merge-conflict-resolution
+  -> domain term/invariant/lifecycle/context change? -> domain-modeling
   -> bug, failing test, or unexpected result?      -> systematic-debugging
   -> discoverable fact?                            -> inspect it; do not ask
   -> systematic evidence or blind-spot gap?        -> iterative-retrieval
@@ -70,6 +78,8 @@ Task arrives
   -> approved tickets + explicit /implement?       -> implement one frontier ticket
   -> approved ticket + SDD/commit approved?        -> subagent-driven-development
   -> behavior change with a test path?             -> test-driven-development
+  -> module interface or seam design?               -> deep-module-design
+  -> fixed-point diff review?                       -> /code-review
   -> dirty worktree or risky branch work?          -> consider using-git-worktrees
   -> completion, fixed, or ready claim?            -> verification-before-completion
   -> external skill learning or edit?              -> skills-learning policy + available runtime authoring skill

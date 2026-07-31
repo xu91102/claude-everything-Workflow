@@ -1,0 +1,4 @@
+interface:
+  display_name: "Writing Plans（兼容）"
+  short_description: "兼容入口，转交 to-tickets"
+  default_prompt: "使用 $writing-plans 兼容入口，把计划请求交给 to-tickets。"

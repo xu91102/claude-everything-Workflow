@@ -1,0 +1,368 @@
+{
+  "schema_version": 1,
+  "upstream": {
+    "repository": "https://github.com/mattpocock/skills",
+    "commit": "2ab958093e83e0ec752e6c1c5932da465bf23e0c",
+    "catalog": "skills/engineering/README.md",
+    "captured_at": "2026-07-31",
+    "catalog_contract_sha256": "c5fe86282b712b3101c63273d80878195d8620f1def50c1609be1c01ee971667"
+  },
+  "policy": {
+    "baseline": "upstream behavior is the minimum capability set",
+    "local_names": "canonical upstream ids are not added solely as compatibility aliases",
+    "compatibility": "existing local entrances remain available for at least one release cycle"
+  },
+  "capabilities": [
+    {
+      "upstream_id": "ask-matt",
+      "invocation": "user",
+      "local_id": "workflow-router",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "用户显式询问应采用哪条工程流程",
+        "invalid_input": "缺少工程目标时返回 NOT_APPLICABLE",
+        "blocked_outcome": "需要用户选择时返回明确下一入口而不隐式执行",
+        "allowed_differences": ["使用本地名称", "保留显式 user invocation"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#ask-matt"
+      },
+      "entrypoints": ["commands/workflow-router.md"],
+      "evidence": [
+        {
+          "path": "commands/workflow-router.md",
+          "tokens": ["skills/using-superpowers/SKILL.md", "最窄流程", "显式"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "grill-with-docs",
+      "invocation": "user",
+      "local_id": "documented-grilling",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "用户显式要求访谈并同步领域文档",
+        "invalid_input": "无可持久领域决策时返回 NOT_APPLICABLE",
+        "blocked_outcome": "未达共同理解时不写文档",
+        "allowed_differences": ["本地命名", "写入前展示目标与摘要"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#grill-with-docs"
+      },
+      "entrypoints": ["commands/documented-grill.md"],
+      "evidence": [
+        {
+          "path": "commands/documented-grill.md",
+          "tokens": ["skills/grilling/SKILL.md", "skills/domain-modeling/SKILL.md", "Documentation Mode"]
+        },
+        {
+          "path": "skills/domain-modeling/SKILL.md",
+          "tokens": ["Documentation Mode", "CONTEXT.md", "ADR"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "triage",
+      "invocation": "user",
+      "local_id": "issue-triage",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "用户显式要求分类或推进外部 Issue/PR",
+        "invalid_input": "内部生成 ticket 返回 NOT_APPLICABLE",
+        "blocked_outcome": "label 冲突或远程写未授权时返回 BLOCKED",
+        "allowed_differences": ["本地 role 映射", "远程写增加授权门"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#triage",
+        "quality_sections": true
+      },
+      "entrypoints": ["skills/issue-triage/SKILL.md"],
+      "evidence": [
+        {
+          "path": "skills/issue-triage/SKILL.md",
+          "tokens": ["needs-triage", "needs-info", "ready-for-agent", "ready-for-human", "wontfix"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "improve-codebase-architecture",
+      "invocation": "user",
+      "local_id": "architecture-audit",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "用户显式要求扫描 deepening opportunities",
+        "invalid_input": "无可验证候选时返回 NO_RELIABLE_CANDIDATE",
+        "blocked_outcome": "候选需要产品决策时交给 grilling",
+        "allowed_differences": ["离线可读 HTML", "本地 deep-module vocabulary"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#improve-codebase-architecture",
+        "quality_sections": true
+      },
+      "entrypoints": ["skills/architecture-audit/SKILL.md"],
+      "evidence": [
+        {
+          "path": "skills/architecture-audit/SKILL.md",
+          "tokens": ["deepening opportunities", "deletion test", "HTML", "grilling"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "setup-matt-pocock-skills",
+      "invocation": "user",
+      "local_id": "project-context",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "用户显式配置 tracker、文档和 triage",
+        "invalid_input": "已有配置且无需变化时返回 NOT_APPLICABLE",
+        "blocked_outcome": "未确认配置时返回 NEEDS_DECISION",
+        "allowed_differences": ["本地配置路径", "不自动创建远程 labels"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#setup-matt-pocock-skills"
+      },
+      "entrypoints": ["skills/project-context/SKILL.md"],
+      "evidence": [
+        {
+          "path": "skills/project-context/SKILL.md",
+          "tokens": ["Work tracking", "Triage", "out-of-scope"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "to-spec",
+      "invocation": "user",
+      "local_id": "conversation-to-spec",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "用户显式把 conversation、plan 或 issue 转成 Spec",
+        "invalid_input": "普通窄任务返回 NOT_APPLICABLE",
+        "blocked_outcome": "关键决策未解决时返回 BLOCKED_BY_UNRESOLVED_DECISION",
+        "allowed_differences": ["本地审批门", "远程发布需要授权"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#to-spec"
+      },
+      "entrypoints": ["commands/to-spec.md"],
+      "evidence": [
+        {
+          "path": "skills/spec-gate/SKILL.md",
+          "tokens": ["current conversation", "User Review Gate", "remote tracker"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "to-tickets",
+      "invocation": "user",
+      "local_id": "to-tickets",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "用户显式拆分 conversation、plan 或 approved Spec",
+        "invalid_input": "formal lane 未批准时返回 BLOCKED_BY_UNAPPROVED_SPEC",
+        "blocked_outcome": "粒度未确认时返回 READY_FOR_TICKET_REVIEW",
+        "allowed_differences": ["TNN 本地 schema", "远程写需要授权"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#to-tickets"
+      },
+      "entrypoints": ["skills/to-tickets/SKILL.md", "commands/to-tickets.md"],
+      "evidence": [
+        {
+          "path": "skills/to-tickets/SKILL.md",
+          "tokens": ["conversation、plan 或 Spec", "tracer bullet", "blocking graph", "远程 tracker"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "implement",
+      "invocation": "user",
+      "local_id": "implement",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "用户显式执行小任务、ticket 集或 Spec",
+        "invalid_input": "多会话 Spec 无 tickets 时返回 NEEDS_TICKETS",
+        "blocked_outcome": "非 frontier、验证失败或授权缺失时返回 BLOCKED",
+        "allowed_differences": ["持久 frontier", "commit/push 权限门"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#implement"
+      },
+      "entrypoints": ["skills/implement/SKILL.md", "commands/implement.md"],
+      "evidence": [
+        {
+          "path": "skills/implement/SKILL.md",
+          "tokens": ["fresh context", "test-driven-development", "code-review", "verification-before-completion"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "wayfinder",
+      "invocation": "user",
+      "local_id": "large-work-planning",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "用户显式规划单会话无法容纳的模糊工作",
+        "invalid_input": "路径已清晰时建议常规流程并停止",
+        "blocked_outcome": "HITL 决策无人回答时返回 BLOCKED",
+        "allowed_differences": ["本地名称", "支持 persisted local tracker"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#wayfinder",
+        "quality_sections": true
+      },
+      "entrypoints": ["skills/large-work-planning/SKILL.md"],
+      "evidence": [
+        {
+          "path": "skills/large-work-planning/SKILL.md",
+          "tokens": ["decision ticket", "fog of war", "frontier", "one ticket"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "prototype",
+      "invocation": "model",
+      "local_id": "rapid-prototyping",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "逻辑、状态或 UI 问题需要可运行反馈",
+        "invalid_input": "问题不明确时返回 BLOCKED_BY_AMBIGUOUS_QUESTION",
+        "blocked_outcome": "缺少可运行环境时报告 BLOCKED",
+        "allowed_differences": ["本地名称", "不自动合入生产分支"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#prototype",
+        "quality_sections": true
+      },
+      "entrypoints": ["skills/rapid-prototyping/SKILL.md"],
+      "evidence": [
+        {
+          "path": "skills/rapid-prototyping/SKILL.md",
+          "tokens": ["throwaway", "logic", "UI", "one command"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "diagnosing-bugs",
+      "invocation": "model",
+      "local_id": "systematic-debugging",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "难复现 bug、flake 或 performance regression",
+        "invalid_input": "没有可观察失败时先建立 reproduction",
+        "blocked_outcome": "无法证伪假设时返回调查阶段",
+        "allowed_differences": ["本地四阶段命名", "增加 Red Test Gate"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#diagnosing-bugs"
+      },
+      "entrypoints": ["skills/systematic-debugging/SKILL.md"],
+      "evidence": [
+        {
+          "path": "skills/systematic-debugging/SKILL.md",
+          "tokens": ["minimise", "instrument", "performance regression", "regression"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "research",
+      "invocation": "model",
+      "local_id": "evidence-research",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "工程问题依赖第一方外部证据",
+        "invalid_input": "无需外部证据时返回 NOT_APPLICABLE",
+        "blocked_outcome": "网络或来源不可用时返回 NOT_RUN",
+        "allowed_differences": ["主 agent 可在无并行授权时执行", "本地 citation 格式"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#research",
+        "quality_sections": true
+      },
+      "entrypoints": ["skills/evidence-research/SKILL.md"],
+      "evidence": [
+        {
+          "path": "skills/evidence-research/SKILL.md",
+          "tokens": ["primary sources", "citation", "Markdown"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "tdd",
+      "invocation": "model",
+      "local_id": "test-driven-development",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "功能、修复或重构有可测行为",
+        "invalid_input": "一次性原型或无行为文档变化可记录例外",
+        "blocked_outcome": "没有正确 RED 时不写行为实现",
+        "allowed_differences": ["中文本地说明", "更严格 completion evidence"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#tdd"
+      },
+      "entrypoints": ["skills/test-driven-development/SKILL.md"],
+      "evidence": [
+        {
+          "path": "skills/test-driven-development/SKILL.md",
+          "tokens": ["RED", "GREEN", "REFACTOR", "垂直切片"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "domain-modeling",
+      "invocation": "model",
+      "local_id": "domain-modeling",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "任务改变领域词汇、不变量、生命周期或 bounded context",
+        "invalid_input": "仅普通代码复杂度时返回 NOT_APPLICABLE",
+        "blocked_outcome": "产品语义决策未解决时返回当前 router",
+        "allowed_differences": ["本地 persistence gate", "显式 Documentation Mode"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#domain-modeling"
+      },
+      "entrypoints": ["skills/domain-modeling/SKILL.md"],
+      "evidence": [
+        {
+          "path": "skills/domain-modeling/SKILL.md",
+          "tokens": ["Domain vocabulary", "Invariants", "Lifecycle", "Bounded contexts"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "codebase-design",
+      "invocation": "model",
+      "local_id": "deep-module-design",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "设计 Module Interface、Seam 或 test surface",
+        "invalid_input": "没有真实变化需求时避免 speculative seam",
+        "blocked_outcome": "领域责任未决时返回 BLOCKED_BY_DOMAIN_DECISION",
+        "allowed_differences": ["本地名称", "强制 expand-migrate-contract"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#codebase-design",
+        "quality_sections": true
+      },
+      "entrypoints": ["skills/deep-module-design/SKILL.md"],
+      "evidence": [
+        {
+          "path": "skills/deep-module-design/SKILL.md",
+          "tokens": ["Module", "Interface", "Depth", "Seam", "Adapter", "Leverage", "Locality"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "code-review",
+      "invocation": "model",
+      "local_id": "two-axis-code-review",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "用户或流程要求固定基点 diff review",
+        "invalid_input": "无固定基点或 diff 时返回 BLOCKED",
+        "blocked_outcome": "缺 Spec 时 Spec 轴 NOT RUN",
+        "allowed_differences": ["使用本地专用审查 agents", "两轴不合并排序"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#code-review"
+      },
+      "entrypoints": ["agents/code-reviewer.md", "commands/code-review.md"],
+      "evidence": [
+        {
+          "path": "agents/code-reviewer.md",
+          "tokens": ["Standards", "Spec", "固定基点", "测试缺口", "并行", "上下文"]
+        }
+      ]
+    },
+    {
+      "upstream_id": "resolving-merge-conflicts",
+      "invocation": "model",
+      "local_id": "merge-conflict-resolution",
+      "parity_status": "verified",
+      "contract": {
+        "normal_trigger": "Git 已处于 merge/rebase conflict",
+        "invalid_input": "无进行中冲突时返回 NOT_APPLICABLE",
+        "blocked_outcome": "双方意图不兼容且需用户决定时返回 BLOCKED",
+        "allowed_differences": ["本地名称", "增加权限和验证报告"],
+        "fixture": "scripts/verify/fixtures/upstream-capability-contracts.json#resolving-merge-conflicts",
+        "quality_sections": true
+      },
+      "entrypoints": ["skills/merge-conflict-resolution/SKILL.md"],
+      "evidence": [
+        {
+          "path": "skills/merge-conflict-resolution/SKILL.md",
+          "tokens": ["primary source", "never abort", "continue", "BLOCKED"]
+        }
+      ]
+    }
+  ]
+}

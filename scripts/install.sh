@@ -63,21 +63,22 @@ backup_if_changed() {
     local src="$1"
     local dest="$2"
 
-    if [ ! -f "$dest" ] || cmp -s "$src" "$dest"; then
-        return
+    local args=("$ROOT_DIR/scripts/merge-distribution.js" "$src" "$dest" "--file" "--backup-only")
+    if [ "$DRY_RUN" -eq 1 ]; then
+        args+=("--dry-run")
     fi
-
-    local backup="${dest}.bak.$(date +%Y%m%d%H%M%S)"
-    echo "Backup: $dest -> $backup"
-    run cp "$dest" "$backup"
+    node "${args[@]}"
 }
 
 copy_file() {
     local src="$1"
     local dest="$2"
 
-    backup_if_changed "$src" "$dest"
-    run cp "$src" "$dest"
+    local args=("$ROOT_DIR/scripts/merge-distribution.js" "$src" "$dest" "--file")
+    if [ "$DRY_RUN" -eq 1 ]; then
+        args+=("--dry-run")
+    fi
+    node "${args[@]}"
 }
 
 copy_claude_settings() {
@@ -103,19 +104,11 @@ copy_dir() {
         return
     fi
 
-    run mkdir -p "$dest_root/$name"
-    run rsync -a "$ROOT_DIR/$name/" "$dest_root/$name/"
-}
-
-require_rsync() {
+    local args=("$ROOT_DIR/$name" "$dest_root/$name")
     if [ "$DRY_RUN" -eq 1 ]; then
-        return
+        args+=("--dry-run")
     fi
-
-    if ! command -v rsync >/dev/null 2>&1; then
-        echo "rsync is required. Please install rsync and retry." >&2
-        exit 1
-    fi
+    node "$ROOT_DIR/scripts/merge-distribution.js" "${args[@]}"
 }
 
 install_shared_dirs() {
@@ -136,7 +129,8 @@ remove_package_only_paths() {
 
     for file in \
         "scripts/install.sh" \
-        "scripts/install.ps1"
+        "scripts/install.ps1" \
+        "scripts/verify-install.ps1"
     do
         if [ -f "$dest/$file" ]; then
             run rm -f "$dest/$file"
@@ -186,8 +180,36 @@ cleanup_retired_skills() {
     node "$ROOT_DIR/scripts/cleanup-retired-skills.js" "$dest"
 }
 
+prepare_retired_skills() {
+    local dest="$1"
+
+    if [ "$DRY_RUN" -eq 1 ]; then
+        return
+    fi
+    node "$ROOT_DIR/scripts/cleanup-retired-skills.js" "$dest" --prepare
+}
+
 validate_retired_skill_manifest() {
     node "$ROOT_DIR/scripts/cleanup-retired-skills.js" --validate
+}
+
+preflight_install() {
+    local dest="$1"
+
+    node "$ROOT_DIR/scripts/preflight-install-paths.js" \
+        "$ROOT_DIR" \
+        "$dest" \
+        "AGENTS.md" \
+        "CLAUDE.md" \
+        "settings.json" \
+        "rules" \
+        "agents" \
+        "commands" \
+        "scripts" \
+        "hooks" \
+        "skills" \
+        "homunculus" \
+        "references"
 }
 
 install_claude() {
@@ -217,7 +239,22 @@ install_codex() {
 }
 
 validate_retired_skill_manifest
-require_rsync
+
+if [ "$INSTALL_CLAUDE" -eq 1 ]; then
+    preflight_install "$HOME_DIR/.claude"
+fi
+
+if [ "$INSTALL_CODEX" -eq 1 ]; then
+    preflight_install "$HOME_DIR/.codex"
+fi
+
+if [ "$INSTALL_CLAUDE" -eq 1 ]; then
+    prepare_retired_skills "$HOME_DIR/.claude"
+fi
+
+if [ "$INSTALL_CODEX" -eq 1 ]; then
+    prepare_retired_skills "$HOME_DIR/.codex"
+fi
 
 if [ "$INSTALL_CLAUDE" -eq 1 ]; then
     install_claude

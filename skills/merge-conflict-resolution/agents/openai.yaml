@@ -1,0 +1,4 @@
+interface:
+  display_name: "Merge Conflict Resolution"
+  short_description: "按变更意图完成 Git 冲突解决"
+  default_prompt: "使用 $merge-conflict-resolution 解决当前 merge 或 rebase 冲突。"

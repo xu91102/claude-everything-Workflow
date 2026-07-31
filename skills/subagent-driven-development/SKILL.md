@@ -30,6 +30,18 @@ skills/subagent-driven-development/scripts/sdd-workspace
 
 The directory contains its own `.gitignore` and must not be committed.
 
+## Recovery
+
+开始或恢复前先读取 ticket artifact、`.superpowers/sdd/progress.md` 和 ticket 分支 git log。
+把三者归一为
+`{ticketStatus, ledgerStatus, ledgerPhase, commitPresent, base, head, commitBelongsToTicket}`，
+运行
+`node skills/subagent-driven-development/scripts/reconcile-state.js STATE.json`。`no-dispatch`
+表示已完成，不得重复派发；`resume-implementation` 只恢复未提交实现；
+`resume-review` 只在 ledger 记录 `review-pending` / `reviewing`、BASE/HEAD 不同且 HEAD
+确属当前 ticket 授权提交时恢复审查。任何冲突都返回 `BLOCKED` 并列出证据，不得猜测或覆盖
+持久事实。
+
 ## Ticket Loop
 
 1. Read the approved ticket and only the necessary Spec sections.
@@ -42,9 +54,11 @@ The directory contains its own `.gitignore` and must not be committed.
    ```
 
 4. Create a report path inside `.superpowers/sdd/`.
-5. Dispatch one fresh implementer using `references/implementer-prompt.md`. Require TDD evidence, focused tests,
+5. 把 ledger phase 持久化为 `implementing`，再 dispatch one fresh implementer using
+   `references/implementer-prompt.md`. Require TDD evidence, focused tests,
    self-review, an authorized commit, and a report file.
-6. Read the short status plus report. A blocked result stops the loop; do not guess.
+6. Read the short status plus report. A blocked result stops the loop; do not guess. 提交出现后立即记录
+   原始 `BASE`、当前 `HEAD`、ticket ref 与 `review-pending`，再进行任何 review。
 7. Record `HEAD` and create the review package:
 
    ```bash
@@ -55,8 +69,8 @@ The directory contains its own `.gitignore` and must not be committed.
    quality from the ticket brief, report, Spec constraints, and diff package.
 9. Send valid findings back to the same implementer, require new test evidence and a fix commit, then
    regenerate the package from the original `BASE`.
-10. Mark the ticket complete only when both verdicts approve it and verification passes. Recompute the
-    frontier before selecting another ticket.
+10. Mark the ticket `complete` with `ticket-state.js` only when both verdicts approve it and verification
+    passes. Reload the artifact and recompute the frontier before selecting another ticket.
 
 Do not dispatch multiple implementers into the same checkout concurrently.
 

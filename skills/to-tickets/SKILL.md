@@ -1,17 +1,18 @@
 ---
 name: to-tickets
-description: 将已批准的 Spec 拆成带 blocking edges 的 tracer-bullet tickets，并发布到本地或已授权 tracker。
+description: 将 conversation、plan 或 Spec 拆成带 blocking edges 的 tracer-bullet tickets，并发布到本地或已授权 tracker；formal lane 要求已批准 Spec。
 disable-model-invocation: true
 ---
 
 # To Tickets
 
-把已批准的 Spec 拆成可由 fresh context 独立完成的 **tracer bullet** tickets。每张 ticket
+把 conversation、plan 或 Spec 拆成可由 fresh context 独立完成的 **tracer bullet** tickets。每张 ticket
 交付一条窄但完整、可演示或可验证的端到端行为，并声明真实的 **Blocked by** 边。
 
 ## Preconditions
 
-- Formal lane 必须提供已获用户批准的 Spec；没有批准时返回
+- Formal lane 必须提供已获用户批准的 Spec；普通低风险请求可直接使用 conversation 或
+  plan。Formal lane 没有批准时返回
   `BLOCKED_BY_UNAPPROVED_SPEC`。
 - 新会话调用时，用户必须同时提供 Spec 路径并明确它已经获批。
 - 读取 `docs/agent-workflow/project-context.md`（若存在），获取 tracker、domain docs 和 ADR
@@ -44,9 +45,9 @@ disable-model-invocation: true
 Local tracker 支持两种布局，共用同一 ticket schema：
 
 - `combined`：`docs/superpowers/tickets/YYYY-MM-DD-<feature>.md`
-- `per-ticket`：`docs/superpowers/tickets/<feature>/issues/<NN>-<slug>.md`
+- `per-ticket`：`docs/superpowers/tickets/<feature>/issues/<TNN>-<slug>.md`
 
-默认 `combined`；用户偏好或 project context 可覆盖。Combined ref 使用 `<path>#<NN>`，
+默认 `combined`；用户偏好或 project context 可覆盖。Combined ref 使用 `<path>#<TNN>`，
 per-ticket ref 使用文件路径。
 
 本地 ticket 是 ignored workflow artifact。Do not stage or commit it.
@@ -58,7 +59,7 @@ per-ticket ref 使用文件路径。
 ## Ticket Schema
 
 ```markdown
-## <NN> — <Title>
+## <TNN> — <Title>
 
 **Parent / Source:** <approved Spec or parent issue>
 
@@ -71,6 +72,22 @@ per-ticket ref 使用文件路径。
 - [ ] <acceptance criterion>
 ```
 
+新 ticket 使用 `T01`、`T02` 格式；迁移期内读取旧 `01`、`02`。状态只能是
+`ready-for-agent`、`in-progress`、`blocked` 或 `complete`。
+
+本地 artifact 使用同一个状态工具做校验、状态写回和 frontier 计算：
+
+```bash
+node skills/to-tickets/scripts/ticket-state.js validate TICKET_FILE...
+node skills/to-tickets/scripts/ticket-state.js frontier TICKET_FILE...
+node skills/to-tickets/scripts/ticket-state.js set TARGET_FILE TICKET_ID STATUS GRAPH_FILE...
+node skills/to-tickets/scripts/ticket-state.js normalize-remote TRACKER_EXPORT.json
+```
+
+Per-ticket layout 的 `set` 必须把同一 graph 的其余文件作为 `GRAPH_FILE...` 传入，防止只读取
+目标文件而误判 blocker。远程 adapter 输出 `{status_map, tickets}` JSON，经
+`normalize-remote` 验证后再计算 frontier；远程写回仍需要 tracker 授权。
+
 不写预计文件路径、接口清单、实现代码或微步骤；这些内容会陈旧。Spec 是架构、testing seams
 和全局约束的唯一事实来源。
 
@@ -78,8 +95,29 @@ per-ticket ref 使用文件路径。
 
 - 每项 Spec requirement 至少映射一张 ticket，每张 ticket 都能回指 Spec。
 - Ticket IDs 唯一，blocking graph 无环。
-- Frontier 只包含 blockers 已完成或没有 blockers 的 tickets。
+- Frontier 只包含状态为 `ready-for-agent`，且所有 blockers 状态为 `complete` 的 tickets。
 - 每张 ticket 可独立验收，并适合一个 fresh context。
+- Fresh context 必须重新读取 artifact/tracker 状态，不使用仅存在于进程内的完成集合。
+
+## Example
+
+输入：“把获批的账户迁移 Spec 拆成 tickets。”推荐图：
+
+```text
+T01 — 让新旧读路径可并存
+Blocked by: None
+What it delivers: 生产请求可在不切流量的情况下验证新读路径
+
+T02 — 迁移并验证真实流量
+Blocked by: T01
+What it delivers: 新读路径承接流量且回滚开关有效
+
+T03 — 删除旧读路径
+Blocked by: T02
+What it delivers: 旧实现退出且公共行为保持
+```
+
+先返回 `READY_FOR_TICKET_REVIEW`；用户确认图后才写 combined/per-ticket artifact 或远程 tracker。
 
 ## Outcomes
 

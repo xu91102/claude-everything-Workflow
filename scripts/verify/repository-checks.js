@@ -26,9 +26,12 @@ function checkRouterAndAgentLinks() {
   requireTokens("skills/subagent-driven-development/SKILL.md", [
     ".superpowers/sdd/progress.md",
     "scripts/ticket-brief",
+    "ticket-state.js",
     "scripts/review-package BASE HEAD",
     "references/ticket-reviewer-prompt.md",
     "Local Git Boundary",
+    "不得重复派发",
+    "返回 `BLOCKED`",
     "skills/implement/SKILL.md",
   ]);
 

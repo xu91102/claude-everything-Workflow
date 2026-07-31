@@ -29,9 +29,43 @@ jobs:
       - name: Validate npm package
         run: npm run pack:dry-run
 
+  windows-install:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Verify PowerShell installer
+        shell: pwsh
+        run: pwsh -NoProfile -File scripts/verify-install.ps1
+
+  upstream-drift:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Report upstream drift
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/check-upstream-drift.js
+
   publish:
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-    needs: verify
+    needs: [verify, windows-install]
     runs-on: ubuntu-latest
     permissions:
       contents: write

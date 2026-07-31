@@ -1,0 +1,6 @@
+interface:
+  display_name: "Issue Triage"
+  short_description: "分类并核验外部 Issue/PR"
+  default_prompt: "使用 $issue-triage 对指定 Issue 或 PR 执行状态机 triage。"
+policy:
+  allow_implicit_invocation: false

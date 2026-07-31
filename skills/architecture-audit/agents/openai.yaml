@@ -1,0 +1,6 @@
+interface:
+  display_name: "Architecture Audit"
+  short_description: "发现并呈现模块深化机会"
+  default_prompt: "使用 $architecture-audit 审查代码库中的 deepening opportunities。"
+policy:
+  allow_implicit_invocation: false

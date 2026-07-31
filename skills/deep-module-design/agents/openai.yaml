@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deep Module Design"
+  short_description: "设计深模块、接口与真实测试缝"
+  default_prompt: "使用 $deep-module-design 设计或评估当前模块的 Interface 与 Seam。"

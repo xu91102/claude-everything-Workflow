@@ -16,9 +16,11 @@ Do not propose or apply a fix until Phase 1 identifies a credible root cause and
 ## Phase 1: Root Cause Investigation
 
 - Reproduce the failure with the smallest command or scenario.
+- **minimise** the reproduction until one fast command fails for this bug and unrelated noise is gone.
 - Capture the exact error, failing assertion, log line, or unexpected output.
 - Trace backward from the symptom to the first incorrect state.
 - Identify what changed recently and which boundary it crosses.
+- For a **performance regression**, preserve a comparable benchmark, input, warmup and environment.
 
 Output: one sentence naming the likely root cause and the evidence for it.
 
@@ -33,7 +35,8 @@ Output: the smallest affected scope and any similar files that should or should 
 ## Phase 3: Hypothesis Test
 
 - Form one falsifiable hypothesis.
-- Run or add the smallest diagnostic check that can prove or disprove it.
+- **instrument** the closest useful boundary and run the smallest diagnostic check that can prove or
+  disprove it; remove probes after use.
 - If the hypothesis fails, return to Phase 1 with the new evidence.
 - After two failed fix hypotheses, stop and reassess the design before trying another fix.
 
@@ -57,3 +60,5 @@ After the fix is verified, return to the original task:
 - Re-run requirement/spec compliance review.
 - Re-run code quality review.
 - Only then mark the task complete.
+
+没有可观察失败时先建立 reproduction；假设未被证据确认前保持调查阶段，不进入修复。

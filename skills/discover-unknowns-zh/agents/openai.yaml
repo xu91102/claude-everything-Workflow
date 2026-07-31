@@ -1,0 +1,4 @@
+interface:
+  display_name: "Discover Unknowns（兼容）"
+  short_description: "兼容入口，转交 iterative-retrieval"
+  default_prompt: "使用 $discover-unknowns-zh 收敛当前任务的未知项与事实缺口。"

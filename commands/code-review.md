@@ -1,11 +1,11 @@
 ---
-description: 基于固定基点的双轴代码审查入口，委派 code-reviewer agent
+description: 基于固定基点启动相互隔离的 Standards 与 Spec 并行审查
 ---
 
 # /code-review - 代码审查
 
 这是 `agents/code-reviewer.md` 的 slash 入口。审查必须明确比较范围，并将
-实现质量与需求符合性分开报告。
+实现质量与需求符合性放入两个相互隔离的并行 sub-agent，最后分轴聚合。
 
 ## 使用方式
 
@@ -27,14 +27,20 @@ description: 基于固定基点的双轴代码审查入口，委派 code-reviewe
 
 ## 执行规则
 
-1. 优先委派 `code-reviewer` agent，并传入审查模式、固定基点、完整 diff、提交列表、
-   审查范围与可用的 Spec 路径。
-2. 审查者只读，不直接修改代码；缺少基点或 diff 时先报告 `BLOCKED`。
-3. 报告分为互不混合的 Standards 轴与 Spec 轴：前者检查仓库规则和代码质量，后者检查
-   改动是否实现已知需求。
-4. 每个轴内部按严重性排序，并列出证据位置、风险和测试缺口；不要用一个总分掩盖另一轴
-   的失败。
-5. 如果无法委派 agent，主模型按同一协议执行只读审查。
+1. 先解析固定基点并固定唯一 diff 命令与提交列表；基点无效或 diff 为空时返回 `BLOCKED`。
+2. 找出仓库规则与 Spec 来源。找不到 Spec 时只跳过 Spec sub-agent，并把该轴标为 `NOT RUN`。
+3. 在同一轮并行启动两个 fresh、只读且上下文隔离的 sub-agent：
+   - `standards-reviewer`：只接收固定 diff、提交列表、规则来源与 smell baseline；
+   - `spec-reviewer`：只接收同一固定 diff、提交列表与 Spec，不接收 Standards 结论。
+4. 两个 sub-agent 都不得修改代码。主调用者等待两者结束后，在 `Standards` 与 `Spec`
+   标题下分别呈现报告；只能轻度清理格式，不能跨轴合并、重排或选出单一赢家。
+5. 运行时没有并行 sub-agent 能力时返回 `BLOCKED_BY_PARALLEL_REVIEW_UNAVAILABLE`；
+   不得退化成一个上下文中的顺序双轴审查。
+
+Standards 轴除仓库规则外，始终以 Fowler smell baseline 检查 Mysterious Name、
+Duplicated Code、Feature Envy、Data Clumps、Primitive Obsession、Repeated Switches、
+Shotgun Surgery、Divergent Change、Speculative Generality、Message Chains、Middle Man
+与 Refused Bequest；仓库明确规则优先，工具已强制的事项不重复报告。
 
 ## 参数
 

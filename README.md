@@ -59,7 +59,7 @@ npm publish --dry-run
 
 ## npm 发布
 
-版本号通过 PR 更新 `package.json`，并与功能改动一起接受审查。PR 合并到 `main` 后，`.github/workflows/ci.yml` 会先运行 `npm run verify` 与 `npm run pack:dry-run`，只有 `verify` 成功时才发布该提交中的版本。
+版本号通过 PR 更新 `package.json`，并与功能改动一起接受审查。PR 合并到 `main` 后，`.github/workflows/ci.yml` 会运行 Linux Harness / npm 打包检查和真实 Windows PowerShell 安装器检查；两个 job 都成功后才发布该提交中的版本。
 
 发布会拒绝不高于 npm `latest` 的新版本，创建指向当前提交的 `v<version>` tag，然后通过 npm 受信任的发布商 OIDC 执行 `npm publish`。当前版本已在 npm 时会安全跳过；待发布版本的 tag 已指向其他提交时会失败，要求先审计。
 
@@ -72,9 +72,19 @@ npm 包设置里必须添加 GitHub Actions 受信任的发布商，仓库为 `x
 - Claude Code: `~/.claude/`
 - Codex: `~/.codex/`
 
-Claude Code 会安装 `CLAUDE.md` 并合并 `settings.json` 作为 hooks 入口；Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`。顶层配置文件已存在且内容不同时，会先生成 `.bak.<timestamp>` 备份再覆盖；目录内容按仓库版本同步。
+Claude Code 会安装 `CLAUDE.md` 并合并 `settings.json` 作为 hooks 入口；Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`。顶层配置文件已存在且内容不同时，会先生成 `.distribution-backup-<hash>` 备份再覆盖；目录内容按仓库版本同步。
+
+安装器在任何写入前检查所有将触达的路径；目标存在 symlink/junction 时整次安装失败且不写入
+外部位置。分发中的活跃文件与本地内容冲突时，会先生成 `.distribution-backup-<hash>` 再更新；
+升级清理只删除 `scripts/retired-skill-files.json` 中 hash 匹配的已分发旧文件：
+未知文件始终保留；同路径用户定制文件保留原件并生成 `.retired-backup-<hash>` 备份，然后以
+非零状态要求人工审计。已发布 `0.1.9` 包的退役文件 hash 与 npm provenance 固定在
+`scripts/published-retirement-baselines.json`。`--dry-run` / `-DryRun` 只报告，不修改文件。
 
 ## 手动安装
+
+以下递归复制仅适用于全新空目录，不能完成旧文件 hash 校验、退役迁移、定制文件备份或
+symlink/junction preflight。任何升级都必须运行上面的 `install.sh` / `install.ps1` 迁移安装器。
 
 ### Windows
 
@@ -124,7 +134,7 @@ claude-everything-Workflow/
 │
 ├── agents/                     # 代理（专业任务委托）
 │   ├── architect.md            # 架构师
-│   ├── code-reviewer.md        # 代码审查员
+│   ├── code-reviewer.md        # 双轴并行审查编排
 │   ├── tdd-guide.md            # TDD 指导
 │   ├── e2e-runner.md           # E2E / Playwright（可选 Agent Browser）
 │   ├── harness-optimizer.md    # Harness 配置调优
@@ -139,10 +149,12 @@ claude-everything-Workflow/
 │   ├── promote.md              # /promote 预览/推广项目直觉
 │   ├── prune.md                # /prune 清理已标记直觉
 │   ├── evolve.md               # /evolve 演化评估
-│   ├── code-review.md          # /code-review → code-reviewer
+│   ├── code-review.md          # /code-review → 两个隔离审查 agent
 │   ├── tdd.md                  # /tdd → tdd-guide
 │   ├── e2e.md                  # /e2e → e2e-runner
 │   ├── grill.md                # /grill → grilling
+│   ├── documented-grill.md     # /documented-grill → grilling + domain-modeling
+│   ├── workflow-router.md      # /workflow-router → 本地工程流程路由
 │   ├── to-spec.md              # /to-spec → spec-gate
 │   ├── to-tickets.md           # /to-tickets → to-tickets
 │   ├── implement.md            # /implement → implement
@@ -290,9 +302,11 @@ claude-everything-Workflow/
 | `/promote`         | 预览或推广项目级直觉到全局直觉                             |
 | `/prune`           | 清理已人工标记删除、拒绝或归档的直觉                       |
 | `/evolve`          | 评估模式是否值得演化为 skill、agent 或 command             |
-| `/code-review`     | 固定基点、Standards 轴与 Spec 轴的双轴审查，委派 `code-reviewer` agent |
+| `/code-review`     | 固定基点、Standards 轴与 Spec 轴；并行派生相互隔离的审查 agent |
 | `/tdd`             | 薄封装入口，委派 `tdd-guide` agent                         |
 | `/e2e`             | 薄封装入口，委派 `e2e-runner` agent 和 `e2e-testing` skill |
+| `/workflow-router` | 显式询问当前任务应进入哪条最窄工程 workflow               |
+| `/documented-grill`| 压力测试需求并同步维护领域词汇与 ADR                      |
 | `/harness-audit`   | 薄封装入口，委派 `harness-optimizer` agent                 |
 | `/setup-workflow`  | 显式配置项目工作追踪、领域文档和 ADR 位置                  |
 
@@ -325,6 +339,16 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks；如未来需要 Codex 原生自动化，应新增明确 adapter。
 
 ## Superpowers 风格开发闭环
+
+### 固定上游工程能力基线
+
+本仓以 [mattpocock/skills](https://github.com/mattpocock/skills) commit
+`2ab958093e83e0ec752e6c1c5932da465bf23e0c` 的 engineering catalog 为固定基线，完整映射
+其中 17 项工程能力。机器可读映射位于 `scripts/upstream-capabilities.json`；Harness 会验证
+逐项入口、行为证据、user/model invocation mode，以及不会仅为兼容新增 upstream canonical
+skill 目录。本地安全门可以加强授权、可恢复性和验证，但不能删减该基线能力。
+非阻塞 `upstream-drift` CI 会比较固定提交与上游 `main` 的 `skills/engineering/` Git tree，
+报告新增、删除、变更的能力与文件；基线更新仍需人工审查并显式修改 manifest。
 
 本仓默认最短闭环、按风险逐级升级。高风险任务或用户显式 opt-in 时参考 [obra/superpowers](https://github.com/obra/superpowers) 的门禁结构，但不复制外部仓库文件。主线是：
 
@@ -362,10 +386,13 @@ Formal lane 固定为 `to-spec → to-tickets → implement`：
 - `writing-plans` → `/to-tickets`
 - `executing-plans` → `/implement`
 - `discover-unknowns-zh` → `iterative-retrieval`
-- `find-skills` → 宿主提供的 Skill 发现/安装能力
-- `skill-creator` → 宿主提供的 Skill 创作能力
+- `find-skills` 与 `skill-creator` 保留仓库自包含实现，不依赖宿主内置能力。
 
-升级安装会按精确退役清单删除上述旧分发文件；同名目录中的未知用户文件会被保留并报告。
+以上旧入口作为 compatibility layer 至少一个发布周期内保持可用；调用时保持原名称可用，内部转交
+新的唯一事实来源，避免维护两套相互漂移的流程。
+
+升级安装只按精确退役清单和已知 hash 清理真正退役的分发文件；上述 compatibility entrances
+不会被清理。
 
 硬门禁：
 
@@ -435,7 +462,7 @@ Formal lane 固定为 `to-spec → to-tickets → implement`：
 6. 使用 /tdd 委派 tdd-guide 规划测试先行实现
 7. 关键路径使用 /e2e 委派 e2e-runner 维护 Playwright
 8. 使用 /verify 验证
-9. 使用 /code-review 基于固定基点委派 code-reviewer 做双轴审查
+9. 使用 /code-review 基于固定基点并行派生两个隔离 agent 做双轴审查
 10. 使用 /learn-eval 将稳定模式沉淀到 skills/learn/<category>/
 11. 使用 /projects 查看项目级学习来源
 12. 使用 /promote --dry-run 评估是否推广为全局直觉

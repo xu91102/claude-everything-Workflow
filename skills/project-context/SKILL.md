@@ -7,7 +7,8 @@ disable-model-invocation: true
 # Project Context
 
 Set up a small, versioned source of truth that tells agents where this repository tracks work,
-domain vocabulary, and durable decisions. This is an explicit setup action, not a workflow gate.
+domain vocabulary, durable decisions, triage roles, and out-of-scope knowledge. This is an explicit
+setup action, not a workflow gate.
 
 ## Boundary
 
@@ -27,7 +28,8 @@ Inspect only the current repository and existing project documentation:
 2. Existing ADR directories, `docs/agent-workflow/`, `.scratch/`, and project-local tracker notes.
 3. Git remotes and existing issue references, without accessing remote tracker data unless the user
    separately asks for it.
-4. Monorepo signals such as workspace manifests and package directories.
+4. Existing triage labels, external-PR policy, and `.out-of-scope/` or equivalent knowledge base.
+5. Monorepo signals such as workspace manifests and package directories.
 
 Report found facts, conflicts, and missing inputs concisely. Existing confirmed configuration wins;
 reopen it only when the user asks to change it or its referenced path no longer exists.
@@ -45,6 +47,10 @@ why it fits the discovered repository:
    independent domains.
 3. **Decision records**: record the existing ADR directory, or recommend `docs/adr/` only when a
    durable decision is ready to document.
+4. **Triage**: map category/state role names to tracker labels and record whether external PRs are in
+   scope plus the collaborator rule.
+5. **Rejected requests**: record the existing out-of-scope path, or recommend `.out-of-scope/` only
+   when the project actually uses issue triage.
 
 If no decision is needed, present the discovered default for confirmation rather than asking a
 synthetic question.
@@ -70,6 +76,8 @@ CONFIGURED
 - work_tracking
 - domain_layout
 - adr_location
+- triage_roles
+- out_of_scope_location
 - remaining_risks
 
 NEEDS_DECISION

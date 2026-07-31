@@ -1,121 +1,13 @@
 "use strict";
 
-function parseTickets(source, label) {
-  const headings = [...source.matchAll(/^##\s+([A-Z]+\d+)\s+—\s+(.+)$/gm)];
-  if (headings.length === 0) {
-    throw new Error(`${label}: no ticket headings`);
-  }
-
-  return headings.map((heading, index) => {
-    const body = source.slice(
-      heading.index,
-      headings[index + 1]?.index ?? source.length,
-    );
-    const field = (name) => {
-      const match = body.match(
-        new RegExp(`^\\*\\*${name}:\\*\\*\\s*(.+)$`, "m"),
-      );
-      if (!match || !match[1].trim()) {
-        throw new Error(`${label}#${heading[1]}: missing ${name}`);
-      }
-      return match[1].trim();
-    };
-    const blockedBy = field("Blocked by");
-    const blockers = /^None\b/.test(blockedBy)
-      ? []
-      : blockedBy
-          .split(",")
-          .map((value) => parseBlockerRef(value, label, heading[1]));
-    const acceptance = [...body.matchAll(/^- \[ \] (.+)$/gm)].map(
-      (match) => match[1].trim(),
-    );
-    if (acceptance.length === 0) {
-      throw new Error(`${label}#${heading[1]}: missing acceptance criteria`);
-    }
-    if (body.includes("```")) {
-      throw new Error(`${label}#${heading[1]}: implementation code is forbidden`);
-    }
-
-    const ticket = {
-      id: heading[1],
-      title: heading[2].trim(),
-      source: field("Parent / Source"),
-      outcome: field("What to build"),
-      blockers,
-      status: field("Status"),
-      acceptance,
-    };
-    validateTicketContent(ticket, label);
-    return ticket;
-  });
-}
-
-function parseBlockerRef(value, label, ticketId) {
-  const reference = value.trim();
-  const match =
-    reference.match(/^([A-Z]+\d+)$/) ||
-    reference.match(/#([A-Z]+\d+)$/) ||
-    reference.match(/[/\\]([A-Z]+\d+)(?:-[^/\\]+)?\.md$/);
-  if (!match) {
-    throw new Error(`${label}#${ticketId}: invalid blocker ${reference}`);
-  }
-  return match[1];
-}
-
-function validateTicketContent(ticket, label) {
-  const content = [ticket.outcome, ...ticket.acceptance].join("\n");
-  const forbidden = [
-    /(?:^|\s)(?:src|lib|app|scripts|skills)\/[\w./-]+/,
-    /\b(?:step|步骤)\s*\d+/i,
-    /\b\d+\s*(?:minutes?|分钟)\b/i,
-    /\b(?:interface|files?)\s*:/i,
-    /\b(?:const|function|class)\s+\w+/,
-  ];
-  if (forbidden.some((pattern) => pattern.test(content))) {
-    throw new Error(`${label}#${ticket.id}: implementation detail is forbidden`);
-  }
-}
-
-function validateGraph(tickets) {
-  const byId = new Map();
-  for (const ticket of tickets) {
-    if (byId.has(ticket.id)) throw new Error(`duplicate ticket ${ticket.id}`);
-    if (ticket.status !== "ready-for-agent") {
-      throw new Error(`${ticket.id}: invalid status ${ticket.status}`);
-    }
-    byId.set(ticket.id, ticket);
-  }
-
-  for (const ticket of tickets) {
-    for (const blocker of ticket.blockers) {
-      if (!byId.has(blocker)) {
-        throw new Error(`${ticket.id}: unknown blocker ${blocker}`);
-      }
-    }
-  }
-
-  const visiting = new Set();
-  const visited = new Set();
-  function visit(id) {
-    if (visiting.has(id)) throw new Error(`cycle at ${id}`);
-    if (visited.has(id)) return;
-    visiting.add(id);
-    for (const blocker of byId.get(id).blockers) visit(blocker);
-    visiting.delete(id);
-    visited.add(id);
-  }
-  for (const ticket of tickets) visit(ticket.id);
-}
-
-function frontier(tickets, completed = new Set()) {
-  return tickets
-    .filter(
-      (ticket) =>
-        !completed.has(ticket.id) &&
-        ticket.blockers.every((blocker) => completed.has(blocker)),
-    )
-    .map((ticket) => ticket.id);
-}
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const {
+  frontier,
+  parseTickets,
+  validateGraph,
+} = require("../../skills/to-tickets/scripts/ticket-state");
 
 function validateCoverage(requirements, coverage, tickets) {
   const requirementSet = new Set(requirements);
@@ -261,7 +153,13 @@ function assertLayoutAndFrontier(combined, perTicket) {
     throw new Error("initial frontier is incorrect");
   }
   if (
-    JSON.stringify(frontier(combined, new Set(["T01"]))) !==
+    JSON.stringify(
+      frontier(
+        combined.map((ticket) =>
+          ticket.id === "T01" ? { ...ticket, status: "complete" } : ticket,
+        ),
+      ),
+    ) !==
     JSON.stringify(["T02"])
   ) {
     throw new Error("frontier after T01 is incorrect");
@@ -337,7 +235,348 @@ function assertAdversarialContracts(combined) {
   );
 }
 
-function runTicketChecks({ fail, requireTokens }) {
+function loadTicketRuntime(root) {
+  return require(path.join(
+    root,
+    "skills",
+    "to-tickets",
+    "scripts",
+    "ticket-state.js",
+  ));
+}
+
+function assertLocalTicketPersistence(runtime) {
+  const numeric = runtime.parseTickets(
+    PER_TICKET_FIXTURES[0].replaceAll("T01", "01"),
+    "legacy-numeric",
+  );
+  if (numeric[0].id !== "01") {
+    throw new Error("legacy numeric ticket ID was not accepted");
+  }
+
+  const initial = runtime.parseTickets(COMBINED_FIXTURE, "persistent");
+  let acceptedBlockedTicket = false;
+  try {
+    runtime.setTicketStatus(
+      COMBINED_FIXTURE,
+      "T02",
+      "in-progress",
+      initial,
+    );
+    acceptedBlockedTicket = true;
+  } catch {
+    // Expected: T02 is not in the persisted frontier.
+  }
+  if (acceptedBlockedTicket) {
+    throw new Error("persisted state accepted a non-frontier ticket");
+  }
+  const inProgress = runtime.setTicketStatus(
+    COMBINED_FIXTURE,
+    "T01",
+    "in-progress",
+  );
+  const afterT01 = runtime.parseTickets(
+    runtime.setTicketStatus(inProgress, "T01", "complete"),
+    "persistent-after-T01",
+  );
+  if (
+    JSON.stringify(runtime.frontier(initial)) !== JSON.stringify(["T01"]) ||
+    JSON.stringify(runtime.frontier(afterT01)) !== JSON.stringify(["T02"])
+  ) {
+    throw new Error("persisted ticket state did not restore the frontier");
+  }
+  runtime.validateGraph(afterT01);
+}
+
+function validRemotePayload() {
+  return {
+    status_map: {
+      open: "ready-for-agent",
+      started: "in-progress",
+      waiting: "blocked",
+      closed: "complete",
+    },
+    tickets: [
+      {
+        id: "T01",
+        title: "First",
+        source: "remote#1",
+        outcome: "Deliver first slice",
+        blockers: [],
+        remote_status: "closed",
+        acceptance: ["First slice works"],
+      },
+      {
+        id: "T02",
+        title: "Second",
+        source: "remote#2",
+        outcome: "Deliver second slice",
+        blockers: ["T01"],
+        remote_status: "open",
+        acceptance: ["Second slice works"],
+      },
+    ],
+  };
+}
+
+function assertValidRemoteNormalization(runtime) {
+  const remote = runtime.normalizeRemoteTickets(validRemotePayload());
+  if (JSON.stringify(runtime.frontier(remote)) !== JSON.stringify(["T02"])) {
+    throw new Error("remote tracker state did not normalize to the frontier");
+  }
+}
+
+function assertInvalidRemoteScalarFields(runtime) {
+  for (const invalidField of ["title", "source", "outcome"]) {
+    const invalid = validRemotePayload();
+    invalid.tickets = [
+      {
+        ...invalid.tickets[0],
+        remote_status: "open",
+        [invalidField]: { unexpected: true },
+      },
+    ];
+    expectRejection(
+      () => runtime.normalizeRemoteTickets(invalid),
+      `remote tracker accepted non-string ${invalidField}`,
+    );
+  }
+}
+
+function assertInvalidRemoteArrays(runtime) {
+  const invalidBlocker = validRemotePayload();
+  invalidBlocker.tickets = [
+    {
+      ...invalidBlocker.tickets[0],
+      remote_status: "open",
+      blockers: [{}],
+    },
+  ];
+  expectRejection(
+    () => runtime.normalizeRemoteTickets(invalidBlocker),
+    "remote tracker accepted a non-string blocker",
+  );
+  const invalidAcceptance = validRemotePayload();
+  invalidAcceptance.tickets = [
+    {
+      ...invalidAcceptance.tickets[0],
+      remote_status: "open",
+      acceptance: [{}],
+    },
+  ];
+  expectRejection(
+    () => runtime.normalizeRemoteTickets(invalidAcceptance),
+    "remote tracker accepted non-string acceptance",
+  );
+}
+
+function assertPersistentTicketState(root) {
+  const runtime = loadTicketRuntime(root);
+  assertLocalTicketPersistence(runtime);
+  assertValidRemoteNormalization(runtime);
+  assertInvalidRemoteScalarFields(runtime);
+  assertInvalidRemoteArrays(runtime);
+}
+
+function assertSddCompletion(recovery) {
+  const finished = recovery.reconcileState({
+    ticketStatus: "complete",
+    ledgerStatus: "complete",
+    ledgerPhase: "complete",
+    commitPresent: true,
+    base: "base-sha",
+    head: "head-sha",
+    commitBelongsToTicket: true,
+  });
+  if (finished.action !== "no-dispatch") {
+    throw new Error("SDD recovery would redispatch a completed ticket");
+  }
+  const staleFinished = recovery.reconcileState({
+    ticketStatus: "complete",
+    ledgerStatus: "complete",
+    ledgerPhase: "complete",
+    commitPresent: true,
+    base: "base-sha",
+    head: "head-sha",
+    commitBelongsToTicket: false,
+  });
+  if (staleFinished.action !== "BLOCKED") {
+    throw new Error("SDD recovery trusted stale completion evidence");
+  }
+}
+
+function assertSddActiveRecovery(recovery) {
+  const conflict = recovery.reconcileState({
+    ticketStatus: "in-progress",
+    ledgerStatus: "complete",
+    commitPresent: true,
+  });
+  if (conflict.action !== "BLOCKED") {
+    throw new Error("SDD recovery did not block conflicting persisted state");
+  }
+
+  const review = recovery.reconcileState({
+    ticketStatus: "in-progress",
+    ledgerStatus: "in-progress",
+    ledgerPhase: "review-pending",
+    commitPresent: true,
+    base: "base-sha",
+    head: "head-sha",
+    commitBelongsToTicket: true,
+  });
+  if (review.action !== "resume-review") {
+    throw new Error("SDD recovery could not resume a persisted review phase");
+  }
+  const implementation = recovery.reconcileState({
+    ticketStatus: "in-progress",
+    ledgerStatus: "in-progress",
+    ledgerPhase: "implementing",
+    commitPresent: false,
+  });
+  if (implementation.action !== "resume-implementation") {
+    throw new Error("SDD recovery could not resume persisted implementation");
+  }
+  const unknownCommit = recovery.reconcileState({
+    ticketStatus: "in-progress",
+    ledgerStatus: "in-progress",
+    ledgerPhase: "review-pending",
+    commitPresent: true,
+    base: "base-sha",
+    head: "head-sha",
+    commitBelongsToTicket: false,
+  });
+  if (unknownCommit.action !== "BLOCKED") {
+    throw new Error("SDD recovery trusted an unbound ticket commit");
+  }
+}
+
+function assertSddInvalidMatrix(recovery) {
+  const invalidLedgerStates = [
+    {
+      ticketStatus: "ready-for-agent",
+      ledgerStatus: "ready-for-agent",
+      ledgerPhase: "complete",
+      commitPresent: false,
+    },
+    {
+      ticketStatus: "ready-for-agent",
+      ledgerStatus: "absent",
+      ledgerPhase: "implementing",
+      commitPresent: false,
+    },
+    {
+      ticketStatus: "in-progress",
+      ledgerStatus: "in-progress",
+      ledgerPhase: "reviewing",
+      commitPresent: false,
+    },
+    {
+      ticketStatus: "in-progress",
+      ledgerStatus: "in-progress",
+      ledgerPhase: "implementing",
+      commitPresent: true,
+    },
+    {
+      ticketStatus: "complete",
+      ledgerStatus: "complete",
+      ledgerPhase: "reviewing",
+      commitPresent: true,
+    },
+  ];
+  for (const invalidState of invalidLedgerStates) {
+    if (recovery.reconcileState(invalidState).action !== "BLOCKED") {
+      throw new Error(
+        `SDD recovery accepted inconsistent ledger state ${JSON.stringify(invalidState)}`,
+      );
+    }
+  }
+}
+
+function assertSddRecovery(root) {
+  const recovery = require(path.join(
+    root,
+    "skills",
+    "subagent-driven-development",
+    "scripts",
+    "reconcile-state.js",
+  ));
+  assertSddCompletion(recovery);
+  assertSddActiveRecovery(recovery);
+  assertSddInvalidMatrix(recovery);
+}
+
+function assertAtomicTicketWrites(root) {
+  const runtime = require(path.join(
+    root,
+    "skills",
+    "to-tickets",
+    "scripts",
+    "ticket-state.js",
+  ));
+  const directory = fs.mkdtempSync(
+    path.join(os.tmpdir(), "cew-ticket-atomic-"),
+  );
+  const artifact = path.join(directory, "tickets.md");
+  fs.writeFileSync(artifact, COMBINED_FIXTURE);
+  expectRejection(
+    () =>
+      runtime.writeFileAtomic(
+        artifact,
+        COMBINED_FIXTURE.replace(
+          "**Status:** ready-for-agent",
+          "**Status:** in-progress",
+        ),
+        () => {
+          throw new Error("injected before rename");
+        },
+      ),
+    "injected atomic ticket write did not fail",
+  );
+  if (fs.readFileSync(artifact, "utf8") !== COMBINED_FIXTURE) {
+    throw new Error("failed atomic ticket write corrupted the original artifact");
+  }
+  const lock = `${artifact}.ticket-state.lock`;
+  fs.writeFileSync(lock, "other writer\n");
+  expectRejection(
+    () => runtime.withFileLock(artifact, () => {}),
+    "ticket-state accepted a concurrent writer",
+  );
+  fs.rmSync(lock, { force: true });
+  fs.writeFileSync(
+    lock,
+    `${JSON.stringify({
+      pid: 99999999,
+      created_at: "2000-01-01T00:00:00.000Z",
+      token: "stale-owner",
+    })}\n`,
+  );
+  let recoveredStaleLock = false;
+  runtime.withFileLock(artifact, () => {
+    recoveredStaleLock = true;
+  });
+  if (!recoveredStaleLock || fs.existsSync(lock)) {
+    throw new Error("ticket-state did not recover a dead-owner stale lock");
+  }
+  fs.writeFileSync(
+    lock,
+    `${JSON.stringify({
+      pid: process.pid,
+      created_at: new Date().toISOString(),
+      token: "live-owner",
+    })}\n`,
+  );
+  expectRejection(
+    () => runtime.withFileLock(artifact, () => {}),
+    "ticket-state reclaimed a live writer lock",
+  );
+  if (!fs.existsSync(lock)) {
+    throw new Error("ticket-state removed another live writer lock");
+  }
+  fs.rmSync(lock, { force: true });
+  fs.rmSync(directory, { recursive: true, force: true });
+}
+
+function runTicketChecks({ fail, requireTokens, root }) {
   requireTokens("skills/to-tickets/SKILL.md", [
     "BLOCKED_BY_UNAPPROVED_SPEC",
     "READY_FOR_TICKET_REVIEW",
@@ -349,6 +588,9 @@ function runTicketChecks({ fail, requireTokens }) {
     assertLayoutAndFrontier(combined, perTicket);
     assertGateOutcomes(combined);
     assertAdversarialContracts(combined);
+    assertPersistentTicketState(root);
+    assertSddRecovery(root);
+    assertAtomicTicketWrites(root);
   } catch (error) {
     fail(`ticket contract verification failed: ${error.message}`);
   }

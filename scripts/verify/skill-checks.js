@@ -40,6 +40,9 @@ function checkEngineeringMainline() {
     "frontier",
     "combined",
     "per-ticket",
+    "ticket-state.js",
+    "in-progress",
+    "complete",
     "READY_FOR_TICKET_REVIEW",
   ]);
   requireTokens("skills/implement/SKILL.md", [
@@ -86,128 +89,131 @@ function checkMainlineOrdering() {
   }
 }
 
-function checkPrunedSkillSet() {
-  for (const retired of [
+function checkCompatibilitySkillSet() {
+  for (const compatibilitySkill of [
     "discover-unknowns-zh",
     "find-skills",
     "skill-creator",
     "writing-plans",
     "executing-plans",
   ]) {
-    if (exists(`skills/${retired}`)) {
-      fail(`skills/${retired} should be retired`);
+    if (!exists(`skills/${compatibilitySkill}/SKILL.md`)) {
+      fail(`skills/${compatibilitySkill}/SKILL.md should provide a compatibility entrance`);
     }
   }
 
-  requireTokens("skills/iterative-retrieval/SKILL.md", [
-    "事实缺口",
-    "盲点",
+  requireTokens("skills/writing-plans/SKILL.md", [
+    "compatibility",
+    "to-tickets",
+  ]);
+  requireTokens("skills/executing-plans/SKILL.md", [
+    "compatibility",
+    "implement",
+  ]);
+  requireTokens("skills/discover-unknowns-zh/SKILL.md", [
+    "compatibility",
+    "iterative-retrieval",
+  ]);
+  requireTokens("skills/find-skills/SKILL.md", [
+    "self-contained",
+    "本仓库",
+  ]);
+  requireTokens("skills/skill-creator/SKILL.md", [
+    "self-contained",
+    "scripts/init_skill.py",
   ]);
   requireTokens("README.md", [
     "Skill 迁移说明",
     "`writing-plans` → `/to-tickets`",
     "`executing-plans` → `/implement`",
     "`discover-unknowns-zh` → `iterative-retrieval`",
-    "`find-skills` → 宿主提供的 Skill 发现/安装能力",
-    "`skill-creator` → 宿主提供的 Skill 创作能力",
+    "`find-skills` 与 `skill-creator`",
+    "至少一个发布周期",
   ]);
 }
 
-function checkSkillQuality() {
-  const skillsDir = rel("skills");
-  const names = fs
-    .readdirSync(skillsDir, { withFileTypes: true })
+function listSkillNames() {
+  return fs
+    .readdirSync(rel("skills"), { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .filter((name) => exists(path.join("skills", name, "SKILL.md")))
     .sort();
-  if (names.length !== 17) {
-    fail(`expected 17 formal skills; found ${names.length}`);
+}
+
+function validateSkillFrontmatter({ name, skillPath, body }) {
+  const frontmatter = body.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!frontmatter) {
+    fail(`${skillPath} should contain YAML frontmatter`);
+    return null;
   }
-
-  let totalLines = 0;
-  for (const name of names) {
-    const skillPath = `skills/${name}/SKILL.md`;
-    const metadataPath = `skills/${name}/agents/openai.yaml`;
-    const body = read(skillPath);
-    const lineCount = body.split(/\r?\n/).length;
-    totalLines += lineCount;
-    if (lineCount > 200) {
-      fail(`${skillPath} should stay at or below 200 lines; found ${lineCount}`);
-    }
-
-    const frontmatter = body.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-    if (!frontmatter) {
-      fail(`${skillPath} should contain YAML frontmatter`);
-      continue;
-    }
-
-    const allowedFrontmatterKeys = new Set([
-      "name",
-      "description",
-      "disable-model-invocation",
-    ]);
-    for (const line of frontmatter[1].split(/\r?\n/)) {
-      const key = line.match(/^([a-z-]+):/)?.[1];
-      if (key && !allowedFrontmatterKeys.has(key)) {
-        fail(`${skillPath} contains unsupported frontmatter key ${key}`);
-      }
-    }
-
-    const descriptionMatch = frontmatter[1].match(
-      /^description:\s*(?:"([^"]*)"|'([^']*)'|(.+))$/m,
-    );
-    if (!descriptionMatch) {
-      fail(`${skillPath} should have a one-line description`);
-    } else {
-      const description =
-        descriptionMatch[1] ?? descriptionMatch[2] ?? descriptionMatch[3];
-      if (description.length > 320) {
-        fail(
-          `${skillPath} description should be at most 320 characters; found ${description.length}`,
-        );
-      }
-    }
-
-    requireTokens(metadataPath, [
-      "display_name:",
-      "short_description:",
-      "default_prompt:",
-    ]);
-
-    const isUserInvoked = frontmatter[1].includes(
-      "disable-model-invocation: true",
-    );
-    const metadata = exists(metadataPath) ? read(metadataPath) : "";
-    if (metadata && !metadata.includes(`$${name}`)) {
-      fail(`${metadataPath} default_prompt should reference $${name}`);
-    }
-    const blocksImplicit = metadata.includes(
-      "allow_implicit_invocation: false",
-    );
-    if (isUserInvoked !== blocksImplicit) {
-      fail(
-        `${name} should use the same invocation mode in SKILL.md and agents/openai.yaml`,
-      );
-    }
-
-    const indexLine = read("skills/README.md")
-      .split(/\r?\n/)
-      .find((line) => line.startsWith(`- \`${name}\``));
-    const indexMarksUserInvocation =
-      indexLine?.includes("user-invoked") ?? false;
-    if (isUserInvoked !== indexMarksUserInvocation) {
-      fail(`${name} invocation mode should match skills/README.md`);
+  const allowed = new Set([
+    "name",
+    "description",
+    "disable-model-invocation",
+  ]);
+  for (const line of frontmatter[1].split(/\r?\n/)) {
+    const key = line.match(/^([a-z-]+):/)?.[1];
+    if (key && !allowed.has(key)) {
+      fail(`${skillPath} contains unsupported frontmatter key ${key}`);
     }
   }
-
-  const budget = Math.floor(2712 * 0.75);
-  if (totalLines > budget) {
-    fail(
-      `formal SKILL.md budget should be at most ${budget} lines; found ${totalLines}`,
-    );
+  const descriptionMatch = frontmatter[1].match(
+    /^description:\s*(?:"([^"]*)"|'([^']*)'|(.+))$/m,
+  );
+  if (!descriptionMatch) {
+    fail(`${skillPath} should have a one-line description`);
+  } else {
+    const description =
+      descriptionMatch[1] ?? descriptionMatch[2] ?? descriptionMatch[3];
+    if (description.length > 320) {
+      fail(`${name} description should be at most 320 characters`);
+    }
   }
+  return frontmatter[1];
+}
 
+function validateSkillInvocation({ name, metadataPath, frontmatter }) {
+  const isUserInvoked = frontmatter.includes("disable-model-invocation: true");
+  const metadata = exists(metadataPath) ? read(metadataPath) : "";
+  requireTokens(metadataPath, [
+    "display_name:",
+    "short_description:",
+    "default_prompt:",
+  ]);
+  if (metadata && !metadata.includes(`$${name}`)) {
+    fail(`${metadataPath} default_prompt should reference $${name}`);
+  }
+  const blocksImplicit = metadata.includes("allow_implicit_invocation: false");
+  if (isUserInvoked !== blocksImplicit) {
+    fail(`${name} should align invocation mode between skill and metadata`);
+  }
+  const indexLine = read("skills/README.md")
+    .split(/\r?\n/)
+    .find((line) => line.startsWith(`- \`${name}\``));
+  const indexMarksUserInvocation =
+    indexLine?.includes("user-invoked") ?? false;
+  if (isUserInvoked !== indexMarksUserInvocation) {
+    fail(`${name} invocation mode should match skills/README.md`);
+  }
+}
+
+function validateOneSkill(name) {
+  const skillPath = `skills/${name}/SKILL.md`;
+  const metadataPath = `skills/${name}/agents/openai.yaml`;
+  const body = read(skillPath);
+  const lineCount = body.split(/\r?\n/).length;
+  if (lineCount > 200) {
+    fail(`${skillPath} should stay at or below 200 lines; found ${lineCount}`);
+  }
+  const frontmatter = validateSkillFrontmatter({ name, skillPath, body });
+  if (frontmatter) {
+    validateSkillInvocation({ name, metadataPath, frontmatter });
+  }
+  return lineCount;
+}
+
+function validateSkillReferences() {
   requireTokens("skills/e2e-testing/SKILL.md", [
     "references/playwright-patterns.md",
   ]);
@@ -224,11 +230,28 @@ function checkSkillQuality() {
   }
 }
 
+function checkSkillQuality() {
+  const names = listSkillNames();
+  if (names.length < 29) {
+    fail(`expected at least 29 skills; found ${names.length}`);
+  }
+  const totalLines = names.reduce(
+    (total, name) => total + validateOneSkill(name),
+    0,
+  );
+  if (totalLines > names.length * 75) {
+    fail(
+      `formal SKILL.md budget exceeded: ${totalLines} lines for ${names.length} skills`,
+    );
+  }
+  validateSkillReferences();
+}
+
 function runSkillChecks(context) {
   bindContext(context);
   checkEngineeringMainline();
   checkMainlineOrdering();
-  checkPrunedSkillSet();
+  checkCompatibilitySkillSet();
   checkSkillQuality();
 }
 

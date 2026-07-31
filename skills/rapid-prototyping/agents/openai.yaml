@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rapid Prototyping"
+  short_description: "用抛弃式原型回答设计问题"
+  default_prompt: "使用 $rapid-prototyping 创建一个只回答当前设计问题的可运行原型。"

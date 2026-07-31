@@ -18,6 +18,7 @@ Do not ask clarifying questions. If a user-owned decision can materially change 
 Consume only:
 
 - the task goal and risk classification;
+- the **current conversation**, plan, or issue body when `/to-spec` is explicitly invoked;
 - confirmed grilling handoff decisions and delegated defaults, when present;
 - repository facts verified from current files, history, tests, or tools;
 - an optional output path under `docs/superpowers/specs/`.
@@ -102,6 +103,19 @@ After self-review, show the saved path and a compact summary of decisions and no
 - If the user approves, return control to `skills/using-superpowers/SKILL.md`; it hands the user to
   explicit `/to-tickets`. Do not invoke a user-invoked Skill implicitly.
 
+### Optional tracker publication
+
+After approval, preserve the ability to publish the Spec to a configured **remote tracker**:
+
+- only when `docs/agent-workflow/project-context.md` names a tracker, a callable tool exists, and the
+  user explicitly authorizes this external write;
+- create or update the user-selected parent item, attach or link the approved artifact, and return its
+  stable reference;
+- never treat publication as approval, never invent tracker coordinates, and keep the local artifact
+  as the exact reviewed source;
+- without configuration, tool, or authorization, return `NEEDS_TRACKER_AUTHORIZATION` and leave
+  remote state unchanged.
+
 ## Outcomes
 
 Return exactly one of:
@@ -120,6 +134,11 @@ BLOCKED_BY_UNRESOLVED_DECISION
 
 NOT_APPLICABLE
 - reason
+
+NEEDS_TRACKER_AUTHORIZATION
+- spec_path
+- tracker
+- missing_configuration_tool_or_authorization
 ```
 
 `READY_FOR_USER_REVIEW` does not mean approved. `NOT_APPLICABLE` returns routing responsibility without recommending another Skill.

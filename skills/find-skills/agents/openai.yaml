@@ -1,0 +1,4 @@
+interface:
+  display_name: "Find Skills"
+  short_description: "发现本地与宿主可用的 skill"
+  default_prompt: "使用 $find-skills 为当前任务查找最小且可验证的能力集合。"
