@@ -1,28 +1,28 @@
-# Task Reviewer Prompt Template
+# Ticket Reviewer Prompt Template
 
-Use this template when dispatching a task reviewer subagent. The reviewer
-reads the task's diff once and returns two verdicts: spec compliance and
+Use this template when dispatching a ticket reviewer subagent. The reviewer
+reads the ticket's diff once and returns two verdicts: spec compliance and
 code quality.
 
-**Purpose:** Verify one task's implementation matches its requirements (nothing
+**Purpose:** Verify one ticket's implementation matches its requirements (nothing
 more, nothing less) and is well-built (clean, tested, maintainable)
 
 ```
 Subagent (general-purpose):
-  description: "Review Task N (spec + quality)"
+  description: "Review Ticket N (spec + quality)"
   model: [MODEL — REQUIRED: choose per SKILL.md Model Selection; an omitted
          model silently inherits the session's most expensive one]
   prompt: |
-    You are reviewing one task's implementation: first whether it matches its
-    requirements, then whether it is well-built. This is a task-scoped gate,
+    You are reviewing one ticket's implementation: first whether it matches its
+    requirements, then whether it is well-built. This is a ticket-scoped gate,
     not a merge review — a broad whole-branch review happens separately after
-    all tasks are complete.
+    all tickets are complete.
 
     ## What Was Requested
 
-    Read the task brief: [BRIEF_FILE]
+    Read the ticket brief: [BRIEF_FILE]
 
-    Global constraints from the spec/design that bind this task:
+    Global constraints from the spec/design that bind this ticket:
     [GLOBAL_CONSTRAINTS]
 
     ## What the Implementer Claims They Built
@@ -87,7 +87,7 @@ Subagent (general-purpose):
       solved
 
     If a requirement cannot be verified from this diff alone (it lives in
-    unchanged code or spans tasks), report it as a ⚠️ item instead of
+    unchanged code or spans tickets), report it as a ⚠️ item instead of
     broadening your search.
 
     ## Part 2: Code Quality
@@ -100,12 +100,12 @@ Subagent (general-purpose):
 
     **Tests:**
     - Do the new and changed tests verify real behavior, not mocks?
-    - Are the task's edge cases covered?
+    - Are the ticket's edge cases covered?
 
     **Structure:**
     - Does each file have one clear responsibility with a well-defined interface?
     - Are units decomposed so they can be understood and tested independently?
-    - Is the implementation following the file structure from the plan?
+    - Is the implementation following the architecture and boundaries from the Spec?
     - Did this change create new files that are already large, or
       significantly grow existing files? (Don't flag pre-existing file
       sizes — focus on what this change contributed.)
@@ -123,15 +123,15 @@ Subagent (general-purpose):
     ## Calibration
 
     Categorize issues by actual severity. Not everything is Critical.
-    Important means this task cannot be trusted until it is fixed: incorrect
+    Important means this ticket cannot be trusted until it is fixed: incorrect
     or fragile behavior, a missed requirement, or maintainability damage you
     would block a merge over — verbatim duplication of a logic block,
     swallowed errors, tests that assert nothing. "Coverage could be broader"
     and polish suggestions are Minor.
-    If the plan or brief explicitly mandates something this rubric calls a
+    If the Spec or brief explicitly mandates something this rubric calls a
     defect (a test that asserts nothing, verbatim duplication of a logic
     block), that IS a finding — report it as Important, labeled
-    plan-mandated. The plan's authorship does not grade its own work; the
+    spec-mandated. The Spec's authorship does not grade its own work; the
     human decides.
     Acknowledge what was done well before listing issues — accurate praise
     helps the implementer trust the rest of the feedback.
@@ -160,29 +160,29 @@ Subagent (general-purpose):
 
     ### Assessment
 
-    **Task quality:** [Approved | Needs fixes]
+    **Ticket quality:** [Approved | Needs fixes]
 
     **Reasoning:** [1-2 sentence technical assessment]
 ```
 
 **Placeholders:**
 - `[MODEL]` — REQUIRED: reviewer model per SKILL.md Model Selection
-- `[BRIEF_FILE]` — REQUIRED: the task brief file (`scripts/task-brief PLAN N`
+- `[BRIEF_FILE]` — REQUIRED: the ticket brief file (`scripts/ticket-brief TICKETS_FILE TICKET_ID`
   prints the path; same file the implementer worked from)
 - `[GLOBAL_CONSTRAINTS]` — the binding requirements copied verbatim from
-  the plan's Global Constraints section or the spec: exact values, formats,
+  the approved Spec: exact values, formats,
   and stated relationships between components (not process rules — those
   are already in this template)
 - `[REPORT_FILE]` — REQUIRED: the file the implementer wrote its detailed
   report to
-- `[BASE_SHA]` — commit before this task
+- `[BASE_SHA]` — commit before this ticket
 - `[HEAD_SHA]` — current commit
 - `[DIFF_FILE]` — REQUIRED: the path the controller wrote the review
   package to (`scripts/review-package BASE HEAD` prints the unique path it
   wrote; the package never enters the controller's context)
 
 **Reviewer returns:** Spec Compliance verdict (✅/❌/⚠️), Strengths, Issues
-(Critical/Important/Minor), Task quality verdict
+(Critical/Important/Minor), Ticket quality verdict
 
 A fix dispatch can address spec gaps and quality findings together;
 re-review after fixes covers both verdicts.

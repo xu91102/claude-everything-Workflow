@@ -1,6 +1,6 @@
 ---
 name: grilling
-description: "Resolve consequential user-owned decisions through a one-question-at-a-time interview. Use when the user invokes /grill, says grill me, asks for challenge or pressure-testing, or when the central router finds an unresolved decision that materially changes the outcome; do not trigger for discoverable facts, ordinary complexity, file count, or high risk by itself."
+description: "Use for /grill, pressure-testing, or a consequential unresolved user decision. Resolve one decision per turn; do not trigger for discoverable facts, ordinary complexity, file count, or high risk alone."
 ---
 
 # Grilling
@@ -13,7 +13,7 @@ Reference: https://github.com/mattpocock/skills/blob/main/skills/productivity/gr
 
 - Do not ask for discoverable facts. Inspect files, documentation, logs, history, and tools first.
 - Ask only about a user-owned decision whose alternatives materially change the result.
-- Route systematic evidence or blind-spot gaps back through `skills/using-superpowers/SKILL.md` for `discover-unknowns-zh`.
+- Route systematic evidence or blind-spot gaps back through `skills/using-superpowers/SKILL.md` for `iterative-retrieval`.
 - High risk alone does not trigger an interview. If high-risk work has a real unresolved user decision, resolve it and record `resume_target: spec-gate`.
 - Do not generate or approve a Spec, implement code, or own workflow continuation.
 

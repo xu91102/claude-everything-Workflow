@@ -30,16 +30,17 @@ function checkSuperpowersDevLoop() {
     "using-superpowers",
     "subagent-driven-development",
     ".superpowers/sdd",
-    "Global Constraints",
-    "Interfaces",
+    "to-spec → to-tickets → implement",
+    "tracer-bullet",
+    "frontier",
     "?key=",
     "4 小时",
     "using-git-worktrees",
     "iterative-retrieval",
-    "executing-plans",
     "verification-before-completion",
     "完整流程适用时",
-    "没有 spec 不进入 plan",
+    "没有批准的 Spec 不生成 tickets",
+    "没有批准的 tickets 不进入实现",
     "没有用户审核不进入实现",
     "没有 failing test，不写行为代码",
     "没有 review 不标记任务完成",
@@ -51,7 +52,8 @@ function checkSuperpowersDevLoop() {
   requireTokens("rules/01-base.md", [
     "Spec Gate",
     "User Review Gate",
-    "Plan Gate",
+    "Ticket Gate",
+    "Implement Gate",
     "Red Test Gate",
     "Task Review Gate",
     "Verify Gate",
@@ -70,13 +72,13 @@ function checkSuperpowersDevLoop() {
     "User Review Gate",
   ]);
 
-  requireTokens("skills/writing-plans/SKILL.md", [
+  requireTokens("skills/to-tickets/SKILL.md", [
     "## Preconditions",
-    "approved spec",
-    "Plan Gate",
-    "## Global Constraints",
-    "**Interfaces:**",
-    "skills/subagent-driven-development/SKILL.md",
+    "Spec",
+    "Ticket Schema",
+    "Blocked by",
+    "frontier",
+    "tracer bullet",
   ]);
 
   requireTokens("skills/test-driven-development/SKILL.md", [
@@ -136,7 +138,7 @@ function checkSpecVisualContracts() {
 function checkSuperpowersArtifactPolicy() {
   requireTokens("rules/05-git-workflow.md", [
     "## Superpowers 本地工件",
-    "Superpowers 生成的 spec 和 plan 仅用于本地工作流",
+    "Superpowers 生成的 spec 和 tickets 仅用于本地工作流",
     "无论保存位置都不得暂存或提交",
   ]);
   requireTokens("skills/spec-gate/SKILL.md", [
@@ -144,10 +146,9 @@ function checkSuperpowersArtifactPolicy() {
     "Treat every generated design Spec as a local workflow artifact",
     "Do not stage or commit it.",
   ]);
-  requireTokens("skills/writing-plans/SKILL.md", [
-    "Local-only artifact policy",
-    "Treat every generated implementation plan as a local workflow artifact",
-    "Do not stage or commit it.",
+  requireTokens("skills/to-tickets/SKILL.md", [
+    "ignored local artifact",
+    "docs/superpowers/tickets/",
   ]);
 
   const repoRoot = spawnSync("git", ["rev-parse", "--show-toplevel"], {
@@ -234,12 +235,12 @@ function checkRouteOrdering() {
 }
 
 function checkWorkflowDocuments() {
-  requireTokens("skills/discover-unknowns-zh/SKILL.md", [
+  requireTokens("skills/iterative-retrieval/SKILL.md", [
     "事实缺口",
-    "skills/grilling/SKILL.md",
-    "skills/spec-gate/SKILL.md",
-    "复杂、高风险、多文件或长周期本身不是触发条件",
-    "不要因为下一步会触碰生产代码或多文件改动就自动创建实施计划",
+    "盲点",
+    "Dispatch",
+    "Evaluate",
+    "Refine",
   ]);
   requireTokens("rules/01-base.md", [
     "默认最短闭环、按风险逐级升级",
@@ -248,7 +249,8 @@ function checkWorkflowDocuments() {
     "多文件、新功能、普通行为变化和复杂度本身都不是升级条件",
     "信息足够后立即停止追问",
     "Spec Gate",
-    "Plan Gate",
+    "Ticket Gate",
+    "Implement Gate",
     "Task Review Gate",
     "BLOCKED_BY_UNRESOLVED_DECISION",
     "不得自动回到 grilling",
@@ -261,10 +263,11 @@ function checkWorkflowDocuments() {
     "skills/spec-gate/SKILL.md",
   ]);
   requireTokens("agents/planner.md", [
-    "`grilling`",
-    "`spec-gate`",
-    "多模块本身不是",
-    "不重复已解决决策",
+    "Ticket Graph Reviewer",
+    "不生成第二种实施工件",
+    "Spec coverage",
+    "Tracer bullets",
+    "Frontier",
   ]);
 }
 
@@ -298,9 +301,8 @@ function checkGrillingWorkflow() {
 }
 
 function checkSuperpowersRoutingConsistency() {
-  requireTokens("skills/discover-unknowns-zh/SKILL.md", [
-    "返回 `skills/using-superpowers/SKILL.md` 重新路由",
-    "不要用固定的后续 skill 枚举代替路由器",
+  requireTokens("skills/iterative-retrieval/SKILL.md", [
+    "返回 `skills/using-superpowers/SKILL.md`",
   ]);
   requireTokens("rules/01-base.md", [
     "高风险边界识别优先于“需求清楚/易回滚”短路",
@@ -311,26 +313,27 @@ function checkSuperpowersRoutingConsistency() {
     "Spec Gate contract conflict",
   ]);
 
-  const unknowns = read("skills/discover-unknowns-zh/SKILL.md");
-  for (const staleRoute of [
-    "交接到 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans` skill",
-    "再进入 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans`",
-  ]) {
-    if (unknowns.includes(staleRoute)) {
-      fail(
-        "skills/discover-unknowns-zh/SKILL.md should return to the router " +
-          `instead of enumerating follow-up skills: ${staleRoute}`,
-      );
-    }
-  }
-
 }
 
 function checkRemovedSkillReferences() {
-  for (const skill of ["context-budget", "documentation-lookup"]) {
+  for (const skill of [
+    "context-budget",
+    "documentation-lookup",
+  ]) {
     for (const file of managedFiles()) {
       if (isVerifierImplementation(file)) continue;
-      if (read(file).includes(skill)) {
+      if (file === "scripts/retired-skill-files.json") continue;
+      if (file === "scripts/published-retirement-baselines.json") continue;
+      const lines = read(file).split(/\r?\n/);
+      const activeReferences = lines.filter(
+        (line) =>
+          line.includes(skill) &&
+          !(
+            file === "README.md" &&
+            line.startsWith(`- \`${skill}\` →`)
+          ),
+      );
+      if (activeReferences.length > 0) {
         fail(`${file} still references removed skill ${skill}`);
       }
     }

@@ -7,7 +7,7 @@ description: Use when encountering any bug, failing test, flaky behavior, or une
 
 Use this skill when implementation or verification reveals a bug, failing test, flaky behavior, or unexpected result.
 
-The goal is not to make debugging heavy. The goal is to stop guessing. Complete the four phases in order, then return to the active task or plan.
+The goal is not to make debugging heavy. The goal is to stop guessing. Complete the four phases in order, then return to the active ticket or task.
 
 <HARD-GATE>
 Do not propose or apply a fix until Phase 1 identifies a credible root cause and Phase 3 has tested the hypothesis with the smallest useful check.
@@ -16,9 +16,11 @@ Do not propose or apply a fix until Phase 1 identifies a credible root cause and
 ## Phase 1: Root Cause Investigation
 
 - Reproduce the failure with the smallest command or scenario.
+- **minimise** the reproduction until one fast command fails for this bug and unrelated noise is gone.
 - Capture the exact error, failing assertion, log line, or unexpected output.
 - Trace backward from the symptom to the first incorrect state.
 - Identify what changed recently and which boundary it crosses.
+- For a **performance regression**, preserve a comparable benchmark, input, warmup and environment.
 
 Output: one sentence naming the likely root cause and the evidence for it.
 
@@ -33,7 +35,8 @@ Output: the smallest affected scope and any similar files that should or should 
 ## Phase 3: Hypothesis Test
 
 - Form one falsifiable hypothesis.
-- Run or add the smallest diagnostic check that can prove or disprove it.
+- **instrument** the closest useful boundary and run the smallest diagnostic check that can prove or
+  disprove it; remove probes after use.
 - If the hypothesis fails, return to Phase 1 with the new evidence.
 - After two failed fix hypotheses, stop and reassess the design before trying another fix.
 
@@ -44,7 +47,7 @@ Output: confirmed hypothesis or reason for returning to investigation.
 - Add or update the failing test first when the project has a suitable test path.
 - Apply one focused fix at the source of the root cause.
 - Run the failing test or reproduction command.
-- Run the task's required verification from the plan.
+- Run the ticket's or task's required verification.
 - Remove diagnostic logging or temporary probes.
 
 Output: root cause, fix summary, commands run, result, and remaining risk.
@@ -57,3 +60,5 @@ After the fix is verified, return to the original task:
 - Re-run requirement/spec compliance review.
 - Re-run code quality review.
 - Only then mark the task complete.
+
+没有可观察失败时先建立 reproduction；假设未被证据确认前保持调查阶段，不进入修复。

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Implement"
+  short_description: "实现获批 ticket 并完成验证"
+  default_prompt: "使用 $implement 实现我指定的获批 ticket。"
+policy:
+  allow_implicit_invocation: false

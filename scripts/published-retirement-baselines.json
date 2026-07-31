@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "packages": [
+    {
+      "package": "claude-everything-workflow",
+      "version": "0.1.9",
+      "dist_shasum": "8914a9a9c30c691e69ae2d1f8542325978f1351b",
+      "dist_integrity": "sha512-pd8a5CAzX7ryjSIB0LJlIUXCQkYdr8Yc0qTOa7gk3BK0ldjwbZ5TG7ppAC6Eg7rB8GaqAnBGDuI0lapQUw/DcQ==",
+      "retired_files": {
+        "skills/brainstorming/SKILL.md": "7abfa1adfd596a5d62c8da0f7f664dd03151e92c0445f3877ba29bcd6d3b9d68",
+        "skills/brainstorming/spec-document-reviewer-prompt.md": "12cb5ed58aef41b8da6fbb505547c71ca3f5658c83b66ca6e556c936308b3189",
+        "skills/brainstorming/visual-companion.md": "60cbad29b9dd7eaf08da020e301c498a72230b2e13c1813fa967a135ffcc1d71",
+        "skills/brainstorming/agents/openai.yaml": "90585d2a09289aaff7eba1271596e8500c7328437b94839f2d39699a41689195",
+        "skills/brainstorming/scripts/frame-template.html": "6a8a4e58bd6a44b904e2e3c57de774481d909204597e1498de53f1b2fecc4c4e",
+        "skills/brainstorming/scripts/helper.js": "43c6d69954a46ec34a2a262bcc62a9a7e83e839c739f199cb72646d397c686e3",
+        "skills/brainstorming/scripts/server.cjs": "2d2961ea8d11f56c5f4c3a1a68d22709efa5d7601a2246d8c880774e7e9e8412",
+        "skills/brainstorming/scripts/start-server.sh": "a4e5ae84275bcaacd2f84345afeabe59cf7b00ba080e123da7cc1fb226f12847",
+        "skills/brainstorming/scripts/stop-server.sh": "0b5ccbbd57f62d3ed88993f7940b5ee0e5c0fc9b21c550c623da4f6292e47daf"
+      }
+    }
+  ]
+}

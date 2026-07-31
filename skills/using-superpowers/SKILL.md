@@ -1,6 +1,6 @@
 ---
 name: using-superpowers
-description: "Route non-trivial work through the smallest suitable workflow, including direct execution, grilling for unresolved user-owned decisions, and formal Spec Gate for explicitly requested or costly-to-reverse work. Use at task start, after a process Skill returns an outcome, and whenever continuation ownership is unclear."
+description: "Route engineering work through direct, decision, or formal lanes. Use at task start, after a process outcome, or when continuation between Spec, tickets, implementation, debugging, review, and verification is unclear."
 ---
 
 # Using Superpowers
@@ -45,7 +45,9 @@ needs-decision
 formal-spec
   explicit formal Spec or high-risk boundary
     -> grilling inline first only when a consequential decision is unresolved
-    -> spec-gate -> user review -> approved Spec -> writing-plans
+    -> spec-gate -> user review -> approved Spec
+    -> /to-tickets -> ticket review -> approved tickets
+    -> /implement on a frontier ticket
 ```
 
 File count, a new-feature label, ordinary behavior change, and normal code complexity do not upgrade a task. They affect implementation and verification intensity only.
@@ -58,19 +60,29 @@ Use process skills before implementation skills:
 Task arrives
   -> explicit /setup-workflow?                     -> project-context
   -> explicit /grill?                              -> grilling explicit
+  -> explicit documented domain interview?         -> /documented-grill
+  -> external Issue/PR triage request?              -> issue-triage
+  -> huge effort whose path exceeds one session?   -> large-work-planning
+  -> architecture health/deepening scan?           -> architecture-audit
+  -> one runnable design question?                  -> rapid-prototyping
+  -> primary-source research request?               -> evidence-research
+  -> merge/rebase conflict already in progress?    -> merge-conflict-resolution
+  -> domain term/invariant/lifecycle/context change? -> domain-modeling
   -> bug, failing test, or unexpected result?      -> systematic-debugging
   -> discoverable fact?                            -> inspect it; do not ask
-  -> systematic evidence or blind-spot gap?        -> discover-unknowns-zh
+  -> systematic evidence or blind-spot gap?        -> iterative-retrieval
   -> unresolved user-owned decision?               -> grilling inline
        high-risk or explicit formal Spec context?  -> resume_target: spec-gate
   -> explicit formal Spec or high-risk boundary?   -> spec-gate
-  -> approved Spec, no plan?                       -> writing-plans
-  -> approved plan + SDD/commit approved?          -> subagent-driven-development
-  -> approved plan, no commit approval?            -> executing-plans
+  -> approved Spec, no tickets?                    -> hand off to explicit /to-tickets
+  -> approved tickets + explicit /implement?       -> implement one frontier ticket
+  -> approved ticket + SDD/commit approved?        -> subagent-driven-development
   -> behavior change with a test path?             -> test-driven-development
+  -> module interface or seam design?               -> deep-module-design
+  -> fixed-point diff review?                       -> /code-review
   -> dirty worktree or risky branch work?          -> consider using-git-worktrees
   -> completion, fixed, or ready claim?            -> verification-before-completion
-  -> external skill learning or edit?              -> skill-creator + skills-learning
+  -> external skill learning or edit?              -> skills-learning policy + available runtime authoring skill
   -> otherwise                                     -> shortest applicable loop
 ```
 
@@ -84,7 +96,13 @@ Read `Risk classification` and `Resume target`. A non-formal task returns to dir
 
 ### Spec Gate ready
 
-`READY_FOR_USER_REVIEW` means the local artifact passed self-review but is not approved. Present the path and wait for explicit approval. Only an approved Spec may enter `writing-plans`.
+`READY_FOR_USER_REVIEW` means the local artifact passed self-review but is not approved. Present the path and wait for explicit approval. After approval, hand off to explicit `/to-tickets`; a user-invoked Skill cannot be called implicitly.
+
+### Ticket review
+
+`READY_FOR_TICKET_REVIEW` means the ticket graph is drafted but not approved. Present titles, outcomes, and blocking edges; do not publish tickets or implement.
+
+`TICKETS_PUBLISHED` returns ticket refs and the current **frontier**. Only a user-selected frontier ticket may enter explicit `/implement`. Each ticket starts from fresh context.
 
 ### Spec Gate blocked
 
@@ -116,6 +134,7 @@ Stop and reassess if you are about to:
 - let Spec Gate interview the user;
 - automatically bounce from a blocked Spec Gate to grilling;
 - continue implementation without an approved required Spec;
+- continue formal work without approved tickets, or implement a ticket outside the frontier;
 - claim completion without fresh verification evidence.
 
 ## Completion

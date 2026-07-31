@@ -1,0 +1,4 @@
+interface:
+  display_name: "Executing Plans（兼容）"
+  short_description: "兼容入口，转交 implement"
+  default_prompt: "使用 $executing-plans 兼容入口，把执行请求交给 implement。"

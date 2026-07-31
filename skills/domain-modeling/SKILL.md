@@ -71,8 +71,27 @@ own verification. When `docs/agent-workflow/project-context.md` exists, use its 
 and ADR locations; otherwise do not invent a project-wide documentation layout. This preserves the
 distinction between modeling a decision and implementing it.
 
+## Documentation Mode
+
+只有用户显式调用 `documented-grill` 时启用 **Documentation Mode**。它把 grilling 已确认的
+决定实时整理为待持久化 patch：
+
+1. 从 `docs/agent-workflow/project-context.md` 解析 `CONTEXT.md` / `CONTEXT-MAP.md` 与 ADR
+   位置；没有配置时只返回建议内容，不发明布局。
+2. 每个已确认答案更新 glossary、invariant、lifecycle 或 bounded context 草稿；只记录已确认
+   内容，不把仍在讨论的选项写成事实。
+3. 共同理解 gate 通过后，展示目标文件和 diff 摘要；显式命令的写文档授权覆盖上面的
+   “approved Spec 后持久化”默认门，但不授权 schema/code/外部 tracker 改动。
+4. 追加或精确修改既有 `CONTEXT.md`；hard-to-reverse decision 创建 ADR，保留既有格式和编号。
+5. 返回文档路径、写入的决定、未写入风险和 grilling handoff。
+
 ## Examples
 
 - Adding a subscription entity with trial, active, suspended, and cancelled lifecycle states triggers this Skill.
 - Renaming an internal helper while consuming unchanged billing vocabulary does not trigger it.
 - Moving authorization ownership between bounded contexts triggers it and may surface a high-risk decision for Spec Gate.
+
+## Exit
+
+内部 helper 变更且领域语言、invariant、lifecycle 与 context 均不变时返回 `NOT_APPLICABLE`。
+遇到未解决产品语义时返回当前 router，不替用户决定。

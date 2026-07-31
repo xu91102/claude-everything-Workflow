@@ -63,21 +63,22 @@ backup_if_changed() {
     local src="$1"
     local dest="$2"
 
-    if [ ! -f "$dest" ] || cmp -s "$src" "$dest"; then
-        return
+    local args=("$ROOT_DIR/scripts/merge-distribution.js" "$src" "$dest" "--file" "--backup-only")
+    if [ "$DRY_RUN" -eq 1 ]; then
+        args+=("--dry-run")
     fi
-
-    local backup="${dest}.bak.$(date +%Y%m%d%H%M%S)"
-    echo "Backup: $dest -> $backup"
-    run cp "$dest" "$backup"
+    node "${args[@]}"
 }
 
 copy_file() {
     local src="$1"
     local dest="$2"
 
-    backup_if_changed "$src" "$dest"
-    run cp "$src" "$dest"
+    local args=("$ROOT_DIR/scripts/merge-distribution.js" "$src" "$dest" "--file")
+    if [ "$DRY_RUN" -eq 1 ]; then
+        args+=("--dry-run")
+    fi
+    node "${args[@]}"
 }
 
 copy_claude_settings() {
@@ -103,19 +104,11 @@ copy_dir() {
         return
     fi
 
-    run mkdir -p "$dest_root/$name"
-    run rsync -a "$ROOT_DIR/$name/" "$dest_root/$name/"
-}
-
-require_rsync() {
+    local args=("$ROOT_DIR/$name" "$dest_root/$name")
     if [ "$DRY_RUN" -eq 1 ]; then
-        return
+        args+=("--dry-run")
     fi
-
-    if ! command -v rsync >/dev/null 2>&1; then
-        echo "rsync is required. Please install rsync and retry." >&2
-        exit 1
-    fi
+    node "$ROOT_DIR/scripts/merge-distribution.js" "${args[@]}"
 }
 
 install_shared_dirs() {
@@ -136,7 +129,8 @@ remove_package_only_paths() {
 
     for file in \
         "scripts/install.sh" \
-        "scripts/install.ps1"
+        "scripts/install.ps1" \
+        "scripts/verify-install.ps1"
     do
         if [ -f "$dest/$file" ]; then
             run rm -f "$dest/$file"
@@ -175,49 +169,47 @@ remove_obsolete_workflow_paths() {
     done
 }
 
-remove_obsolete_brainstorming_skill() {
+cleanup_retired_skills() {
     local dest="$1"
-    local target="$dest/skills/brainstorming"
-    local relative
-    local dir
-
-    if [ ! -d "$target" ]; then
-        return
-    fi
-
-    for relative in \
-        "SKILL.md" \
-        "spec-document-reviewer-prompt.md" \
-        "visual-companion.md" \
-        "agents/openai.yaml" \
-        "scripts/frame-template.html" \
-        "scripts/helper.js" \
-        "scripts/server.cjs" \
-        "scripts/start-server.sh" \
-        "scripts/stop-server.sh"
-    do
-        if [ -f "$target/$relative" ]; then
-            run rm -f "$target/$relative"
-        fi
-    done
 
     if [ "$DRY_RUN" -eq 1 ]; then
-        echo "[dry-run] remove empty directories under '$target' after known files"
+        node "$ROOT_DIR/scripts/cleanup-retired-skills.js" "$dest" --dry-run
         return
     fi
 
-    for relative in "scripts" "agents"; do
-        dir="$target/$relative"
-        if [ -d "$dir" ] && [ -z "$(find "$dir" -mindepth 1 -print -quit)" ]; then
-            run rmdir "$dir"
-        fi
-    done
+    node "$ROOT_DIR/scripts/cleanup-retired-skills.js" "$dest"
+}
 
-    if [ -d "$target" ] && [ -z "$(find "$target" -mindepth 1 -print -quit)" ]; then
-        run rmdir "$target"
-    elif [ -d "$target" ]; then
-        echo "Preserving unknown files in obsolete brainstorming directory: $target"
+prepare_retired_skills() {
+    local dest="$1"
+
+    if [ "$DRY_RUN" -eq 1 ]; then
+        return
     fi
+    node "$ROOT_DIR/scripts/cleanup-retired-skills.js" "$dest" --prepare
+}
+
+validate_retired_skill_manifest() {
+    node "$ROOT_DIR/scripts/cleanup-retired-skills.js" --validate
+}
+
+preflight_install() {
+    local dest="$1"
+
+    node "$ROOT_DIR/scripts/preflight-install-paths.js" \
+        "$ROOT_DIR" \
+        "$dest" \
+        "AGENTS.md" \
+        "CLAUDE.md" \
+        "settings.json" \
+        "rules" \
+        "agents" \
+        "commands" \
+        "scripts" \
+        "hooks" \
+        "skills" \
+        "homunculus" \
+        "references"
 }
 
 install_claude() {
@@ -230,7 +222,7 @@ install_claude() {
     copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
     copy_claude_settings "$ROOT_DIR/settings.json" "$dest/settings.json"
     install_shared_dirs "$dest"
-    remove_obsolete_brainstorming_skill "$dest"
+    cleanup_retired_skills "$dest"
     remove_package_only_paths "$dest"
 }
 
@@ -242,11 +234,27 @@ install_codex() {
     remove_obsolete_workflow_paths "$dest"
     copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
     install_shared_dirs "$dest"
-    remove_obsolete_brainstorming_skill "$dest"
+    cleanup_retired_skills "$dest"
     remove_package_only_paths "$dest"
 }
 
-require_rsync
+validate_retired_skill_manifest
+
+if [ "$INSTALL_CLAUDE" -eq 1 ]; then
+    preflight_install "$HOME_DIR/.claude"
+fi
+
+if [ "$INSTALL_CODEX" -eq 1 ]; then
+    preflight_install "$HOME_DIR/.codex"
+fi
+
+if [ "$INSTALL_CLAUDE" -eq 1 ]; then
+    prepare_retired_skills "$HOME_DIR/.claude"
+fi
+
+if [ "$INSTALL_CODEX" -eq 1 ]; then
+    prepare_retired_skills "$HOME_DIR/.codex"
+fi
 
 if [ "$INSTALL_CLAUDE" -eq 1 ]; then
     install_claude

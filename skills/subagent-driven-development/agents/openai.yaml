@@ -1,0 +1,4 @@
+interface:
+  display_name: "Subagent-Driven Development"
+  short_description: "用独立实现与审查代理执行获批 ticket"
+  default_prompt: "使用 $subagent-driven-development 执行已获批且允许逐票提交的 ticket。"

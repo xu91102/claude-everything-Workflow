@@ -36,21 +36,15 @@ function Backup-IfChanged {
         [string]$Destination
     )
 
-    if (-not (Test-Path -LiteralPath $Destination)) {
-        return
+    $mergeScript = Join-Path $RootDir "scripts\merge-distribution.js"
+    $arguments = @($mergeScript, $Source, $Destination, "--file", "--backup-only")
+    if ($DryRun) {
+        $arguments += "--dry-run"
     }
-
-    $sourceHash = Get-FileHash -LiteralPath $Source -Algorithm SHA256
-    $destHash = Get-FileHash -LiteralPath $Destination -Algorithm SHA256
-    if ($sourceHash.Hash -eq $destHash.Hash) {
-        return
+    & node @arguments
+    if ($LASTEXITCODE -ne 0) {
+        throw "Configuration backup failed with exit code $LASTEXITCODE"
     }
-
-    $backup = "$Destination.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
-    Write-Host "Backup: $Destination -> $backup"
-    Invoke-InstallCommand `
-        -Description "Copy-Item '$Destination' '$backup'" `
-        -Action { Copy-Item -LiteralPath $Destination -Destination $backup -Force }
 }
 
 function Copy-ConfigFile {
@@ -59,10 +53,15 @@ function Copy-ConfigFile {
         [string]$Destination
     )
 
-    Backup-IfChanged -Source $Source -Destination $Destination
-    Invoke-InstallCommand `
-        -Description "Copy-Item '$Source' '$Destination'" `
-        -Action { Copy-Item -LiteralPath $Source -Destination $Destination -Force }
+    $mergeScript = Join-Path $RootDir "scripts\merge-distribution.js"
+    $arguments = @($mergeScript, $Source, $Destination, "--file")
+    if ($DryRun) {
+        $arguments += "--dry-run"
+    }
+    & node @arguments
+    if ($LASTEXITCODE -ne 0) {
+        throw "Configuration merge failed with exit code $LASTEXITCODE"
+    }
 }
 
 function Copy-ClaudeSettings {
@@ -137,13 +136,15 @@ function Copy-DirectoryMerge {
     }
 
     $destDir = Join-Path $DestinationRoot $Name
-    Invoke-InstallCommand `
-        -Description "New-Item -ItemType Directory '$destDir'" `
-        -Action { New-Item -ItemType Directory -Path $destDir -Force | Out-Null }
-
-    Invoke-InstallCommand `
-        -Description "Copy-Item '$sourceDir\*' '$destDir' -Recurse -Force" `
-        -Action { Copy-Item -Path (Join-Path $sourceDir '*') -Destination $destDir -Recurse -Force }
+    $mergeScript = Join-Path $RootDir "scripts\merge-distribution.js"
+    $arguments = @($mergeScript, $sourceDir, $destDir)
+    if ($DryRun) {
+        $arguments += "--dry-run"
+    }
+    & node @arguments
+    if ($LASTEXITCODE -ne 0) {
+        throw "Distribution merge failed with exit code $LASTEXITCODE"
+    }
 }
 
 function Install-SharedDirs {
@@ -170,7 +171,8 @@ function Remove-PackageOnlyPaths {
 
     $packageOnlyFiles = @(
         "scripts\install.sh",
-        "scripts\install.ps1"
+        "scripts\install.ps1",
+        "scripts\verify-install.ps1"
     )
 
     foreach ($relative in $packageOnlyFiles) {
@@ -223,55 +225,65 @@ function Remove-ObsoleteWorkflowPaths {
     }
 }
 
-function Remove-ObsoleteBrainstormingSkill {
+function Remove-RetiredSkills {
     param([string]$Destination)
 
-    $target = Join-Path $Destination "skills\brainstorming"
-    if (-not (Test-Path -LiteralPath $target -PathType Container)) {
+    $cleanupScript = Join-Path $RootDir "scripts\cleanup-retired-skills.js"
+    if ($DryRun) {
+        & node $cleanupScript $Destination --dry-run
+        if ($LASTEXITCODE -ne 0) {
+            throw "Retired skill cleanup dry-run failed with exit code $LASTEXITCODE"
+        }
         return
     }
 
-    $knownFiles = @(
-        "SKILL.md",
-        "spec-document-reviewer-prompt.md",
-        "visual-companion.md",
-        "agents\openai.yaml",
-        "scripts\frame-template.html",
-        "scripts\helper.js",
-        "scripts\server.cjs",
-        "scripts\start-server.sh",
-        "scripts\stop-server.sh"
-    )
-
-    foreach ($relative in $knownFiles) {
-        $file = Join-Path $target $relative
-        if (Test-Path -LiteralPath $file -PathType Leaf) {
-            Invoke-InstallCommand `
-                -Description "Remove-Item '$file'" `
-                -Action { Remove-Item -LiteralPath $file -Force }
-        }
+    & node $cleanupScript $Destination
+    if ($LASTEXITCODE -ne 0) {
+        throw "Retired skill cleanup failed with exit code $LASTEXITCODE"
     }
+}
+
+function Prepare-RetiredSkills {
+    param([string]$Destination)
 
     if ($DryRun) {
-        Write-Host "[dry-run] Remove empty directories under '$target' after known files"
         return
     }
-
-    foreach ($relative in @("scripts", "agents")) {
-        $directory = Join-Path $target $relative
-        if (Test-Path -LiteralPath $directory -PathType Container) {
-            $children = Get-ChildItem -LiteralPath $directory -Force
-            if ($children.Count -eq 0) {
-                Remove-Item -LiteralPath $directory -Force
-            }
-        }
+    $cleanupScript = Join-Path $RootDir "scripts\cleanup-retired-skills.js"
+    & node $cleanupScript $Destination --prepare
+    if ($LASTEXITCODE -ne 0) {
+        throw "Retired skill preparation failed with exit code $LASTEXITCODE"
     }
+}
 
-    $remaining = Get-ChildItem -LiteralPath $target -Force
-    if ($remaining.Count -eq 0) {
-        Remove-Item -LiteralPath $target -Force
-    } else {
-        Write-Host "Preserving unknown files in obsolete brainstorming directory: $target"
+function Test-RetiredSkillManifest {
+    $cleanupScript = Join-Path $RootDir "scripts\cleanup-retired-skills.js"
+    & node $cleanupScript --validate
+    if ($LASTEXITCODE -ne 0) {
+        throw "Retired skill manifest validation failed with exit code $LASTEXITCODE"
+    }
+}
+
+function Test-InstallPaths {
+    param([string]$Destination)
+
+    $preflightScript = Join-Path $RootDir "scripts\preflight-install-paths.js"
+    $targets = @(
+        "AGENTS.md",
+        "CLAUDE.md",
+        "settings.json",
+        "rules",
+        "agents",
+        "commands",
+        "scripts",
+        "hooks",
+        "skills",
+        "homunculus",
+        "references"
+    )
+    & node $preflightScript $RootDir $Destination @targets
+    if ($LASTEXITCODE -ne 0) {
+        throw "Install path preflight failed with exit code $LASTEXITCODE"
     }
 }
 
@@ -290,7 +302,7 @@ function Install-ClaudeWorkflow {
     Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath
     Convert-ClaudeSettingsHookPaths -SettingsPath $settingsPath
     Install-SharedDirs -Destination $dest
-    Remove-ObsoleteBrainstormingSkill -Destination $dest
+    Remove-RetiredSkills -Destination $dest
     Remove-PackageOnlyPaths -Destination $dest
 }
 
@@ -305,8 +317,26 @@ function Install-CodexWorkflow {
     Remove-ObsoleteWorkflowPaths -Destination $dest
     Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
     Install-SharedDirs -Destination $dest
-    Remove-ObsoleteBrainstormingSkill -Destination $dest
+    Remove-RetiredSkills -Destination $dest
     Remove-PackageOnlyPaths -Destination $dest
+}
+
+Test-RetiredSkillManifest
+
+if ($InstallClaude) {
+    Test-InstallPaths -Destination (Join-Path $HomeDir ".claude")
+}
+
+if ($InstallCodex) {
+    Test-InstallPaths -Destination (Join-Path $HomeDir ".codex")
+}
+
+if ($InstallClaude) {
+    Prepare-RetiredSkills -Destination (Join-Path $HomeDir ".claude")
+}
+
+if ($InstallCodex) {
+    Prepare-RetiredSkills -Destination (Join-Path $HomeDir ".codex")
 }
 
 if ($InstallClaude) {

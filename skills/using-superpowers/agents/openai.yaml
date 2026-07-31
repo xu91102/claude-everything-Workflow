@@ -1,0 +1,4 @@
+interface:
+  display_name: "Using Superpowers"
+  short_description: "在 direct、decision 与 formal lane 间路由"
+  default_prompt: "使用 $using-superpowers 为当前工程任务选择最窄的安全工作流。"

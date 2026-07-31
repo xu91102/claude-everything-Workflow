@@ -1,0 +1,4 @@
+interface:
+  display_name: "Evidence Research"
+  short_description: "基于第一方来源形成研究记录"
+  default_prompt: "使用 $evidence-research 调研当前工程问题并生成带 citation 的 Markdown 记录。"

@@ -1,6 +1,6 @@
 ---
 name: visual-companion
-description: "Present mockups, diagrams, spatial relationships, and side-by-side visual options in a secured local browser companion. Use only when seeing the content materially improves understanding; require explicit user consent before starting the server or opening a URL, and combine with grilling when visual feedback represents a consequential user decision."
+description: "Use for mockups, diagrams, spatial relationships, or side-by-side visual options when seeing them materially improves understanding. Require consent before starting the secured local browser; combine with grilling for consequential decisions."
 ---
 
 # Visual Companion

@@ -1,7 +1,7 @@
 ---
 name: continuous-learning-v2
 description: 基于直觉的学习系统。用于配置或审查 Hook 观察、project/global instinct、置信度、项目推广、迁移和演化为 skills/commands/agents 的流程。
-version: 2.1.0
+disable-model-invocation: true
 ---
 
 # Continuous Learning v2.1

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test-Driven Development"
+  short_description: "用 Red-Green-Refactor 驱动行为变更"
+  default_prompt: "使用 $test-driven-development 先建立正确失败的测试，再做最小实现。"

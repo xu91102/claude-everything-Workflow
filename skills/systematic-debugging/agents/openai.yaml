@@ -1,0 +1,4 @@
+interface:
+  display_name: "Systematic Debugging"
+  short_description: "从证据和假设测试定位根因"
+  default_prompt: "使用 $systematic-debugging 先定位这个失败的根因，再提出修复。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grilling"
+  short_description: "逐项压力测试关键用户决策"
+  default_prompt: "使用 $grilling 找出并收敛会实质改变结果的关键决策。"

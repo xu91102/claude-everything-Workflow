@@ -1,0 +1,6 @@
+interface:
+  display_name: "Large Work Planning"
+  short_description: "用决策工单地图推进巨大工作"
+  default_prompt: "使用 $large-work-planning 为巨大且模糊的工作建立 decision-ticket 地图。"
+policy:
+  allow_implicit_invocation: false

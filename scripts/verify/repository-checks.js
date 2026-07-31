@@ -13,7 +13,7 @@ function checkRouterAndAgentLinks() {
   requireTokens("skills/using-superpowers/SKILL.md", [
     "Skill Invocation Rule",
     "Task arrives",
-    "approved plan + SDD/commit approved?",
+    "approved ticket + SDD/commit approved?",
     "external skill learning or edit?",
     "process skills before implementation skills",
     "skills/grilling/SKILL.md",
@@ -25,16 +25,19 @@ function checkRouterAndAgentLinks() {
 
   requireTokens("skills/subagent-driven-development/SKILL.md", [
     ".superpowers/sdd/progress.md",
-    "scripts/task-brief",
+    "scripts/ticket-brief",
+    "ticket-state.js",
     "scripts/review-package BASE HEAD",
-    "task-reviewer-prompt.md",
+    "references/ticket-reviewer-prompt.md",
     "Local Git Boundary",
-    "skills/executing-plans/SKILL.md",
+    "不得重复派发",
+    "返回 `BLOCKED`",
+    "skills/implement/SKILL.md",
   ]);
 
-  requireTokens("skills/subagent-driven-development/task-reviewer-prompt.md", [
+  requireTokens("skills/subagent-driven-development/references/ticket-reviewer-prompt.md", [
     "Spec Compliance",
-    "Task quality",
+    "Ticket quality",
     "Cannot verify from diff",
     "[BRIEF_FILE]",
     "[DIFF_FILE]",
@@ -42,7 +45,7 @@ function checkRouterAndAgentLinks() {
 
   for (const script of [
     "skills/subagent-driven-development/scripts/sdd-workspace",
-    "skills/subagent-driven-development/scripts/task-brief",
+    "skills/subagent-driven-development/scripts/ticket-brief",
     "skills/subagent-driven-development/scripts/review-package",
   ]) {
     if (!exists(script)) fail(`${script} is missing`);
@@ -61,7 +64,7 @@ function checkRouterAndAgentLinks() {
     }
   }
 
-  for (const agent of ["agents/harness-optimizer.md", "agents/planner.md"]) {
+  for (const agent of ["agents/harness-optimizer.md"]) {
     if (!exists(agent)) {
       fail(`${agent} is missing`);
       continue;
@@ -73,44 +76,6 @@ function checkRouterAndAgentLinks() {
     }
     if (!body.includes("grilling") || !body.includes("spec-gate")) {
       fail(`${agent} should reference grilling and spec-gate`);
-    }
-  }
-}
-
-function checkWritingPlansSkill() {
-  if (!exists("skills/writing-plans/SKILL.md")) {
-    fail("skills/writing-plans/SKILL.md is missing");
-  } else {
-    const writingPlans = read("skills/writing-plans/SKILL.md");
-    const requiredTokens = [
-      "Project-Agent Loop",
-      "skills/using-git-worktrees/SKILL.md",
-      "skills/executing-plans/SKILL.md",
-      "agents/tdd-guide.md",
-      "agents/code-reviewer.md",
-      "skills/systematic-debugging/SKILL.md",
-      "skills/verification-before-completion/SKILL.md",
-      "skills/subagent-driven-development/SKILL.md",
-      "## Global Constraints",
-      "**Interfaces:**",
-      "Completion Loop",
-      "`/verify`",
-      "`/pr`",
-    ];
-
-    for (const token of requiredTokens) {
-      if (!writingPlans.includes(token)) {
-        fail(`skills/writing-plans/SKILL.md should include ${token}`);
-      }
-    }
-
-    for (const forbidden of [
-      "superpowers:subagent-driven-development",
-      "superpowers:executing-plans",
-    ]) {
-      if (writingPlans.includes(forbidden)) {
-        fail(`skills/writing-plans/SKILL.md contains dangling ${forbidden}`);
-      }
     }
   }
 }
@@ -154,14 +119,15 @@ function checkCodeReviewContracts() {
     "固定基点、Standards 轴与 Spec 轴",
   ]);
 
-  requireTokens("skills/executing-plans/SKILL.md", [
-    "pre-plan commit as the fixed base",
-    "Spec source",
+  requireTokens("skills/implement/SKILL.md", [
+    "ticket",
+    "Spec",
+    "code-review",
   ]);
 
-  requireTokens("skills/writing-plans/SKILL.md", [
-    "pre-plan commit as its fixed base",
-    "Spec source",
+  requireTokens("skills/to-tickets/SKILL.md", [
+    "Spec 是架构",
+    "blocking graph",
   ]);
 }
 
@@ -207,10 +173,10 @@ function checkExecutionSupportSkills() {
     "Do not create a worktree for simple single-file edits",
   ]);
 
-  requireTokens("skills/executing-plans/SKILL.md", [
-    "approved implementation plan",
-    "Inline Execution",
-    "Project-Agent Loop",
+  requireTokens("skills/implement/SKILL.md", [
+    "frontier",
+    "fresh context",
+    "test-driven-development",
     "skills/systematic-debugging/SKILL.md",
     "skills/verification-before-completion/SKILL.md",
   ]);
@@ -243,7 +209,6 @@ function checkExecutionSupportSkills() {
 
 function checkSkillLinks() {
   checkRouterAndAgentLinks();
-  checkWritingPlansSkill();
   checkDebuggingSkill();
   checkCodeReviewContracts();
   checkProjectContextContracts();

@@ -1,68 +1,34 @@
 ---
 name: executing-plans
-description: Use after an approved implementation plan exists and the user wants execution. Runs the plan task-by-task with checkpoints, optional project-agent loop, tests, reviews, and final verification without expanding scope.
+description: 兼容旧 executing-plans 入口；按 checkpoint 执行获批实施计划，或转交 implement frontier-ticket 工作流。
 ---
 
-# Executing Plans
+# Executing Plans Compatibility
 
-Reference: https://github.com/obra/superpowers
+这是至少保留一个发布周期的 **compatibility** 入口，保留旧 plan execution 语义。
 
-Use this skill only after `skills/writing-plans/SKILL.md` has produced an approved plan. The plan is the source of truth; do not add scope unless the user approves a plan update.
+## When to Use
 
-## Preconditions
+用户已有批准的 implementation plan 并要求执行时使用。有 persisted tickets 时转交
+`implement`；纯 legacy plan 则按步骤与 checkpoint 执行。
 
-- An implementation plan exists and has been approved by the user.
-- If work should be isolated, use `skills/using-git-worktrees/SKILL.md` before editing.
-- Read the plan once, extract tasks, files, tests, and acceptance criteria.
-- Confirm whether execution is inline or project-agent loop.
+## How It Works
 
-## Inline Execution
+1. 读取完整 plan、来源 Spec、当前 git 状态和仓库规则；计划与事实冲突时先 `BLOCKED`。
+2. 一次执行一个 plan step，每个行为变化走 TDD；完成该步验证后报告 checkpoint。
+3. 用户授权连续执行时可继续下一步；遇到外部授权、consequential decision、范围扩大或失败
+   验证立即停止。
+4. 最后运行 Standards/Spec 双轴 review 与 `verification-before-completion`。
+5. commit/push/PR 仍需明确授权，不因兼容调用自动获得。
 
-Use inline execution for small, clear, tightly coupled work.
+Ticket mode 读取并完整遵循 `skills/implement/SKILL.md`，每次从 persisted frontier 重载状态。
 
-For each task:
+## Example
 
-1. Mark exactly one task in progress.
-2. Perform the next unchecked step only.
-3. Run the command specified by the plan.
-4. If a test or command fails unexpectedly, pause and use `skills/systematic-debugging/SKILL.md`.
-5. Do a requirement/spec compliance check for the task.
-6. Do a code quality check for the task.
-7. Mark the task complete only after checks pass.
+“执行 `docs/plan.md`，每两步汇报”进入 legacy checkpoints；“执行 T03 ticket”进入
+frontier-ticket mode。
 
-## Project-Agent Loop
+## Exit
 
-Use this for substantial plans with independent tasks.
-
-For each task:
-
-1. Dispatch one fresh implementation agent with only:
-   - the approved spec summary
-   - the exact task section
-   - relevant file paths
-   - expected tests and acceptance criteria
-2. Tell the agent it is not alone in the codebase and must not revert others' changes.
-3. After implementation, run requirement/spec compliance review.
-4. Run code quality review with `agents/code-reviewer.md`; add security or database review only when the touched area warrants it.
-5. Send findings back to the same implementer until resolved.
-6. Mark the task complete only after tests and reviews pass.
-
-Subagents must return only conclusion, evidence paths, risks, and next steps. Do not accept large raw logs as final output.
-
-## Completion Loop
-
-After all tasks are complete:
-
-1. Apply `skills/verification-before-completion/SKILL.md`: identify the verification evidence required before any completion claim.
-2. Run `/verify` or the plan's equivalent verification commands to produce that fresh evidence.
-3. If verification fails, use `skills/systematic-debugging/SKILL.md` for each failure class before changing code.
-4. Run a final review over the full diff with `agents/code-reviewer.md`; pin the
-   pre-plan commit as the fixed base and pass the approved Spec or plan as the
-   Spec source so Standards and Spec results remain independent.
-5. Summarize files changed, tests run, skipped checks, remaining risk, and whether the work is ready for `/pr`.
-
-## Boundaries
-
-- Do not commit, push, create PRs, delete branches, or remove worktrees unless the user asked for that action.
-- Do not skip failed tests because later tasks might fix them; record the failure and debug now unless the plan explicitly says the failure is expected.
-- Do not mark multiple tasks complete at the end; update status incrementally.
+返回 `PLAN_STEP_COMPLETE`、`IMPLEMENTED`、`BLOCKED` 或 `VERIFICATION_FAILED`，并带当前步骤、
+证据和下一 checkpoint；不得盲目批量修改。
