@@ -45,7 +45,9 @@ needs-decision
 formal-spec
   explicit formal Spec or high-risk boundary
     -> grilling inline first only when a consequential decision is unresolved
-    -> spec-gate -> user review -> approved Spec -> writing-plans
+    -> spec-gate -> user review -> approved Spec
+       -> multi-session/tracker delivery -> to-tickets -> implement per frontier ticket
+       -> single-session delivery -> writing-plans -> execute
 ```
 
 File count, a new-feature label, ordinary behavior change, and normal code complexity do not upgrade a task. They affect implementation and verification intensity only.
@@ -56,21 +58,34 @@ Use process skills before implementation skills:
 
 ```text
 Task arrives
+  -> explicit workflow advice?                    -> /ask-workflow advice mode
   -> explicit /setup-workflow?                     -> project-context
+  -> explicit /grill-with-docs?                    -> grilling explicit + domain-modeling persistent mode
   -> explicit /grill?                              -> grilling explicit
+  -> explicit /handoff or fresh session or prototype branch? -> skills/handoff/SKILL.md
+  -> explicit /triage?                             -> skills/triage/SKILL.md
+  -> explicit /implement?                          -> validate approved plan/ticket, then implementation loop
+  -> huge effort beyond one session?               -> skills/wayfinder/SKILL.md
+  -> explicit architecture-health audit?           -> skills/improve-codebase-architecture/SKILL.md
+  -> merge or rebase conflict?                     -> skills/resolving-merge-conflicts/SKILL.md
   -> bug, failing test, or unexpected result?      -> systematic-debugging
   -> discoverable fact?                            -> inspect it; do not ask
-  -> systematic evidence or blind-spot gap?        -> discover-unknowns-zh
+  -> primary-source research or cited research artifact? -> skills/research/SKILL.md
+  -> systematic evidence or blind-spot gap?        -> iterative-retrieval
+  -> explicit prototype or runnable design question? -> skills/prototype/SKILL.md
   -> unresolved user-owned decision?               -> grilling inline
        high-risk or explicit formal Spec context?  -> resume_target: spec-gate
   -> explicit formal Spec or high-risk boundary?   -> spec-gate
-  -> approved Spec, no plan?                       -> writing-plans
+  -> approved Spec requiring tracker tickets?      -> skills/to-tickets/SKILL.md
+  -> approved Spec, single-session plan missing?   -> writing-plans
+  -> approved agent-ready ticket?                  -> /implement ticket loop
   -> approved plan + SDD/commit approved?          -> subagent-driven-development
   -> approved plan, no commit approval?            -> executing-plans
   -> behavior change with a test path?             -> test-driven-development
   -> dirty worktree or risky branch work?          -> consider using-git-worktrees
   -> completion, fixed, or ready claim?            -> verification-before-completion
-  -> external skill learning or edit?              -> skill-creator + skills-learning
+  -> skill discovery or install request?           -> find-skills
+  -> external skill learning or edit?              -> rules/common/skills-learning.md
   -> otherwise                                     -> shortest applicable loop
 ```
 
@@ -84,7 +99,16 @@ Read `Risk classification` and `Resume target`. A non-formal task returns to dir
 
 ### Spec Gate ready
 
-`READY_FOR_USER_REVIEW` means the local artifact passed self-review but is not approved. Present the path and wait for explicit approval. Only an approved Spec may enter `writing-plans`.
+`READY_FOR_USER_REVIEW` means the local artifact passed self-review but is not approved. Present the
+path and wait for explicit approval. An approved Spec routes to `to-tickets` for multi-session/tracker
+delivery or `writing-plans` for a single-session delivery plan.
+
+### Cross-session handoff
+
+When a prototype detour needs isolation or the current context is leaving its reliable reasoning zone,
+recommend `/handoff` and wait for explicit approval before creating the temporary document. The handoff
+ends the current flow; a fresh session references the returned path and enters this router again. Do not
+use handoff as a substitute for durable Specs, ADRs, tickets, or verification evidence.
 
 ### Spec Gate blocked
 

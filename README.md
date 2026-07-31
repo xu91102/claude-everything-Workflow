@@ -288,17 +288,26 @@ claude-everything-Workflow/
 | `/promote`         | 预览或推广项目级直觉到全局直觉                             |
 | `/prune`           | 清理已人工标记删除、拒绝或归档的直觉                       |
 | `/evolve`          | 评估模式是否值得演化为 skill、agent 或 command             |
-| `/code-review`     | 固定基点、Standards 轴与 Spec 轴的双轴审查，委派 `code-reviewer` agent |
+| `/code-review`     | 固定基点下并行执行隔离的 Standards 轴与 Spec 轴审查       |
 | `/tdd`             | 薄封装入口，委派 `tdd-guide` agent                         |
 | `/e2e`             | 薄封装入口，委派 `e2e-runner` agent 和 `e2e-testing` skill |
 | `/harness-audit`   | 薄封装入口，委派 `harness-optimizer` agent                 |
 | `/setup-workflow`  | 显式配置项目工作追踪、领域文档和 ADR 位置                  |
+| `/ask-workflow`    | 根据目标推荐最短工程流程                                   |
+| `/grill-with-docs` | 访谈决策并按授权同步领域词汇与 ADR                         |
+| `/handoff`         | 生成临时脱敏交接文档，供全新 session 接续                 |
+| `/implement`       | 从已批准 Spec、plan 或 agent-ready ticket 执行闭环         |
+| `/to-tickets`      | 拆分 tracer-bullet tickets 与 blocking edges               |
+| `/triage`          | 分诊 Issue/外部 PR 并形成 durable agent brief              |
+| `/wayfinder`       | 维护跨 session 的 decision-ticket map                      |
+| `/improve-codebase-architecture` | 扫描 deepening 机会并进入架构决策闭环          |
 
 ## 验证 Harness
 
 ```bash
 node scripts/verify-harness.js
 bash scripts/install.sh --dry-run
+npm run verify:upstream -- --upstream-root <mattpocock-skills-clone>
 ```
 
 ```powershell
@@ -329,20 +338,25 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 ```text
 任务
   -> using-superpowers 先路由到相关 process skill
-  -> 可查事实直接检索；系统性事实缺口用 discover-unknowns-zh
+  -> 可查事实直接检索；外部一手来源调查用 research；系统性本地缺口用 iterative-retrieval
+  -> 需要可运行答案：prototype 选择 logic TUI 或 visual-companion UI 分支
+  -> 需要隔离 prototype 或接近上下文可靠区边界：handoff 到全新 session，再带结论返回
+  -> 超过单个 session 的模糊工作：wayfinder 维护 decision-ticket map
   -> 标记用户显式 formal spec 或高回滚成本架构/公共契约、安全、持久数据、不可逆副作用
   -> 存在关键用户决策：grilling 一次只问一个最高价值问题，并返回结构化 handoff
   -> 明确低风险且无未决决策：direct，直接实现并做相称验证
   -> 高风险/formal spec 且上下文充分：spec-gate 零访谈写 design spec 并自审
   -> Spec Gate 阻塞：停止并展示决策地图；用户明确继续才创建新 grilling 会话
   -> 用户审核并批准 spec
+  -> 多 session/tracker 交付：to-tickets 拆垂直切片和 blocking edges
   -> using-git-worktrees 按需创建隔离工作区
-  -> writing-plans 写实施计划
-  -> subagent-driven-development 或 executing-plans 按计划执行
+  -> 单 session：writing-plans 写实施计划
+  -> /implement 先 claim frontier ticket，再按计划调用 subagent-driven-development / executing-plans
   -> TDD 红绿重构
   -> 需求符合性审查
   -> 代码质量审查
   -> verification-before-completion 完成声明前确认新鲜验证证据
+  -> ticket 验收、双轴审查和验证通过后 resolve，并返回 newly unlocked frontier
   -> /verify 质量门
   -> /pr 提交/PR
   -> /learn-eval --preview 学习沉淀
@@ -351,6 +365,20 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 需要显式压力测试计划、设计或重大决策时使用 `/grill`；需要正式工程 Spec 时使用 `/to-spec`。显式 grilling 会话保留共同理解确认；自动触发只使用更短的微型访谈。明确任务、多文件任务、普通行为变化和可查事实不会因此增加交互轮数。
 
 旧入口名 `brainstorming` 兼容一个发布周期：中央路由会提示迁移并按 formal Spec 请求处理，但不再安装或发现同名 Skill。`grilling` 是唯一需求澄清引擎，`spec-gate` 只负责零访谈成稿、自审和用户批准。
+
+### Skill 迁移说明
+
+- `discover-unknowns-zh` 已退休：事实、证据和盲点检索转到 `iterative-retrieval`/`research`，可运行原型转到 `prototype`，正式计划转到 `writing-plans`/`to-tickets`。
+- 原 skill 的 `implementation-notes`、`explainer` 和 `quiz` 工件链不再属于本项目承诺的工作流。
+- `skill-creator` 已退休：Skill 写作与验证规则收敛到 `rules/common/skills-learning.md`，开放生态发现仍由 `find-skills` 处理。
+
+Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.json`；Harness 要求
+上游 17 项 promoted Engineering 能力都有本地 `covered` 或 `adapted` 证据，并覆盖主流程
+跨 session 所依赖的 Productivity `handoff`。`scripts/upstream-capability-baseline.json`
+记录固定 commit 的源文件 SHA-256；`verify:upstream` 可对 fresh clone 复核 commit、目录清单
+和每个源文件，避免只依赖本地映射自报。
+
+升级安装会按精确的退役文件清单删除旧分发文件；同名目录中的未知用户文件和 symlink 会保留并报告。
 
 硬门禁：
 
@@ -420,7 +448,7 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 6. 使用 /tdd 委派 tdd-guide 规划测试先行实现
 7. 关键路径使用 /e2e 委派 e2e-runner 维护 Playwright
 8. 使用 /verify 验证
-9. 使用 /code-review 基于固定基点委派 code-reviewer 做双轴审查
+9. 使用 /code-review 基于固定基点并行执行隔离的 Standards/Spec 双轴审查
 10. 使用 /learn-eval 将稳定模式沉淀到 skills/learn/<category>/
 11. 使用 /projects 查看项目级学习来源
 12. 使用 /promote --dry-run 评估是否推广为全局直觉

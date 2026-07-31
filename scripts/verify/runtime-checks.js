@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
@@ -77,12 +78,16 @@ function checkScriptLayout() {
 
   requireTokens("scripts/install.ps1", [
     "Remove-ObsoleteWorkflowPaths",
+    "Remove-RetiredSkills",
+    "Test-RetiredSkillManifest",
     "scripts\\hooks\\run-with-flags.js",
     "hooks\\review-confidence.js",
   ]);
 
   requireTokens("scripts/install.sh", [
     "remove_obsolete_workflow_paths",
+    "cleanup_retired_skills",
+    "validate_retired_skill_manifest",
     "scripts/hooks/run-with-flags.js",
     "hooks/review-confidence.js",
   ]);
@@ -241,6 +246,227 @@ function checkObserveV2() {
   fs.rmSync(tempHome, { recursive: true, force: true });
 }
 
+function createRetiredSkillFixture() {
+  const tempRoot = fs.mkdtempSync(
+    path.join(os.tmpdir(), "cew-retired-skill-cleanup-"),
+  );
+  const at = (...parts) => path.join(tempRoot, ...parts);
+  const fixture = {
+    tempRoot,
+    known: at("skills", "brainstorming", "SKILL.md"),
+    unknown: at("skills", "brainstorming", "user-notes.md"),
+    dryRunKnown: at("skills", "discover-unknowns-zh", "SKILL.md"),
+    creatorKnown: at("skills", "skill-creator", "scripts", "quick_validate.py"),
+    creatorUnknown: at("skills", "skill-creator", "user-template.md"),
+    nestedSymlink: at("skills", "brainstorming", "scripts"),
+    nestedExternalKnown: at("outside-nested-directory", "helper.js"),
+    rootSymlinkInstall: at("root-symlink-install"),
+    rootSymlink: at(
+      "root-symlink-install",
+      "skills",
+      "discover-unknowns-zh",
+    ),
+    rootExternalKnown: at("outside-retired-skill", "SKILL.md"),
+    leafSymlinkInstall: at("leaf-symlink-install"),
+    leafSymlink: at(
+      "leaf-symlink-install",
+      "skills",
+      "discover-unknowns-zh",
+      "SKILL.md",
+    ),
+    leafExternalKnown: at("outside-leaf-symlink", "SKILL.md"),
+    permissionInstall: at("permission-install"),
+    permissionSkillsRoot: at("permission-install", "skills"),
+    testLeafSymlink: process.platform !== "win32",
+  };
+
+  for (const file of [
+    fixture.known,
+    fixture.unknown,
+    fixture.dryRunKnown,
+    fixture.creatorKnown,
+    fixture.creatorUnknown,
+  ]) {
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, "fixture");
+  }
+  fs.mkdirSync(path.dirname(fixture.rootExternalKnown), { recursive: true });
+  fs.writeFileSync(fixture.rootExternalKnown, "must stay");
+  fs.mkdirSync(path.dirname(fixture.rootSymlink), { recursive: true });
+  fs.symlinkSync(
+    path.dirname(fixture.rootExternalKnown),
+    fixture.rootSymlink,
+    process.platform === "win32" ? "junction" : "dir",
+  );
+  fs.mkdirSync(path.dirname(fixture.nestedSymlink), { recursive: true });
+  fs.mkdirSync(path.dirname(fixture.nestedExternalKnown), { recursive: true });
+  fs.writeFileSync(fixture.nestedExternalKnown, "must also stay");
+  fs.symlinkSync(
+    path.dirname(fixture.nestedExternalKnown),
+    fixture.nestedSymlink,
+    process.platform === "win32" ? "junction" : "dir",
+  );
+  if (fixture.testLeafSymlink) {
+    fs.mkdirSync(path.dirname(fixture.leafSymlink), { recursive: true });
+    fs.mkdirSync(path.dirname(fixture.leafExternalKnown), { recursive: true });
+    fs.writeFileSync(fixture.leafExternalKnown, "must stay linked");
+    fs.symlinkSync(fixture.leafExternalKnown, fixture.leafSymlink, "file");
+  }
+  fs.mkdirSync(fixture.permissionSkillsRoot, { recursive: true });
+  return fixture;
+}
+
+function runRetiredSkillCleanup(cleanup, args) {
+  return spawnSync(process.execPath, [cleanup, ...args], {
+    cwd: root,
+    encoding: "utf8",
+    timeout: 10000,
+  });
+}
+
+function isSymlink(file) {
+  try {
+    return fs.lstatSync(file).isSymbolicLink();
+  } catch (error) {
+    if (error.code === "ENOENT") return false;
+    throw error;
+  }
+}
+
+function assertRetiredSkillCleanup(fixture) {
+  if (
+    fs.existsSync(fixture.known) ||
+    fs.existsSync(fixture.dryRunKnown) ||
+    fs.existsSync(fixture.creatorKnown)
+  ) {
+    fail("retired skill cleanup did not remove known files");
+  }
+  if (
+    !fs.existsSync(fixture.unknown) ||
+    !fs.existsSync(fixture.creatorUnknown)
+  ) {
+    fail("retired skill cleanup removed an unknown user file");
+  }
+  if (
+    !fs.existsSync(fixture.rootExternalKnown) ||
+    !isSymlink(fixture.rootSymlink)
+  ) {
+    fail("retired skill cleanup followed a symlinked skill directory");
+  }
+  if (
+    !fs.existsSync(fixture.nestedExternalKnown) ||
+    !isSymlink(fixture.nestedSymlink)
+  ) {
+    fail("retired skill cleanup followed a nested directory symlink");
+  }
+  const leafSymlinkPreserved =
+    !fixture.testLeafSymlink ||
+    (
+      fs.existsSync(fixture.leafExternalKnown) &&
+      isSymlink(fixture.leafSymlink)
+    );
+  if (!leafSymlinkPreserved) {
+    fail("retired skill cleanup removed a leaf symlink");
+  }
+}
+
+function checkPermissionFailure(cleanup, fixture) {
+  if (process.platform === "win32") return;
+
+  fs.chmodSync(fixture.permissionInstall, 0o000);
+  try {
+    const result = runRetiredSkillCleanup(cleanup, [
+      fixture.permissionInstall,
+    ]);
+    if (result.status === 0) {
+      fail("retired skill cleanup ignored an inaccessible install root");
+    }
+  } finally {
+    fs.chmodSync(fixture.permissionInstall, 0o700);
+  }
+}
+
+function checkRetiredSkillCleanup() {
+  const cleanup = rel("scripts/cleanup-retired-skills.js");
+  const manifest = rel("scripts/retired-skill-files.json");
+  if (!fs.existsSync(cleanup)) return fail("retired skill cleanup script is missing");
+  if (!fs.existsSync(manifest)) return fail("retired skill manifest is missing");
+
+  const fixture = createRetiredSkillFixture();
+  try {
+    const validation = runRetiredSkillCleanup(cleanup, ["--validate"]);
+    if (validation.status !== 0) {
+      fail(`retired skill manifest validation failed: ${validation.stderr}`);
+    }
+
+    const dryRun = runRetiredSkillCleanup(cleanup, [
+      fixture.tempRoot,
+      "--dry-run",
+    ]);
+    if (dryRun.status !== 0) {
+      fail(`retired skill cleanup dry-run failed: ${dryRun.stderr}`);
+    }
+    if (!dryRun.stdout.includes("Preserve unknown retired skill path")) {
+      fail("retired skill cleanup dry-run did not report preserved unknown files");
+    }
+    if (
+      !fs.existsSync(fixture.known) ||
+      !fs.existsSync(fixture.dryRunKnown) ||
+      !fs.existsSync(fixture.creatorKnown)
+    ) {
+      fail("retired skill cleanup dry-run modified files");
+    }
+
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      const result = runRetiredSkillCleanup(cleanup, [fixture.tempRoot]);
+      if (result.status !== 0) {
+        fail(`retired skill cleanup attempt ${attempt} failed: ${result.stderr}`);
+      }
+    }
+    const rootSymlink = runRetiredSkillCleanup(cleanup, [
+      fixture.rootSymlinkInstall,
+    ]);
+    if (rootSymlink.status !== 0) {
+      fail(`retired skill root symlink cleanup failed: ${rootSymlink.stderr}`);
+    }
+    if (fixture.testLeafSymlink) {
+      const leafSymlink = runRetiredSkillCleanup(cleanup, [
+        fixture.leafSymlinkInstall,
+      ]);
+      if (leafSymlink.status !== 0) {
+        fail(`retired skill leaf symlink cleanup failed: ${leafSymlink.stderr}`);
+      }
+    }
+    checkPermissionFailure(cleanup, fixture);
+    assertRetiredSkillCleanup(fixture);
+  } finally {
+    fs.rmSync(fixture.tempRoot, { recursive: true, force: true });
+  }
+}
+
+function checkUpstreamCapabilityVerifier() {
+  const verifier = rel("scripts/verify-upstream-capability-map.js");
+  const baseline = rel("scripts/upstream-capability-baseline.json");
+  if (!fs.existsSync(verifier)) {
+    fail("upstream capability verifier is missing");
+    return;
+  }
+  if (!fs.existsSync(baseline)) {
+    fail("upstream capability baseline is missing");
+    return;
+  }
+  const result = spawnSync(process.execPath, [verifier], {
+    cwd: root,
+    encoding: "utf8",
+    timeout: 10000,
+  });
+  if (result.error) {
+    fail(`upstream capability verifier failed: ${result.error.message}`);
+  } else if (result.status !== 0) {
+    fail(`upstream capability verifier exited ${result.status}: ${result.stderr}`);
+  }
+}
+
 function checkGitDiffWhitespace() {
   const isRepo = spawnSync("git", ["rev-parse", "--is-inside-work-tree"], {
     cwd: root,
@@ -270,6 +496,8 @@ function runRuntimeChecks(context) {
   checkScriptLayout();
   checkContinuousLearningV21();
   checkObserveV2();
+  checkRetiredSkillCleanup();
+  checkUpstreamCapabilityVerifier();
   checkGitDiffWhitespace();
 }
 

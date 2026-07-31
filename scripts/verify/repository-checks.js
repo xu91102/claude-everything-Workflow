@@ -14,6 +14,8 @@ function checkRouterAndAgentLinks() {
     "Skill Invocation Rule",
     "Task arrives",
     "approved plan + SDD/commit approved?",
+    "skill discovery or install request?",
+    "find-skills",
     "external skill learning or edit?",
     "process skills before implementation skills",
     "skills/grilling/SKILL.md",
@@ -87,7 +89,7 @@ function checkWritingPlansSkill() {
       "skills/using-git-worktrees/SKILL.md",
       "skills/executing-plans/SKILL.md",
       "agents/tdd-guide.md",
-      "agents/code-reviewer.md",
+      "skills/code-review/references/standards-reviewer-prompt.md",
       "skills/systematic-debugging/SKILL.md",
       "skills/verification-before-completion/SKILL.md",
       "skills/subagent-driven-development/SKILL.md",
@@ -121,6 +123,17 @@ function checkDebuggingSkill() {
   } else {
     const debugging = read("skills/systematic-debugging/SKILL.md");
     for (const token of [
+      "Feedback Loop Gate",
+      "one command",
+      "already run",
+      "Red-capable",
+      "Deterministic",
+      "Fast",
+      "Agent-runnable",
+      "3–5 ranked hypotheses",
+      "higher reproduction rate",
+      "smallest scenario",
+      "skills/improve-codebase-architecture/SKILL.md",
       "Phase 1: Root Cause Investigation",
       "Phase 2: Pattern Analysis",
       "Phase 3: Hypothesis Test",
@@ -138,20 +151,56 @@ function checkCodeReviewContracts() {
   requireTokens("commands/code-review.md", [
     "固定基点",
     "`git diff <base>...HEAD`",
+    "`git diff <base>`",
+    "--worktree",
     "--spec <path>",
     "Spec 轴",
+    "skills/code-review/SKILL.md",
+    "并行",
+  ]);
+
+  requireTokens("skills/code-review/SKILL.md", [
+    "two parallel subagents",
+    "tracked staged and unstaged",
+    "untracked",
+    "git diff <base>",
+    "standards-reviewer-prompt.md",
+    "spec-reviewer-prompt.md",
+    "Do not merge or rerank",
+  ]);
+
+  requireTokens("skills/code-review/references/standards-reviewer-prompt.md", [
+    "Mysterious Name",
+    "Duplicated Code",
+    "Feature Envy",
+    "Data Clumps",
+    "Primitive Obsession",
+    "Repeated Switches",
+    "Shotgun Surgery",
+    "Divergent Change",
+    "Speculative Generality",
+    "Message Chains",
+    "Middle Man",
+    "Refused Bequest",
+    "judgement call",
+  ]);
+
+  requireTokens("skills/code-review/references/spec-reviewer-prompt.md", [
+    "missing or partial",
+    "scope creep",
+    "looks implemented but is wrong",
+    "NOT RUN",
   ]);
 
   requireTokens("agents/code-reviewer.md", [
-    "`git diff <base>...HEAD`",
+    "skills/code-review/SKILL.md",
     "## Standards",
     "## Spec",
-    "NOT RUN",
-    "不得跨轴合并或重新排序",
+    "two isolated review contexts",
   ]);
 
   requireTokens("README.md", [
-    "固定基点、Standards 轴与 Spec 轴",
+    "固定基点下并行执行隔离的 Standards 轴与 Spec 轴审查",
   ]);
 
   requireTokens("skills/executing-plans/SKILL.md", [
@@ -172,6 +221,15 @@ function checkProjectContextContracts() {
     "CONFIGURED",
     "Do not create an empty `CONTEXT.md`",
     "references/project-context-template.md",
+    "bug",
+    "enhancement",
+  ]);
+  requireTokens("skills/project-context/references/project-context-template.md", [
+    "`bug`",
+    "`enhancement`",
+    "Claim",
+    "Progress",
+    "Resolve",
   ]);
 
   requireTokens("commands/setup-workflow.md", [
@@ -197,6 +255,26 @@ function checkProjectContextContracts() {
   requireTokens("README.md", [
     "`/setup-workflow`",
     "project-context",
+  ]);
+}
+
+function checkTrackerDeliveryLifecycle() {
+  requireTokens("commands/implement.md", [
+    "docs/agent-workflow/project-context.md",
+    "pre-ticket base",
+    "ticket as the Spec source",
+    "`/code-review --worktree <pre-ticket-base> --spec <ticket>`",
+    "frontier",
+    "claim",
+    "in-progress",
+    "resolve",
+    "unlocked",
+    "explicit confirmation",
+  ]);
+
+  requireTokens("commands/pr.md", [
+    "ticket reference",
+    "does not authorize closing",
   ]);
 }
 
@@ -228,6 +306,8 @@ function checkExecutionSupportSkills() {
     "Refine",
     "最多跑 3 轮",
     "回传格式",
+    "事实、证据和盲点缺口",
+    "skills/using-superpowers/SKILL.md",
   ]);
 
   requireTokens("skills/feature-acceptance/SKILL.md", [
@@ -247,6 +327,7 @@ function checkSkillLinks() {
   checkDebuggingSkill();
   checkCodeReviewContracts();
   checkProjectContextContracts();
+  checkTrackerDeliveryLifecycle();
   checkExecutionSupportSkills();
 }
 

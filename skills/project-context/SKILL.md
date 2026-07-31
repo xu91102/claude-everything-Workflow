@@ -1,12 +1,13 @@
 ---
 name: project-context
-description: "Configure a repository's durable agent context: issue-tracker location, domain-document layout, and ADR policy. Only when the user explicitly asks to set up project context, `/setup-workflow`, domain-document locations, or team tracking; do not invoke for ordinary implementation or domain-modeling work."
+description: "Configure a repository's durable agent context: issue-tracker operations, triage role vocabulary, domain-document layout, and ADR policy. Only when the user explicitly asks to set up project context, `/setup-workflow`, domain-document locations, triage configuration, or team tracking."
 ---
 
 # Project Context
 
-Set up a small, versioned source of truth that tells agents where this repository tracks work,
-domain vocabulary, and durable decisions. This is an explicit setup action, not a workflow gate.
+Set up a small, versioned source of truth that tells agents where this repository tracks work, how
+tracker mutations are expressed, which triage labels map to canonical roles, and where domain
+vocabulary and durable decisions live. This is an explicit setup action, not a workflow gate.
 
 ## Boundary
 
@@ -26,7 +27,8 @@ Inspect only the current repository and existing project documentation:
 2. Existing ADR directories, `docs/agent-workflow/`, `.scratch/`, and project-local tracker notes.
 3. Git remotes and existing issue references, without accessing remote tracker data unless the user
    separately asks for it.
-4. Monorepo signals such as workspace manifests and package directories.
+4. Existing tracker-operation docs, triage labels and `.out-of-scope/`.
+5. Monorepo signals such as workspace manifests and package directories.
 
 Report found facts, conflicts, and missing inputs concisely. Existing confirmed configuration wins;
 reopen it only when the user asks to change it or its referenced path no longer exists.
@@ -36,13 +38,19 @@ reopen it only when the user asks to change it or its referenced path no longer 
 Resolve only choices not settled by repository facts, one at a time. Give a recommendation and
 why it fits the discovered repository:
 
-1. **Work tracking**: `github`, `jira`, `linear`, `local-markdown`, or `custom`. Prefer the
-   configured remote or an existing local convention; record URL/project key/path and the allowed
-   tool or CLI, if any.
-2. **Domain layout**: `single-context` at `CONTEXT.md`, or `multi-context` with a root
+1. **Work tracking**: `github`, `gitlab`, `jira`, `linear`, `local-markdown`, or `custom`. Prefer the
+   configured remote or an existing local convention; record URL/project key/path, read operations,
+   mutation operations, native dependency support and the allowed tool/connector.
+2. **Triage roles**: map category roles `bug` and `enhancement`, plus state roles `needs-triage`,
+   `needs-info`, `ready-for-agent`, `ready-for-human` and `wontfix`, to tracker labels. Use canonical
+   names unless existing labels prove otherwise.
+3. **Local artifacts**: for `local-markdown`, record one feature directory, one ticket per file,
+   dependency edges, claim/resolution states and the map/frontier convention. Default to
+   `docs/superpowers/tracker/`, which is ignored by this package.
+4. **Domain layout**: `single-context` at `CONTEXT.md`, or `multi-context` with a root
    `CONTEXT-MAP.md`. Prefer multi-context only when the repository is a real monorepo with
    independent domains.
-3. **Decision records**: record the existing ADR directory, or recommend `docs/adr/` only when a
+5. **Decision records**: record the existing ADR directory, or recommend `docs/adr/` only when a
    durable decision is ready to document.
 
 If no decision is needed, present the discovered default for confirmation rather than asking a
@@ -67,6 +75,8 @@ Return one outcome:
 CONFIGURED
 - config_path
 - work_tracking
+- tracker_operations
+- triage_role_mapping
 - domain_layout
 - adr_location
 - remaining_risks

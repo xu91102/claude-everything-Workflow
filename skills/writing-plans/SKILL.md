@@ -183,7 +183,10 @@ After saving the plan, offer execution choice:
   - `agents/e2e-runner.md` for Playwright or user-flow verification tasks
   - a general worker if no specialized project agent fits
 - Review stage 1: requirement/spec compliance. Use `agents/planner.md` or a generic review worker seeded with the spec and plan. Compare the implementation against the spec and this plan before judging style. If there is a gap, send it back to the same task implementer.
-- Review stage 2: code quality. Use `agents/code-reviewer.md`, plus `agents/security-reviewer.md` or `agents/database-reviewer.md` when the touched area warrants it. If issues remain, send them back to the same task implementer and re-review.
+- Review stage 2: code quality. Use
+  `skills/code-review/references/standards-reviewer-prompt.md`, plus `agents/security-reviewer.md` or
+  `agents/database-reviewer.md` when the touched area warrants it. If issues remain, send them back
+  to the same task implementer and re-review.
 - Mark the task checkbox complete only after tests pass and both review stages pass.
 
 **If Inline Execution chosen:**
@@ -203,7 +206,8 @@ After all plan tasks are complete:
 1. Apply `skills/verification-before-completion/SKILL.md`: identify the verification evidence required before any completion claim.
 2. Run the project's verification flow (`/verify` or equivalent commands) to produce that fresh evidence.
 3. If verification fails, use `skills/systematic-debugging/SKILL.md` for each failure class before changing code.
-4. Run a final code review over the whole diff using `agents/code-reviewer.md`.
+4. Run a final two-subagent worktree review from the pre-plan base over committed, staged, unstaged,
+   and untracked task changes using `skills/code-review/SKILL.md`.
    Pin the pre-plan commit as its fixed base and pass the approved Spec or this
    plan as the Spec source; add `agents/security-reviewer.md` or
    `agents/database-reviewer.md` when relevant.

@@ -64,12 +64,34 @@ If an unresolved item changes product meaning, ownership, a public contract, per
 
 ## Persistence Gate
 
-Before an approved Spec exists, keep the output in the active handoff or Spec only. Do not modify tracked `CONTEXT.md`, ADRs, schemas, or code.
+Default mode keeps output in the active handoff or Spec. Do not modify tracked `CONTEXT.md`, ADRs,
+schemas, or code merely because domain modeling triggered.
 
-After the user approves the Spec, persistence becomes an explicit implementation-plan task with its
-own verification. When `docs/agent-workflow/project-context.md` exists, use its confirmed context
-and ADR locations; otherwise do not invent a project-wide documentation layout. This preserves the
-distinction between modeling a decision and implementing it.
+**Persistent documentation mode** is enabled only by an explicit `/grill-with-docs` request or direct
+user approval to maintain domain docs during the session. In that mode:
+
+1. Use the confirmed context and ADR locations from `docs/agent-workflow/project-context.md`.
+2. When a term becomes stable, show the exact glossary change and obtain write approval before
+   updating it inline.
+3. Offer an ADR only when the decision is hard to reverse, surprising without context and the result
+   of a real trade-off; show its path/content before writing.
+4. Keep `CONTEXT.md` implementation-free and keep ADRs concise.
+
+Outside that mode, persistence after an approved Spec remains an explicit implementation-plan task.
+If project context is absent, do not invent a documentation layout.
+
+### Glossary shape
+
+- Define only project-specific domain terms in one or two sentences.
+- Choose one canonical term and list misleading synonyms under `Avoid`.
+- A single-context repository uses root `CONTEXT.md`; a real multi-context repository uses
+  `CONTEXT-MAP.md` pointing to context-local glossaries.
+
+### ADR shape
+
+- Use the configured ADR directory and the next sequential number.
+- Lead with one short paragraph covering context, decision and reason.
+- Add status, alternatives or consequences only when they carry durable information.
 
 ## Examples
 

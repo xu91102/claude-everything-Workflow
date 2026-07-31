@@ -344,7 +344,7 @@ function checkSkillCategoryIndex() {
 
 function checkRouterTargets() {
   const expected = [
-    ["commands/code-review.md", ["agents/code-reviewer.md"]],
+    ["commands/code-review.md", ["skills/code-review/SKILL.md"]],
     [
       "commands/tdd.md",
       ["agents/tdd-guide.md", "skills/test-driven-development/SKILL.md"],

@@ -234,12 +234,13 @@ function checkRouteOrdering() {
 }
 
 function checkWorkflowDocuments() {
-  requireTokens("skills/discover-unknowns-zh/SKILL.md", [
-    "事实缺口",
+  requireTokens("skills/iterative-retrieval/SKILL.md", [
+    "事实、证据和盲点缺口",
+    "低成本",
+    "复杂、高风险、多文件或长周期",
     "skills/grilling/SKILL.md",
     "skills/spec-gate/SKILL.md",
-    "复杂、高风险、多文件或长周期本身不是触发条件",
-    "不要因为下一步会触碰生产代码或多文件改动就自动创建实施计划",
+    "返回 `skills/using-superpowers/SKILL.md`",
   ]);
   requireTokens("rules/01-base.md", [
     "默认最短闭环、按风险逐级升级",
@@ -298,9 +299,9 @@ function checkGrillingWorkflow() {
 }
 
 function checkSuperpowersRoutingConsistency() {
-  requireTokens("skills/discover-unknowns-zh/SKILL.md", [
+  requireTokens("skills/iterative-retrieval/SKILL.md", [
     "返回 `skills/using-superpowers/SKILL.md` 重新路由",
-    "不要用固定的后续 skill 枚举代替路由器",
+    "不要自行枚举或调用下一 skill",
   ]);
   requireTokens("rules/01-base.md", [
     "高风险边界识别优先于“需求清楚/易回滚”短路",
@@ -311,19 +312,236 @@ function checkSuperpowersRoutingConsistency() {
     "Spec Gate contract conflict",
   ]);
 
-  const unknowns = read("skills/discover-unknowns-zh/SKILL.md");
+  const retrieval = read("skills/iterative-retrieval/SKILL.md");
   for (const staleRoute of [
     "交接到 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans` skill",
     "再进入 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans`",
   ]) {
-    if (unknowns.includes(staleRoute)) {
+    if (retrieval.includes(staleRoute)) {
       fail(
-        "skills/discover-unknowns-zh/SKILL.md should return to the router " +
+        "skills/iterative-retrieval/SKILL.md should return to the router " +
           `instead of enumerating follow-up skills: ${staleRoute}`,
       );
     }
   }
 
+}
+
+function readCapabilityManifest(manifestPath) {
+  if (!exists(manifestPath)) {
+    fail(`${manifestPath} is missing`);
+    return null;
+  }
+  try {
+    return JSON.parse(read(manifestPath));
+  } catch (error) {
+    fail(`${manifestPath} is not valid JSON: ${error.message}`);
+    return null;
+  }
+}
+
+function checkCapabilityManifestHeader(manifest, manifestPath) {
+  const valid =
+    manifest.schema_version === 1 &&
+    manifest.upstream?.repository === "https://github.com/mattpocock/skills" &&
+    /^[0-9a-f]{40}$/.test(manifest.upstream?.commit || "") &&
+    manifest.upstream?.baseline === "promoted-engineering";
+  if (!valid) fail(`${manifestPath} has an invalid upstream contract`);
+}
+
+function checkCapabilityEntries(manifest, manifestPath) {
+  const expected = [
+    "ask-matt", "code-review", "codebase-design", "diagnosing-bugs",
+    "domain-modeling", "grill-with-docs", "implement",
+    "improve-codebase-architecture", "prototype", "research",
+    "resolving-merge-conflicts", "setup-matt-pocock-skills", "tdd",
+    "to-spec", "to-tickets", "triage", "wayfinder",
+  ].sort();
+  const capabilities = Array.isArray(manifest.capabilities)
+    ? manifest.capabilities
+    : [];
+  const actual = capabilities.map((entry) => entry.upstream).sort();
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    fail(`${manifestPath} must map all 17 promoted engineering capabilities`);
+  }
+  for (const entry of capabilities) {
+    if (!["covered", "adapted"].includes(entry.status)) {
+      fail(`${entry.upstream} is not capability-equivalent: ${entry.status}`);
+    }
+    if (!Array.isArray(entry.evidence) || entry.evidence.length === 0) {
+      fail(`${entry.upstream} has no local evidence files`);
+      continue;
+    }
+    for (const file of entry.evidence) {
+      if (!exists(file)) fail(`${entry.upstream} evidence is missing: ${file}`);
+    }
+  }
+}
+
+function checkCapabilitySupportDependencies(manifest, manifestPath) {
+  const dependencies = Array.isArray(manifest.support_dependencies)
+    ? manifest.support_dependencies
+    : [];
+  const handoff = dependencies.find((entry) => entry.upstream === "handoff");
+  const valid =
+    handoff?.source_group === "productivity" &&
+    ["covered", "adapted"].includes(handoff.status) &&
+    handoff.evidence?.includes("commands/handoff.md") &&
+    handoff.evidence?.includes("skills/handoff/SKILL.md");
+  if (!valid) {
+    fail(`${manifestPath} must map the engineering flow's handoff dependency`);
+  }
+}
+
+function checkCapabilityRouting() {
+  requireTokens("skills/using-superpowers/SKILL.md", [
+    "explicit workflow advice?",
+    "ask-workflow",
+    "explicit prototype or runnable design question?",
+    "skills/prototype/SKILL.md",
+    "primary-source research or cited research artifact?",
+    "skills/research/SKILL.md",
+    "huge effort beyond one session?",
+    "skills/wayfinder/SKILL.md",
+    "approved Spec requiring tracker tickets?",
+    "skills/to-tickets/SKILL.md",
+    "merge or rebase conflict?",
+    "skills/resolving-merge-conflicts/SKILL.md",
+    "fresh session or prototype branch?",
+    "skills/handoff/SKILL.md",
+  ]);
+}
+
+function checkCapabilityFiles() {
+  for (const file of [
+    "commands/ask-workflow.md",
+    "commands/grill-with-docs.md",
+    "commands/handoff.md",
+    "commands/implement.md",
+    "commands/improve-codebase-architecture.md",
+    "commands/to-tickets.md",
+    "commands/triage.md",
+    "commands/wayfinder.md",
+    "skills/codebase-design/SKILL.md",
+    "skills/handoff/SKILL.md",
+    "skills/improve-codebase-architecture/SKILL.md",
+    "skills/prototype/SKILL.md",
+    "skills/research/SKILL.md",
+    "skills/resolving-merge-conflicts/SKILL.md",
+    "skills/to-tickets/SKILL.md",
+    "skills/triage/SKILL.md",
+    "skills/wayfinder/SKILL.md",
+  ]) {
+    if (!exists(file)) fail(`${file} is missing`);
+  }
+}
+
+function checkDesignCapabilityContracts() {
+  requireTokens("skills/codebase-design/SKILL.md", [
+    "Module",
+    "Interface",
+    "Seam",
+    "Adapter",
+    "Leverage",
+    "Locality",
+    "deletion test",
+    "interface as the test surface",
+  ]);
+  requireTokens("skills/improve-codebase-architecture/SKILL.md", [
+    "deepening opportunities",
+    "skills/codebase-design/SKILL.md",
+    "skills/visual-companion/SKILL.md",
+    "explicit consent",
+    "skills/grilling/SKILL.md",
+  ]);
+  requireTokens("skills/prototype/SKILL.md", [
+    "Logic",
+    "Visual",
+    "throwaway",
+    "one command to run",
+    "Do not silently continue into production code",
+  ]);
+  requireTokens("skills/prototype/references/ui.md", [
+    "runnable in-project UI prototype",
+    "?variant=",
+    "real read-only data",
+    "production builds",
+    "exact URLs",
+  ]);
+}
+
+function checkDeliveryCapabilityContracts() {
+  requireTokens("skills/research/SKILL.md", [
+    "background subagent",
+    "primary sources",
+    "citing each claim",
+    "Markdown report",
+    ".unknowns/",
+  ]);
+  requireTokens("skills/resolving-merge-conflicts/SKILL.md", [
+    "primary sources",
+    "one hunk at a time",
+    "Do not abort",
+    "Git authorization",
+  ]);
+  requireTokens("skills/to-tickets/SKILL.md", [
+    "tracer bullet",
+    "blocking edges",
+    "vertical",
+    "Do not publish before approval",
+    "ready-for-agent",
+  ]);
+  requireTokens("skills/triage/SKILL.md", [
+    "needs-triage",
+    "needs-info",
+    "ready-for-agent",
+    "ready-for-human",
+    "wontfix",
+    "generated by AI during triage",
+    "obtain confirmation",
+  ]);
+  requireTokens("skills/wayfinder/SKILL.md", [
+    "Destination",
+    "Decisions so far",
+    "Not yet specified",
+    "frontier",
+    "one ticket per session",
+    "WAY_CLEAR",
+    "to-tickets",
+  ]);
+  requireTokens("skills/test-driven-development/SKILL.md", [
+    "Public Seam",
+    "测试和调用方应穿过同一个 seam",
+    "固定事实",
+    "真实系统边界",
+    "tracer bullet",
+  ]);
+  requireTokens("skills/handoff/SKILL.md", [
+    "temporary directory",
+    "private subdirectory",
+    "0700",
+    "exclusive creation",
+    "0600",
+    "delete the handoff after consumption",
+    "fresh session",
+    "Suggested skills",
+    "Do not duplicate",
+    "Redact",
+    "exact path",
+  ]);
+}
+
+function checkUpstreamCapabilityParity() {
+  const manifestPath = "scripts/upstream-capability-map.json";
+  const manifest = readCapabilityManifest(manifestPath);
+  if (!manifest) return;
+  checkCapabilityManifestHeader(manifest, manifestPath);
+  checkCapabilityEntries(manifest, manifestPath);
+  checkCapabilitySupportDependencies(manifest, manifestPath);
+  checkCapabilityRouting();
+  checkCapabilityFiles();
+  checkDesignCapabilityContracts();
+  checkDeliveryCapabilityContracts();
 }
 
 function checkRemovedSkillReferences() {
@@ -335,6 +553,53 @@ function checkRemovedSkillReferences() {
       }
     }
   }
+
+  const retiredSkills = ["discover-unknowns-zh", "skill-creator"];
+  const allowedRetirementFiles = new Set([
+    "README.md",
+    "scripts/retired-skill-files.json",
+  ]);
+
+  for (const skill of retiredSkills) {
+    if (exists(`skills/${skill}/SKILL.md`)) {
+      fail(`skills/${skill} should be retired`);
+    }
+    for (const file of managedFiles()) {
+      if (
+        isVerifierImplementation(file) ||
+        allowedRetirementFiles.has(file)
+      ) {
+        continue;
+      }
+      if (read(file).includes(skill)) {
+        fail(`${file} still references retired skill ${skill}`);
+      }
+    }
+  }
+
+  requireTokens("README.md", [
+    "Skill 迁移说明",
+    "`discover-unknowns-zh` 已退休",
+    "`iterative-retrieval`",
+    "`research`",
+    "`prototype`",
+    "`writing-plans`",
+    "`to-tickets`",
+    "`implementation-notes`、`explainer` 和 `quiz` 工件链不再属于",
+    "`skill-creator` 已退休",
+    "`rules/common/skills-learning.md`",
+    "scripts/upstream-capability-map.json",
+  ]);
+  requireTokens("scripts/retired-skill-files.json", retiredSkills);
+  requireTokens("skills/find-skills/SKILL.md", [
+    "name: find-skills",
+    "npx skills find",
+    "Verify Quality Before Recommending",
+  ]);
+  requireTokens("rules/common/skills-learning.md", [
+    "Skill 创建和更新遵循本规则",
+    "开放生态中的 skill 查找和安装由 `find-skills` 处理",
+  ]);
 }
 
 function checkForbiddenCommandDrift() {
@@ -376,6 +641,7 @@ function runWorkflowChecks(context) {
   checkSuperpowersArtifactPolicy();
   checkGrillingWorkflow();
   checkSuperpowersRoutingConsistency();
+  checkUpstreamCapabilityParity();
   runGrillingSpecGateChecks(context);
   checkRemovedSkillReferences();
   checkForbiddenCommandDrift();

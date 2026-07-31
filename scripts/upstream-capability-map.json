@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "upstream": {
+    "repository": "https://github.com/mattpocock/skills",
+    "commit": "2ab958093e83e0ec752e6c1c5932da465bf23e0c",
+    "checked_at": "2026-07-31",
+    "baseline": "promoted-engineering"
+  },
+  "capabilities": [
+    {
+      "upstream": "ask-matt",
+      "status": "adapted",
+      "evidence": [
+        "commands/ask-workflow.md",
+        "skills/using-superpowers/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "code-review",
+      "status": "adapted",
+      "evidence": [
+        "commands/code-review.md",
+        "skills/code-review/SKILL.md",
+        "skills/code-review/references/standards-reviewer-prompt.md",
+        "skills/code-review/references/spec-reviewer-prompt.md"
+      ]
+    },
+    {
+      "upstream": "codebase-design",
+      "status": "covered",
+      "evidence": [
+        "skills/codebase-design/SKILL.md",
+        "skills/codebase-design/references/deepening.md"
+      ]
+    },
+    {
+      "upstream": "diagnosing-bugs",
+      "status": "adapted",
+      "evidence": [
+        "skills/systematic-debugging/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "domain-modeling",
+      "status": "adapted",
+      "evidence": [
+        "skills/domain-modeling/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "grill-with-docs",
+      "status": "adapted",
+      "evidence": [
+        "commands/grill-with-docs.md",
+        "skills/grilling/SKILL.md",
+        "skills/domain-modeling/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "implement",
+      "status": "adapted",
+      "evidence": [
+        "commands/implement.md",
+        "skills/executing-plans/SKILL.md",
+        "skills/subagent-driven-development/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "improve-codebase-architecture",
+      "status": "adapted",
+      "evidence": [
+        "commands/improve-codebase-architecture.md",
+        "skills/improve-codebase-architecture/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "prototype",
+      "status": "adapted",
+      "evidence": [
+        "skills/prototype/SKILL.md",
+        "skills/prototype/references/logic.md",
+        "skills/visual-companion/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "research",
+      "status": "covered",
+      "evidence": [
+        "skills/research/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "resolving-merge-conflicts",
+      "status": "covered",
+      "evidence": [
+        "skills/resolving-merge-conflicts/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "setup-matt-pocock-skills",
+      "status": "adapted",
+      "evidence": [
+        "commands/setup-workflow.md",
+        "skills/project-context/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "tdd",
+      "status": "adapted",
+      "evidence": [
+        "commands/tdd.md",
+        "skills/test-driven-development/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "to-spec",
+      "status": "adapted",
+      "evidence": [
+        "commands/to-spec.md",
+        "skills/spec-gate/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "to-tickets",
+      "status": "adapted",
+      "evidence": [
+        "commands/to-tickets.md",
+        "skills/to-tickets/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "triage",
+      "status": "adapted",
+      "evidence": [
+        "commands/triage.md",
+        "skills/triage/SKILL.md"
+      ]
+    },
+    {
+      "upstream": "wayfinder",
+      "status": "adapted",
+      "evidence": [
+        "commands/wayfinder.md",
+        "skills/wayfinder/SKILL.md"
+      ]
+    }
+  ],
+  "support_dependencies": [
+    {
+      "upstream": "handoff",
+      "source_group": "productivity",
+      "status": "adapted",
+      "reason": "The promoted Engineering router requires it for prototype detours and context-window crossings.",
+      "evidence": [
+        "commands/handoff.md",
+        "skills/handoff/SKILL.md",
+        "skills/using-superpowers/SKILL.md"
+      ]
+    }
+  ]
+}
