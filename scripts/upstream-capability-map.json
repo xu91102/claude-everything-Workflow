@@ -69,7 +69,6 @@
       "upstream": "improve-codebase-architecture",
       "status": "adapted",
       "evidence": [
-        "commands/improve-codebase-architecture.md",
         "skills/improve-codebase-architecture/SKILL.md"
       ]
     },
@@ -124,7 +123,6 @@
       "upstream": "to-tickets",
       "status": "adapted",
       "evidence": [
-        "commands/to-tickets.md",
         "skills/to-tickets/SKILL.md"
       ]
     },
@@ -132,7 +130,6 @@
       "upstream": "triage",
       "status": "adapted",
       "evidence": [
-        "commands/triage.md",
         "skills/triage/SKILL.md"
       ]
     },
@@ -140,7 +137,6 @@
       "upstream": "wayfinder",
       "status": "adapted",
       "evidence": [
-        "commands/wayfinder.md",
         "skills/wayfinder/SKILL.md"
       ]
     }
@@ -152,7 +148,6 @@
       "status": "adapted",
       "reason": "The promoted Engineering router requires it for prototype detours and context-window crossings.",
       "evidence": [
-        "commands/handoff.md",
         "skills/handoff/SKILL.md",
         "skills/using-superpowers/SKILL.md"
       ]

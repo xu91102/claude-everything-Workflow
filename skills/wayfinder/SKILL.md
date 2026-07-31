@@ -1,6 +1,7 @@
 ---
 name: wayfinder
 description: "Plan a huge, foggy effort that exceeds one agent session as a shared map of decision tickets, work the unblocked frontier one ticket per session, and hand the resolved map to Spec/ticket planning. Use for multi-session uncertainty, not a well-scoped feature."
+disable-model-invocation: true
 ---
 
 # Wayfinder

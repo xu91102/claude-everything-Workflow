@@ -1,6 +1,7 @@
 ---
 name: handoff
-description: "Compact the current work into a redacted Markdown handoff for a fresh session. Use when the user explicitly requests /handoff, when a prototype detour needs an isolated session, or when the active context is leaving its reliable reasoning zone."
+description: "Compact the current work into a redacted Markdown handoff for a fresh session. Use when the user explicitly invokes this skill, when a prototype detour needs an isolated session, or when the active context is leaving its reliable reasoning zone."
+disable-model-invocation: true
 ---
 
 # Handoff
@@ -13,7 +14,7 @@ Origin: `mattpocock/skills@2ab9580`, adapted to this repository's write-safety a
 
 - Use only for a fresh session or an intentional prototype branch. Built-in compaction is for continuing
   the same conversation at a phase boundary.
-- Creating the handoff document is authorized only by an explicit `/handoff` request or explicit approval
+- Creating the handoff document is authorized only by explicit invocation or explicit approval
   after the router recommends it.
 - Resolve the operating system's temporary directory with the available runtime. Create a unique
   private subdirectory with mode `0700`; fail closed if permissions cannot be enforced. Do not write

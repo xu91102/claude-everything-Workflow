@@ -1,6 +1,7 @@
 ---
 name: to-tickets
 description: "Break an approved Spec, plan, issue, or conversation into tracer-bullet vertical-slice tickets with explicit blocking edges. Use for multi-session or tracker-coordinated delivery after requirements are resolved; require approval before publishing local or external tracker artifacts."
+disable-model-invocation: true
 ---
 
 # To Tickets

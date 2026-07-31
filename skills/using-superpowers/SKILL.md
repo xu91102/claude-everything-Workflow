@@ -62,8 +62,9 @@ Task arrives
   -> explicit /setup-workflow?                     -> project-context
   -> explicit /grill-with-docs?                    -> grilling explicit + domain-modeling persistent mode
   -> explicit /grill?                              -> grilling explicit
-  -> explicit /handoff or fresh session or prototype branch? -> skills/handoff/SKILL.md
-  -> explicit /triage?                             -> skills/triage/SKILL.md
+  -> explicit handoff or fresh session or prototype branch?
+                                                     -> skills/handoff/SKILL.md
+  -> explicit triage request?                      -> skills/triage/SKILL.md
   -> explicit /implement?                          -> validate approved plan/ticket, then implementation loop
   -> huge effort beyond one session?               -> skills/wayfinder/SKILL.md
   -> explicit architecture-health audit?           -> skills/improve-codebase-architecture/SKILL.md
@@ -106,9 +107,9 @@ delivery or `writing-plans` for a single-session delivery plan.
 ### Cross-session handoff
 
 When a prototype detour needs isolation or the current context is leaving its reliable reasoning zone,
-recommend `/handoff` and wait for explicit approval before creating the temporary document. The handoff
-ends the current flow; a fresh session references the returned path and enters this router again. Do not
-use handoff as a substitute for durable Specs, ADRs, tickets, or verification evidence.
+recommend the `handoff` Skill and wait for explicit approval before creating the temporary document.
+The handoff ends the current flow; a fresh session references the returned path and enters this router
+again. Do not use handoff as a substitute for durable Specs, ADRs, tickets, or verification evidence.
 
 ### Spec Gate blocked
 

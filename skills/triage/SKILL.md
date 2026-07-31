@@ -1,6 +1,7 @@
 ---
 name: triage
 description: "Move incoming issues and external pull requests through an evidence-based triage state machine: categorize, verify, gather missing information, and produce durable agent-ready briefs. Use only when the user asks to inspect or change tracker triage state."
+disable-model-invocation: true
 ---
 
 # Triage

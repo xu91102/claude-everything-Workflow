@@ -295,12 +295,10 @@ claude-everything-Workflow/
 | `/setup-workflow`  | 显式配置项目工作追踪、领域文档和 ADR 位置                  |
 | `/ask-workflow`    | 根据目标推荐最短工程流程                                   |
 | `/grill-with-docs` | 访谈决策并按授权同步领域词汇与 ADR                         |
-| `/handoff`         | 生成临时脱敏交接文档，供全新 session 接续                 |
 | `/implement`       | 从已批准 Spec、plan 或 agent-ready ticket 执行闭环         |
-| `/to-tickets`      | 拆分 tracer-bullet tickets 与 blocking edges               |
-| `/triage`          | 分诊 Issue/外部 PR 并形成 durable agent brief              |
-| `/wayfinder`       | 维护跨 session 的 decision-ticket map                      |
-| `/improve-codebase-architecture` | 扫描 deepening 机会并进入架构决策闭环          |
+
+`handoff`、`to-tickets`、`triage`、`wayfinder` 和 `improve-codebase-architecture`
+直接以 Skill 形式由中央路由调用，不再增加同名薄包装 command。
 
 ## 验证 Harness
 

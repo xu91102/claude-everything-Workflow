@@ -1,6 +1,7 @@
 ---
 name: improve-codebase-architecture
 description: "Scan a codebase for deepening opportunities, present a visual architecture report, and grill through a selected candidate. Use for explicit architecture-health, deep-module, seam, testability, or AI-navigability audits; default to read-only analysis."
+disable-model-invocation: true
 ---
 
 # Improve Codebase Architecture

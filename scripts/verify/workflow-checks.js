@@ -386,8 +386,8 @@ function checkCapabilitySupportDependencies(manifest, manifestPath) {
   const valid =
     handoff?.source_group === "productivity" &&
     ["covered", "adapted"].includes(handoff.status) &&
-    handoff.evidence?.includes("commands/handoff.md") &&
-    handoff.evidence?.includes("skills/handoff/SKILL.md");
+    handoff.evidence?.includes("skills/handoff/SKILL.md") &&
+    !handoff.evidence?.includes("commands/handoff.md");
   if (!valid) {
     fail(`${manifestPath} must map the engineering flow's handoff dependency`);
   }
@@ -416,12 +416,7 @@ function checkCapabilityFiles() {
   for (const file of [
     "commands/ask-workflow.md",
     "commands/grill-with-docs.md",
-    "commands/handoff.md",
     "commands/implement.md",
-    "commands/improve-codebase-architecture.md",
-    "commands/to-tickets.md",
-    "commands/triage.md",
-    "commands/wayfinder.md",
     "skills/codebase-design/SKILL.md",
     "skills/handoff/SKILL.md",
     "skills/improve-codebase-architecture/SKILL.md",
@@ -433,6 +428,16 @@ function checkCapabilityFiles() {
     "skills/wayfinder/SKILL.md",
   ]) {
     if (!exists(file)) fail(`${file} is missing`);
+  }
+
+  for (const file of [
+    "commands/handoff.md",
+    "commands/improve-codebase-architecture.md",
+    "commands/to-tickets.md",
+    "commands/triage.md",
+    "commands/wayfinder.md",
+  ]) {
+    if (exists(file)) fail(`${file} is a redundant Skill wrapper`);
   }
 }
 
@@ -448,6 +453,7 @@ function checkDesignCapabilityContracts() {
     "interface as the test surface",
   ]);
   requireTokens("skills/improve-codebase-architecture/SKILL.md", [
+    "disable-model-invocation: true",
     "deepening opportunities",
     "skills/codebase-design/SKILL.md",
     "skills/visual-companion/SKILL.md",
@@ -485,6 +491,7 @@ function checkDeliveryCapabilityContracts() {
     "Git authorization",
   ]);
   requireTokens("skills/to-tickets/SKILL.md", [
+    "disable-model-invocation: true",
     "tracer bullet",
     "blocking edges",
     "vertical",
@@ -492,6 +499,7 @@ function checkDeliveryCapabilityContracts() {
     "ready-for-agent",
   ]);
   requireTokens("skills/triage/SKILL.md", [
+    "disable-model-invocation: true",
     "needs-triage",
     "needs-info",
     "ready-for-agent",
@@ -501,6 +509,7 @@ function checkDeliveryCapabilityContracts() {
     "obtain confirmation",
   ]);
   requireTokens("skills/wayfinder/SKILL.md", [
+    "disable-model-invocation: true",
     "Destination",
     "Decisions so far",
     "Not yet specified",
@@ -517,6 +526,7 @@ function checkDeliveryCapabilityContracts() {
     "tracer bullet",
   ]);
   requireTokens("skills/handoff/SKILL.md", [
+    "disable-model-invocation: true",
     "temporary directory",
     "private subdirectory",
     "0700",
