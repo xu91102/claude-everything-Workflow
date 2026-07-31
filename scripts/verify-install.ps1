@@ -65,7 +65,7 @@ try {
     if ($JunctionStatus -eq 0) {
         throw "PowerShell installer accepted a junctioned skills target"
     }
-    if ((Get-ChildItem -LiteralPath $ExternalSkills -Force).Count -ne 0) {
+    if (@(Get-ChildItem -LiteralPath $ExternalSkills -Force).Count -ne 0) {
         throw "PowerShell installer wrote through a junction before rejecting it"
     }
 
@@ -80,7 +80,7 @@ try {
     $RootJunctionStatus = Invoke-Installer -FixtureHome $RootJunctionHome
     if (
         $RootJunctionStatus -eq 0 -or
-        (Get-ChildItem -LiteralPath $ExternalRoot -Force).Count -ne 0
+        @(Get-ChildItem -LiteralPath $ExternalRoot -Force).Count -ne 0
     ) {
         throw "PowerShell installer wrote before rejecting a junctioned install root"
     }
@@ -119,7 +119,11 @@ try {
     New-Item -ItemType Directory -Path (Split-Path -Parent $ActiveSkill) -Force | Out-Null
     Set-Content -LiteralPath $ActiveSkill -Value "user customized active skill"
     $ActiveStatus = Invoke-Installer -FixtureHome $ActiveHome
-    $ActiveBackups = Get-ChildItem -LiteralPath (Split-Path -Parent $ActiveSkill) -Filter "SKILL.md.distribution-backup-*"
+    $ActiveBackups = @(
+        Get-ChildItem `
+            -LiteralPath (Split-Path -Parent $ActiveSkill) `
+            -Filter "SKILL.md.distribution-backup-*"
+    )
     if ($ActiveStatus -ne 0 -or $ActiveBackups.Count -ne 1) {
         throw "PowerShell installer did not back up a customized active file"
     }
@@ -153,7 +157,11 @@ try {
     Set-Content -LiteralPath $RetiredSkill -Value "user customized retired skill"
     Set-Content -LiteralPath $Sentinel -Value "do not replace"
     $RetiredStatus = Invoke-Installer -FixtureHome $RetiredHome
-    $RetiredBackups = Get-ChildItem -LiteralPath (Split-Path -Parent $RetiredSkill) -Filter "SKILL.md.retired-backup-*"
+    $RetiredBackups = @(
+        Get-ChildItem `
+            -LiteralPath (Split-Path -Parent $RetiredSkill) `
+            -Filter "SKILL.md.retired-backup-*"
+    )
     if (
         $RetiredStatus -eq 0 -or
         (Get-Content -LiteralPath $Sentinel -Raw).Trim() -ne "do not replace" -or
