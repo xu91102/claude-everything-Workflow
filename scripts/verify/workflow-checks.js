@@ -396,7 +396,9 @@ function checkCapabilitySupportDependencies(manifest, manifestPath) {
 function checkCapabilityRouting() {
   requireTokens("skills/using-superpowers/SKILL.md", [
     "explicit workflow advice?",
-    "ask-workflow",
+    "workflow advice mode",
+    "explicit implementation request?",
+    "skills/implement/SKILL.md",
     "explicit prototype or runnable design question?",
     "skills/prototype/SKILL.md",
     "primary-source research or cited research artifact?",
@@ -414,11 +416,9 @@ function checkCapabilityRouting() {
 
 function checkCapabilityFiles() {
   for (const file of [
-    "commands/ask-workflow.md",
-    "commands/grill-with-docs.md",
-    "commands/implement.md",
     "skills/codebase-design/SKILL.md",
     "skills/handoff/SKILL.md",
+    "skills/implement/SKILL.md",
     "skills/improve-codebase-architecture/SKILL.md",
     "skills/prototype/SKILL.md",
     "skills/research/SKILL.md",
@@ -431,7 +431,10 @@ function checkCapabilityFiles() {
   }
 
   for (const file of [
+    "commands/ask-workflow.md",
+    "commands/grill-with-docs.md",
     "commands/handoff.md",
+    "commands/implement.md",
     "commands/improve-codebase-architecture.md",
     "commands/to-tickets.md",
     "commands/triage.md",

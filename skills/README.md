@@ -12,6 +12,7 @@
 - `subagent-driven-development`：用户批准 commit/PR/SDD handling 后的任务拆分、审查和进度账本。
 - `using-git-worktrees`：脏工作区、高风险或并行任务的隔离工作区准备。
 - `to-tickets`：把已批准工作拆成 tracer-bullet tickets 和 blocking graph。
+- `implement`：从已批准 Spec、plan 或 frontier ticket 执行 claim、TDD、审查、验证与 resolve。
 - `wayfinder`：为跨 session 的模糊工作维护 decision-ticket map/frontier。
 - `triage`：对 Issue/外部 PR 分类、验证并形成 agent-ready brief。
 - `handoff`：将当前上下文脱敏压缩到临时 Markdown，供全新 session 接续。

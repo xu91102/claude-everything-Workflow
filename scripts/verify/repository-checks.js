@@ -259,7 +259,8 @@ function checkProjectContextContracts() {
 }
 
 function checkTrackerDeliveryLifecycle() {
-  requireTokens("commands/implement.md", [
+  requireTokens("skills/implement/SKILL.md", [
+    "disable-model-invocation: true",
     "docs/agent-workflow/project-context.md",
     "pre-ticket base",
     "ticket as the Spec source",

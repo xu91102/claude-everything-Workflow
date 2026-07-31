@@ -11,7 +11,6 @@
       "upstream": "ask-matt",
       "status": "adapted",
       "evidence": [
-        "commands/ask-workflow.md",
         "skills/using-superpowers/SKILL.md"
       ]
     },
@@ -51,7 +50,6 @@
       "upstream": "grill-with-docs",
       "status": "adapted",
       "evidence": [
-        "commands/grill-with-docs.md",
         "skills/grilling/SKILL.md",
         "skills/domain-modeling/SKILL.md"
       ]
@@ -60,7 +58,7 @@
       "upstream": "implement",
       "status": "adapted",
       "evidence": [
-        "commands/implement.md",
+        "skills/implement/SKILL.md",
         "skills/executing-plans/SKILL.md",
         "skills/subagent-driven-development/SKILL.md"
       ]

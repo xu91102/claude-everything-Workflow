@@ -79,5 +79,5 @@ TICKETS_PUBLISHED
 - next implementable tickets
 ```
 
-An approved ticket is an implementation contract. `/implement` may execute one frontier ticket in a
-fresh context without regenerating the whole project plan.
+An approved ticket is an implementation contract. The `implement` Skill may execute one frontier
+ticket in a fresh context without regenerating the whole project plan.

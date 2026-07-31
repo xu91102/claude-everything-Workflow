@@ -293,12 +293,10 @@ claude-everything-Workflow/
 | `/e2e`             | 薄封装入口，委派 `e2e-runner` agent 和 `e2e-testing` skill |
 | `/harness-audit`   | 薄封装入口，委派 `harness-optimizer` agent                 |
 | `/setup-workflow`  | 显式配置项目工作追踪、领域文档和 ADR 位置                  |
-| `/ask-workflow`    | 根据目标推荐最短工程流程                                   |
-| `/grill-with-docs` | 访谈决策并按授权同步领域词汇与 ADR                         |
-| `/implement`       | 从已批准 Spec、plan 或 agent-ready ticket 执行闭环         |
 
-`handoff`、`to-tickets`、`triage`、`wayfinder` 和 `improve-codebase-architecture`
-直接以 Skill 形式由中央路由调用，不再增加同名薄包装 command。
+新增的上游等价能力全部以 Skill 形式由中央路由调用，不增加薄包装 command。其中
+`using-superpowers` 提供只读流程建议，`grilling` 与 `domain-modeling` 组合带文档访谈，
+`implement` 执行已批准工作的交付闭环。
 
 ## 验证 Harness
 
@@ -349,7 +347,7 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
   -> 多 session/tracker 交付：to-tickets 拆垂直切片和 blocking edges
   -> using-git-worktrees 按需创建隔离工作区
   -> 单 session：writing-plans 写实施计划
-  -> /implement 先 claim frontier ticket，再按计划调用 subagent-driven-development / executing-plans
+  -> implement Skill 先 claim frontier ticket，再按计划调用 subagent-driven-development / executing-plans
   -> TDD 红绿重构
   -> 需求符合性审查
   -> 代码质量审查

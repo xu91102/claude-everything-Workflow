@@ -67,8 +67,8 @@ If an unresolved item changes product meaning, ownership, a public contract, per
 Default mode keeps output in the active handoff or Spec. Do not modify tracked `CONTEXT.md`, ADRs,
 schemas, or code merely because domain modeling triggered.
 
-**Persistent documentation mode** is enabled only by an explicit `/grill-with-docs` request or direct
-user approval to maintain domain docs during the session. In that mode:
+**Persistent documentation mode** is enabled only by an explicit documented grilling request or
+direct user approval to maintain domain docs during the session. In that mode:
 
 1. Use the confirmed context and ADR locations from `docs/agent-workflow/project-context.md`.
 2. When a term becomes stable, show the exact glossary change and obtain write approval before

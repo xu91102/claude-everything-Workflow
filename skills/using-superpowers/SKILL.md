@@ -58,14 +58,14 @@ Use process skills before implementation skills:
 
 ```text
 Task arrives
-  -> explicit workflow advice?                    -> /ask-workflow advice mode
+  -> explicit workflow advice?                    -> workflow advice mode
   -> explicit /setup-workflow?                     -> project-context
-  -> explicit /grill-with-docs?                    -> grilling explicit + domain-modeling persistent mode
+  -> explicit documented grilling request?        -> grilling explicit + domain-modeling persistent mode
   -> explicit /grill?                              -> grilling explicit
   -> explicit handoff or fresh session or prototype branch?
                                                      -> skills/handoff/SKILL.md
   -> explicit triage request?                      -> skills/triage/SKILL.md
-  -> explicit /implement?                          -> validate approved plan/ticket, then implementation loop
+  -> explicit implementation request?             -> skills/implement/SKILL.md
   -> huge effort beyond one session?               -> skills/wayfinder/SKILL.md
   -> explicit architecture-health audit?           -> skills/improve-codebase-architecture/SKILL.md
   -> merge or rebase conflict?                     -> skills/resolving-merge-conflicts/SKILL.md
@@ -79,7 +79,7 @@ Task arrives
   -> explicit formal Spec or high-risk boundary?   -> spec-gate
   -> approved Spec requiring tracker tickets?      -> skills/to-tickets/SKILL.md
   -> approved Spec, single-session plan missing?   -> writing-plans
-  -> approved agent-ready ticket?                  -> /implement ticket loop
+  -> approved agent-ready ticket?                  -> skills/implement/SKILL.md
   -> approved plan + SDD/commit approved?          -> subagent-driven-development
   -> approved plan, no commit approval?            -> executing-plans
   -> behavior change with a test path?             -> test-driven-development
@@ -93,6 +93,11 @@ Task arrives
 A high-risk boundary is a costly-to-reverse architecture or service boundary, public-contract compatibility, authentication or authorization boundary, persistent data/schema migration, or irreversible external side effect. Record this classification before grilling so its handoff can resume `spec-gate`.
 
 ## Process Outcomes
+
+### Workflow advice mode
+
+只返回推荐入口与原因、前置条件、需要补齐的用户决策或 Spec/tickets/map/handoff，以及直到
+审查和验证的闭环路径。不要调用下一 Skill、写文件或修改 tracker。
 
 ### Grilling handoff
 

@@ -46,7 +46,7 @@ description: 提交、推送和创建 Pull Request 的标准工作流
 
 若当前工作来自 tracker ticket，在 commit/PR 描述中加入不会误触发关闭的 ticket reference
 及验证摘要。创建 PR does not authorize closing、resolve、改 label 或解锁其他 ticket；
-这些 mutation 仍由 `/implement` 的完成门禁和外部写确认负责。
+这些 mutation 仍由 `implement` Skill 的完成门禁和外部写确认负责。
 
 ## 验证选择
 
