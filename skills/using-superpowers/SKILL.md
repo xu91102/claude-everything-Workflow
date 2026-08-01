@@ -70,7 +70,7 @@ Task arrives
   -> behavior change with a test path?             -> test-driven-development
   -> dirty worktree or risky branch work?          -> consider using-git-worktrees
   -> completion, fixed, or ready claim?            -> verification-before-completion
-  -> external skill learning or edit?              -> skill-creator + skills-learning
+  -> external skill learning or edit?              -> rules/common/skills-learning.md
   -> otherwise                                     -> shortest applicable loop
 ```
 
