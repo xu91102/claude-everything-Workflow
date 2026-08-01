@@ -21,7 +21,7 @@ version: 2.1.0
 - **Project instinct**：默认作用域，只服务当前项目，避免跨项目污染。
 - **Global instinct**：经用户确认后才跨项目应用。
 - **Confidence**：`0.3/0.5/0.7/0.9`，不会因时间自动衰减；长期未观察只进入待审查。
-- **Promotion**：先 `/promote --dry-run` 预览，再由用户确认是否 `--apply`。
+- **Promotion**：先 `/learn promote --dry-run` 预览，再由用户确认是否 `--apply`。
 
 ## 数据布局
 
@@ -41,12 +41,12 @@ ${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus/
 
 | 命令 | 作用 |
 | --- | --- |
-| `/learn-eval` | 从当前会话提取可复用模式，保存前走质量门 |
-| `/instinct-status --review` | 调用 `scripts/learning/review-confidence.js` 审查 project/global/legacy instincts |
-| `/projects` | 调用 `scripts/learning/projects.js` 查看项目注册表 |
-| `/promote --dry-run` | 调用 `scripts/learning/promote.js` 预览 project -> global |
-| `/evolve` | 聚类 instinct，评估是否演化为 skill/command/agent |
-| `/prune` | 只清理人工标记删除、拒绝或归档的 instinct |
+| `/learn eval` | 从当前会话提取可复用模式，保存前走质量门 |
+| `/learn status --review` | 调用 `scripts/learning/review-confidence.js` 审查 project/global/legacy instincts |
+| `/learn projects` | 调用 `scripts/learning/projects.js` 查看项目注册表 |
+| `/learn promote --dry-run` | 调用 `scripts/learning/promote.js` 预览 project -> global |
+| `/learn evolve` | 聚类 instinct，评估是否演化为 skill/command/agent |
+| `/learn prune` | 只清理人工标记删除、拒绝或归档的 instinct |
 
 ## 脚本入口
 

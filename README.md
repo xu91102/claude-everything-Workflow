@@ -131,21 +131,11 @@ claude-everything-Workflow/
 │   └── ...                     # 其他专业代理
 │
 ├── commands/                   # 命令（斜杠快捷入口）
-│   ├── pr.md                   # /pr 提交与创建 PR
-│   ├── verify.md               # /verify 验证
-│   ├── learn-eval.md           # /learn-eval 提取模式 (含质量门)
-│   ├── instinct-status.md      # /instinct-status 状态与待审查
-│   ├── projects.md             # /projects 查看学习项目注册表
-│   ├── promote.md              # /promote 预览/推广项目直觉
-│   ├── prune.md                # /prune 清理已标记直觉
-│   ├── evolve.md               # /evolve 演化评估
 │   ├── code-review.md          # /code-review → code-reviewer
-│   ├── tdd.md                  # /tdd → tdd-guide
-│   ├── e2e.md                  # /e2e → e2e-runner
-│   ├── grill.md                # /grill → grilling
+│   ├── learn.md                # /learn 统一学习管理
+│   ├── pr.md                   # /pr 提交与创建 PR
 │   ├── to-spec.md              # /to-spec → spec-gate
-│   ├── setup-workflow.md        # /setup-workflow → project-context
-│   └── harness-audit.md        # /harness-audit → harness-optimizer
+│   └── verify.md               # /verify 验证
 │
 ├── references/                 # 按需加载的长参考材料
 │   └── agents/                 # Agent 详细检查清单与示例
@@ -278,21 +268,13 @@ claude-everything-Workflow/
 
 ## 可用命令
 
-| 命令               | 功能                                                       |
-| ------------------ | ---------------------------------------------------------- |
-| `/pr`              | 提交、推送和创建 PR 的标准工作流                           |
-| `/verify`          | 运行全面验证检查                                           |
-| `/learn-eval`      | 从会话提取模式 (含质量门评估)                              |
-| `/instinct-status` | 查看学习状态和待审查报告                                   |
-| `/projects`        | 查看 Continuous Learning 项目注册表                        |
-| `/promote`         | 预览或推广项目级直觉到全局直觉                             |
-| `/prune`           | 清理已人工标记删除、拒绝或归档的直觉                       |
-| `/evolve`          | 评估模式是否值得演化为 skill、agent 或 command             |
-| `/code-review`     | 固定基点下并行执行隔离的 Standards 轴与 Spec 轴审查       |
-| `/tdd`             | 薄封装入口，委派 `tdd-guide` agent                         |
-| `/e2e`             | 薄封装入口，委派 `e2e-runner` agent 和 `e2e-testing` skill |
-| `/harness-audit`   | 薄封装入口，委派 `harness-optimizer` agent                 |
-| `/setup-workflow`  | 显式配置项目工作追踪、领域文档和 ADR 位置                  |
+| 命令 | 功能 |
+| --- | --- |
+| `/to-spec` | 正式工程 Spec 的显式决策门 |
+| `/code-review` | 固定基点下并行执行隔离的 Standards 轴与 Spec 轴审查 |
+| `/verify` | 运行全面验证检查 |
+| `/pr` | 提交、推送和创建 PR 的标准工作流 |
+| `/learn` | 统一管理学习评估、状态、项目、推广、清理与演化 |
 
 新增的上游等价能力全部以 Skill 形式由中央路由调用，不增加薄包装 command。其中
 `using-superpowers` 提供只读流程建议，`grilling` 与 `domain-modeling` 组合带文档访谈，
@@ -355,10 +337,10 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
   -> ticket 验收、双轴审查和验证通过后 resolve，并返回 newly unlocked frontier
   -> /verify 质量门
   -> /pr 提交/PR
-  -> /learn-eval --preview 学习沉淀
+  -> /learn eval --preview 学习沉淀
 ```
 
-需要显式压力测试计划、设计或重大决策时使用 `/grill`；需要正式工程 Spec 时使用 `/to-spec`。显式 grilling 会话保留共同理解确认；自动触发只使用更短的微型访谈。明确任务、多文件任务、普通行为变化和可查事实不会因此增加交互轮数。
+需要压力测试计划、设计或重大决策时直接提出 grilling 请求；需要正式工程 Spec 时使用 `/to-spec`。显式 grilling 会话保留共同理解确认；自动触发只使用更短的微型访谈。明确任务、多文件任务、普通行为变化和可查事实不会因此增加交互轮数。
 
 旧入口名 `brainstorming` 兼容一个发布周期：中央路由会提示迁移并按 formal Spec 请求处理，但不再安装或发现同名 Skill。`grilling` 是唯一需求澄清引擎，`spec-gate` 只负责零访谈成稿、自审和用户批准。
 
@@ -398,7 +380,7 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 
 复杂度只影响执行与验证强度，不自动触发完整流程。普通新功能、多文件行为变化和存在低风险关键未知的任务仍走最短适用闭环；只有上述高风险类别或显式 opt-in 才进入完整流程。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
 
-收尾阶段按 `/verify` -> `/pr` -> `/learn-eval --preview` 推进。`/learn-eval --preview` 是非阻塞学习建议门，只在模式高频、稳定、可复用时保存。
+收尾阶段按 `/verify` -> `/pr` -> `/learn eval --preview` 推进。`/learn eval --preview` 是非阻塞学习建议门，只在模式高频、稳定、可复用时保存。
 
 ## Continuous Learning v2
 
@@ -411,16 +393,16 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
                             ↓
                projects/<project-id>/instincts/
                   ↓                    ↓
-       /learn-eval 质量门     /promote 预览推广
+       /learn eval 质量门     /learn promote 预览推广
                   ↓                    ↓
         skills/learn/<category>/   global/instincts
                   ↓
-        /evolve 评估是否升级为正式 skills/commands/agents
+        /learn evolve 评估是否升级为正式 skills/commands/agents
 ```
 
 默认学习数据根目录为 `${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus`。旧版 `~/.claude/homunculus` 可用 `node scripts/learning/migrate-homunculus.js --dry-run` 预览迁移。
 
-`observations.jsonl`、project instincts 和 global instincts 是观察、候选和迁移来源；经 `/learn-eval` 质量门确认后，最终学习产物以 `skills/learn/<category>/` 为权威路径。只有高频、稳定、可组合的模式才通过 `/evolve` 升级为正式 `skills/`、`commands/` 或 `agents/`。
+`observations.jsonl`、project instincts 和 global instincts 是观察、候选和迁移来源；经 `/learn eval` 质量门确认后，最终学习产物以 `skills/learn/<category>/` 为权威路径。只有高频、稳定、可组合的模式才通过 `/learn evolve` 升级为正式 `skills/`、`commands/` 或 `agents/`。
 
 ### 置信度系统
 
@@ -431,23 +413,19 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 | 0.7  | 强     | 主动应用     |
 | 0.9  | 核心   | 始终应用     |
 
-> 置信度不会因时间流逝自动衰减。使用 `scripts/learning/review-confidence.js` 审查、`/prune` 清理。
+> 置信度不会因时间流逝自动衰减。使用 `scripts/learning/review-confidence.js` 审查、`/learn prune` 清理。
 
 ## 使用流程
 
 ```
 1. 复制到 ~/.claude/
-2. 首次需要长期协作上下文时，用 `/setup-workflow` 配置工作追踪和领域文档位置；需求清楚时直接实现；关键未知按需用 `/grill`；高风险任务或显式 opt-in 用 `/to-spec` 写 design spec
+2. 首次需要长期协作上下文时，直接请求配置 project context；需求清楚时直接实现；关键未知按需请求 grilling；高风险任务或显式 opt-in 用 `/to-spec` 写 design spec
 3. 高风险或并行实现前，用 `using-git-worktrees` 隔离工作区
 4. 用 `writing-plans` 写实施计划
 5. 用 `executing-plans` 按计划执行
-6. 使用 /tdd 委派 tdd-guide 规划测试先行实现
-7. 关键路径使用 /e2e 委派 e2e-runner 维护 Playwright
-8. 使用 /verify 验证
-9. 使用 /code-review 基于固定基点并行执行隔离的 Standards/Spec 双轴审查
-10. 使用 /learn-eval 将稳定模式沉淀到 skills/learn/<category>/
-11. 使用 /projects 查看项目级学习来源
-12. 使用 /promote --dry-run 评估是否推广为全局直觉
-13. 使用 /evolve 评估是否演化
-14. 使用 /prune 清理已人工标记删除的直觉
+6. 由中央路由调用 test-driven-development 和 tdd-guide 执行测试先行实现
+7. 关键路径由 e2e-testing 和 e2e-runner 维护 Playwright
+8. 使用 /code-review 基于固定基点并行执行隔离的 Standards/Spec 双轴审查
+9. 使用 /verify 验证，通过后使用 /pr 进入提交与 PR 门
+10. 使用 /learn eval、/learn projects、/learn promote、/learn evolve 或 /learn prune 管理学习闭环
 ```

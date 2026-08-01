@@ -150,6 +150,17 @@ remove_obsolete_workflow_paths() {
     local dir
 
     for file in \
+        "commands/e2e.md" \
+        "commands/evolve.md" \
+        "commands/grill.md" \
+        "commands/harness-audit.md" \
+        "commands/instinct-status.md" \
+        "commands/learn-eval.md" \
+        "commands/projects.md" \
+        "commands/promote.md" \
+        "commands/prune.md" \
+        "commands/setup-workflow.md" \
+        "commands/tdd.md" \
         "scripts/hooks/run-with-flags.js" \
         "scripts/hooks/commit-quality.js" \
         "scripts/hooks/session-start.js" \

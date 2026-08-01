@@ -23,6 +23,19 @@ function checkCommands() {
         .filter((file) => file.endsWith(".md"))
         .sort()
     : [];
+  const expectedCommands = [
+    "code-review.md",
+    "learn.md",
+    "pr.md",
+    "to-spec.md",
+    "verify.md",
+  ];
+
+  if (JSON.stringify(commands) !== JSON.stringify(expectedCommands)) {
+    fail(
+      `commands must expose exactly: ${expectedCommands.join(", ")}; found: ${commands.join(", ")}`,
+    );
+  }
 
   if (!exists("README.md")) {
     fail("README.md is missing");
@@ -49,6 +62,18 @@ function checkCommands() {
       );
     }
   }
+
+  requireTokens("commands/learn.md", [
+    "/learn eval",
+    "/learn status",
+    "/learn projects",
+    "/learn promote",
+    "/learn prune",
+    "/learn evolve",
+    "scripts/learning/review-confidence.js",
+    "scripts/learning/projects.js",
+    "scripts/learning/promote.js",
+  ]);
 }
 
 function checkReadmeTreePaths() {
@@ -130,6 +155,28 @@ function checkInstallRuntimePolicy() {
     }
     if (!sh.includes(`copy_dir ${dir} "$dest"`)) {
       fail(`scripts/install.sh shared dirs should include ${dir}`);
+    }
+  }
+
+  const retiredCommands = [
+    "e2e.md",
+    "evolve.md",
+    "grill.md",
+    "harness-audit.md",
+    "instinct-status.md",
+    "learn-eval.md",
+    "projects.md",
+    "promote.md",
+    "prune.md",
+    "setup-workflow.md",
+    "tdd.md",
+  ];
+  for (const command of retiredCommands) {
+    if (!sh.includes(`commands/${command}`)) {
+      fail(`scripts/install.sh should remove retired commands/${command}`);
+    }
+    if (!ps.includes(`commands\\${command}`)) {
+      fail(`scripts/install.ps1 should remove retired commands/${command}`);
     }
   }
 
@@ -279,12 +326,11 @@ function checkLearningPathPolicy() {
     "skills/learn/<category>/",
     "观察、候选和迁移来源",
   ]);
-  requireTokens("commands/evolve.md", [
+  requireTokens("commands/learn.md", [
+    "/learn eval",
+    "/learn evolve",
     "skills/learn/<category>/",
     "候选证据来源",
-  ]);
-  requireTokens("commands/learn-eval.md", [
-    "skills/learn/<category>/",
     "权威学习产物",
   ]);
   requireTokens("rules/common/skills-learning.md", [
@@ -345,18 +391,8 @@ function checkSkillCategoryIndex() {
 function checkRouterTargets() {
   const expected = [
     ["commands/code-review.md", ["skills/code-review/SKILL.md"]],
-    [
-      "commands/tdd.md",
-      ["agents/tdd-guide.md", "skills/test-driven-development/SKILL.md"],
-    ],
-    [
-      "commands/e2e.md",
-      ["agents/e2e-runner.md", "skills/e2e-testing/SKILL.md"],
-    ],
-    ["commands/harness-audit.md", ["agents/harness-optimizer.md"]],
-    ["commands/grill.md", ["skills/grilling/SKILL.md"]],
+    ["commands/learn.md", ["skills/continuous-learning-v2/SKILL.md"]],
     ["commands/to-spec.md", ["skills/spec-gate/SKILL.md"]],
-    ["commands/setup-workflow.md", ["skills/project-context/SKILL.md"]],
   ];
 
   for (const [command, targets] of expected) {

@@ -21,8 +21,8 @@ const ROUTING_SCENARIOS = [
     }],
   },
   {
-    name: "explicit /grill",
-    checks: [{ file: "skills/using-superpowers/SKILL.md", tokens: ["explicit /grill", "grilling explicit"] }],
+    name: "explicit grilling request",
+    checks: [{ file: "skills/using-superpowers/SKILL.md", tokens: ["explicit grilling request", "grilling explicit"] }],
   },
   {
     name: "clear breaking public API migration",

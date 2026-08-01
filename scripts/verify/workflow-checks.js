@@ -45,7 +45,7 @@ function checkSuperpowersDevLoop() {
     "没有 review 不标记任务完成",
     "没有新鲜验证证据，不声明完成、通过、已修复或 ready",
     "没有 verify，不进入 PR",
-    "`/learn-eval --preview` 是非阻塞学习建议门",
+    "`/learn eval --preview` 是非阻塞学习建议门",
   ]);
 
   requireTokens("rules/01-base.md", [
@@ -281,7 +281,7 @@ function checkComplexityRules() {
     );
   }
   requireTokens("README.md", [
-    "`/grill`",
+    "直接提出 grilling 请求",
     "`/to-spec`",
     "`grilling` 是唯一需求澄清引擎",
     "默认最短闭环",
@@ -397,6 +397,13 @@ function checkCapabilityRouting() {
   requireTokens("skills/using-superpowers/SKILL.md", [
     "explicit workflow advice?",
     "workflow advice mode",
+    "explicit TDD request?",
+    "agents/tdd-guide.md",
+    "explicit E2E or Playwright request?",
+    "skills/e2e-testing/SKILL.md",
+    "agents/e2e-runner.md",
+    "explicit harness audit?",
+    "agents/harness-optimizer.md",
     "User-invoked Delivery Gates",
     "explicit /to-tickets?",
     "recommend `to-tickets`; wait for explicit invocation",
@@ -448,10 +455,21 @@ function checkCapabilityFiles() {
 
   for (const file of [
     "commands/ask-workflow.md",
+    "commands/e2e.md",
+    "commands/evolve.md",
+    "commands/grill.md",
     "commands/grill-with-docs.md",
     "commands/handoff.md",
+    "commands/harness-audit.md",
     "commands/implement.md",
     "commands/improve-codebase-architecture.md",
+    "commands/instinct-status.md",
+    "commands/learn-eval.md",
+    "commands/projects.md",
+    "commands/promote.md",
+    "commands/prune.md",
+    "commands/setup-workflow.md",
+    "commands/tdd.md",
     "commands/to-tickets.md",
     "commands/triage.md",
     "commands/wayfinder.md",
