@@ -44,7 +44,7 @@
 
 ## Meta / Skill 管理
 
-- `find-skills`：查找和安装开放生态中的 agent skill。
+- `find-skills`：查找本地已有或开放生态中可安装的 agent skill。
 
 ## Learn / 学习沉淀
 
