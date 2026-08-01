@@ -10,6 +10,6 @@
 
 ## 添加流程
 
-1. 使用 `/learn-eval --preview` 评估是否值得保存
-2. 确认模式可复用后，运行 `/learn-eval` 保存
+1. 使用 `/learn eval --preview` 评估是否值得保存
+2. 确认模式可复用后，运行 `/learn eval` 保存
 3. 学习产物按分类保存到对应子目录

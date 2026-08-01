@@ -1,6 +1,6 @@
 ---
 name: grilling
-description: "Resolve consequential user-owned decisions through a one-question-at-a-time interview. Use when the user invokes /grill, says grill me, asks for challenge or pressure-testing, or when the central router finds an unresolved decision that materially changes the outcome; do not trigger for discoverable facts, ordinary complexity, file count, or high risk by itself."
+description: "Resolve consequential user-owned decisions through a one-question-at-a-time interview. Use when the user says grill me, asks for challenge or pressure-testing, or when the central router finds an unresolved decision that materially changes the outcome; do not trigger for discoverable facts, ordinary complexity, file count, or high risk by itself."
 ---
 
 # Grilling
@@ -55,7 +55,7 @@ For a low-risk task, return the handoff for direct or narrow-process routing. Fo
 
 ### Explicit grilling session
 
-Use when the user explicitly invokes `/grill`, says grill me, or asks to challenge a plan, design, decision, or idea. Walk the consequential decision tree until branches are resolved or delegated, then use the shared-understanding gate.
+Use when the user says grill me or asks to challenge a plan, design, decision, or idea. Walk the consequential decision tree until branches are resolved or delegated, then use the shared-understanding gate.
 
 ## Handoff
 

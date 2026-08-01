@@ -137,8 +137,8 @@ function checkContinuousLearningV21() {
     "Continuous Learning v2.1",
     "projects/<project-id>/",
     "observations.jsonl",
-    "/projects",
-    "/promote --dry-run",
+    "/learn projects",
+    "/learn promote --dry-run",
     "migrate-homunculus.js --dry-run",
     "observer.enabled",
   ]);
@@ -156,12 +156,11 @@ function checkContinuousLearningV21() {
     "legacy",
   ]);
 
-  requireTokens("commands/projects.md", [
+  requireTokens("commands/learn.md", [
+    "/learn projects",
     "scripts/learning/projects.js",
     "--register-current",
-  ]);
-
-  requireTokens("commands/promote.md", [
+    "/learn promote",
     "scripts/learning/promote.js",
     "--dry-run",
     "--apply",

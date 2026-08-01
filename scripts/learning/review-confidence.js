@@ -348,7 +348,7 @@ function printTextReport(results, staleDays) {
     if (grouped.stale.length > 0 || grouped['low-evidence'].length > 0) {
         console.log('')
         console.log(
-            '[Review] 提示: 使用 /instinct-status 查看详情，' +
+            '[Review] 提示: 使用 /learn status 查看详情，' +
             '手动决定是否保留、更新或移除'
         )
     }

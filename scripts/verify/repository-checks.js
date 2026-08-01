@@ -123,25 +123,75 @@ function checkDebuggingSkill() {
   } else {
     const debugging = read("skills/systematic-debugging/SKILL.md");
     for (const token of [
-      "Feedback Loop Gate",
-      "one command",
-      "already run",
-      "Red-capable",
-      "Deterministic",
-      "Fast",
-      "Agent-runnable",
-      "3–5 ranked hypotheses",
-      "higher reproduction rate",
-      "smallest scenario",
-      "skills/improve-codebase-architecture/SKILL.md",
-      "Phase 1: Root Cause Investigation",
-      "Phase 2: Pattern Analysis",
-      "Phase 3: Hypothesis Test",
-      "Phase 4: Fix And Verify",
-      "Return To Plan",
+      "references/diagnosing-bugs.upstream.md",
+      "唯一运行入口",
+      "上游原始 Bash 模板留档",
+      "scripts/hitl-loop.template.js",
     ]) {
       if (!debugging.includes(token)) {
         fail(`skills/systematic-debugging/SKILL.md should include ${token}`);
+      }
+    }
+
+    const upstreamPath =
+      "skills/systematic-debugging/references/diagnosing-bugs.upstream.md";
+    if (!exists(upstreamPath)) {
+      fail(`${upstreamPath} is missing`);
+    } else {
+      const upstreamDebugging = read(upstreamPath);
+      for (const token of [
+        "# Diagnosing Bugs",
+        "## Phase 1 — Build a feedback loop",
+        "one command",
+        "Red-capable",
+        "Deterministic",
+        "Fast",
+        "Agent-runnable",
+        "3–5 ranked hypotheses",
+        "higher reproduction rate",
+        "## Phase 2 — Reproduce + minimise",
+        "## Phase 3 — Hypothesise",
+        "## Phase 4 — Instrument",
+        "## Phase 5 — Fix + regression test",
+        "## Phase 6 — Cleanup + post-mortem",
+        "scripts/hitl-loop.template.sh",
+        "Show the ranked list to the user before testing",
+        "Tag every debug log",
+        "what would have prevented this bug?",
+        "/improve-codebase-architecture",
+      ]) {
+        if (!upstreamDebugging.includes(token)) {
+          fail(`${upstreamPath} should include ${token}`);
+        }
+      }
+    }
+
+    requireTokens("skills/systematic-debugging/scripts/hitl-loop.template.sh", [
+      "Human-in-the-loop reproduction loop.",
+      "step()",
+      "capture()",
+      "ERRORED",
+      "ERROR_MSG",
+    ]);
+
+    requireTokens("skills/systematic-debugging/scripts/hitl-loop.template.js", [
+      "Human-in-the-loop reproduction loop.",
+      "async function step",
+      "async function capture",
+      "完成后按 Enter",
+      "输入已结束",
+      "ERRORED",
+      "ERROR_MSG",
+    ]);
+
+    const hitlNode = read(
+      "skills/systematic-debugging/scripts/hitl-loop.template.js",
+    );
+    for (const token of ["(y/n)", "none", "--- Captured ---"]) {
+      if (hitlNode.includes(token)) {
+        fail(
+          `skills/systematic-debugging/scripts/hitl-loop.template.js should not expose English prompt token ${token}`,
+        );
       }
     }
   }
@@ -232,11 +282,6 @@ function checkProjectContextContracts() {
     "Resolve",
   ]);
 
-  requireTokens("commands/setup-workflow.md", [
-    "skills/project-context/SKILL.md",
-    "唯一事实来源",
-  ]);
-
   requireTokens("skills/project-context/agents/openai.yaml", [
     "display_name",
     "default_prompt",
@@ -248,12 +293,12 @@ function checkProjectContextContracts() {
   ]);
 
   requireTokens("skills/using-superpowers/SKILL.md", [
-    "explicit /setup-workflow?",
+    "explicit project-context setup request?",
     "project-context",
   ]);
 
   requireTokens("README.md", [
-    "`/setup-workflow`",
+    "直接请求配置 project context",
     "project-context",
   ]);
 }

@@ -66,7 +66,7 @@ monorepo 中先识别 package 依赖。若内部 package 以 `dist/` 暴露，co
 
 - 技能：`skills/e2e-testing/SKILL.md`，包含 Playwright 目录结构、POM、配置、CI、制品、flake 处理。
 - 代理：`e2e-runner`，默认 CLI，MCP 仅用于探索和调试。
-- 入口：`/e2e`，复杂或从零搭建时可委派 `e2e-runner`。
+- 入口：由中央路由选择 `e2e-testing`，复杂或从零搭建时可委派 `e2e-runner`。
 - E2E 应有 `globalSetup` 或等价健康检查，等待 API/Web ready 后再跑用例。
 - 本地多 worktree 开发时，端口和环境变量应隔离，例如 `.env.worktree`。
 - CI 失败时上传 Playwright trace、screenshot、HTML report 和 `test-results`。

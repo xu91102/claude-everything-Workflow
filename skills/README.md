@@ -48,4 +48,4 @@
 
 ## Learn / 学习沉淀
 
-学习目录 `learn/` 经 `/learn-eval` 质量门确认学习模式，必须继续按 `skills/learn/<category>/` 分类保存。
+学习目录 `learn/` 经 `/learn eval` 质量门确认学习模式，必须继续按 `skills/learn/<category>/` 分类保存。

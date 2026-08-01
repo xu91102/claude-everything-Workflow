@@ -59,12 +59,15 @@ Use process skills before implementation skills:
 ```text
 Task arrives
   -> explicit workflow advice?                    -> workflow advice mode
-  -> explicit /setup-workflow?                     -> project-context
+  -> explicit project-context setup request?       -> project-context
   -> explicit documented grilling request?        -> grilling explicit + domain-modeling persistent mode
-  -> explicit /grill?                              -> grilling explicit
+  -> explicit grilling request?                    -> grilling explicit
   -> explicit handoff or fresh session or prototype branch?
                                                      -> skills/handoff/SKILL.md
   -> explicit triage request?                      -> skills/triage/SKILL.md
+  -> explicit TDD request?                         -> skills/test-driven-development/SKILL.md + agents/tdd-guide.md
+  -> explicit E2E or Playwright request?           -> skills/e2e-testing/SKILL.md + agents/e2e-runner.md
+  -> explicit harness audit?                       -> agents/harness-optimizer.md
   -> explicit /to-tickets?                         -> skills/to-tickets/SKILL.md
   -> explicit implementation request?             -> skills/implement/SKILL.md
   -> huge effort beyond one session?               -> skills/wayfinder/SKILL.md
