@@ -175,49 +175,19 @@ remove_obsolete_workflow_paths() {
     done
 }
 
-remove_obsolete_brainstorming_skill() {
+cleanup_retired_skills() {
     local dest="$1"
-    local target="$dest/skills/brainstorming"
-    local relative
-    local dir
-
-    if [ ! -d "$target" ]; then
-        return
-    fi
-
-    for relative in \
-        "SKILL.md" \
-        "spec-document-reviewer-prompt.md" \
-        "visual-companion.md" \
-        "agents/openai.yaml" \
-        "scripts/frame-template.html" \
-        "scripts/helper.js" \
-        "scripts/server.cjs" \
-        "scripts/start-server.sh" \
-        "scripts/stop-server.sh"
-    do
-        if [ -f "$target/$relative" ]; then
-            run rm -f "$target/$relative"
-        fi
-    done
 
     if [ "$DRY_RUN" -eq 1 ]; then
-        echo "[dry-run] remove empty directories under '$target' after known files"
+        node "$ROOT_DIR/scripts/cleanup-retired-skills.js" "$dest" --dry-run
         return
     fi
 
-    for relative in "scripts" "agents"; do
-        dir="$target/$relative"
-        if [ -d "$dir" ] && [ -z "$(find "$dir" -mindepth 1 -print -quit)" ]; then
-            run rmdir "$dir"
-        fi
-    done
+    node "$ROOT_DIR/scripts/cleanup-retired-skills.js" "$dest"
+}
 
-    if [ -d "$target" ] && [ -z "$(find "$target" -mindepth 1 -print -quit)" ]; then
-        run rmdir "$target"
-    elif [ -d "$target" ]; then
-        echo "Preserving unknown files in obsolete brainstorming directory: $target"
-    fi
+validate_retired_skill_manifest() {
+    node "$ROOT_DIR/scripts/cleanup-retired-skills.js" --validate
 }
 
 install_claude() {
@@ -230,7 +200,7 @@ install_claude() {
     copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
     copy_claude_settings "$ROOT_DIR/settings.json" "$dest/settings.json"
     install_shared_dirs "$dest"
-    remove_obsolete_brainstorming_skill "$dest"
+    cleanup_retired_skills "$dest"
     remove_package_only_paths "$dest"
 }
 
@@ -242,10 +212,11 @@ install_codex() {
     remove_obsolete_workflow_paths "$dest"
     copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
     install_shared_dirs "$dest"
-    remove_obsolete_brainstorming_skill "$dest"
+    cleanup_retired_skills "$dest"
     remove_package_only_paths "$dest"
 }
 
+validate_retired_skill_manifest
 require_rsync
 
 if [ "$INSTALL_CLAUDE" -eq 1 ]; then

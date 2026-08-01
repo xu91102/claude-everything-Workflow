@@ -5,7 +5,10 @@ description: 新功能、bug 修复、重构或行为变化需要测试先行时
 
 # Test-Driven Development
 
-参考来源: https://github.com/obra/superpowers/tree/main/skills/test-driven-development
+参考来源:
+
+- https://github.com/obra/superpowers/tree/main/skills/test-driven-development
+- https://github.com/mattpocock/skills/tree/main/skills/engineering/tdd
 
 本 skill 是本仓库的精简版本，只保留适合 agent 执行的 TDD 规则，不复制外部 skill 全文。
 
@@ -28,6 +31,16 @@ description: 新功能、bug 修复、重构或行为变化需要测试先行时
 6. 重构不能引入新行为；新行为需要新的失败测试。
 7. 一次只推进一个垂直切片：一个可观察行为、一个失败测试、一个最小实现。
 
+## Public Seam
+
+测试 seam 是观察行为的公共接口。测试和调用方应穿过同一个 seam，不读取私有状态或绕过
+接口到数据库验证。
+
+- formal Spec、plan 或 agent-ready ticket 必须预先记录关键测试 seams。
+- direct 小任务若现有公共接口和测试先例已明确，先声明所用 seam 后直接推进，不制造用户问题。
+- 若 seam 选择会改变公共契约、架构或测试成本，返回中央路由解决该用户决策。
+- 优先最高层且稳定的 seam；减少跨代码库暴露的测试接口数量。
+
 ## Red Test Gate
 
 新功能、bug 修复、重构引起行为变化、公共 API 变化和用户流程变化，必须先写失败测试并运行确认失败原因正确，才能写行为实现代码。
@@ -47,7 +60,10 @@ description: 新功能、bug 修复、重构或行为变化需要测试先行时
 - 测试名称描述真实行为。
 - 每个测试只覆盖一个行为。
 - 优先测试公开 API 和用户可观察结果。
-- mock 只在不可避免时使用，避免测试 mock 本身。
+- 期望值来自 Spec、已知示例或固定事实，不用与实现相同的算法重算期望值。
+- mock 只放在第三方 API、时间、随机性等真实系统边界；优先真实测试数据库或本地替代物。
+- 不 mock 自有内部模块、私有方法、调用次数或实现顺序。
+- 不一次横向写完整测试矩阵；每个测试都是下一条 tracer bullet。
 
 ## GREEN
 

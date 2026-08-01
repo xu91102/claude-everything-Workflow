@@ -43,7 +43,9 @@ For each task:
    - expected tests and acceptance criteria
 2. Tell the agent it is not alone in the codebase and must not revert others' changes.
 3. After implementation, run requirement/spec compliance review.
-4. Run code quality review with `agents/code-reviewer.md`; add security or database review only when the touched area warrants it.
+4. Run a task-scoped Standards review with
+   `skills/code-review/references/standards-reviewer-prompt.md`; add security or database review only
+   when the touched area warrants it.
 5. Send findings back to the same implementer until resolved.
 6. Mark the task complete only after tests and reviews pass.
 
@@ -56,9 +58,9 @@ After all tasks are complete:
 1. Apply `skills/verification-before-completion/SKILL.md`: identify the verification evidence required before any completion claim.
 2. Run `/verify` or the plan's equivalent verification commands to produce that fresh evidence.
 3. If verification fails, use `skills/systematic-debugging/SKILL.md` for each failure class before changing code.
-4. Run a final review over the full diff with `agents/code-reviewer.md`; pin the
-   pre-plan commit as the fixed base and pass the approved Spec or plan as the
-   Spec source so Standards and Spec results remain independent.
+4. Run a final worktree review over the full diff with `skills/code-review/SKILL.md`; pin the
+   pre-plan commit as the fixed base, include committed/staged/unstaged/untracked task changes, and
+   pass the approved Spec or plan as the Spec source so Standards and Spec results remain independent.
 5. Summarize files changed, tests run, skipped checks, remaining risk, and whether the work is ready for `/pr`.
 
 ## Boundaries

@@ -13,7 +13,7 @@ Reference: https://github.com/mattpocock/skills/blob/main/skills/productivity/gr
 
 - Do not ask for discoverable facts. Inspect files, documentation, logs, history, and tools first.
 - Ask only about a user-owned decision whose alternatives materially change the result.
-- Route systematic evidence or blind-spot gaps back through `skills/using-superpowers/SKILL.md` for `discover-unknowns-zh`.
+- Route systematic evidence or blind-spot gaps back through `skills/using-superpowers/SKILL.md` for `skills/iterative-retrieval/SKILL.md`.
 - High risk alone does not trigger an interview. If high-risk work has a real unresolved user decision, resolve it and record `resume_target: spec-gate`.
 - Do not generate or approve a Spec, implement code, or own workflow continuation.
 

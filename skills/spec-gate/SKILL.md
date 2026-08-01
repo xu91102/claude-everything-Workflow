@@ -29,8 +29,10 @@ Treat a confirmed handoff as approved input. Reopen a decision only when its rec
 1. Confirm that a formal Spec is explicitly requested or that the task crosses a high-risk boundary.
 2. Inspect discoverable facts instead of turning them into questions.
 3. Build a decision inventory from the task, handoff, and repository evidence.
-4. Separate agent-owned reversible details from user-owned consequential decisions.
-5. Return an outcome immediately if the task is not applicable or a consequential decision remains unresolved.
+4. Identify the highest stable public seams where acceptance behavior will be tested. Prefer existing
+   seams; a new seam that changes a public contract or architecture is a consequential decision.
+5. Separate agent-owned reversible details from user-owned consequential decisions.
+6. Return an outcome immediately if the task is not applicable or a consequential decision remains unresolved.
 
 Agent-owned details may use the safest reversible default. A user-owned decision may use an agent default only when the confirmed handoff explicitly delegates it.
 
@@ -99,7 +101,24 @@ After self-review, show the saved path and a compact summary of decisions and no
 
 - If the user requests document changes, revise the Spec and self-review again.
 - If revision exposes a consequential decision, return `BLOCKED_BY_UNRESOLVED_DECISION`.
-- If the user approves, return control to `skills/using-superpowers/SKILL.md`; do not invoke planning directly.
+- If the user approves, mark the artifact as the approved Spec source.
+
+### Tracker publication
+
+Read `docs/agent-workflow/project-context.md` when it exists:
+
+- For a configured local tracker, copy the approved Spec to its configured feature `spec.md` path,
+  preserving the local-only policy.
+- For an external tracker, show the exact repository/project, title, body source and labels; publish
+  only after explicit confirmation of that external write. Apply the configured `ready-for-agent`
+  label when the tracker contract defines it.
+- If no tracker is configured, keep the approved local artifact and report `tracker: not configured`.
+
+Record the local path and optional tracker reference together so `to-tickets` can consume one canonical
+approved source. Publication does not authorize tickets, implementation, commit or PR creation.
+
+After approval/publication, return control to `skills/using-superpowers/SKILL.md`; do not invoke
+planning directly.
 
 ## Outcomes
 

@@ -4,6 +4,8 @@
 
 正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构，以兼容 Claude Code、Codex 和安装脚本的发现方式；分类维护在 `skills/README.md`，不要把正式 skill 物理嵌套到分类目录下。
 
+Skill 创建和更新遵循本规则；开放生态中的 skill 查找和安装由 `find-skills` 处理。
+
 每个 skill 应包含：
 
 - **When to Use**：何时使用。
@@ -11,7 +13,15 @@
 - **Examples**：实际示例。
 - **Codemaps**：代码库导航地图，可选。
 
-保持 skill 精简；详细参考内容应拆到 references，并按需读取。
+创建或修改 skill 时：
+
+- 目录名、frontmatter `name` 使用小写 kebab-case；frontmatter 只保留发现和触发需要的字段。
+- `description` 同时说明能力与触发场景；不要把触发条件只放在正文，因为正文仅在触发后加载。
+- 正文使用指令式表达，只写模型无法可靠自行推导的流程、边界和验证契约。
+- 保持 skill 精简；详细参考内容拆到一层 `references/`，由 `SKILL.md` 说明何时读取，避免重复。
+- 只在确定性、重复性或高风险操作需要时增加 `scripts/`；新增脚本必须实际运行验证。
+- 不创建额外 README、安装指南或变更日志；正式索引统一维护在 `skills/README.md`。
+- 修改后运行 `npm run verify`，并确认 skill 目录、frontmatter、引用资源和安装包面均可发现。
 
 ### Superpowers 路由纪律
 

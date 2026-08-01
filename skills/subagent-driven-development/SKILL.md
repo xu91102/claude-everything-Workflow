@@ -62,7 +62,7 @@ digraph process {
 
     "Read plan, note context and global constraints, create todos" [shape=box];
     "More tasks remain?" [shape=diamond];
-    "Dispatch final code reviewer subagent (agents/code-reviewer.md)" [shape=box];
+    "Dispatch final two-axis review (skills/code-review/SKILL.md)" [shape=box];
     "Use verification-before-completion, then /verify and /pr when requested" [shape=box style=filled fillcolor=lightgreen];
 
     "Read plan, note context and global constraints, create todos" -> "Dispatch implementer subagent (./implementer-prompt.md)";
@@ -77,8 +77,8 @@ digraph process {
     "Task reviewer reports spec ✅ and quality approved?" -> "Mark task complete in todo list and progress ledger" [label="yes"];
     "Mark task complete in todo list and progress ledger" -> "More tasks remain?";
     "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
-    "More tasks remain?" -> "Dispatch final code reviewer subagent (agents/code-reviewer.md)" [label="no"];
-    "Dispatch final code reviewer subagent (agents/code-reviewer.md)" -> "Use verification-before-completion, then /verify and /pr when requested";
+    "More tasks remain?" -> "Dispatch final two-axis review (skills/code-review/SKILL.md)" [label="no"];
+    "Dispatch final two-axis review (skills/code-review/SKILL.md)" -> "Use verification-before-completion, then /verify and /pr when requested";
 }
 ```
 
@@ -273,7 +273,8 @@ a ledger file, not only in todos.
 
 - [implementer-prompt.md](implementer-prompt.md) - Dispatch implementer subagent
 - [task-reviewer-prompt.md](task-reviewer-prompt.md) - Dispatch task reviewer subagent (spec compliance + code quality)
-- Final whole-branch review: use `agents/code-reviewer.md`, adding `agents/security-reviewer.md` or `agents/database-reviewer.md` when the touched area warrants it.
+- Final whole-branch review: use `skills/code-review/SKILL.md`, adding `agents/security-reviewer.md`
+  or `agents/database-reviewer.md` when the touched area warrants it.
 
 ## Example Workflow
 
@@ -332,7 +333,7 @@ Task reviewer: Spec ✅. Task quality: Approved.
 ...
 
 [After all tasks]
-[Dispatch final code-reviewer]
+[Dispatch final two-axis review through skills/code-review/SKILL.md]
 Final reviewer: All requirements met, ready to merge
 
 Done!
@@ -415,7 +416,7 @@ Done!
 **Required workflow skills:**
 - **skills/using-git-worktrees/SKILL.md** - Ensures isolated workspace when needed
 - **skills/writing-plans/SKILL.md** - Creates the plan this skill executes
-- **agents/code-reviewer.md** - Final whole-branch review template
+- **skills/code-review/SKILL.md** - Final whole-branch Standards/Spec review protocol
 - **skills/verification-before-completion/SKILL.md** - Fresh evidence gate before completion claims
 
 **Subagents should use:**

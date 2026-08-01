@@ -45,7 +45,9 @@ needs-decision
 formal-spec
   explicit formal Spec or high-risk boundary
     -> grilling inline first only when a consequential decision is unresolved
-    -> spec-gate -> user review -> approved Spec -> writing-plans
+    -> spec-gate -> user review -> approved Spec
+       -> multi-session/tracker delivery -> recommend to-tickets and wait for explicit invocation
+       -> single-session delivery -> writing-plans -> execute
 ```
 
 File count, a new-feature label, ordinary behavior change, and normal code complexity do not upgrade a task. They affect implementation and verification intensity only.
@@ -56,20 +58,35 @@ Use process skills before implementation skills:
 
 ```text
 Task arrives
+  -> explicit workflow advice?                    -> workflow advice mode
   -> explicit /setup-workflow?                     -> project-context
+  -> explicit documented grilling request?        -> grilling explicit + domain-modeling persistent mode
   -> explicit /grill?                              -> grilling explicit
+  -> explicit handoff or fresh session or prototype branch?
+                                                     -> skills/handoff/SKILL.md
+  -> explicit triage request?                      -> skills/triage/SKILL.md
+  -> explicit /to-tickets?                         -> skills/to-tickets/SKILL.md
+  -> explicit implementation request?             -> skills/implement/SKILL.md
+  -> huge effort beyond one session?               -> skills/wayfinder/SKILL.md
+  -> explicit architecture-health audit?           -> skills/improve-codebase-architecture/SKILL.md
+  -> merge or rebase conflict?                     -> skills/resolving-merge-conflicts/SKILL.md
   -> bug, failing test, or unexpected result?      -> systematic-debugging
   -> discoverable fact?                            -> inspect it; do not ask
-  -> systematic evidence or blind-spot gap?        -> discover-unknowns-zh
+  -> primary-source research or cited research artifact? -> skills/research/SKILL.md
+  -> systematic evidence or blind-spot gap?        -> iterative-retrieval
+  -> explicit prototype or runnable design question? -> skills/prototype/SKILL.md
   -> unresolved user-owned decision?               -> grilling inline
        high-risk or explicit formal Spec context?  -> resume_target: spec-gate
   -> explicit formal Spec or high-risk boundary?   -> spec-gate
-  -> approved Spec, no plan?                       -> writing-plans
+  -> approved Spec requires tracker tickets but no explicit /to-tickets? -> recommend `to-tickets`; wait for explicit invocation
+  -> approved Spec, single-session plan missing?   -> writing-plans
+  -> approved agent-ready ticket but no explicit implementation request? -> recommend `implement`; wait for explicit invocation
   -> approved plan + SDD/commit approved?          -> subagent-driven-development
   -> approved plan, no commit approval?            -> executing-plans
   -> behavior change with a test path?             -> test-driven-development
   -> dirty worktree or risky branch work?          -> consider using-git-worktrees
   -> completion, fixed, or ready claim?            -> verification-before-completion
+  -> skill discovery or install request?           -> find-skills
   -> external skill learning or edit?              -> rules/common/skills-learning.md
   -> otherwise                                     -> shortest applicable loop
 ```
@@ -78,13 +95,36 @@ A high-risk boundary is a costly-to-reverse architecture or service boundary, pu
 
 ## Process Outcomes
 
+### Workflow advice mode
+
+只返回推荐入口与原因、前置条件、需要补齐的用户决策或 Spec/tickets/map/handoff，以及直到
+审查和验证的闭环路径。不要调用下一 Skill、写文件或修改 tracker。
+
+### User-invoked Delivery Gates
+
+`to-tickets` 和 `implement` 都声明了 `disable-model-invocation: true`。只有当前用户请求显式触发
+对应动作时，router 才能进入该 Skill；Spec 获批、tickets 已发布或某张 ticket 进入 frontier
+都只满足前置条件，不能推导出下一阶段授权。
+
+没有显式请求时，只能 recommend `to-tickets`; wait for explicit invocation，或 recommend
+`implement`; wait for explicit invocation。不得为了保持流程连续而自动跨越 user-invoked gate。
+
 ### Grilling handoff
 
 Read `Risk classification` and `Resume target`. A non-formal task returns to direct or another narrow process. A high-risk/formal task with `resume_target: spec-gate` enters a fresh Spec Gate call.
 
 ### Spec Gate ready
 
-`READY_FOR_USER_REVIEW` means the local artifact passed self-review but is not approved. Present the path and wait for explicit approval. Only an approved Spec may enter `writing-plans`.
+`READY_FOR_USER_REVIEW` means the local artifact passed self-review but is not approved. Present the
+path and wait for explicit approval. For multi-session/tracker delivery, recommend `to-tickets` and
+wait for explicit invocation; for a single-session delivery plan, route to `writing-plans`.
+
+### Cross-session handoff
+
+When a prototype detour needs isolation or the current context is leaving its reliable reasoning zone,
+recommend the `handoff` Skill and wait for explicit approval before creating the temporary document.
+The handoff ends the current flow; a fresh session references the returned path and enters this router
+again. Do not use handoff as a substitute for durable Specs, ADRs, tickets, or verification evidence.
 
 ### Spec Gate blocked
 
@@ -115,6 +155,7 @@ Stop and reassess if you are about to:
 - enter formal Spec Gate for an ordinary reversible change;
 - let Spec Gate interview the user;
 - automatically bounce from a blocked Spec Gate to grilling;
+- automatically cross a user-invoked `to-tickets` or `implement` gate;
 - continue implementation without an approved required Spec;
 - claim completion without fresh verification evidence.
 

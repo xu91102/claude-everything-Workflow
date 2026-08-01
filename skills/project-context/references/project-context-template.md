@@ -8,6 +8,40 @@
 - 位置：`<仓库、项目键、URL 或本地路径>`
 - 允许工具：`<gh | jira CLI | linear connector | 无>`
 - 使用规则：`<何时读取、何时创建或更新；没有授权时仅只读>`
+- 依赖关系：`<原生 blocking/sub-issue 能力，或正文 Blocked by 约定>`
+- 本地工件目录：`<local-markdown 路径；非本地 tracker 填不适用>`
+
+### Tracker 操作
+
+- 读取：`<查看单项、评论、标签和依赖关系的命令/工具>`
+- 查询：`<列出待分诊、frontier 或 ready-for-agent 项的命令/工具>`
+- 创建：`<创建 Issue/ticket 的命令/工具；执行前必须确认>`
+- 更新：`<评论、标签、依赖、claim、close 的命令/工具；执行前必须确认>`
+
+## 分诊角色
+
+| Category 规范角色 | Tracker 标签 |
+| --- | --- |
+| `bug` | `<label>` |
+| `enhancement` | `<label>` |
+
+| State 规范角色 | Tracker 标签 |
+| --- | --- |
+| `needs-triage` | `<label>` |
+| `needs-info` | `<label>` |
+| `ready-for-agent` | `<label>` |
+| `ready-for-human` | `<label>` |
+| `wontfix` | `<label>` |
+
+外部 PR 是否作为请求入口：`<yes | no>`
+
+## Wayfinder / Tickets
+
+- Map：`<位置或 tracker 对象形状>`
+- Child ticket：`<位置或 sub-issue 关系>`
+- Blocking：`<原生依赖或 Blocked by 约定>`
+- Frontier：`<open + unblocked + unclaimed 的查询方式>`
+- Claim / Progress / Resolve：`<状态、assignee、进度记录、关闭及解锁查询操作>`
 
 ## 领域文档
 
