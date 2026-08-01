@@ -46,7 +46,7 @@ formal-spec
   explicit formal Spec or high-risk boundary
     -> grilling inline first only when a consequential decision is unresolved
     -> spec-gate -> user review -> approved Spec
-       -> multi-session/tracker delivery -> to-tickets -> implement per frontier ticket
+       -> multi-session/tracker delivery -> recommend to-tickets and wait for explicit invocation
        -> single-session delivery -> writing-plans -> execute
 ```
 
@@ -65,6 +65,7 @@ Task arrives
   -> explicit handoff or fresh session or prototype branch?
                                                      -> skills/handoff/SKILL.md
   -> explicit triage request?                      -> skills/triage/SKILL.md
+  -> explicit /to-tickets?                         -> skills/to-tickets/SKILL.md
   -> explicit implementation request?             -> skills/implement/SKILL.md
   -> huge effort beyond one session?               -> skills/wayfinder/SKILL.md
   -> explicit architecture-health audit?           -> skills/improve-codebase-architecture/SKILL.md
@@ -77,9 +78,9 @@ Task arrives
   -> unresolved user-owned decision?               -> grilling inline
        high-risk or explicit formal Spec context?  -> resume_target: spec-gate
   -> explicit formal Spec or high-risk boundary?   -> spec-gate
-  -> approved Spec requiring tracker tickets?      -> skills/to-tickets/SKILL.md
+  -> approved Spec requires tracker tickets but no explicit /to-tickets? -> recommend `to-tickets`; wait for explicit invocation
   -> approved Spec, single-session plan missing?   -> writing-plans
-  -> approved agent-ready ticket?                  -> skills/implement/SKILL.md
+  -> approved agent-ready ticket but no explicit implementation request? -> recommend `implement`; wait for explicit invocation
   -> approved plan + SDD/commit approved?          -> subagent-driven-development
   -> approved plan, no commit approval?            -> executing-plans
   -> behavior change with a test path?             -> test-driven-development
@@ -99,6 +100,15 @@ A high-risk boundary is a costly-to-reverse architecture or service boundary, pu
 只返回推荐入口与原因、前置条件、需要补齐的用户决策或 Spec/tickets/map/handoff，以及直到
 审查和验证的闭环路径。不要调用下一 Skill、写文件或修改 tracker。
 
+### User-invoked Delivery Gates
+
+`to-tickets` 和 `implement` 都声明了 `disable-model-invocation: true`。只有当前用户请求显式触发
+对应动作时，router 才能进入该 Skill；Spec 获批、tickets 已发布或某张 ticket 进入 frontier
+都只满足前置条件，不能推导出下一阶段授权。
+
+没有显式请求时，只能 recommend `to-tickets`; wait for explicit invocation，或 recommend
+`implement`; wait for explicit invocation。不得为了保持流程连续而自动跨越 user-invoked gate。
+
 ### Grilling handoff
 
 Read `Risk classification` and `Resume target`. A non-formal task returns to direct or another narrow process. A high-risk/formal task with `resume_target: spec-gate` enters a fresh Spec Gate call.
@@ -106,8 +116,8 @@ Read `Risk classification` and `Resume target`. A non-formal task returns to dir
 ### Spec Gate ready
 
 `READY_FOR_USER_REVIEW` means the local artifact passed self-review but is not approved. Present the
-path and wait for explicit approval. An approved Spec routes to `to-tickets` for multi-session/tracker
-delivery or `writing-plans` for a single-session delivery plan.
+path and wait for explicit approval. For multi-session/tracker delivery, recommend `to-tickets` and
+wait for explicit invocation; for a single-session delivery plan, route to `writing-plans`.
 
 ### Cross-session handoff
 
@@ -145,6 +155,7 @@ Stop and reassess if you are about to:
 - enter formal Spec Gate for an ordinary reversible change;
 - let Spec Gate interview the user;
 - automatically bounce from a blocked Spec Gate to grilling;
+- automatically cross a user-invoked `to-tickets` or `implement` gate;
 - continue implementation without an approved required Spec;
 - claim completion without fresh verification evidence.
 

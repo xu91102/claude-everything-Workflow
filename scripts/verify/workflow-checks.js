@@ -397,21 +397,37 @@ function checkCapabilityRouting() {
   requireTokens("skills/using-superpowers/SKILL.md", [
     "explicit workflow advice?",
     "workflow advice mode",
+    "User-invoked Delivery Gates",
+    "explicit /to-tickets?",
+    "recommend `to-tickets`; wait for explicit invocation",
     "explicit implementation request?",
     "skills/implement/SKILL.md",
+    "recommend `implement`; wait for explicit invocation",
     "explicit prototype or runnable design question?",
     "skills/prototype/SKILL.md",
     "primary-source research or cited research artifact?",
     "skills/research/SKILL.md",
     "huge effort beyond one session?",
     "skills/wayfinder/SKILL.md",
-    "approved Spec requiring tracker tickets?",
     "skills/to-tickets/SKILL.md",
     "merge or rebase conflict?",
     "skills/resolving-merge-conflicts/SKILL.md",
     "fresh session or prototype branch?",
     "skills/handoff/SKILL.md",
   ]);
+
+  const router = read("skills/using-superpowers/SKILL.md");
+  const forbiddenAutoEdges = [
+    /approved Spec requiring tracker tickets\?\s*->\s*skills\/to-tickets\/SKILL\.md/i,
+    /approved agent-ready ticket\?\s*->\s*skills\/implement\/SKILL\.md/i,
+  ];
+  for (const edge of forbiddenAutoEdges) {
+    if (edge.test(router)) {
+      fail(
+        "user-invoked delivery skills must be recommended and explicitly invoked, not auto-routed",
+      );
+    }
+  }
 }
 
 function checkCapabilityFiles() {

@@ -261,8 +261,14 @@ function checkProjectContextContracts() {
 function checkTrackerDeliveryLifecycle() {
   requireTokens("skills/implement/SKILL.md", [
     "disable-model-invocation: true",
+    "## State Machine",
+    "PRECONDITION → ISOLATE → CLAIM → EXECUTE → REVIEW → VERIFY → RESOLVE → REFRESH_FRONTIER → FINISH_DELIVERY",
     "docs/agent-workflow/project-context.md",
+    "skills/using-git-worktrees/SKILL.md",
+    "clean baseline",
     "pre-ticket base",
+    "writing-plans",
+    "subagent-driven-development",
     "ticket as the Spec source",
     "`/code-review --worktree <pre-ticket-base> --spec <ticket>`",
     "frontier",
@@ -271,6 +277,16 @@ function checkTrackerDeliveryLifecycle() {
     "resolve",
     "unlocked",
     "explicit confirmation",
+    "frontier 为空",
+    "frontier 为空但仍有 open tickets",
+    "BLOCKED_GRAPH",
+    "open ticket count = 0",
+    "全分支双轴 review",
+    "`/verify pre-pr`",
+    "`/pr` 或 keep",
+    "不得自动 claim 下一张 ticket",
+    "不得自动 commit、push",
+    "不得自动关闭外部 Issue",
   ]);
 
   requireTokens("commands/pr.md", [
