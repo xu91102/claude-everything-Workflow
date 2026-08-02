@@ -54,11 +54,17 @@ function mergeSettings(source, existing) {
   };
 }
 
+function readJson(path) {
+  const raw = fs.readFileSync(path, "utf8");
+  // strip BOM (﻿) if present
+  return JSON.parse(raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw);
+}
+
 function main() {
   const [, , sourcePath, destinationPath] = process.argv;
-  const source = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
+  const source = readJson(sourcePath);
   const existing = fs.existsSync(destinationPath)
-    ? JSON.parse(fs.readFileSync(destinationPath, "utf8"))
+    ? readJson(destinationPath)
     : {};
   const merged = mergeSettings(source, existing);
   fs.writeFileSync(destinationPath, JSON.stringify(merged, null, 2) + "\n");
