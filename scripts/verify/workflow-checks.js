@@ -26,20 +26,18 @@ function bindContext(context) {
 
 function checkSuperpowersDevLoop() {
   requireTokens("README.md", [
-    "Superpowers 风格开发闭环",
+    "Ticket-first 工程交付闭环",
     "using-superpowers",
-    "subagent-driven-development",
-    ".superpowers/sdd",
-    "Global Constraints",
-    "Interfaces",
     "?key=",
     "4 小时",
     "using-git-worktrees",
     "iterative-retrieval",
-    "executing-plans",
+    "to-tickets",
+    "implement",
+    "subagent-driven-development",
     "verification-before-completion",
     "完整流程适用时",
-    "没有 spec 不进入 plan",
+    "没有批准的必需 Spec 不进入 ticket 或 implement",
     "没有用户审核不进入实现",
     "没有 failing test，不写行为代码",
     "没有 review 不标记任务完成",
@@ -51,7 +49,7 @@ function checkSuperpowersDevLoop() {
   requireTokens("rules/01-base.md", [
     "Spec Gate",
     "User Review Gate",
-    "Plan Gate",
+    "Ticket Gate",
     "Red Test Gate",
     "Task Review Gate",
     "Verify Gate",
@@ -60,7 +58,9 @@ function checkSuperpowersDevLoop() {
 
   requireTokens("rules/common/skills-learning.md", [
     "skills/using-superpowers/SKILL.md",
-    "process skill 优先于 implementation skill",
+    "路由权威来源",
+    "rules/01-base.md",
+    "rules/common/agent-orchestration.md",
     "不凭记忆执行 skill",
   ]);
 
@@ -70,13 +70,29 @@ function checkSuperpowersDevLoop() {
     "User Review Gate",
   ]);
 
-  requireTokens("skills/writing-plans/SKILL.md", [
-    "## Preconditions",
-    "approved spec",
-    "Plan Gate",
-    "## Global Constraints",
-    "**Interfaces:**",
-    "skills/subagent-driven-development/SKILL.md",
+  requireTokens("skills/to-tickets/SKILL.md", [
+    "tracer bullet",
+    "blocking edges",
+    "fresh context",
+    "file paths",
+    "code snippets",
+  ]);
+
+  requireTokens("skills/implement/SKILL.md", [
+    "一个 fresh context",
+    "test-driven-development",
+    "ticket as the Spec source",
+  ]);
+
+  requireTokens("skills/subagent-driven-development/SKILL.md", [
+    "frontier ticket",
+    "fresh subagent",
+    "one ticket",
+    "Do not generate a detailed implementation plan",
+    "controller-owned integration worktree",
+    "integrate-and-verify gate",
+    "task-owned untracked files",
+    "every selected ticket body as the combined Spec source",
   ]);
 
   requireTokens("skills/test-driven-development/SKILL.md", [
@@ -136,7 +152,7 @@ function checkSpecVisualContracts() {
 function checkSuperpowersArtifactPolicy() {
   requireTokens("rules/05-git-workflow.md", [
     "## Superpowers 本地工件",
-    "Superpowers 生成的 spec 和 plan 仅用于本地工作流",
+    "Superpowers 生成的 Spec 和本地 tickets 仅用于本地工作流",
     "无论保存位置都不得暂存或提交",
   ]);
   requireTokens("skills/spec-gate/SKILL.md", [
@@ -144,11 +160,7 @@ function checkSuperpowersArtifactPolicy() {
     "Treat every generated design Spec as a local workflow artifact",
     "Do not stage or commit it.",
   ]);
-  requireTokens("skills/writing-plans/SKILL.md", [
-    "Local-only artifact policy",
-    "Treat every generated implementation plan as a local workflow artifact",
-    "Do not stage or commit it.",
-  ]);
+  requireTokens("skills/to-tickets/SKILL.md", ["Local tracker", "one file per ticket"]);
 
   const repoRoot = spawnSync("git", ["rev-parse", "--show-toplevel"], {
     cwd: root,
@@ -249,24 +261,19 @@ function checkWorkflowDocuments() {
     "多文件、新功能、普通行为变化和复杂度本身都不是升级条件",
     "信息足够后立即停止追问",
     "Spec Gate",
-    "Plan Gate",
+    "Ticket Gate",
     "Task Review Gate",
     "BLOCKED_BY_UNRESOLVED_DECISION",
     "不得自动回到 grilling",
     "不恢复旧调用栈",
   ]);
   requireTokens("rules/common/skills-learning.md", [
-    "不自动加载完整 process skill 链",
-    "路由选中后",
-    "skills/grilling/SKILL.md",
-    "skills/spec-gate/SKILL.md",
+    "路由权威来源",
+    "不要因为多文件或普通复杂度加载完整 process skill 链",
+    "rules/01-base.md",
+    "rules/common/agent-orchestration.md",
   ]);
-  requireTokens("agents/planner.md", [
-    "`grilling`",
-    "`spec-gate`",
-    "多模块本身不是",
-    "不重复已解决决策",
-  ]);
+  requireTokens("agents/planner.md", ["to-tickets", "不写文件路径"]);
 }
 
 function checkComplexityRules() {
@@ -314,8 +321,8 @@ function checkSuperpowersRoutingConsistency() {
 
   const retrieval = read("skills/iterative-retrieval/SKILL.md");
   for (const staleRoute of [
-    "交接到 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans` skill",
-    "再进入 `brainstorming`、`writing-plans`、`test-driven-development` 或 `executing-plans`",
+    "交接到 `brainstorming`、`test-driven-development` 或 `executing-plans` skill",
+    "再进入 `brainstorming`、`test-driven-development` 或 `executing-plans`",
   ]) {
     if (retrieval.includes(staleRoute)) {
       fail(
@@ -404,12 +411,11 @@ function checkCapabilityRouting() {
     "agents/e2e-runner.md",
     "explicit harness audit?",
     "agents/harness-optimizer.md",
-    "User-invoked Delivery Gates",
-    "explicit /to-tickets?",
-    "recommend `to-tickets`; wait for explicit invocation",
-    "explicit implementation request?",
+    "Agent-selected Delivery Topology",
+    "delivery request in defined scope?",
+    "independent frontier tickets with no overlapping write surface?",
     "skills/implement/SKILL.md",
-    "recommend `implement`; wait for explicit invocation",
+    "skills/subagent-driven-development/SKILL.md",
     "explicit prototype or runnable design question?",
     "skills/prototype/SKILL.md",
     "primary-source research or cited research artifact?",
@@ -424,15 +430,23 @@ function checkCapabilityRouting() {
   ]);
 
   const router = read("skills/using-superpowers/SKILL.md");
-  const forbiddenAutoEdges = [
-    /approved Spec requiring tracker tickets\?\s*->\s*skills\/to-tickets\/SKILL\.md/i,
-    /approved agent-ready ticket\?\s*->\s*skills\/implement\/SKILL\.md/i,
-  ];
-  for (const edge of forbiddenAutoEdges) {
-    if (edge.test(router)) {
-      fail(
-        "user-invoked delivery skills must be recommended and explicitly invoked, not auto-routed",
-      );
+  for (const staleGate of [
+    "User-invoked Delivery Gates",
+    "recommend `to-tickets`; wait for explicit invocation",
+    "recommend `implement`; wait for explicit invocation",
+  ]) {
+    if (router.includes(staleGate)) {
+      fail(`router must not retain the obsolete user-invoked delivery gate: ${staleGate}`);
+    }
+  }
+
+  for (const deliverySkill of [
+    "skills/to-tickets/SKILL.md",
+    "skills/implement/SKILL.md",
+    "skills/subagent-driven-development/SKILL.md",
+  ]) {
+    if (read(deliverySkill).includes("disable-model-invocation: true")) {
+      fail(`${deliverySkill} must remain router-selectable for delivery topology`);
     }
   }
 }
@@ -528,7 +542,6 @@ function checkDeliveryCapabilityContracts() {
     "Git authorization",
   ]);
   requireTokens("skills/to-tickets/SKILL.md", [
-    "disable-model-invocation: true",
     "tracer bullet",
     "blocking edges",
     "vertical",
@@ -601,7 +614,12 @@ function checkRemovedSkillReferences() {
     }
   }
 
-  const retiredSkills = ["discover-unknowns-zh", "skill-creator"];
+  const retiredSkills = [
+    "discover-unknowns-zh",
+    "skill-creator",
+    "writing-plans",
+    "executing-plans",
+  ];
   const allowedRetirementFiles = new Set([
     "README.md",
     "scripts/retired-skill-files.json",
@@ -630,7 +648,6 @@ function checkRemovedSkillReferences() {
     "`iterative-retrieval`",
     "`research`",
     "`prototype`",
-    "`writing-plans`",
     "`to-tickets`",
     "`implementation-notes`、`explainer` 和 `quiz` 工件链不再属于",
     "`skill-creator` 已退休",

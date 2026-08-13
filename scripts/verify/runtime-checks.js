@@ -82,6 +82,7 @@ function checkScriptLayout() {
     "Test-RetiredSkillManifest",
     "scripts\\hooks\\run-with-flags.js",
     "hooks\\review-confidence.js",
+    "rules\\08-ecc-integration.md",
   ]);
 
   requireTokens("scripts/install.sh", [
@@ -90,6 +91,7 @@ function checkScriptLayout() {
     "validate_retired_skill_manifest",
     "scripts/hooks/run-with-flags.js",
     "hooks/review-confidence.js",
+    "rules/08-ecc-integration.md",
   ]);
 
   checkLegacyScriptReferences();

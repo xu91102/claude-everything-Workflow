@@ -9,7 +9,7 @@ Create an implementation-ready design artifact from resolved decisions and verif
 
 ## Hard Gate
 
-Do not invoke implementation skills, write implementation code, or generate an implementation plan until the saved Spec has passed self-review and the user has explicitly approved it.
+Do not invoke implementation skills, write implementation code, or generate tickets until the saved Spec has passed self-review and the user has explicitly approved it.
 
 Do not ask clarifying questions. If a user-owned decision can materially change the result, return `BLOCKED_BY_UNRESOLVED_DECISION` before drafting the document.
 
@@ -90,7 +90,7 @@ Before returning a review outcome:
 2. Verify every consequential choice is resolved or explicitly delegated.
 3. Verify architecture, interfaces, failure behavior, migration, tests, acceptance, risk, and rollback agree.
 4. Verify each acceptance criterion maps to a repeatable automated or manual check.
-5. Verify the scope can produce one coherent implementation plan.
+5. Verify the scope can produce either one coherent implementation ticket or a coherent ticket breakdown.
 6. For complex or high-risk specs, read `references/spec-document-reviewer-prompt.md` and apply its calibrated review.
 
 Fix non-decision defects inline and repeat the self-review. A newly exposed consequential decision returns the blocking contract instead of entering user review.

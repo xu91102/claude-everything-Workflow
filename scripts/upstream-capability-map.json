@@ -58,9 +58,7 @@
       "upstream": "implement",
       "status": "adapted",
       "evidence": [
-        "skills/implement/SKILL.md",
-        "skills/executing-plans/SKILL.md",
-        "skills/subagent-driven-development/SKILL.md"
+        "skills/implement/SKILL.md"
       ]
     },
     {

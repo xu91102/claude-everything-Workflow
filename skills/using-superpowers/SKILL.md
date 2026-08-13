@@ -1,6 +1,6 @@
 ---
 name: using-superpowers
-description: "Route non-trivial work through the smallest suitable workflow, including direct execution, grilling for unresolved user-owned decisions, and formal Spec Gate for explicitly requested or costly-to-reverse work. Use at task start, after a process Skill returns an outcome, and whenever continuation ownership is unclear."
+description: "Route delivery work through an agent-selected direct, serial-ticket, or safe SDD topology; use grilling for unresolved user-owned decisions and Spec Gate for explicitly requested or costly-to-reverse work. Use at task start, after a process Skill returns an outcome, and whenever continuation ownership is unclear."
 ---
 
 # Using Superpowers
@@ -46,8 +46,10 @@ formal-spec
   explicit formal Spec or high-risk boundary
     -> grilling inline first only when a consequential decision is unresolved
     -> spec-gate -> user review -> approved Spec
-       -> multi-session/tracker delivery -> recommend to-tickets and wait for explicit invocation
-       -> single-session delivery -> writing-plans -> execute
+       -> router selects delivery topology
+          -> durable ticket graph -> to-tickets -> user approves ticket contract
+          -> one coherent scope -> implement
+          -> independent frontier tickets without write overlap -> subagent-driven-development
 ```
 
 File count, a new-feature label, ordinary behavior change, and normal code complexity do not upgrade a task. They affect implementation and verification intensity only.
@@ -68,8 +70,6 @@ Task arrives
   -> explicit TDD request?                         -> skills/test-driven-development/SKILL.md + agents/tdd-guide.md
   -> explicit E2E or Playwright request?           -> skills/e2e-testing/SKILL.md + agents/e2e-runner.md
   -> explicit harness audit?                       -> agents/harness-optimizer.md
-  -> explicit /to-tickets?                         -> skills/to-tickets/SKILL.md
-  -> explicit implementation request?             -> skills/implement/SKILL.md
   -> huge effort beyond one session?               -> skills/wayfinder/SKILL.md
   -> explicit architecture-health audit?           -> skills/improve-codebase-architecture/SKILL.md
   -> merge or rebase conflict?                     -> skills/resolving-merge-conflicts/SKILL.md
@@ -81,11 +81,11 @@ Task arrives
   -> unresolved user-owned decision?               -> grilling inline
        high-risk or explicit formal Spec context?  -> resume_target: spec-gate
   -> explicit formal Spec or high-risk boundary?   -> spec-gate
-  -> approved Spec requires tracker tickets but no explicit /to-tickets? -> recommend `to-tickets`; wait for explicit invocation
-  -> approved Spec, single-session plan missing?   -> writing-plans
-  -> approved agent-ready ticket but no explicit implementation request? -> recommend `implement`; wait for explicit invocation
-  -> approved plan + SDD/commit approved?          -> subagent-driven-development
-  -> approved plan, no commit approval?            -> executing-plans
+  -> delivery request in defined scope?            -> select delivery topology
+       -> durable multi-session/tracker graph?     -> skills/to-tickets/SKILL.md
+       -> independent frontier tickets with no overlapping write surface?
+                                                     -> skills/subagent-driven-development/SKILL.md
+       -> otherwise                                 -> skills/implement/SKILL.md
   -> behavior change with a test path?             -> test-driven-development
   -> dirty worktree or risky branch work?          -> consider using-git-worktrees
   -> completion, fixed, or ready claim?            -> verification-before-completion
@@ -103,14 +103,21 @@ A high-risk boundary is a costly-to-reverse architecture or service boundary, pu
 只返回推荐入口与原因、前置条件、需要补齐的用户决策或 Spec/tickets/map/handoff，以及直到
 审查和验证的闭环路径。不要调用下一 Skill、写文件或修改 tracker。
 
-### User-invoked Delivery Gates
+### Agent-selected Delivery Topology
 
-`to-tickets` 和 `implement` 都声明了 `disable-model-invocation: true`。只有当前用户请求显式触发
-对应动作时，router 才能进入该 Skill；Spec 获批、tickets 已发布或某张 ticket 进入 frontier
-都只满足前置条件，不能推导出下一阶段授权。
+用户要求完成一个定义明确的交付范围后，router 自行选择 `implement`、`to-tickets` 或
+`subagent-driven-development`；选择依据是持续性、依赖图、写入面和验证成本，而不是用户是否记得某个
+Skill 名称。开始时用一行说明所选拓扑及理由，然后继续执行。
 
-没有显式请求时，只能 recommend `to-tickets`; wait for explicit invocation，或 recommend
-`implement`; wait for explicit invocation。不得为了保持流程连续而自动跨越 user-invoked gate。
+- 一个可在当前上下文完成的连贯范围，使用 `implement`。
+- 需要跨会话、tracker 或可恢复依赖图时，使用 `to-tickets`。这仍必须展示 ticket 的行为、验收标准与
+  blocker，并在发布前获得用户对 ticket contract 的批准。
+- 只有至少两张已批准、无 blocker、写入面不重叠的 frontier tickets，才使用 SDD。不能安全并行时选择
+  串行 `implement`，不要为了使用 subagent 人为拆票。
+
+用户的交付授权覆盖已批准范围内的本地实现与拓扑选择，不覆盖新的产品范围、未决用户决策、外部 tracker
+mutation、commit、push、PR 或不可逆副作用。新的 frontier 只有仍在该授权范围内时才能由 router 再次选择
+执行拓扑。
 
 ### Grilling handoff
 
@@ -119,8 +126,8 @@ Read `Risk classification` and `Resume target`. A non-formal task returns to dir
 ### Spec Gate ready
 
 `READY_FOR_USER_REVIEW` means the local artifact passed self-review but is not approved. Present the
-path and wait for explicit approval. For multi-session/tracker delivery, recommend `to-tickets` and
-wait for explicit invocation; for a single-session delivery plan, route to `writing-plans`.
+path and wait for explicit approval. Approval returns control here; the router then selects a delivery
+topology from the approved scope instead of waiting for the user to name the next Skill.
 
 ### Cross-session handoff
 
@@ -158,7 +165,8 @@ Stop and reassess if you are about to:
 - enter formal Spec Gate for an ordinary reversible change;
 - let Spec Gate interview the user;
 - automatically bounce from a blocked Spec Gate to grilling;
-- automatically cross a user-invoked `to-tickets` or `implement` gate;
+- select SDD without at least two safe, independent frontier tickets;
+- treat a topology choice as approval for a ticket contract or an external mutation;
 - continue implementation without an approved required Spec;
 - claim completion without fresh verification evidence.
 

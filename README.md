@@ -108,7 +108,7 @@ claude-everything-Workflow/
 │   ├── 05-git-workflow.md      # Git 规范
 │   ├── 06-comments.md          # 注释规范
 │   ├── 07-forbidden.md         # 禁止事项
-│   ├── 08-ecc-integration.md   # ECC 集成索引
+│   ├── 08-specialty-rules-index.md # 专项规则索引
 │   ├── 09-first-principles-adversarial-testing.md # 第一性原则与对抗性测试
 │   └── common/                 # 通用最佳实践
 │       ├── harness-engineering.md # Agent Harness 六层与执行循环
@@ -159,18 +159,13 @@ claude-everything-Workflow/
 │   │   └── SKILL.md
 │   ├── project-context/        # 显式配置项目工作追踪、领域文档和 ADR 位置
 │   │   └── SKILL.md
+│   ├── subagent-driven-development/ # 独立 frontier ticket 的可选并行执行
+│   │   └── SKILL.md
 │   ├── visual-companion/       # 经同意后展示安全本地视觉方案
 │   │   ├── SKILL.md
 │   │   ├── references/
 │   │   └── scripts/
-│   ├── subagent-driven-development/ # SDD：task brief、review package、progress ledger
-│   │   ├── SKILL.md
-│   │   ├── implementer-prompt.md
-│   │   ├── task-reviewer-prompt.md
-│   │   └── scripts/
 │   ├── using-git-worktrees/    # 隔离式 worktree 执行准备
-│   │   └── SKILL.md
-│   ├── executing-plans/        # 按计划执行、检查点、审查与验证
 │   │   └── SKILL.md
 │   ├── verification-before-completion/ # 完成声明前的新鲜验证门
 │   │   └── SKILL.md
@@ -309,9 +304,10 @@ export ECC_DISABLED_HOOKS="post:edit:console-log"
 当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录统一保存低噪音 Hook 运行时和脚本实现。默认不启用会话启动、会话结束、停止或压缩前的弱摘要 Hook，避免污染上下文。`scripts/learning/` 只保存手动学习治理脚本，不作为 Hook 自动触发。
 Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks；如未来需要 Codex 原生自动化，应新增明确 adapter。
 
-## Superpowers 风格开发闭环
+## Ticket-first 工程交付闭环
 
-本仓默认最短闭环、按风险逐级升级。高风险任务或用户显式 opt-in 时参考 [obra/superpowers](https://github.com/obra/superpowers) 的门禁结构，但不复制外部仓库文件。主线是：
+本仓默认最短闭环、按风险逐级升级；跨会话交付参考
+[mattpocock/skills](https://github.com/mattpocock/skills) 的 ticket-first 模型。主线是：
 
 ```text
 任务
@@ -322,19 +318,21 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
   -> 超过单个 session 的模糊工作：wayfinder 维护 decision-ticket map
   -> 标记用户显式 formal spec 或高回滚成本架构/公共契约、安全、持久数据、不可逆副作用
   -> 存在关键用户决策：grilling 一次只问一个最高价值问题，并返回结构化 handoff
-  -> 明确低风险且无未决决策：direct，直接实现并做相称验证
+  -> 明确低风险且无未决决策：direct，经 implement 的无 ticket 路径实施、审查并做相称验证
   -> 高风险/formal spec 且上下文充分：spec-gate 零访谈写 design spec 并自审
   -> Spec Gate 阻塞：停止并展示决策地图；用户明确继续才创建新 grilling 会话
   -> 用户审核并批准 spec
-  -> 多 session/tracker 交付：to-tickets 拆垂直切片和 blocking edges
+  -> router 按交付持续性、依赖图、写入面和验证成本选择执行拓扑
+  -> 多 session/tracker：to-tickets 拆垂直切片和 blocking edges，用户确认 ticket contract 后发布
+  -> 单 session 的 direct/approved Spec 连贯范围或单张 frontier ticket：implement 在一个 fresh context 中实施
+  -> 多张独立 frontier tickets：router 用 subagent-driven-development 在独立 worker worktree 并行，再汇入 integration worktree
   -> using-git-worktrees 按需创建隔离工作区
-  -> 单 session：writing-plans 写实施计划
-  -> implement Skill 先 claim frontier ticket，再按计划调用 subagent-driven-development / executing-plans
   -> TDD 红绿重构
   -> 需求符合性审查
   -> 代码质量审查
   -> verification-before-completion 完成声明前确认新鲜验证证据
-  -> ticket 验收、双轴审查和验证通过后 resolve，并返回 newly unlocked frontier
+  -> ticket 路径：ticket 验收、双轴审查和验证通过后 resolve，并返回 newly unlocked frontier
+  -> 无 ticket 路径：双轴审查和验证通过后报告证据，不 claim、resolve 或刷新 tracker
   -> /verify 质量门
   -> /pr 提交/PR
   -> /learn eval --preview 学习沉淀
@@ -346,9 +344,10 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 ### Skill 迁移说明
 
-- `discover-unknowns-zh` 已退休：事实、证据和盲点检索转到 `iterative-retrieval`/`research`，可运行原型转到 `prototype`，正式计划转到 `writing-plans`/`to-tickets`。
+- `discover-unknowns-zh` 已退休：事实、证据和盲点检索转到 `iterative-retrieval`/`research`，可运行原型转到 `prototype`，多会话交付转到 `to-tickets`。
 - 原 skill 的 `implementation-notes`、`explainer` 和 `quiz` 工件链不再属于本项目承诺的工作流。
 - `skill-creator` 已退休：Skill 写作与验证规则收敛到 `rules/common/skills-learning.md`，开放生态发现仍由 `find-skills` 处理。
+- 详细实施计划、计划执行，以及依赖长计划的旧 SDD 辅助材料已退休：ticket 是唯一的跨会话实施合同；当前 SDD 只按 ticket 分派 fresh subagent。
 
 Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.json`；Harness 要求
 上游 17 项 promoted Engineering 能力都有本地 `covered` 或 `adapted` 证据，并覆盖主流程
@@ -363,19 +362,19 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 - 开始非平凡任务前，先用 `using-superpowers` 判断并加载相关 process skill。
 - 上下文或工具面变重时，先盘点常驻 Token 开销，再决定新增或删除 MCP/skill/agent。
 - 子代理需要探索大仓库时，先用 `iterative-retrieval` 的 Dispatch/Evaluate/Refine/Loop 闭环收敛上下文，再回传证据。
-- 完整流程适用时：没有 spec 不进入 plan，没有用户审核不进入实现，没有 review 不标记任务完成。
-- 计划必须包含 `Global Constraints` 和每任务 `Interfaces`，让 implementer/reviewer 不依赖父会话记忆。
+- 完整流程适用时：没有批准的必需 Spec 不进入 ticket 或 implement，没有用户审核不进入实现，没有 review 不标记任务完成。
+- 每张 ticket 必须说明交付行为、验收标准和真实 blocker；不要在 ticket 中复制文件路径、代码或逐步计划。
 - 没有 failing test，不写行为代码。
 - 没有新鲜验证证据，不声明完成、通过、已修复或 ready。
 - 没有 verify，不进入 PR。
 - 有脏工作区、并行任务或高风险改动时，先考虑 `using-git-worktrees`。
-- 只有用户明确批准 commit/PR/SDD 执行时，才使用 `subagent-driven-development` 的 per-task commit 流；否则用 `executing-plans` 或 inline execution。
 
-### 对齐 Superpowers v6.0.3 的能力
+### Ticket-first 交付约束
 
-- `subagent-driven-development` 使用 `.superpowers/sdd/` 保存 task brief、implementer report、review package 和 `progress.md`，避免把 scratch 写进 `.git/`。
-- 每个任务使用一个 `task-reviewer-prompt.md` 同时返回 spec compliance 和 code quality verdict，减少重复 reviewer 上下文。
-- `writing-plans` 强制 `Global Constraints` 和每任务 `Interfaces`，把跨任务约束、输入输出契约传给 implementer 和 reviewer。
+- `to-tickets` 只写端到端行为、验收标准和 blocking edges；一张 ticket 是一个可在 fresh context 完成的 tracer bullet。
+- 细节由实施会话结合当前代码发现；ticket 不写文件路径、行号、代码片段或分层改造步骤，避免文档在实现前过期。
+- `implement` 处理一张 frontier ticket，或用户授权的低风险 direct/approved Spec 连贯范围；ticket 以自身作为 Spec source，direct scope 以明确用户请求和相称验证为 scope source。两条路径都驱动 TDD、双轴审查和新鲜验证，只有 ticket 才 claim、resolve 并刷新依赖图。
+- `subagent-driven-development` 是 router 选出的并行执行器：不再读取长计划，而是给每个 fresh subagent 一张已批准的 frontier ticket 和独立 worker worktree；通过 review 的 diff 必须汇入 integration worktree 并完成联合验证后才能 resolve。
 - Visual Companion 使用带 `?key=` 的 per-session URL，HTTP/WebSocket 请求都需要 session key；默认 idle timeout 为 4 小时，可用 `--idle-timeout-minutes` 调整。
 
 复杂度只影响执行与验证强度，不自动触发完整流程。普通新功能、多文件行为变化和存在低风险关键未知的任务仍走最短适用闭环；只有上述高风险类别或显式 opt-in 才进入完整流程。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
@@ -420,12 +419,11 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 ```
 1. 复制到 ~/.claude/
 2. 首次需要长期协作上下文时，直接请求配置 project context；需求清楚时直接实现；关键未知按需请求 grilling；高风险任务或显式 opt-in 用 `/to-spec` 写 design spec
-3. 高风险或并行实现前，用 `using-git-worktrees` 隔离工作区
-4. 用 `writing-plans` 写实施计划
-5. 用 `executing-plans` 按计划执行
-6. 由中央路由调用 test-driven-development 和 tdd-guide 执行测试先行实现
-7. 关键路径由 e2e-testing 和 e2e-runner 维护 Playwright
-8. 使用 /code-review 基于固定基点并行执行隔离的 Standards/Spec 双轴审查
-9. 使用 /verify 验证，通过后使用 /pr 进入提交与 PR 门
-10. 使用 /learn eval、/learn projects、/learn promote、/learn evolve 或 /learn prune 管理学习闭环
+3. router 判断跨会话交付时调用 `to-tickets`，确认拆分、验收和依赖后发布；单会话跳过 tickets
+4. router 为无 blocker 的单张 ticket 或单会话 approved Spec 选择 `implement`；高风险或并行实现前，用 `using-git-worktrees` 隔离工作区。
+   多张独立 frontier tickets 时，router 选择 `subagent-driven-development`。
+5. 有测试路径时由 `test-driven-development` 和 tdd-guide 执行测试先行实现；关键路径由 e2e-testing 和 e2e-runner 维护 Playwright
+6. 使用 /code-review 基于固定基点并行执行隔离的 Standards/Spec 双轴审查
+7. 使用 /verify 验证，通过后使用 /pr 进入提交与 PR 门
+8. 使用 `/learn` 的 eval、projects、promote、evolve 或 prune 子命令管理学习闭环
 ```

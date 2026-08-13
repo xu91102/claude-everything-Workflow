@@ -10,7 +10,7 @@ Check:
 - Decision integrity: no unresolved user-owned choice is disguised as an implementation detail.
 - Consistency: requirements, architecture, interfaces, data flow, error handling, migration, and rollback agree.
 - Testability: each acceptance criterion has an automated seam or explicit repeatable manual check.
-- Scope: one coherent implementation plan can deliver the result.
+- Scope: one coherent implementation ticket or ticket breakdown can deliver the result.
 - YAGNI: no unrequested subsystem or speculative extension.
 - Failure behavior: normal, adversarial, retry, partial-state, and compatibility paths are covered where relevant.
 

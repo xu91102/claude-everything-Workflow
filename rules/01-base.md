@@ -20,8 +20,7 @@
 - 外科手术式修改：每一行改动都应能追溯到用户需求、失败用例或验证目标。
 - 不顺手重构：发现无关问题时只记录或说明，除非用户明确要求，否则不修改。
 - 先定义成功标准：复杂任务开始前明确验证方式，例如测试、构建、复现用例或行为检查。
-- 最小验证闭环：完成前运行与改动范围匹配的最小验证；无法验证时说明原因和剩余风险。
-- 分层验证频率：中间步骤只跑最小必要验证；完成阶段统一跑一次完整的相关验证。遇到失败、跨模块影响、高风险改动或 PR 质量门时，再升级验证范围。
+- 验证闭环：验证范围必须匹配风险；具体层级、频率和无法验证时的披露要求见 `rules/common/testing.md`。
 
 ## 开发流程
 
@@ -67,9 +66,9 @@
 1. Clarification Gate -> 仅真实未决用户决策使用 grilling；已确认决策只在 reversal evidence 出现或基础前提失效时重开
 2. Spec Gate -> `spec-gate` 零访谈生成并自审 design spec；重大未决决策返回终止态 `BLOCKED_BY_UNRESOLVED_DECISION`
 3. User Review Gate -> 用户确认 spec 后才能继续
-4. Plan Gate -> writing-plans 写实施计划
+4. Ticket Gate -> 需要持久依赖图时经 `to-tickets` 形成并确认 ticket contract；实施拓扑与 SDD 条件见 `rules/common/agent-orchestration.md`
 5. Red Test Gate -> 行为变化先写失败测试并确认失败原因
-6. Task Review Gate -> 每个任务完成后做需求符合性审查和代码质量审查
+6. Task Review Gate -> 每张 ticket 完成后做需求符合性审查和代码质量审查
 7. Verify Gate -> /verify 或等价验证通过后才能进入 PR
 8. PR Gate -> /pr 只处理本次任务相关文件并记录验证与风险
 ```

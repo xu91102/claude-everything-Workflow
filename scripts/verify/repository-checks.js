@@ -13,7 +13,10 @@ function checkRouterAndAgentLinks() {
   requireTokens("skills/using-superpowers/SKILL.md", [
     "Skill Invocation Rule",
     "Task arrives",
-    "approved plan + SDD/commit approved?",
+    "Agent-selected Delivery Topology",
+    "delivery request in defined scope?",
+    "independent frontier tickets with no overlapping write surface?",
+    "skills/subagent-driven-development/SKILL.md",
     "skill discovery or install request?",
     "find-skills",
     "external skill learning or edit?",
@@ -24,31 +27,6 @@ function checkRouterAndAgentLinks() {
     "skills/verification-before-completion/SKILL.md",
     "User instructions",
   ]);
-
-  requireTokens("skills/subagent-driven-development/SKILL.md", [
-    ".superpowers/sdd/progress.md",
-    "scripts/task-brief",
-    "scripts/review-package BASE HEAD",
-    "task-reviewer-prompt.md",
-    "Local Git Boundary",
-    "skills/executing-plans/SKILL.md",
-  ]);
-
-  requireTokens("skills/subagent-driven-development/task-reviewer-prompt.md", [
-    "Spec Compliance",
-    "Task quality",
-    "Cannot verify from diff",
-    "[BRIEF_FILE]",
-    "[DIFF_FILE]",
-  ]);
-
-  for (const script of [
-    "skills/subagent-driven-development/scripts/sdd-workspace",
-    "skills/subagent-driven-development/scripts/task-brief",
-    "skills/subagent-driven-development/scripts/review-package",
-  ]) {
-    if (!exists(script)) fail(`${script} is missing`);
-  }
 
   const expected = [
     ["agents/e2e-runner.md", "skills/e2e-testing/SKILL.md"],
@@ -79,42 +57,43 @@ function checkRouterAndAgentLinks() {
   }
 }
 
-function checkWritingPlansSkill() {
-  if (!exists("skills/writing-plans/SKILL.md")) {
-    fail("skills/writing-plans/SKILL.md is missing");
-  } else {
-    const writingPlans = read("skills/writing-plans/SKILL.md");
-    const requiredTokens = [
-      "Project-Agent Loop",
-      "skills/using-git-worktrees/SKILL.md",
-      "skills/executing-plans/SKILL.md",
-      "agents/tdd-guide.md",
-      "skills/code-review/references/standards-reviewer-prompt.md",
-      "skills/systematic-debugging/SKILL.md",
-      "skills/verification-before-completion/SKILL.md",
-      "skills/subagent-driven-development/SKILL.md",
-      "## Global Constraints",
-      "**Interfaces:**",
-      "Completion Loop",
-      "`/verify`",
-      "`/pr`",
-    ];
-
-    for (const token of requiredTokens) {
-      if (!writingPlans.includes(token)) {
-        fail(`skills/writing-plans/SKILL.md should include ${token}`);
-      }
-    }
-
-    for (const forbidden of [
-      "superpowers:subagent-driven-development",
-      "superpowers:executing-plans",
-    ]) {
-      if (writingPlans.includes(forbidden)) {
-        fail(`skills/writing-plans/SKILL.md contains dangling ${forbidden}`);
-      }
+function checkTicketFirstDelivery() {
+  for (const skill of ["writing-plans", "executing-plans"]) {
+    if (exists(`skills/${skill}/SKILL.md`)) {
+      fail(`skills/${skill}/SKILL.md must be retired for the ticket-first flow`);
     }
   }
+
+  requireTokens("agents/planner.md", ["to-tickets", "ticket", "不写文件路径"]);
+
+  requireTokens("skills/to-tickets/SKILL.md", [
+    "tracer bullet",
+    "blocking edges",
+    "fresh context",
+    "file paths",
+    "code snippets",
+    "Do not publish before approval",
+  ]);
+  requireTokens("skills/implement/SKILL.md", [
+    "一个 fresh context",
+    "test-driven-development",
+    "ticket as the Spec source",
+    "`/code-review --worktree <pre-ticket-base> --spec <ticket>`",
+    "direct-scope contract",
+    "无 ticket 范围不得 claim 或写入任何 tracker",
+  ]);
+  requireTokens("skills/subagent-driven-development/SKILL.md", [
+    "frontier ticket",
+    "fresh subagent",
+    "one ticket",
+    "router is executing a user-authorized delivery scope",
+    "separate worktree",
+    "controller-owned integration worktree",
+    "integrate-and-verify gate",
+    "task-owned untracked files",
+    "every selected ticket body as the combined Spec source",
+    "Do not generate a detailed implementation plan",
+  ]);
 }
 
 function checkDebuggingSkill() {
@@ -253,14 +232,9 @@ function checkCodeReviewContracts() {
     "固定基点下并行执行隔离的 Standards 轴与 Spec 轴审查",
   ]);
 
-  requireTokens("skills/executing-plans/SKILL.md", [
-    "pre-plan commit as the fixed base",
-    "Spec source",
-  ]);
-
-  requireTokens("skills/writing-plans/SKILL.md", [
-    "pre-plan commit as its fixed base",
-    "Spec source",
+  requireTokens("skills/implement/SKILL.md", [
+    "pre-ticket base",
+    "ticket as the Spec source",
   ]);
 }
 
@@ -304,16 +278,21 @@ function checkProjectContextContracts() {
 }
 
 function checkTrackerDeliveryLifecycle() {
+  const deliveryLifecycle =
+    "PRECONDITION → ISOLATE → [CLAIM] → EXECUTE → REVIEW → VERIFY → " +
+    "[RESOLVE → REFRESH_FRONTIER] → FINISH_DELIVERY";
+
   requireTokens("skills/implement/SKILL.md", [
-    "disable-model-invocation: true",
     "## State Machine",
-    "PRECONDITION → ISOLATE → CLAIM → EXECUTE → REVIEW → VERIFY → RESOLVE → REFRESH_FRONTIER → FINISH_DELIVERY",
+    deliveryLifecycle,
+    "无 ticket 的 direct scope 或 approved Spec scope 跳过 CLAIM、RESOLVE",
     "docs/agent-workflow/project-context.md",
     "skills/using-git-worktrees/SKILL.md",
+    "除只读分析和单文件修改外，所有代码、配置、Harness 改动必须先创建独立" +
+      " `git worktree` 和任务分支",
     "clean baseline",
     "pre-ticket base",
-    "writing-plans",
-    "subagent-driven-development",
+    "一个 fresh context",
     "ticket as the Spec source",
     "`/code-review --worktree <pre-ticket-base> --spec <ticket>`",
     "frontier",
@@ -329,9 +308,10 @@ function checkTrackerDeliveryLifecycle() {
     "全分支双轴 review",
     "`/verify pre-pr`",
     "`/pr` 或 keep",
-    "不得自动 claim 下一张 ticket",
-    "不得自动 commit、push",
+    "可重新选择串行 `implement` 或安全 SDD",
+    "不覆盖 commit、push 或创建 PR",
     "不得自动关闭外部 Issue",
+    "无 ticket 范围不得 claim 或写入任何 tracker",
   ]);
 
   requireTokens("commands/pr.md", [
@@ -345,14 +325,6 @@ function checkExecutionSupportSkills() {
     "git worktree add",
     "git worktree remove",
     "Do not create a worktree for simple single-file edits",
-  ]);
-
-  requireTokens("skills/executing-plans/SKILL.md", [
-    "approved implementation plan",
-    "Inline Execution",
-    "Project-Agent Loop",
-    "skills/systematic-debugging/SKILL.md",
-    "skills/verification-before-completion/SKILL.md",
   ]);
 
   requireTokens("skills/verification-before-completion/SKILL.md", [
@@ -385,7 +357,7 @@ function checkExecutionSupportSkills() {
 
 function checkSkillLinks() {
   checkRouterAndAgentLinks();
-  checkWritingPlansSkill();
+  checkTicketFirstDelivery();
   checkDebuggingSkill();
   checkCodeReviewContracts();
   checkProjectContextContracts();
@@ -434,18 +406,22 @@ function checkRuleLoadingPolicy() {
     }
   }
 
-  if (!exists("rules/08-ecc-integration.md")) {
-    fail("rules/08-ecc-integration.md is missing");
+  if (!exists("rules/08-specialty-rules-index.md")) {
+    fail("rules/08-specialty-rules-index.md is missing");
     return;
   }
 
-  const ecc = read("rules/08-ecc-integration.md");
-  if (!ecc.includes("触发矩阵")) {
-    fail("rules/08-ecc-integration.md should include a trigger matrix");
+  const specialtyRules = read("rules/08-specialty-rules-index.md");
+  if (!specialtyRules.includes("触发矩阵")) {
+    fail("rules/08-specialty-rules-index.md should include a trigger matrix");
   }
-  if (!ecc.includes("不得因为") || !ecc.includes("可能有用") || !ecc.includes("而一次性读取完整")) {
+  if (
+    !specialtyRules.includes("不得因为") ||
+    !specialtyRules.includes("可能有用") ||
+    !specialtyRules.includes("而一次性读取完整")
+  ) {
     fail(
-      "rules/08-ecc-integration.md should forbid full rules loading just because it might be useful",
+      "rules/08-specialty-rules-index.md should forbid full rules loading just because it might be useful",
     );
   }
 }
