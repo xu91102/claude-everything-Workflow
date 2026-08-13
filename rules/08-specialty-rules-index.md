@@ -1,6 +1,6 @@
-# ECC 集成索引
+# 专项规则索引
 
-本文件只保留 ECC 相关规则索引，避免默认加载过多细节。需要对应场景时再读取专项规则。
+本文件只保留专项规则索引，避免默认加载过多细节。需要对应场景时再读取对应规则。
 
 ## 加载层级
 
@@ -29,18 +29,19 @@
 - 长任务优先维护干净工作集；探索、审查、诊断等可隔离任务按需委派 subagent，只回传结论和证据。
 - Agent 不稳定时，先检查 Harness 六层：主循环、工具、上下文、状态、权限、验证。
 - 复杂、跨领域或需要独立视角时，再读取对应专项规则并考虑委派 agent。
-- 不为轻量任务加载完整 ECC 规则集。
+- 不为轻量任务加载完整专项规则集。
 
 ## 触发矩阵
 
 | 场景                                     | 读取                                                                    |
 | ---------------------------------------- | ----------------------------------------------------------------------- |
 | Harness 审计、命令/agent/skill/hook 调整 | `common/harness-engineering.md`、必要时读取 `common/context-hygiene.md` |
-| 子代理编排、并行探索、上下文隔离         | `common/agent-orchestration.md`、`common/context-hygiene.md`            |
+| Ticket/SDD 编排、并行探索               | `common/agent-orchestration.md`                                         |
+| Fresh/Fork、Subagent 回传、上下文隔离   | `common/context-hygiene.md`                                             |
 | Hook 行为、退出码、Profile、权限         | `common/hooks.md`                                                       |
 | Token、MCP、模型和上下文成本             | `common/performance.md`                                                 |
 | 外部 skill 学习、模式保存、演化评估      | `common/skills-learning.md`                                             |
 | 测试策略、TDD、E2E、验证范围             | `common/testing.md`                                                     |
-| 提交、推送、PR、CI 质量门                | `common/pr-automation.md`                                               |
+| 提交、推送、PR、CI 质量门                | `05-git-workflow.md`、`common/pr-automation.md`                        |
 | 安全敏感实现或安全审查                   | `common/security.md`                                                    |
 | 跨平台脚本、不可变性、实施阶段控制       | `common/implementation.md`                                              |

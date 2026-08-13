@@ -209,7 +209,13 @@ function Remove-ObsoleteWorkflowPaths {
         "hooks\session-end.js",
         "hooks\evaluate-session.js",
         "hooks\pre-compact.js",
-        "hooks\runtime\session-utils.js"
+        "hooks\runtime\session-utils.js",
+        "rules\08-ecc-integration.md",
+        "skills\subagent-driven-development\implementer-prompt.md",
+        "skills\subagent-driven-development\task-reviewer-prompt.md",
+        "skills\subagent-driven-development\scripts\sdd-workspace",
+        "skills\subagent-driven-development\scripts\task-brief",
+        "skills\subagent-driven-development\scripts\review-package"
     )
 
     foreach ($relative in $obsoleteFiles) {
@@ -221,7 +227,7 @@ function Remove-ObsoleteWorkflowPaths {
         }
     }
 
-    foreach ($relative in @("scripts\hooks", "scripts\lib")) {
+    foreach ($relative in @("scripts\hooks", "scripts\lib", "skills\subagent-driven-development\scripts")) {
         $target = Join-Path $Destination $relative
         if (Test-Path -LiteralPath $target -PathType Container) {
             $children = Get-ChildItem -LiteralPath $target -Force

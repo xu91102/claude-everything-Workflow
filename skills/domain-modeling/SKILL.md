@@ -77,7 +77,7 @@ direct user approval to maintain domain docs during the session. In that mode:
    of a real trade-off; show its path/content before writing.
 4. Keep `CONTEXT.md` implementation-free and keep ADRs concise.
 
-Outside that mode, persistence after an approved Spec remains an explicit implementation-plan task.
+Outside that mode, persistence after an approved Spec remains a router-selected ticket or implementation task.
 If project context is absent, do not invent a documentation layout.
 
 ### Glossary shape

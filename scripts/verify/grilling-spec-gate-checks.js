@@ -177,7 +177,7 @@ function checkSupportingSkills({ requireTokens }) {
 
 function checkRemovedBrainstormingReferences(context) {
   const { exists, read, managedFiles, fail, isVerifierImplementation } = context;
-  for (const agent of ["agents/planner.md", "agents/harness-optimizer.md"]) {
+  for (const agent of ["agents/harness-optimizer.md"]) {
     if (exists(agent) && read(agent).includes("brainstorming")) {
       fail(`${agent} must not reference brainstorming after the migration`);
     }
@@ -221,18 +221,24 @@ function checkInstallerCleanupContract({ requireTokens }) {
     "cleanup-retired-skills.js",
     "validate_retired_skill_manifest",
     "--dry-run",
+    "rules/08-ecc-integration.md",
+    "skills/subagent-driven-development/implementer-prompt.md",
   ]);
   requireTokens("scripts/install.ps1", [
     "Remove-RetiredSkills",
     "cleanup-retired-skills.js",
     "Test-RetiredSkillManifest",
     "--dry-run",
+    "rules\\08-ecc-integration.md",
+    "skills\\subagent-driven-development\\implementer-prompt.md",
   ]);
   requireTokens("scripts/retired-skill-files.json", [
     "brainstorming",
     "SKILL.md",
     "scripts/server.cjs",
     "agents/openai.yaml",
+    "writing-plans",
+    "executing-plans",
   ]);
   requireTokens("scripts/cleanup-retired-skills.js", [
     "Preserving unknown files in retired skill",

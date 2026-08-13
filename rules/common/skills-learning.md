@@ -23,12 +23,11 @@ Skill 创建和更新遵循本规则；开放生态中的 skill 查找和安装�
 - 不创建额外 README、安装指南或变更日志；正式索引统一维护在 `skills/README.md`。
 - 修改后运行 `npm run verify`，并确认 skill 目录、frontmatter、引用资源和安装包面均可发现。
 
-### Superpowers 路由纪律
+### 路由权威来源
 
-- 非平凡任务开始前，先用 `skills/using-superpowers/SKILL.md` 做风险路由；不因非平凡、多文件、新功能或普通行为变化就自动升级，不自动加载完整 process skill 链。
-- 显式完整流程或高回滚成本边界使用 `skills/spec-gate/SKILL.md`；若仍有阻塞实现的用户决策，先用 `skills/grilling/SKILL.md` 形成 handoff，再由中央路由调用新的 Spec Gate；需求清楚且低风险时走最短适用闭环。
-- `skills/spec-gate/SKILL.md` 不得形成提问循环或自动返回 grilling；阻塞 outcome 必须终止当前调用链。
-- 路由选中后，process skill 优先于 implementation skill；不要把完整流程当作所有任务的固定前置链。
+- 非平凡任务开始前读取 `skills/using-superpowers/SKILL.md`，不要因为多文件或普通复杂度加载完整 process skill 链。
+- 全局门禁以 `rules/01-base.md` 为准；ticket/SDD 调度以 `rules/common/agent-orchestration.md` 和当前
+  `SKILL.md` 为准。本文件不复制运行时路由、Spec Gate 或外部授权契约。
 - 不凭记忆执行 skill；skill 可能已更新，必须读取当前 `SKILL.md`。
 - 用户直接指令、`AGENTS.md`、`CLAUDE.md` 和项目规则优先于 skill；冲突影响结果时要说明。
 
@@ -48,7 +47,7 @@ Skill 创建和更新遵循本规则；开放生态中的 skill 查找和安装�
 1. 识别它修复的具体 agent 失败模式，例如需求未澄清、未复现就修复、测试铺太开、架构建议泛泛而谈。
 2. 映射到本项目已有层次：`rules/` 放长期硬规则，`skills/` 放自动触发能力，`agents/` 放隔离委托，`commands/` 放用户主动入口，`hooks/` 放可验证的自动检查。
 3. 优先保存为 `skills/learn/<category>/` 下的学习模式，验证确实高频、稳定、可组合后再演化为正式 skill、agent 或 command。
-4. 不整段复制外部仓库内容；只保留触发条件、执行步骤、验证闭环和本项目特定约束。
+4. 不整段复制外部仓库内容；只保留触发条件、交付契约、验证闭环和本项目特定约束。
 5. 涉及 README、命令入口、发布清单或安装脚本时，同步更新验证脚本，防止索引漂移。
 
 评估问题：

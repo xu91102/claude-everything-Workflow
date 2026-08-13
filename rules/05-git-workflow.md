@@ -50,12 +50,11 @@ fix bug
 
 ## Superpowers 本地工件
 
-- Superpowers 生成的 spec 和 plan 仅用于本地工作流，无论保存位置都不得暂存或提交。
+- Superpowers 生成的 Spec 和本地 tickets 仅用于本地工作流，无论保存位置都不得暂存或提交。
 - 默认目录 `docs/superpowers/` 由 `.gitignore` 保留在本地；PR 只包含实现、测试和长期维护文档。
 
-## PR 工作流
+## PR 授权边界
 
-- 用户要求提交、推送、创建 PR 时，读取 `commands/pr.md` 和 `rules/common/pr-automation.md`。
 - 不在 `main`、`master`、`prod` 等受保护分支直接提交。
 - 用户明确要求推送分支时可直接执行；创建 PR、合并 PR 前必须向用户确认。
-- PR 描述必须包含背景、核心改动、验证结果、风险与回滚。
+- 用户要求提交、推送、创建 PR 时，读取 `commands/pr.md` 和 `rules/common/pr-automation.md`；后者只维护 PR 的 CI、制品和描述，不重复本文件的 Git 与授权规则。

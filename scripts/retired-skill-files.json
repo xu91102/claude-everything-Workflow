@@ -25,6 +25,13 @@
       "scripts/init_skill.py",
       "scripts/package_skill.py",
       "scripts/quick_validate.py"
+    ],
+    "writing-plans": [
+      "SKILL.md",
+      "plan-document-reviewer-prompt.md"
+    ],
+    "executing-plans": [
+      "SKILL.md"
     ]
   }
 }
