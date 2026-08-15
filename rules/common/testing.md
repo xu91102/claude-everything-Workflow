@@ -25,19 +25,13 @@ monorepo 中先识别 package 依赖。若内部 package 以 `dist/` 暴露，co
 
 ## 验证频率
 
-- 中间步骤只运行与当前改动范围匹配的最小必要验证。
-- 完成阶段统一运行一次完整的相关验证。
-- 遇到失败、跨模块影响、高风险改动、发布或 PR 前质量门时，立即升级验证范围。
-- 不要因为每次小改动都默认运行全量测试或完整 build；验证范围应和风险、改动面、反馈成本匹配。
-- “完整验证”不是每次编辑后的默认动作，而是阶段性质量门；不能为了省时间跳过最终质量门。
-- 无法运行完整验证时，必须说明原因、已运行的替代检查和剩余风险。
+- 中间步骤运行与当前改动面匹配的最小必要验证；完成阶段统一运行完整的相关验证。
+- 失败、跨模块影响、高风险改动、发布或 PR 前质量门时立即升级验证范围；不要把全量测试或完整 build 变成每次小改动后的默认动作。
+- 验证范围匹配风险、改动面和反馈成本，最终质量门不能省略；无法运行时说明原因、已运行的替代检查和剩余风险。
 
 ## Build 使用原则
 
-- 不要每次改动都默认打包。
-- 涉及跨模块类型、接口、store、workflow 或构建配置时，运行 `pnpm run build` 确认最终可编译。
-- 如果全量 build 成本高，优先运行更窄的类型检查、单测或目标文件 lint。
-- 无法运行验证时，明确说明原因和剩余风险。
+不要每次改动都默认打包；涉及跨模块类型、接口、store、workflow 或构建配置时运行 `pnpm run build` 确认最终可编译。全量 build 成本高时优先运行更窄的类型检查、单测或目标文件 lint。
 
 ## TDD 工作流
 
@@ -56,7 +50,6 @@ monorepo 中先识别 package 依赖。若内部 package 以 `dist/` 暴露，co
 | 覆盖率   | >= 80%                    |
 | 测试先行 | 新功能/bug 修复优先补测试 |
 | 关键路径 | 合并前覆盖或明确缺口      |
-| 提交前   | 运行与改动范围匹配的验证  |
 
 ## 对抗性测试
 
@@ -64,9 +57,6 @@ monorepo 中先识别 package 依赖。若内部 package 以 `dist/` 暴露，co
 
 ## 端到端测试
 
-- 技能：`skills/e2e-testing/SKILL.md`，包含 Playwright 目录结构、POM、配置、CI、制品、flake 处理。
-- 代理：`e2e-runner`，默认 CLI，MCP 仅用于探索和调试。
-- 入口：由中央路由选择 `e2e-testing`，复杂或从零搭建时可委派 `e2e-runner`。
-- E2E 应有 `globalSetup` 或等价健康检查，等待 API/Web ready 后再跑用例。
-- 本地多 worktree 开发时，端口和环境变量应隔离，例如 `.env.worktree`。
+- Playwright 目录、POM、配置、CI、制品和 flake 处理以 `skills/e2e-testing/SKILL.md` 为准；MCP 只用于探索和调试。
+- E2E 用 `globalSetup` 或等价健康检查等待 API/Web ready；本地多 worktree 隔离端口和环境变量，例如 `.env.worktree`。
 - CI 失败时上传 Playwright trace、screenshot、HTML report 和 `test-results`。
