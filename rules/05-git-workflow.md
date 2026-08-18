@@ -9,44 +9,11 @@
 
 ## 提交格式 (CRITICAL)
 
-```
-<type>(<scope>): <subject>
-
-type 类型：
-feat:     新功能
-fix:      修复 bug
-docs:     文档更新
-style:    代码格式调整（不影响逻辑）
-refactor: 重构（不新增功能，不修复bug）
-perf:     性能优化
-test:     测试相关
-chore:    构建/工具变更
-```
-
-## 提交示例
-
-```bash
-# CORRECT
-feat(user): 添加用户登录功能
-fix(cart): 修复购物车数量计算错误
-docs(api): 更新接口文档
-
-# WRONG
-update code
-fix bug
-修改了一些东西
-```
+使用 `<type>(<scope>): <subject>`：`feat` 新功能、`fix` 修复、`docs` 文档、`style` 不影响逻辑的格式调整、`refactor` 重构、`perf` 性能、`test` 测试、`chore` 构建或工具。提交信息必须描述实际改动，例如 `feat(user): 添加用户登录功能`。
 
 ## 提交检查清单
 
-提交前 ALWAYS 检查：
-
-- [ ] 提交信息符合规范
-- [ ] 无 console.log 调试代码
-- [ ] 无硬编码的敏感信息
-- [ ] 代码已通过 lint 检查
-- [ ] 只暂存本次任务相关文件
-- [ ] PR 前验证结果已记录
+提交前确认：提交信息符合规范；代码已通过 lint；只暂存本次任务相关文件；PR 前验证结果已记录。代码与安全禁止项统一见 `rules/07-forbidden.md`。
 
 ## Superpowers 本地工件
 

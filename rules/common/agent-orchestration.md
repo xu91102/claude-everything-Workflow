@@ -2,9 +2,7 @@
 
 ## Agent 使用原则
 
-按任务复杂度选择是否路由到专业 agent。简单、明确、低风险的任务优先由当前 agent 直接完成；复杂、跨领域或需要独立视角的任务再委派给专业 agent。
-
-委派的首要目的不是“多一个人”，而是保护主上下文：把一次性搜索、失败日志、排查分支和专项审查隔离到独立工作区，主 agent 只接收结论、证据、风险和下一步。
+简单、明确、低风险的任务由当前 agent 直接完成；复杂、跨领域或需要独立视角时再委派。委派用于隔离一次性搜索、失败日志、排查分支和专项审查，主 agent 只接收结论、证据、风险和下一步。
 
 | 场景 | 使用 Agent / Skill | 时机 |
 | --- | --- | --- |
@@ -20,24 +18,17 @@
 
 ## Tickets 先于跨会话执行
 
-跨会话变更必须以可验收的依赖 tickets 分解；能在一个会话完成的变更直接实施：
+跨会话变更必须以可验收的依赖 tickets 分解；单会话变更直接实施：
 
-1. 理解阶段：阅读相关代码，理解现有架构。
-2. 设计阶段：对复杂架构决策使用 architect agent。
-3. Ticket 阶段：用 `to-tickets` 形成 vertical slices、验收标准和 blocking edges，并经用户确认。
-4. 实施阶段：router 为已授权范围选择单张 frontier ticket 串行实施，或为多张独立 ticket 选择 SDD。
-   SDD 为每张独立 ticket 创建 worker worktree 与 fresh subagent，并将通过审查的 diff 汇入 controller-owned
-   integration worktree 完成联合验证后再 resolve。
-5. 验证阶段：测试和安全审查。
+1. 阅读相关代码；复杂架构决策才使用 architect agent。
+2. `to-tickets` 形成 vertical slices、验收标准和 blocking edges，并经用户确认。
+3. router 在授权范围内选择单张 frontier ticket 串行实施，或为多张独立 ticket 选择 SDD；SDD 为每张 ticket 创建 worker worktree 和 fresh subagent，将审查通过的 diff 汇入 controller-owned integration worktree 联合验证后再 resolve。
+4. 进行测试和安全审查。
 
 ## 并行执行
 
-仅当 router 证明至少两张已批准 frontier tickets 相互独立、写面不重叠且并行收益明确时，并行启动多个 agents。
-不要为了简单任务或轻量检查启动额外 agent。
-
-复杂问题可按需使用分角色子 agents，例如事实审查员、高级工程师、安全专家、一致性审查员、冗余检查员。
+仅当 router 证明至少两张已批准 frontier tickets 相互独立、写面不重叠且并行收益明确时，才并行启动多个 agents；不要为简单任务或轻量检查增加 agent。复杂问题可按需使用事实审查、高级工程、安全、一致性或冗余审查等分角色子 agents。
 
 ## Subagent 上下文契约
 
-Fresh/Fork 选择、agent `description`、回传格式和外部写入边界的唯一来源是
-`rules/common/context-hygiene.md`。本文件只定义何时调度哪个角色以及 ticket/SDD 的依赖与并行条件。
+Fresh/Fork 选择、agent `description`、回传格式和外部写入边界的唯一来源是 `rules/common/context-hygiene.md`；本文件只定义角色调度与 ticket/SDD 的依赖、并行条件。

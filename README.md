@@ -117,10 +117,8 @@ claude-everything-Workflow/
 │       ├── performance.md      # Token 优化 & 模型选择
 │       ├── hooks.md            # Hook 系统最佳实践
 │       ├── skills-learning.md  # Skills 与持续学习
-│       ├── security.md         # 安全优先原则
 │       ├── testing.md          # 测试与验证
-│       ├── pr-automation.md    # PR 自动化与 CI 质量门
-│       └── implementation.md   # 实施实践
+│       └── pr-automation.md    # PR 自动化与 CI 质量门
 │
 ├── agents/                     # 代理（专业任务委托）
 │   ├── architect.md            # 架构师
