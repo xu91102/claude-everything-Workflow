@@ -170,7 +170,16 @@ function Remove-PackageOnlyPaths {
 
     $packageOnlyFiles = @(
         "scripts\install.sh",
-        "scripts\install.ps1"
+        "scripts\install.ps1",
+        "scripts\verify-harness.js",
+        "scripts\verify\core.js",
+        "scripts\verify\grilling-spec-gate-checks.js",
+        "scripts\verify\metadata-checks.js",
+        "scripts\verify\repository-checks.js",
+        "scripts\verify\runtime-checks.js",
+        "scripts\verify\workflow-checks.js",
+        "scripts\verify\workflow-ownership-fixtures.js",
+        "scripts\verify\workflow-ownership.js"
     )
 
     foreach ($relative in $packageOnlyFiles) {
@@ -179,6 +188,16 @@ function Remove-PackageOnlyPaths {
             Invoke-InstallCommand `
                 -Description "Remove-Item '$target'" `
                 -Action { Remove-Item -LiteralPath $target -Force }
+        }
+    }
+
+    $verifyDirectory = Join-Path $Destination "scripts\verify"
+    if (Test-Path -LiteralPath $verifyDirectory -PathType Container) {
+        $children = Get-ChildItem -LiteralPath $verifyDirectory -Force
+        if ($children.Count -eq 0) {
+            Invoke-InstallCommand `
+                -Description "Remove-Item '$verifyDirectory'" `
+                -Action { Remove-Item -LiteralPath $verifyDirectory -Force }
         }
     }
 }

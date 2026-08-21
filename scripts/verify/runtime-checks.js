@@ -247,6 +247,93 @@ function checkObserveV2() {
   fs.rmSync(tempHome, { recursive: true, force: true });
 }
 
+function runCodexInstall(tempHome) {
+  fs.mkdirSync(tempHome, { recursive: true });
+  const result = spawnSync(
+    "bash",
+    [rel("scripts/install.sh"), "--codex-only"],
+    {
+      cwd: root,
+      encoding: "utf8",
+      env: { ...process.env, HOME: tempHome, USERPROFILE: tempHome },
+      timeout: 30000,
+    },
+  );
+  if (result.error) {
+    fail(`Codex install smoke test failed: ${result.error.message}`);
+    return false;
+  }
+  if (result.status !== 0) {
+    fail(`Codex install smoke test exited ${result.status}: ${result.stderr}`);
+    return false;
+  }
+  return true;
+}
+
+function installedRuntimeSources(directory) {
+  if (!fs.existsSync(directory)) return [];
+  const sources = [];
+  const pending = [directory];
+  while (pending.length > 0) {
+    const current = pending.pop();
+    for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+      const target = path.join(current, entry.name);
+      if (entry.isDirectory()) pending.push(target);
+      // Installed Node runtimes may use .js, .cjs, or .mjs module conventions.
+      if (entry.isFile() && /\.(?:c|m)?js$/.test(entry.name)) sources.push(target);
+    }
+  }
+  return sources;
+}
+
+function checkInstalledCommonmarkIsolation(codexHome) {
+  // Match CommonJS, dynamic/side-effect imports, package subpaths, and static `from` imports.
+  const commonmarkImport =
+    /(?:require|import)\s*(?:\(\s*)?["']commonmark(?:\/[^"']*)?["']|\bfrom\s*["']commonmark(?:\/[^"']*)?["']/;
+  for (const source of installedRuntimeSources(codexHome)) {
+    if (commonmarkImport.test(fs.readFileSync(source, "utf8"))) {
+      fail(`${source} must not import package-only commonmark`);
+    }
+  }
+}
+
+function checkInstalledPackageOnlyPaths() {
+  if (process.platform === "win32") return;
+
+  const tempRoot = fs.mkdtempSync(
+    path.join(os.tmpdir(), "cew-install-package-only-"),
+  );
+  try {
+    const cleanHome = path.join(tempRoot, "clean");
+    if (!runCodexInstall(cleanHome)) return;
+    const cleanScripts = path.join(cleanHome, ".codex", "scripts");
+    for (const relative of ["verify-harness.js", "verify"]) {
+      if (fs.existsSync(path.join(cleanScripts, relative))) {
+        fail(`Codex install must omit package-only scripts/${relative}`);
+      }
+    }
+    checkInstalledCommonmarkIsolation(path.join(cleanHome, ".codex"));
+
+    const preserveHome = path.join(tempRoot, "preserve");
+    const userFile = path.join(
+      preserveHome,
+      ".codex",
+      "scripts",
+      "verify",
+      "user-notes.js",
+    );
+    fs.mkdirSync(path.dirname(userFile), { recursive: true });
+    fs.writeFileSync(userFile, "// user-owned fixture\n");
+    if (!runCodexInstall(preserveHome)) return;
+    if (!fs.existsSync(userFile)) {
+      fail("Codex install removed an unknown user-owned verifier file");
+    }
+    checkInstalledCommonmarkIsolation(path.join(preserveHome, ".codex"));
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
+}
+
 function createRetiredSkillFixture() {
   const tempRoot = fs.mkdtempSync(
     path.join(os.tmpdir(), "cew-retired-skill-cleanup-"),
@@ -497,6 +584,7 @@ function runRuntimeChecks(context) {
   checkScriptLayout();
   checkContinuousLearningV21();
   checkObserveV2();
+  checkInstalledPackageOnlyPaths();
   checkRetiredSkillCleanup();
   checkUpstreamCapabilityVerifier();
   checkGitDiffWhitespace();

@@ -11,6 +11,20 @@ let read;
 let fail;
 let requireTokens;
 
+const PACKAGE_ONLY_PATHS = [
+  "scripts/install.sh",
+  "scripts/install.ps1",
+  "scripts/verify-harness.js",
+  "scripts/verify/core.js",
+  "scripts/verify/grilling-spec-gate-checks.js",
+  "scripts/verify/metadata-checks.js",
+  "scripts/verify/repository-checks.js",
+  "scripts/verify/runtime-checks.js",
+  "scripts/verify/workflow-checks.js",
+  "scripts/verify/workflow-ownership-fixtures.js",
+  "scripts/verify/workflow-ownership.js",
+];
+
 function bindContext(context) {
   ({ root, rel, exists, read, fail, requireTokens } = context);
 }
@@ -115,6 +129,73 @@ function checkReadmeTreePaths() {
   }
 }
 
+function quotedPackageOnlyPaths(source, bodyPattern) {
+  const body = source.match(bodyPattern)?.[1] ?? "";
+  return [...body.matchAll(/"([^"]+)"/g)].map((match) =>
+    match[1].replaceAll("\\", "/"),
+  );
+}
+
+function checkPackageOnlyLists(ps, sh) {
+  const psPaths = quotedPackageOnlyPaths(
+    ps,
+    /\$packageOnlyFiles = @\(([\s\S]*?)\r?\n\s*\)/,
+  );
+  const shPaths = quotedPackageOnlyPaths(
+    sh,
+    /remove_package_only_paths\(\) \{[\s\S]*?for file in \\\r?\n([\s\S]*?)\r?\n\s*do/,
+  );
+  const expected = JSON.stringify(PACKAGE_ONLY_PATHS);
+  if (JSON.stringify(psPaths) !== expected) {
+    fail(`scripts/install.ps1 package-only list mismatch: ${psPaths.join(", ")}`);
+  }
+  if (JSON.stringify(shPaths) !== expected) {
+    fail(`scripts/install.sh package-only list mismatch: ${shPaths.join(", ")}`);
+  }
+}
+
+function checkInstallerSurface(ps, sh) {
+  const sharedDirs = [
+    "rules",
+    "agents",
+    "commands",
+    "scripts",
+    "hooks",
+    "skills",
+    "homunculus",
+    "references",
+  ];
+  for (const dir of sharedDirs) {
+    if (!ps.includes(`"${dir}"`)) {
+      fail(`scripts/install.ps1 shared dirs should include ${dir}`);
+    }
+    if (!sh.includes(`copy_dir ${dir} "$dest"`)) {
+      fail(`scripts/install.sh shared dirs should include ${dir}`);
+    }
+  }
+  const retiredCommands = [
+    "e2e.md", "evolve.md", "grill.md", "harness-audit.md", "instinct-status.md",
+    "learn-eval.md", "projects.md", "promote.md", "prune.md", "setup-workflow.md",
+    "tdd.md",
+  ];
+  for (const command of retiredCommands) {
+    if (!sh.includes(`commands/${command}`)) {
+      fail(`scripts/install.sh should remove retired commands/${command}`);
+    }
+    if (!ps.includes(`commands\\${command}`)) {
+      fail(`scripts/install.ps1 should remove retired commands/${command}`);
+    }
+  }
+  const psCodexBody = ps.match(/function Install-CodexWorkflow \{[\s\S]*?\n\}/);
+  if (psCodexBody && psCodexBody[0].includes("settings.json")) {
+    fail("Install-CodexWorkflow should not install Claude Code settings.json");
+  }
+  const shCodexBody = sh.match(/install_codex\(\) \{[\s\S]*?\n\}/);
+  if (shCodexBody && shCodexBody[0].includes("settings.json")) {
+    fail("install_codex should not install Claude Code settings.json");
+  }
+}
+
 function checkInstallRuntimePolicy() {
   requireTokens("README.md", [
     "Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`",
@@ -127,6 +208,10 @@ function checkInstallRuntimePolicy() {
     "Copy-ConfigFile -Source (Join-Path $RootDir \"AGENTS.md\")",
     "Remove-PackageOnlyPaths",
     "scripts\\install.ps1",
+    "scripts\\verify-harness.js",
+    "scripts\\verify",
+    "scripts\\verify\\workflow-ownership-fixtures.js",
+    "scripts\\verify\\workflow-ownership.js",
   ]);
   requireTokens("scripts/install.sh", [
     "copy_claude_settings",
@@ -134,61 +219,16 @@ function checkInstallRuntimePolicy() {
     "copy_file \"$ROOT_DIR/AGENTS.md\" \"$dest/AGENTS.md\"",
     "remove_package_only_paths",
     "scripts/install.sh",
+    "scripts/verify-harness.js",
+    "scripts/verify",
+    "scripts/verify/workflow-ownership-fixtures.js",
+    "scripts/verify/workflow-ownership.js",
   ]);
 
   const ps = read("scripts/install.ps1");
   const sh = read("scripts/install.sh");
-  const sharedDirs = [
-    "rules",
-    "agents",
-    "commands",
-    "scripts",
-    "hooks",
-    "skills",
-    "homunculus",
-    "references",
-  ];
-
-  for (const dir of sharedDirs) {
-    if (!ps.includes(`"${dir}"`)) {
-      fail(`scripts/install.ps1 shared dirs should include ${dir}`);
-    }
-    if (!sh.includes(`copy_dir ${dir} "$dest"`)) {
-      fail(`scripts/install.sh shared dirs should include ${dir}`);
-    }
-  }
-
-  const retiredCommands = [
-    "e2e.md",
-    "evolve.md",
-    "grill.md",
-    "harness-audit.md",
-    "instinct-status.md",
-    "learn-eval.md",
-    "projects.md",
-    "promote.md",
-    "prune.md",
-    "setup-workflow.md",
-    "tdd.md",
-  ];
-  for (const command of retiredCommands) {
-    if (!sh.includes(`commands/${command}`)) {
-      fail(`scripts/install.sh should remove retired commands/${command}`);
-    }
-    if (!ps.includes(`commands\\${command}`)) {
-      fail(`scripts/install.ps1 should remove retired commands/${command}`);
-    }
-  }
-
-  const psCodexBody = ps.match(/function Install-CodexWorkflow \{[\s\S]*?\n\}/);
-  if (psCodexBody && psCodexBody[0].includes("settings.json")) {
-    fail("Install-CodexWorkflow should not install Claude Code settings.json");
-  }
-
-  const shCodexBody = sh.match(/install_codex\(\) \{[\s\S]*?\n\}/);
-  if (shCodexBody && shCodexBody[0].includes("settings.json")) {
-    fail("install_codex should not install Claude Code settings.json");
-  }
+  checkPackageOnlyLists(ps, sh);
+  checkInstallerSurface(ps, sh);
 }
 
 function checkHookConfigReferences() {
