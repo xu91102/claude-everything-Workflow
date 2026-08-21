@@ -46,21 +46,10 @@ function checkSuperpowersDevLoop() {
     "`/learn eval --preview` 是非阻塞学习建议门",
   ]);
 
-  requireTokens("rules/01-base.md", [
-    "Spec Gate",
-    "User Review Gate",
-    "Ticket Gate",
-    "Red Test Gate",
-    "Task Review Gate",
-    "Verify Gate",
-    "PR Gate",
-  ]);
-
   requireTokens("rules/common/skills-learning.md", [
     "skills/using-superpowers/SKILL.md",
     "路由权威来源",
-    "rules/01-base.md",
-    "rules/common/agent-orchestration.md",
+    "唯一流程路由",
     "不凭记忆执行 skill",
   ]);
 
@@ -255,23 +244,15 @@ function checkWorkflowDocuments() {
     "返回 `skills/using-superpowers/SKILL.md`",
   ]);
   requireTokens("rules/01-base.md", [
-    "默认最短闭环、按风险逐级升级",
-    "formal spec",
-    "高风险边界识别优先于",
-    "多文件、新功能、普通行为变化和复杂度本身都不是升级条件",
-    "信息足够后立即停止追问",
-    "Spec Gate",
-    "Ticket Gate",
-    "Task Review Gate",
-    "BLOCKED_BY_UNRESOLVED_DECISION",
-    "不得自动回到 grilling",
-    "不恢复旧调用栈",
+    "基础交付政策",
+    "skills/using-superpowers/SKILL.md",
+    "目标项目自身约定优先",
+    "可检查的完成标准",
   ]);
   requireTokens("rules/common/skills-learning.md", [
     "路由权威来源",
     "不要因为多文件或普通复杂度加载完整 process skill 链",
-    "rules/01-base.md",
-    "rules/common/agent-orchestration.md",
+    "唯一流程路由",
   ]);
   requireTokens("agents/planner.md", ["to-tickets", "不写文件路径"]);
 }
@@ -309,9 +290,6 @@ function checkSuperpowersRoutingConsistency() {
   requireTokens("skills/iterative-retrieval/SKILL.md", [
     "返回 `skills/using-superpowers/SKILL.md` 重新路由",
     "不要自行枚举或调用下一 skill",
-  ]);
-  requireTokens("rules/01-base.md", [
-    "高风险边界识别优先于“需求清楚/易回滚”短路",
   ]);
   requireTokens("skills/spec-gate/SKILL.md", [
     "zero interview",
@@ -449,6 +427,82 @@ function checkCapabilityRouting() {
       fail(`${deliverySkill} must remain router-selectable for delivery topology`);
     }
   }
+}
+
+function checkPolicyOwnership() {
+  const baseRules = read("rules/01-base.md");
+  for (const duplicatedGate of [
+    "Clarification Gate",
+    "User Review Gate",
+    "Ticket Gate",
+    "Red Test Gate",
+    "Task Review Gate",
+    "BLOCKED_BY_UNRESOLVED_DECISION",
+  ]) {
+    if (baseRules.includes(duplicatedGate)) {
+      fail(`rules/01-base.md should not duplicate router state: ${duplicatedGate}`);
+    }
+  }
+
+  const projectAdaptiveBans = [
+    ["rules/02-code-size.md", "≤ 80 行"],
+    ["rules/02-code-size.md", "≤ 5 个"],
+    ["rules/02-code-size.md", "≤ 4 层"],
+    ["rules/03-architecture.md", "分层架构（后端项目）"],
+    ["rules/03-architecture.md", "views/"],
+    ["rules/04-error-handling.md", "HTTP 错误由拦截器统一处理"],
+    ["rules/06-comments.md", "公共 API 使用文档注释"],
+    ["rules/07-forbidden.md", "`any` / `dynamic`"],
+    ["rules/07-forbidden.md", "emoji 和 `console.log`"],
+    ["rules/common/testing.md", ">= 80%"],
+    ["rules/common/testing.md", "pnpm exec tsc --noEmit"],
+    ["rules/common/testing.md", "## TDD 工作流"],
+  ];
+  for (const [file, token] of projectAdaptiveBans) {
+    if (read(file).includes(token)) {
+      fail(`${file} should defer project-adaptive policy instead of requiring ${token}`);
+    }
+  }
+
+  requireTokens("rules/02-code-size.md", ["目标项目已有配置", "不因行数单独拆分"]);
+  requireTokens("rules/common/testing.md", [
+    "项目已有脚本和 CI",
+    "skills/test-driven-development/SKILL.md",
+    "skills/e2e-testing/SKILL.md",
+  ]);
+  requireTokens("rules/common/hooks.md", [
+    "兼容保留",
+    "check-console-log",
+    "check-code-size",
+    "ECC_DISABLED_HOOKS",
+    "目标项目约定优先",
+  ]);
+  if (read("rules/common/hooks.md").includes("默认不进入全局 `settings.json`")) {
+    fail("hook policy should describe the compatibility hooks that remain in global settings");
+  }
+  requireTokens("rules/common/agent-orchestration.md", [
+    "Skill 负责流程",
+    "Agent 只负责隔离角色",
+  ]);
+
+  const orchestration = read("rules/common/agent-orchestration.md");
+  for (const staleTarget of ["build-resolver", "| 代码质量审查 | code-reviewer", "| 测试驱动开发 | tdd-guide"]) {
+    if (orchestration.includes(staleTarget)) {
+      fail(`rules/common/agent-orchestration.md contains stale route ${staleTarget}`);
+    }
+  }
+
+  requireTokens("rules/05-git-workflow.md", [
+    "Git 与 worktree 政策",
+    "skills/using-git-worktrees/SKILL.md",
+    "最新 `origin/main`",
+  ]);
+
+  const ruleIndex = read("rules/08-specialty-rules-index.md");
+  if (ruleIndex.includes("基础层：实现、审查或验证时读取 `01-base.md`")) {
+    fail("rule index should not make base rules another workflow router");
+  }
+  requireTokens("rules/08-specialty-rules-index.md", ["流程路由不在 rules 中维护"]);
 }
 
 function checkCapabilityFiles() {
@@ -705,6 +759,7 @@ function runWorkflowChecks(context) {
   checkSuperpowersArtifactPolicy();
   checkGrillingWorkflow();
   checkSuperpowersRoutingConsistency();
+  checkPolicyOwnership();
   checkUpstreamCapabilityParity();
   runGrillingSpecGateChecks(context);
   checkRemovedSkillReferences();

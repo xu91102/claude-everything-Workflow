@@ -1,28 +1,19 @@
-# Git 提交规范
+# Git 与 worktree 政策
 
-## Worktree 分支开发 (CRITICAL)
+## 隔离与基础分支
 
-- 除只读分析和单文件修改外，所有代码、配置、Harness 改动必须先创建独立 `git worktree` 和任务分支。
-- 创建 worktree 前必须检查当前仓库状态，确认基础分支、当前分支和未提交改动。
-- 开发新功能时，除非用户明确指定其他基础分支，必须先拉取最新远端 `main`，再从最新 `origin/main` 创建独立 `git worktree` 和任务分支；不得以过期的本地 `main` 或当前功能分支作为基础。仓库不存在 `main` 时，先向用户确认替代基础分支。
-- 不在原始 checkout 中做实现、测试和提交；实现、验证、审查、提交都应在任务 worktree 内完成。
-- 不创建嵌套 worktree，不丢弃或覆盖用户已有改动。
+- 除只读分析、单文件修改和窄范围文档调整外，代码、配置或 Harness 改动使用独立 worktree；具体检查和创建过程由 `skills/using-git-worktrees/SKILL.md` 所有。
+- 创建 worktree 前检查当前仓库、分支和 staged、unstaged、untracked 状态，不覆盖或迁移用户改动，不创建嵌套 worktree。
+- 开发新功能时，除非用户明确指定其他基础分支，先获取远端 `main`，再从最新 `origin/main` 创建任务分支。仓库不存在 `main` 时先确认替代基础分支。
+- 不在 `main`、`master`、`prod` 等受保护分支直接提交。
 
-## 提交格式 (CRITICAL)
+## 提交与外部操作
 
-使用 `<type>(<scope>): <subject>`：`feat` 新功能、`fix` 修复、`docs` 文档、`style` 不影响逻辑的格式调整、`refactor` 重构、`perf` 性能、`test` 测试、`chore` 构建或工具。提交信息必须描述实际改动，例如 `feat(user): 添加用户登录功能`。
-
-## 提交检查清单
-
-提交前确认：提交信息符合规范；代码已通过 lint；只暂存本次任务相关文件；PR 前验证结果已记录。代码与安全禁止项统一见 `rules/07-forbidden.md`。
+- 提交格式优先服从目标项目约定；本仓库使用 `<type>(<scope>): <subject>`。只暂存当前任务文件，并记录真实验证结果。
+- Commit、push、创建或合并 PR 都遵循用户授权；一次授权不自动扩大到下一项外部操作。
+- 用户要求 PR 时读取 `commands/pr.md` 和 `rules/common/pr-automation.md`；后者只拥有 PR 的 CI、制品和描述政策。
 
 ## Superpowers 本地工件
 
 - Superpowers 生成的 Spec 和本地 tickets 仅用于本地工作流，无论保存位置都不得暂存或提交。
 - 默认目录 `docs/superpowers/` 由 `.gitignore` 保留在本地；PR 只包含实现、测试和长期维护文档。
-
-## PR 授权边界
-
-- 不在 `main`、`master`、`prod` 等受保护分支直接提交。
-- 用户明确要求推送分支时可直接执行；创建 PR、合并 PR 前必须向用户确认。
-- 用户要求提交、推送、创建 PR 时，读取 `commands/pr.md` 和 `rules/common/pr-automation.md`；后者只维护 PR 的 CI、制品和描述，不重复本文件的 Git 与授权规则。

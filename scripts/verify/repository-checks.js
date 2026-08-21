@@ -366,37 +366,47 @@ function checkSkillLinks() {
 }
 
 function checkRuleLoadingPolicy() {
-  if (!exists("AGENTS.md")) {
-    fail("AGENTS.md is missing");
+  const globalAgentsPath = "templates/global/AGENTS.md";
+  if (!exists(globalAgentsPath)) {
+    fail(`${globalAgentsPath} is missing`);
     return;
   }
 
-  const agentsBody = read("AGENTS.md");
-  if (!agentsBody.includes("规则加载策略")) {
-    fail("AGENTS.md should include a rule loading policy section");
+  const agentsBody = read(globalAgentsPath);
+  if (!agentsBody.includes("路由与按需加载")) {
+    fail(`${globalAgentsPath} should include an on-demand loading section`);
   }
 
   const forbidsFullRulesLoad =
-    agentsBody.includes("不要默认全量加载 `rules/`") ||
-    agentsBody.includes("不要默认全量加载`rules/`") ||
-    agentsBody.includes("仍然只读取当前任务直接相关的规则文件");
+    agentsBody.includes("规则只按当前任务加载") ||
+    agentsBody.includes("不要默认全量加载 `rules/`");
 
   const forbidsFullCommonLoad =
     agentsBody.includes("不要默认全量加载 `rules/common/`") ||
-    agentsBody.includes("不要默认全量加载`rules/common/`") ||
-    agentsBody.includes("`rules/common/` 是专项参考区");
+    agentsBody.includes("`rules/common/` 只在任务");
 
   if (!forbidsFullRulesLoad || !forbidsFullCommonLoad) {
-    fail("AGENTS.md should forbid loading all rules by default");
+    fail(`${globalAgentsPath} should forbid loading all rules by default`);
   }
   if (!agentsBody.includes("~/.codex/rules/")) {
-    fail("AGENTS.md should mention Codex user-level rules fallback");
+    fail(`${globalAgentsPath} should mention Codex user-level rules fallback`);
   }
   if (!agentsBody.includes("~/.claude/rules/")) {
-    fail("AGENTS.md should mention Claude Code user-level rules fallback");
+    fail(`${globalAgentsPath} should mention Claude Code user-level rules fallback`);
   }
-  if (!agentsBody.includes("不能把项目规则目录缺失等同于") || !agentsBody.includes("无规则")) {
-    fail("AGENTS.md should forbid treating a missing project rules directory as no rules");
+  if (!agentsBody.includes("项目没有 `rules/` 不等于无规则")) {
+    fail(`${globalAgentsPath} should treat missing project rules as a user-level fallback`);
+  }
+
+  requireTokens("AGENTS.md", [
+    "CEW 项目规则",
+    "templates/global/AGENTS.md",
+    "skills/using-superpowers/SKILL.md",
+    "npm run verify",
+  ]);
+
+  if (read("AGENTS.md") === agentsBody) {
+    fail("repository AGENTS.md should not duplicate the global template");
   }
 
   if (exists("CLAUDE.md")) {
