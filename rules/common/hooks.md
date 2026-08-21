@@ -37,8 +37,10 @@
 
 自定义 Hook 通过 stdin 接收 JSON；警告写 stderr，仅确实需要修改协议输出时写 stdout，阻止语义遵循上表。
 
+全局 `settings.json` 兼容保留 `check-console-log` 与 `check-code-size`，只作为 advisory；目标项目约定优先，可用 `ECC_DISABLED_HOOKS` 禁用。新增固定行数、日志 API、注释或格式偏好等风格 Hook 时，应由项目级配置显式 opt-in，并读取该项目的真实配置，不再增加 CEW 通用阈值。
+
 ## 权限管理
 
 - 仅为受信任、定义明确的计划启用自动接受；探索性工作禁用。
 - 不使用 `dangerously-skip-permissions`，在 `~/.claude.json` 配置 `allowedTools`。
-- 会阻止提交的质量门 Hook 默认不启用，只有团队明确需要时再接入。
+- 兼容的 `commit-quality` 只把密钥等安全问题作为阻断条件；新增会阻止提交的风格质量门时，只有团队明确需要才接入。

@@ -1,6 +1,6 @@
 # Claude Everything Workflow
 
-> 一套通用的 Agent Harness 工程模板，可直接复制到 `~/.claude/` 使用。
+> 一套面向 Claude Code 与 Codex 的 Agent Harness 工程模板，通过安装器部署全局 bootstrap 和按需能力。
 > 学习 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) 的最佳 Harness 工程实践。
 
 ## 一键安装
@@ -72,42 +72,33 @@ npm 包设置里必须添加 GitHub Actions 受信任的发布商，仓库为 `x
 - Claude Code: `~/.claude/`
 - Codex: `~/.codex/`
 
-Claude Code 会安装 `CLAUDE.md` 并合并 `settings.json` 作为 hooks 入口；Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`。顶层配置文件已存在且内容不同时，会先生成 `.bak.<timestamp>` 备份再覆盖；目录内容按仓库版本同步。
+Claude Code 会安装 `CLAUDE.md` 并合并 `settings.json` 作为 hooks 入口；Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`。CEW 使用 `templates/global/AGENTS.md` 作为全局配置模板，两个安装目标都用它更新全局 `AGENTS.md`；仓库根 `AGENTS.md` 只描述 CEW 自身开发约束。顶层配置文件已存在且内容不同时，会先生成 `.bak.<timestamp>` 备份再覆盖；目录内容按仓库版本同步。
 
-## 手动安装
-
-### Windows
-
-```powershell
-Copy-Item -Recurse .\claude-everything-Workflow\* $env:USERPROFILE\.claude\ -Force
-```
-
-### macOS / Linux
-
-```bash
-cp -r ./claude-everything-Workflow/* ~/.claude/
-```
+不提供“只复制全局入口”的简化安装：该入口依赖同目录的 `rules/` 与 `skills/`。需要单平台安装时使用 `-ClaudeOnly`、`-CodexOnly` 或对应的 shell 参数，安装器会同步完整依赖并保留被覆盖文件的备份。
 
 ## 目录结构
 
 ```
 claude-everything-Workflow/
 ├── README.md                   # 本文档
-├── AGENTS.md                   # Codex 与通用权威规则入口
+├── AGENTS.md                   # 仅描述 CEW 仓库自身差异
 ├── CLAUDE.md                   # Claude Code 最小 bootstrap 入口
+├── templates/
+│   └── global/
+│       └── AGENTS.md           # 安装到 Claude Code/Codex 的全局配置模板
 ├── settings.json               # Claude Code Hooks 配置入口
 ├── .github/
 │   └── workflows/
 │       └── ci.yml               # PR / main 校验与 verify 后发布 npm
 │
 ├── rules/                      # 规则索引与按需加载规则
-│   ├── 01-base.md              # 基础设定
-│   ├── 02-code-size.md         # 代码规模约束
-│   ├── 03-architecture.md      # 架构原则
-│   ├── 04-error-handling.md    # 错误处理
+│   ├── 01-base.md              # 基础交付政策
+│   ├── 02-code-size.md         # 项目自适应的规模评估
+│   ├── 03-architecture.md      # 架构与跨平台兼容政策
+│   ├── 04-error-handling.md    # 错误处理政策
 │   ├── 05-git-workflow.md      # Git 规范
-│   ├── 06-comments.md          # 注释规范
-│   ├── 07-forbidden.md         # 禁止事项
+│   ├── 06-comments.md          # 项目自适应的注释政策
+│   ├── 07-forbidden.md         # 安全与交付底线
 │   ├── 08-specialty-rules-index.md # 专项规则索引
 │   ├── 09-first-principles-adversarial-testing.md # 第一性原则与对抗性测试
 │   └── common/                 # 通用最佳实践
@@ -129,7 +120,7 @@ claude-everything-Workflow/
 │   └── ...                     # 其他专业代理
 │
 ├── commands/                   # 命令（斜杠快捷入口）
-│   ├── code-review.md          # /code-review → code-reviewer
+│   ├── code-review.md          # /code-review → code-review skill
 │   ├── learn.md                # /learn 统一学习管理
 │   ├── pr.md                   # /pr 提交与创建 PR
 │   ├── to-spec.md              # /to-spec → spec-gate
@@ -199,8 +190,8 @@ claude-everything-Workflow/
 
 ## 规则加载策略
 
-- 默认入口只加载 `AGENTS.md` 或 `CLAUDE.md` 中的硬规则和最小索引。
-- `AGENTS.md` 是权威规则入口；`CLAUDE.md` 是 Claude Code bootstrap，只保留启动必需规则和回退策略，避免两份完整规则漂移。
+- 安装后的默认入口是 `templates/global/AGENTS.md` 生成的用户级 `AGENTS.md`；仓库内 `AGENTS.md` 只描述该项目相对全局入口的差异。
+- `CLAUDE.md` 是 Claude Code bootstrap，只引用同目录 `AGENTS.md`；不复制完整规则。
 - 简单问答、解释、格式调整、翻译或只读查看，不读取额外规则。
 - 规则路径解析顺序：先检查当前项目根目录 `rules/`；若项目无 `rules/` 或目标规则文件不存在，必须回退到用户级规则目录：Codex 使用 `~/.codex/rules/`，Claude Code 使用 `~/.claude/rules/`。
 - 当用户级 Workflow 注入到没有 `rules/` 的项目时，不能把项目规则目录缺失等同于“无规则”；必须继续检查对应的用户级规则目录。
@@ -237,7 +228,7 @@ claude-everything-Workflow/
 - MCP 工具描述会占用上下文；建议**同时启用的 MCP 少于 10 个**，并控制活跃工具数量。
 - **策略**：从 **0 个或只开 Context7** 开始，需要再加其它 MCP。
 - **缓存命中策略**：保持入口文件前缀稳定，默认只加载小型 bootstrap 和规则索引；长参考材料、专项规则、agent 详细清单和学习材料必须按需加载。
-- **入口预算**：`CLAUDE.md` 控制在约 1.5K 字符内，`AGENTS.md` 控制在约 3.6K 字符内；超过预算时优先把细节下沉到 `rules/`、`references/` 或专项 skill。
+- **入口预算**：`CLAUDE.md`、全局模板和项目 `AGENTS.md` 分别保持短小；超过预算时优先把长期政策放入按需 rules，把流程放入专项 skill。
 - **按项目禁用**（Claude Code）：在具体仓库的 **`.claude/settings.json`** 中使用 **`disabledMcpServers`**，写上全局已启用、但本项目不用的服务名（与 `mcpServers` 的**键名**一致），例如：
 
 ```json
@@ -269,9 +260,7 @@ claude-everything-Workflow/
 | `/pr` | 提交、推送和创建 PR 的标准工作流 |
 | `/learn` | 统一管理学习评估、状态、项目、推广、清理与演化 |
 
-新增的上游等价能力全部以 Skill 形式由中央路由调用，不增加薄包装 command。其中
-`using-superpowers` 提供只读流程建议，`grilling` 与 `domain-modeling` 组合带文档访谈，
-`implement` 执行已批准工作的交付闭环。
+Skill 维护按需自动触发的流程，command 维护用户显式触发的专属流程与参数；同一协议不在两处复制。其中 `using-superpowers` 是自动流程路由，`grilling` 解决重大用户决策，`implement` 执行已授权交付范围。
 
 ## 验证 Harness
 
@@ -285,7 +274,7 @@ npm run verify:upstream -- --upstream-root <mattpocock-skills-clone>
 powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 ```
 
-`verify-harness.js` 会检查 README 与 `commands/` 是否一致、薄封装 command 是否指向存在的 agent/skill、旧命令和旧衰减语义是否残留，并运行 `observe-v2` 最小 smoke test。
+`verify-harness.js` 会检查 README 与 `commands/` 是否一致、command 引用的 agent/skill 是否存在、旧命令和旧衰减语义是否残留，并运行 `observe-v2` 最小 smoke test。
 
 ## Hook Profile 控制
 
@@ -295,7 +284,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 # minimal | standard | strict (默认: standard)
 export ECC_HOOK_PROFILE=standard
 
-# 禁用特定 Hook (逗号分隔 ID)
+# 禁用特定 Hook（逗号分隔 ID）
 export ECC_DISABLED_HOOKS="post:edit:console-log"
 ```
 

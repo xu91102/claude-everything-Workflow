@@ -14,6 +14,7 @@ const MANAGED_ROOTS = [
   "hooks",
   "scripts",
   "rules",
+  "templates",
 ];
 
 function createFileAccess(root) {

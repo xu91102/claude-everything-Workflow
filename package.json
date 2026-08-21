@@ -34,7 +34,8 @@
     "references/",
     "rules/",
     "scripts/",
-    "skills/"
+    "skills/",
+    "templates/"
   ],
   "engines": {
     "node": ">=18"

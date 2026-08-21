@@ -119,22 +119,49 @@ function checkInstallRuntimePolicy() {
   requireTokens("README.md", [
     "Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`",
     "Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks",
+    "全局配置模板",
+  ]);
+
+  requireTokens("templates/global/AGENTS.md", [
+    "全局 Bootstrap",
+    "除专业术语外，所有内容使用**中文**回复",
+    "## 用户沟通",
+    "面向用户先说结论",
+    "默认使用日常中文",
+    "明确区分已确认事实、推测和阻塞项",
+    "只保留支持结论所需的最小证据",
+    "skills/using-superpowers/SKILL.md",
+    "rules/08-specialty-rules-index.md",
+    "~/.codex/rules/",
+    "~/.claude/rules/",
+  ]);
+  requireTokens("AGENTS.md", [
+    "未加载全局 CEW Bootstrap",
+    "templates/global/AGENTS.md",
   ]);
 
   requireTokens("scripts/install.ps1", [
     "Copy-ClaudeSettings",
     "Install-CodexWorkflow",
-    "Copy-ConfigFile -Source (Join-Path $RootDir \"AGENTS.md\")",
+    "templates\\global\\AGENTS.md",
     "Remove-PackageOnlyPaths",
     "scripts\\install.ps1",
   ]);
   requireTokens("scripts/install.sh", [
     "copy_claude_settings",
     "install_codex()",
-    "copy_file \"$ROOT_DIR/AGENTS.md\" \"$dest/AGENTS.md\"",
+    "copy_file \"$ROOT_DIR/templates/global/AGENTS.md\" \"$dest/AGENTS.md\"",
     "remove_package_only_paths",
     "scripts/install.sh",
   ]);
+
+  requireTokens("package.json", ['"templates/"']);
+
+  if (exists("templates/global/AGENTS.md") && exists("AGENTS.md")) {
+    if (read("templates/global/AGENTS.md") === read("AGENTS.md")) {
+      fail("global AGENTS template and repository AGENTS.md should have separate ownership");
+    }
+  }
 
   const ps = read("scripts/install.ps1");
   const sh = read("scripts/install.sh");
