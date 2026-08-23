@@ -136,12 +136,25 @@ remove_package_only_paths() {
 
     for file in \
         "scripts/install.sh" \
-        "scripts/install.ps1"
+        "scripts/install.ps1" \
+        "scripts/verify-harness.js" \
+        "scripts/verify/core.js" \
+        "scripts/verify/grilling-spec-gate-checks.js" \
+        "scripts/verify/metadata-checks.js" \
+        "scripts/verify/repository-checks.js" \
+        "scripts/verify/runtime-checks.js" \
+        "scripts/verify/workflow-checks.js" \
+        "scripts/verify/workflow-ownership-fixtures.js" \
+        "scripts/verify/workflow-ownership.js"
     do
         if [ -f "$dest/$file" ]; then
             run rm -f "$dest/$file"
         fi
     done
+
+    if [ -d "$dest/scripts/verify" ] && [ -z "$(find "$dest/scripts/verify" -mindepth 1 -print -quit)" ]; then
+        run rmdir "$dest/scripts/verify"
+    fi
 }
 
 remove_obsolete_workflow_paths() {

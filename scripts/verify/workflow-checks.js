@@ -3,6 +3,7 @@
 const path = require("path");
 const { spawnSync } = require("child_process");
 const { runGrillingSpecGateChecks } = require("./grilling-spec-gate-checks");
+const { runWorkflowOwnershipChecks } = require("./workflow-ownership");
 
 let root;
 let exists;
@@ -24,7 +25,7 @@ function bindContext(context) {
   } = context);
 }
 
-function checkSuperpowersDevLoop() {
+function checkReadmeWorkflowContract() {
   requireTokens("README.md", [
     "Ticket-first 工程交付闭环",
     "using-superpowers",
@@ -45,15 +46,20 @@ function checkSuperpowersDevLoop() {
     "没有 verify，不进入 PR",
     "`/learn eval --preview` 是非阻塞学习建议门",
   ]);
+}
+
+function checkSuperpowersDevLoop() {
+  checkReadmeWorkflowContract();
 
   requireTokens("rules/01-base.md", [
-    "Spec Gate",
-    "User Review Gate",
-    "Ticket Gate",
-    "Red Test Gate",
-    "Task Review Gate",
-    "Verify Gate",
-    "PR Gate",
+    "## 最小且正确的实现",
+    "先理解真实调用链",
+    "必要性",
+    "复用现有实现",
+    "标准库或平台原生能力",
+    "已安装依赖",
+    "最小新增代码",
+    "skills/using-superpowers/SKILL.md",
   ]);
 
   requireTokens("rules/common/skills-learning.md", [
@@ -246,6 +252,7 @@ function checkRouteOrdering() {
 }
 
 function checkWorkflowDocuments() {
+  runWorkflowOwnershipChecks({ read, fail, managedFiles });
   requireTokens("skills/iterative-retrieval/SKILL.md", [
     "事实、证据和盲点缺口",
     "低成本",
@@ -255,18 +262,35 @@ function checkWorkflowDocuments() {
     "返回 `skills/using-superpowers/SKILL.md`",
   ]);
   requireTokens("rules/01-base.md", [
-    "默认最短闭环、按风险逐级升级",
-    "formal spec",
-    "高风险边界识别优先于",
-    "多文件、新功能、普通行为变化和复杂度本身都不是升级条件",
-    "信息足够后立即停止追问",
-    "Spec Gate",
-    "Ticket Gate",
-    "Task Review Gate",
-    "BLOCKED_BY_UNRESOLVED_DECISION",
-    "不得自动回到 grilling",
-    "不恢复旧调用栈",
+    "默认走最短适用闭环",
+    "多文件、新功能、普通行为变化和复杂度本身都不是完整流程触发条件",
+    "高风险边界",
+    "rules/common/testing.md",
+    "skills/using-superpowers/SKILL.md",
   ]);
+  requireTokens("rules/common/testing.md", [
+    "隔离端口和环境变量",
+    "等待 Web/API ready",
+  ]);
+  requireTokens("rules/common/context-hygiene.md", [
+    "任何外部 mutation",
+    "发送消息",
+    "写入云文档",
+  ]);
+  requireTokens("rules/common/hooks.md", [
+    "敏感内容只记录风险和证据位置",
+  ]);
+  requireTokens("rules/common/pr-automation.md", [
+    "失败检查不得跳过",
+    "Git/PR 操作按 `rules/05-git-workflow.md` 的授权边界执行",
+  ]);
+  for (const file of [
+    "rules/common/context-hygiene.md",
+    "rules/common/harness-engineering.md",
+    "rules/common/performance.md",
+  ]) {
+    requireTokens(file, ["rules/common/agent-orchestration.md"]);
+  }
   requireTokens("rules/common/skills-learning.md", [
     "路由权威来源",
     "不要因为多文件或普通复杂度加载完整 process skill 链",
@@ -310,8 +334,11 @@ function checkSuperpowersRoutingConsistency() {
     "返回 `skills/using-superpowers/SKILL.md` 重新路由",
     "不要自行枚举或调用下一 skill",
   ]);
-  requireTokens("rules/01-base.md", [
-    "高风险边界识别优先于“需求清楚/易回滚”短路",
+  requireTokens("skills/using-superpowers/SKILL.md", [
+    "explicit formal Spec",
+    "high-risk boundary",
+    "unresolved user-owned decision?",
+    "skills/grilling/SKILL.md",
   ]);
   requireTokens("skills/spec-gate/SKILL.md", [
     "zero interview",
