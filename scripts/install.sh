@@ -127,7 +127,6 @@ install_shared_dirs() {
     copy_dir scripts "$dest"
     copy_dir hooks "$dest"
     copy_dir skills "$dest"
-    copy_dir homunculus "$dest"
     copy_dir references "$dest"
 }
 

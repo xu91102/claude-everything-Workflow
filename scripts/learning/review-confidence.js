@@ -93,9 +93,6 @@ function findInstinctsPath(customPath) {
         if (fs.existsSync(resolved)) return resolved
     }
 
-    const cwdPath = path.join(process.cwd(), 'homunculus', 'instincts')
-    if (fs.existsSync(cwdPath)) return cwdPath
-
     return path.join(os.homedir(), '.claude', 'homunculus', 'instincts')
 }
 
