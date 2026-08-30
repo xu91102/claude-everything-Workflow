@@ -2,7 +2,8 @@
 /**
  * Check Code Size Hook
  *
- * 编辑后只检查本次改动的代码文件，正常静默，避免增加上下文噪音。
+ * 编辑后只检查本次改动的代码文件：文件行数上限与单行长度。
+ * 正常静默，避免增加上下文噪音。对应 rules/02-code-size.md。
  */
 
 'use strict'
@@ -11,6 +12,7 @@ const fs = require('fs')
 
 const CODE_TARGET_LINES = 800
 const TEST_MAX_LINES = 1000
+const MAX_LINE_LENGTH = 120
 const CODE_EXTENSIONS = new Set([
     '.c',
     '.cc',
@@ -85,17 +87,34 @@ function run(raw) {
     const testFile = isTestFile(filePath)
     const lineThreshold = getLineThreshold(filePath)
     const lineCount = countLines(content)
-    if (lineCount <= lineThreshold) {
+
+    const messages = []
+    if (lineCount > lineThreshold) {
+        messages.push(
+            testFile
+                ? `测试文件超过 ${lineThreshold} 行上限 (${lineCount} 行)，请拆分测试场景。`
+                : `代码文件超过约 ${lineThreshold} 行的参考值 (${lineCount} 行)，请评估是否按职责拆分。`
+        )
+    }
+
+    // 最多提示前 3 处超长行
+    const longLineNumbers = []
+    content.split(/\r?\n/).forEach((line, index) => {
+        if (line.length > MAX_LINE_LENGTH && longLineNumbers.length < 3) {
+            longLineNumbers.push(index + 1)
+        }
+    })
+    if (longLineNumbers.length > 0) {
+        messages.push(
+            `存在超过 ${MAX_LINE_LENGTH} 字符的行（如第 ${longLineNumbers.join('、')} 行），请换行或提取。`
+        )
+    }
+
+    if (messages.length === 0) {
         return { exitCode: 0 }
     }
 
-    const message = testFile
-        ? `[Hook] 测试文件超过 ${lineThreshold} 行上限: ` +
-            `${filePath} (${lineCount} 行)，请拆分测试场景后继续。\n`
-        : `[Hook] 代码文件超过约 ${lineThreshold} 行的参考值: ` +
-            `${filePath} (${lineCount} 行)，请评估是否需要按职责拆分。\n`
-
-    return { exitCode: 0, stderr: message }
+    return { exitCode: 0, stderr: `[Hook] ${filePath}: ${messages.join(' ')}\n` }
 }
 
 module.exports = { run }

@@ -2,7 +2,8 @@
 
 ## 代码禁止
 
-- `any` / `dynamic`、`@ts-ignore` / `// @ts-nocheck`、循环依赖、emoji 和 `console.log` 调试代码；它们分别破坏类型安全、隐藏问题、增加耦合或带来编码、性能问题。
+- `console.log`、`debugger`、`@ts-ignore`、`@ts-nocheck` 和 `any` 由 Hook 静态检查（`hooks/check-console-log.js`，随编辑触发）；`dynamic`、循环依赖和 emoji 属于审查判断项。
+- 它们分别破坏类型安全、隐藏问题、增加耦合或带来编码、性能问题。
 
 ## 安全禁止
 

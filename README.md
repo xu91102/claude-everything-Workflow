@@ -187,8 +187,8 @@ claude-everything-Workflow/
 │   │   ├── run-with-flags.js
 │   │   └── hook-flags.js
 │   ├── commit-quality.js       # 可选 Pre-commit 质量门
-│   ├── check-console-log.js    # console.log 检测
-│   └── check-code-size.js      # 代码规模检测
+│   ├── check-console-log.js    # 禁止模式检测（console.log/debugger/@ts-ignore/any）
+│   └── check-code-size.js      # 代码规模与行长检测
 │
 └── homunculus/                 # 自主学习系统
     └── instincts/
