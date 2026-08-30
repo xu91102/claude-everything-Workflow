@@ -182,17 +182,13 @@ claude-everything-Workflow/
 │       ├── testing/
 │       └── debugging/
 │
-├── hooks/                      # 钩子脚本
-│   ├── runtime/                # Hook 运行时与 Profile 控制
-│   │   ├── run-with-flags.js
-│   │   └── hook-flags.js
-│   ├── commit-quality.js       # 可选 Pre-commit 质量门
-│   ├── check-console-log.js    # 禁止模式检测（console.log/debugger/@ts-ignore/any）
-│   └── check-code-size.js      # 代码规模与行长检测
-│
-└── homunculus/                 # 自主学习系统
-    └── instincts/
-        └── personal/           # 个人直觉
+└── hooks/                      # 钩子脚本
+    ├── runtime/                # Hook 运行时与 Profile 控制
+    │   ├── run-with-flags.js
+    │   └── hook-flags.js
+    ├── commit-quality.js       # 可选 Pre-commit 质量门
+    ├── check-console-log.js    # 禁止模式检测（console.log/debugger/@ts-ignore/any）
+    └── check-code-size.js      # 代码规模与行长检测
 ```
 
 正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构，避免破坏 Claude Code、Codex 和安装脚本的发现方式；分类维护在 `skills/README.md`。只有学习产物使用物理分类目录 `skills/learn/<category>/`。

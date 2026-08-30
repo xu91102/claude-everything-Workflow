@@ -162,7 +162,6 @@ function checkInstallerSurface(ps, sh) {
     "scripts",
     "hooks",
     "skills",
-    "homunculus",
     "references",
   ];
   for (const dir of sharedDirs) {
@@ -172,6 +171,12 @@ function checkInstallerSurface(ps, sh) {
     if (!sh.includes(`copy_dir ${dir} "$dest"`)) {
       fail(`scripts/install.sh shared dirs should include ${dir}`);
     }
+  }
+  if (ps.includes('"homunculus"')) {
+    fail("scripts/install.ps1 should not install removed homunculus directory");
+  }
+  if (sh.includes('copy_dir homunculus "$dest"')) {
+    fail("scripts/install.sh should not install removed homunculus directory");
   }
   const retiredCommands = [
     "e2e.md", "evolve.md", "grill.md", "harness-audit.md", "instinct-status.md",
@@ -338,6 +343,17 @@ function checkGitHubWorkflows() {
 }
 
 function checkLearningPathPolicy() {
+  if (exists("homunculus")) {
+    fail("repository should not contain removed homunculus directory");
+  }
+
+  const reviewScript = read("scripts/learning/review-confidence.js");
+  const repositoryInstinctsLookup =
+    /process\.cwd\(\)[\s\S]{0,120}["']homunculus["'][\s\S]{0,80}["']instincts["']/;
+  if (repositoryInstinctsLookup.test(reviewScript)) {
+    fail("review-confidence should not scan repository homunculus/instincts");
+  }
+
   for (const dir of [
     "skills/learn",
     "skills/learn/pr",
@@ -473,6 +489,15 @@ function checkNpmPackageSurface() {
     "cew install",
     "cew verify",
   ]);
+
+  const packageFiles = JSON.parse(read("package.json")).files ?? [];
+  const publishesHomunculus = packageFiles.some((file) => {
+    const normalized = file.replace(/\\/g, "/").replace(/^\.\//, "");
+    return normalized === "homunculus" || normalized.startsWith("homunculus/");
+  });
+  if (publishesHomunculus) {
+    fail("package.json should not publish removed homunculus directory");
+  }
 
   const cliHelp = spawnSync(
     process.execPath,

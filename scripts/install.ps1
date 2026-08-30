@@ -156,7 +156,6 @@ function Install-SharedDirs {
         "scripts",
         "hooks",
         "skills",
-        "homunculus",
         "references"
     )
 
