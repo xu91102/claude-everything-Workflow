@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
@@ -308,6 +309,186 @@ function checkHookConfigReferences() {
   }
 }
 
+function runCommand(command, args, { allowFailure = false, ...options } = {}) {
+  const result = spawnSync(command, args, {
+    encoding: "utf8",
+    timeout: 30000,
+    ...options,
+  });
+  if (result.error) throw result.error;
+  if (!allowFailure && result.status !== 0) {
+    throw new Error(
+      `${command} ${args.join(" ")} failed:\n${result.stdout}${result.stderr}`,
+    );
+  }
+  return result;
+}
+
+function releaseScenario({ exactPublished = false, publishFails = false, tagAt }) {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "cew-release-"));
+  const repository = path.join(tempRoot, "repository");
+  const remote = path.join(tempRoot, "remote.git");
+  const npmLog = path.join(tempRoot, "npm-calls.jsonl");
+  const isolatedGitEnvironment = {
+    ...process.env,
+    GIT_CONFIG_GLOBAL: os.devNull,
+    GIT_CONFIG_NOSYSTEM: "1",
+    GIT_TERMINAL_PROMPT: "0",
+    XDG_CONFIG_HOME: path.join(tempRoot, "xdg-config"),
+  };
+  const git = (args, options = {}) => runCommand("git", args, {
+    env: isolatedGitEnvironment,
+    ...options,
+  });
+
+  try {
+    fs.mkdirSync(repository);
+    git(["init", "--bare", remote]);
+    git(["init", repository]);
+    git(["-C", repository, "config", "user.name", "Release Test"]);
+    git(["-C", repository, "config", "user.email", "release@example.com"]);
+    fs.writeFileSync(
+      path.join(repository, "package.json"),
+      JSON.stringify({ name: "claude-everything-workflow", version: "0.2.2" }),
+    );
+    git(["-C", repository, "add", "package.json"]);
+    git(["-C", repository, "commit", "-m", "initial"]);
+    const firstCommit = git(["-C", repository, "rev-parse", "HEAD"]).stdout.trim();
+    fs.writeFileSync(path.join(repository, "release.txt"), "current\n");
+    git(["-C", repository, "add", "release.txt"]);
+    git(["-C", repository, "commit", "-m", "current"]);
+    const currentCommit = git(["-C", repository, "rev-parse", "HEAD"]).stdout.trim();
+    git(["-C", repository, "remote", "add", "origin", remote]);
+
+    if (tagAt) {
+      const target = tagAt === "current" ? currentCommit : firstCommit;
+      git(["-C", repository, "tag", "-a", "v0.2.2", target, "-m", "test tag"]);
+      git(["-C", repository, "push", "origin", "v0.2.2"]);
+    }
+
+    const npmStub = path.join(tempRoot, "npm-stub.js");
+    fs.writeFileSync(
+      npmStub,
+      `const fs = require("fs");
+const args = process.argv.slice(2);
+fs.appendFileSync(process.env.NPM_CALL_LOG, JSON.stringify(args) + "\\n");
+if (args[0] === "view" && args[1].includes("@0.2.2")) {
+  if (process.env.EXACT_PUBLISHED === "true") {
+    process.stdout.write("0.2.2\\n");
+    process.exit(0);
+  }
+  process.stderr.write("npm error code E404\\n");
+  process.exit(1);
+}
+if (args[0] === "view") {
+  process.stdout.write("0.1.9\\n");
+  process.exit(0);
+}
+if (args[0] === "publish") {
+  if (process.env.PUBLISH_FAILS === "true") {
+    process.stderr.write("publish failed\\n");
+    process.exit(1);
+  }
+  process.exit(0);
+}
+process.stderr.write("unexpected npm invocation: " + args.join(" ") + "\\n");
+process.exit(2);
+`,
+    );
+
+    const result = runCommand(
+      process.execPath,
+      [path.join(root, ".github/scripts/publish-release.js")],
+      {
+        allowFailure: true,
+        cwd: repository,
+        env: {
+          ...isolatedGitEnvironment,
+          CEW_NPM_CLI: npmStub,
+          EXACT_PUBLISHED: String(exactPublished),
+          GITHUB_SHA: currentCommit,
+          NPM_CALL_LOG: npmLog,
+          PUBLISH_FAILS: String(publishFails),
+        },
+      },
+    );
+    const calls = fs.existsSync(npmLog)
+      ? fs.readFileSync(npmLog, "utf8").trim().split("\n").filter(Boolean).map(JSON.parse)
+      : [];
+    const localTag = git(
+      ["-C", repository, "rev-list", "-n", "1", "v0.2.2"],
+      { allowFailure: true },
+    );
+    const remoteTag = git(
+      ["--git-dir", remote, "rev-list", "-n", "1", "v0.2.2"],
+      { allowFailure: true },
+    );
+
+    return {
+      calls,
+      currentCommit,
+      firstCommit,
+      localTag: localTag.status === 0 ? localTag.stdout.trim() : "",
+      remoteTag: remoteTag.status === 0 ? remoteTag.stdout.trim() : "",
+      result,
+    };
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
+}
+
+function checkReleaseRecoveryBehavior() {
+  if (!exists(".github/scripts/publish-release.js")) {
+    fail("release workflow must use an executable publish-release script");
+    return;
+  }
+
+  const firstPublish = releaseScenario({});
+  if (
+    firstPublish.result.status !== 0 ||
+    !firstPublish.calls.some(([command]) => command === "publish") ||
+    firstPublish.remoteTag !== firstPublish.currentCommit
+  ) {
+    fail("release script must publish an absent version before creating its tag");
+  }
+
+  const failedPublish = releaseScenario({ publishFails: true });
+  if (
+    failedPublish.result.status === 0 ||
+    failedPublish.localTag ||
+    failedPublish.remoteTag
+  ) {
+    fail("release script must not create a tag when npm publish fails");
+  }
+
+  const publishedWithoutTag = releaseScenario({ exactPublished: true });
+  if (
+    publishedWithoutTag.result.status !== 0 ||
+    publishedWithoutTag.calls.some(([command]) => command === "publish") ||
+    publishedWithoutTag.remoteTag !== publishedWithoutTag.currentCommit
+  ) {
+    fail("release script must recreate a missing tag for an already published version");
+  }
+
+  const taggedWithoutPublish = releaseScenario({ tagAt: "current" });
+  if (
+    taggedWithoutPublish.result.status !== 0 ||
+    !taggedWithoutPublish.calls.some(([command]) => command === "publish") ||
+    taggedWithoutPublish.remoteTag !== taggedWithoutPublish.currentCommit
+  ) {
+    fail("release script must publish when the correct tag already exists");
+  }
+
+  const mismatchedTag = releaseScenario({ tagAt: "previous" });
+  if (
+    mismatchedTag.result.status === 0 ||
+    mismatchedTag.calls.some(([command]) => command === "publish") ||
+    mismatchedTag.remoteTag !== mismatchedTag.firstCommit
+  ) {
+    fail("release script must reject a tag that points to another commit");
+  }
+}
+
 function checkGitHubWorkflows() {
   const ci = read(".github/workflows/ci.yml");
 
@@ -323,22 +504,34 @@ function checkGitHubWorkflows() {
     "package-manager-cache: false",
     "npm install -g npm@11.5.1",
     "git config user.name \"github-actions[bot]\"",
-    "npm publish",
-    "git push origin \"$TAG\"",
+    "node .github/scripts/publish-release.js",
+  ]);
+
+  requireTokens(".github/scripts/publish-release.js", [
+    '["publish"]',
+    '["push", "origin", tag]',
+    "exactVersionIsPublished",
+    "existingTagCommit",
+    "CEW_NPM_CLI",
   ]);
 
   if (ci.includes("npm version \"$VERSION\"") || ci.includes("HEAD:main")) {
     fail("ci.yml must not rewrite or push main during publish");
   }
+  if (ci.includes("npm publish") || ci.includes("git push origin")) {
+    fail("ci.yml must delegate the release transaction to publish-release.js");
+  }
   if (exists(".github/workflows/npm-publish.yml")) {
     fail("legacy npm-publish workflow must be removed");
   }
+  checkReleaseRecoveryBehavior();
 
   requireTokens("README.md", [
     "npm 发布",
     "版本号通过 PR",
     "ci.yml",
     "受信任的发布商",
+    "npm 发布成功后才创建",
   ]);
 }
 

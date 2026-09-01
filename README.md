@@ -61,7 +61,7 @@ npm publish --dry-run
 
 版本号通过 PR 更新 `package.json`，并与功能改动一起接受审查。PR 合并到 `main` 后，`.github/workflows/ci.yml` 会先运行 `npm run verify` 与 `npm run pack:dry-run`，只有 `verify` 成功时才发布该提交中的版本。
 
-发布会拒绝不高于 npm `latest` 的新版本，创建指向当前提交的 `v<version>` tag，然后通过 npm 受信任的发布商 OIDC 执行 `npm publish`。当前版本已在 npm 时会安全跳过；待发布版本的 tag 已指向其他提交时会失败，要求先审计。
+发布会拒绝不高于 npm `latest` 的新版本，通过 npm 受信任的发布商 OIDC 执行 `npm publish`，并在 npm 发布成功后才创建指向当前提交的 `v<version>` tag。重跑时，当前版本已在 npm 会跳过重复发布并补齐缺失 tag；已有正确 tag 但 npm 尚未发布时会继续发布；tag 已指向其他提交时仍会失败并要求先审计。
 
 如需重试发布，可在 `main` 上手动触发 `CI`；流程不会修改、提交或推送 `main`。
 
@@ -97,6 +97,8 @@ claude-everything-Workflow/
 ├── CLAUDE.md                   # Claude Code 最小 bootstrap 入口
 ├── settings.json               # Claude Code Hooks 配置入口
 ├── .github/
+│   ├── scripts/
+│   │   └── publish-release.js   # 可重试的 npm 发布与 tag 事务
 │   └── workflows/
 │       └── ci.yml               # PR / main 校验与 verify 后发布 npm
 │
