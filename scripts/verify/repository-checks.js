@@ -75,12 +75,15 @@ function checkTicketFirstDelivery() {
     "Do not publish before approval",
   ]);
   requireTokens("skills/implement/SKILL.md", [
-    "一个 fresh context",
     "test-driven-development",
-    "ticket as the Spec source",
-    "`/code-review --worktree <pre-ticket-base> --spec <ticket>`",
     "direct-scope contract",
     "无 ticket 范围不得 claim 或写入任何 tracker",
+    "[references/ticket-delivery.md](references/ticket-delivery.md)",
+  ]);
+  requireTokens("skills/implement/references/ticket-delivery.md", [
+    "一个 fresh context",
+    "ticket as the Spec source",
+    "`/code-review --worktree <pre-ticket-base> --spec <ticket>`",
   ]);
   requireTokens("skills/subagent-driven-development/SKILL.md", [
     "frontier ticket",
@@ -232,7 +235,7 @@ function checkCodeReviewContracts() {
     "固定基点下并行执行隔离的 Standards 轴与 Spec 轴审查",
   ]);
 
-  requireTokens("skills/implement/SKILL.md", [
+  requireTokens("skills/implement/references/ticket-delivery.md", [
     "pre-ticket base",
     "ticket as the Spec source",
   ]);
@@ -283,13 +286,21 @@ function checkTrackerDeliveryLifecycle() {
     "[RESOLVE → REFRESH_FRONTIER] → FINISH_DELIVERY";
 
   requireTokens("skills/implement/SKILL.md", [
-    "## State Machine",
-    deliveryLifecycle,
-    "无 ticket 的 direct scope 或 approved Spec scope 跳过 CLAIM、RESOLVE",
-    "docs/agent-workflow/project-context.md",
+    "rules/05-git-workflow.md",
     "skills/using-git-worktrees/SKILL.md",
+    "clean baseline",
+    "pre-delivery base",
+    "不覆盖 commit、push 或创建 PR",
+    "无 ticket 范围不得 claim 或写入任何 tracker",
+  ]);
+  requireTokens("rules/05-git-workflow.md", [
     "除只读分析和单文件修改外，所有代码、配置、Harness 改动必须先创建独立" +
       " `git worktree` 和任务分支",
+  ]);
+  requireTokens("skills/implement/references/ticket-delivery.md", [
+    "## State Machine",
+    deliveryLifecycle,
+    "docs/agent-workflow/project-context.md",
     "clean baseline",
     "pre-ticket base",
     "一个 fresh context",
@@ -309,9 +320,7 @@ function checkTrackerDeliveryLifecycle() {
     "`/verify pre-pr`",
     "`/pr` 或 keep",
     "可重新选择串行 `implement` 或安全 SDD",
-    "不覆盖 commit、push 或创建 PR",
     "不得自动关闭外部 Issue",
-    "无 ticket 范围不得 claim 或写入任何 tracker",
   ]);
 
   requireTokens("commands/pr.md", [

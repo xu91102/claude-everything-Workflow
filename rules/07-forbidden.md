@@ -1,9 +1,10 @@
 # 禁止事项 (CRITICAL)
 
-## 代码禁止
+## 代码检查
 
-- `console.log`、`debugger`、`@ts-ignore`、`@ts-nocheck` 和 `any` 由 Hook 静态检查（`hooks/check-console-log.js`，随编辑触发）；`dynamic`、循环依赖和 emoji 属于审查判断项。
-- 它们分别破坏类型安全、隐藏问题、增加耦合或带来编码、性能问题。
+- 调试残留、类型抑制和耦合问题按目标项目标准检查；不得为掩盖真实错误添加抑制或绕过检查。
+- `hooks/check-console-log.js` 提示 `console.log`、`debugger`、`@ts-ignore`、`@ts-nocheck` 和 `any`。
+  这是兼容性警告，需结合真实用途判断；项目正常 CLI 输出或边界类型不因字符串命中而被禁止。
 
 ## 安全禁止
 

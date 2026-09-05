@@ -1,6 +1,7 @@
 "use strict";
 
 const ACTIVE_BRAINSTORMING_REFERENCE = "skills/brainstorming/SKILL.md";
+const PROCESS_OUTCOMES = "skills/using-superpowers/references/process-outcomes.md";
 const BRAINSTORMING_REFERENCE_ALLOWLIST = new Set([
   "README.md",
   "skills/using-superpowers/SKILL.md",
@@ -38,20 +39,20 @@ const ROUTING_SCENARIOS = [
   {
     name: "Spec Gate discovers an unresolved public contract",
     checks: [{
-      file: "skills/using-superpowers/SKILL.md",
+      file: PROCESS_OUTCOMES,
       tokens: ["BLOCKED_BY_UNRESOLVED_DECISION", "decision map"],
     }],
   },
   {
     name: "user explicitly continues after blocking",
     checks: [{
-      file: "skills/using-superpowers/SKILL.md",
+      file: PROCESS_OUTCOMES,
       tokens: ["new grilling session", "new Spec Gate", "do not resume the old call stack"],
     }],
   },
   {
     name: "unchanged confirmed decision blocks again",
-    checks: [{ file: "skills/using-superpowers/SKILL.md", tokens: ["Spec Gate contract conflict"] }],
+    checks: [{ file: PROCESS_OUTCOMES, tokens: ["Spec Gate contract conflict"] }],
   },
   {
     name: "task only consumes established domain vocabulary",
@@ -135,6 +136,11 @@ function checkRouterContract({ exists, read, fail, requireTokens }) {
   const file = "skills/using-superpowers/SKILL.md";
   requireTokens(file, [
     "three lanes",
+    "[references/process-outcomes.md](references/process-outcomes.md)",
+    "Ordinary direct delivery does not load this reference",
+    "spec-gate",
+  ]);
+  requireTokens(PROCESS_OUTCOMES, [
     "BLOCKED_BY_UNRESOLVED_DECISION",
     "decision map",
     "new grilling session",
@@ -142,9 +148,9 @@ function checkRouterContract({ exists, read, fail, requireTokens }) {
     "do not resume the old call stack",
     "spec-gate",
   ]);
-  if (!exists(file)) return;
+  if (!exists(file) || !exists(PROCESS_OUTCOMES)) return;
 
-  const body = read(file);
+  const body = read(PROCESS_OUTCOMES);
   if (/BLOCKED_BY_UNRESOLVED_DECISION[\s\S]{0,240}(?:automatically|auto).*grilling/i.test(body)) {
     fail("Router must stop on Spec Gate blocking instead of automatically invoking grilling");
   }

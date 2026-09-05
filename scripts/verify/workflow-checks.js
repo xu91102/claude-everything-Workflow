@@ -52,14 +52,14 @@ function checkSuperpowersDevLoop() {
   checkReadmeWorkflowContract();
 
   requireTokens("rules/01-base.md", [
-    "## 最小且正确的实现",
-    "先理解真实调用链",
-    "必要性",
-    "复用现有实现",
-    "标准库或平台原生能力",
+    "真实调用链",
+    "改动必须对应需求",
+    "复用项目现有入口",
+    "标准库",
     "已安装依赖",
     "最小新增代码",
     "skills/using-superpowers/SKILL.md",
+    "目标项目的架构、lint、类型、测试和风格配置优先",
   ]);
 
   requireTokens("rules/common/skills-learning.md", [
@@ -85,8 +85,11 @@ function checkSuperpowersDevLoop() {
   ]);
 
   requireTokens("skills/implement/SKILL.md", [
-    "一个 fresh context",
     "test-driven-development",
+    "references/ticket-delivery.md",
+  ]);
+  requireTokens("skills/implement/references/ticket-delivery.md", [
+    "一个 fresh context",
     "ticket as the Spec source",
   ]);
 
@@ -262,11 +265,14 @@ function checkWorkflowDocuments() {
     "返回 `skills/using-superpowers/SKILL.md`",
   ]);
   requireTokens("rules/01-base.md", [
-    "默认走最短适用闭环",
-    "多文件、新功能、普通行为变化和复杂度本身都不是完整流程触发条件",
-    "高风险边界",
     "rules/common/testing.md",
     "skills/using-superpowers/SKILL.md",
+  ]);
+  requireTokens("skills/using-superpowers/SKILL.md", [
+    "shortest applicable path",
+    "File count, new features, and ordinary complexity affect",
+    "verification intensity, not the lane",
+    "high-risk boundary",
   ]);
   requireTokens("rules/common/testing.md", [
     "隔离端口和环境变量",

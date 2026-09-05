@@ -205,6 +205,18 @@ claude-everything-Workflow/
 - 回退只改变查找位置，不改变按需读取原则；仍然只读取当前任务直接相关的规则文件，不要默认全量加载 `rules/` 或 `rules/common/`。
 - `rules/common/` 是专项参考区，只在命令、agent、skill 或当前任务明确触发时读取。
 
+以上是本项目对 agent 主动读取的约定，不等于宿主的实际加载量；宿主自动注入的规则不能靠正文中的
+“按需读取”撤销。评估成本时区分常驻入口、Skill 名称与描述、触发后的正文和模式专用引用。
+
+## 精简原则
+
+- rules 保留长期约束与项目回退策略；目标项目的架构、lint、类型、覆盖率和注释惯例优先。
+- Skill 保留能改变决策的流程；普通任务只读所选入口，已在当前任务读过且未改变的内容可以复用。
+- `using-superpowers` 仅在 grilling/Spec 返回或跨会话交接时读取 `references/process-outcomes.md`。
+- `implement` 的普通交付共用实施、双轴审查和验证步骤；只有 ticket 路径读取 `references/ticket-delivery.md`。
+- 无可测试行为的文档、格式或纯配置整理运行对应校验；不为免写行为测试增加一次批准。
+- 精简不删除安全约束、用户决策门、真实验证或 PR 授权。安装目录与仓库可能不同，更新须走已有备份安装流程。
+
 ## 按需 MCP 与上下文控制
 
 默认 MCP 必须同时满足“通用”和“MCP 明显优于 CLI/API/原生能力”。GitHub、文档查询、Exa 搜索、Playwright E2E、memory 和 sequential-thinking 这类纯请求/响应或已有原生替代的能力，优先通过 skill、CLI/API 或 harness 原生能力按需触发，而不是默认常驻。

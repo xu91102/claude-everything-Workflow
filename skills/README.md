@@ -2,6 +2,9 @@
 
 正式 skill 保持 `skills/<skill-name>/SKILL.md` 平铺结构，兼容 Claude Code、Codex 和打包安装的发现方式。分类只在本索引维护，不用物理嵌套目录；需要长材料时，放到对应 skill 的 `references/`。
 
+入口只维护选择与通用约束：`using-superpowers` 的过程返回处理在 `references/process-outcomes.md`，
+`implement` 的 ticket 状态机在 `references/ticket-delivery.md`。只在对应模式读取；普通直接交付不加载这两份引用。
+
 ## Process / 门禁
 
 - `using-superpowers`：非平凡任务的 skill 路由、优先级和完成声明纪律。
