@@ -1,0 +1,397 @@
+{
+  "schemaVersion": 1,
+  "description": "CEW Harness 的 Skill 元数据与流程职责唯一登记表。",
+  "skills": [
+    {
+      "name": "code-review",
+      "path": "skills/code-review/SKILL.md",
+      "owner": "skills/code-review/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "codebase-design",
+      "path": "skills/codebase-design/SKILL.md",
+      "owner": "skills/codebase-design/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "continuous-learning-v2",
+      "path": "skills/continuous-learning-v2/SKILL.md",
+      "owner": "skills/continuous-learning-v2/SKILL.md",
+      "version": "2.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "domain-modeling",
+      "path": "skills/domain-modeling/SKILL.md",
+      "owner": "skills/domain-modeling/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "e2e-testing",
+      "path": "skills/e2e-testing/SKILL.md",
+      "owner": "skills/e2e-testing/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "feature-acceptance",
+      "path": "skills/feature-acceptance/SKILL.md",
+      "owner": "skills/feature-acceptance/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "find-skills",
+      "path": "skills/find-skills/SKILL.md",
+      "owner": "skills/find-skills/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "grilling",
+      "path": "skills/grilling/SKILL.md",
+      "owner": "skills/grilling/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "handoff",
+      "path": "skills/handoff/SKILL.md",
+      "owner": "skills/handoff/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "explicit-only"
+    },
+    {
+      "name": "implement",
+      "path": "skills/implement/SKILL.md",
+      "owner": "skills/implement/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "improve-codebase-architecture",
+      "path": "skills/improve-codebase-architecture/SKILL.md",
+      "owner": "skills/improve-codebase-architecture/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "explicit-only"
+    },
+    {
+      "name": "iterative-retrieval",
+      "path": "skills/iterative-retrieval/SKILL.md",
+      "owner": "skills/iterative-retrieval/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "project-context",
+      "path": "skills/project-context/SKILL.md",
+      "owner": "skills/project-context/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "explicit-only"
+    },
+    {
+      "name": "prototype",
+      "path": "skills/prototype/SKILL.md",
+      "owner": "skills/prototype/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "research",
+      "path": "skills/research/SKILL.md",
+      "owner": "skills/research/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "resolving-merge-conflicts",
+      "path": "skills/resolving-merge-conflicts/SKILL.md",
+      "owner": "skills/resolving-merge-conflicts/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "spec-gate",
+      "path": "skills/spec-gate/SKILL.md",
+      "owner": "skills/spec-gate/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "subagent-driven-development",
+      "path": "skills/subagent-driven-development/SKILL.md",
+      "owner": "skills/subagent-driven-development/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "systematic-debugging",
+      "path": "skills/systematic-debugging/SKILL.md",
+      "owner": "skills/systematic-debugging/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "test-driven-development",
+      "path": "skills/test-driven-development/SKILL.md",
+      "owner": "skills/test-driven-development/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "to-tickets",
+      "path": "skills/to-tickets/SKILL.md",
+      "owner": "skills/to-tickets/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "triage",
+      "path": "skills/triage/SKILL.md",
+      "owner": "skills/triage/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "explicit-only"
+    },
+    {
+      "name": "using-git-worktrees",
+      "path": "skills/using-git-worktrees/SKILL.md",
+      "owner": "skills/using-git-worktrees/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "using-superpowers",
+      "path": "skills/using-superpowers/SKILL.md",
+      "owner": "skills/using-superpowers/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "verification-before-completion",
+      "path": "skills/verification-before-completion/SKILL.md",
+      "owner": "skills/verification-before-completion/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "visual-companion",
+      "path": "skills/visual-companion/SKILL.md",
+      "owner": "skills/visual-companion/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "wayfinder",
+      "path": "skills/wayfinder/SKILL.md",
+      "owner": "skills/wayfinder/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "explicit-only"
+    }
+  ],
+  "ownership": [
+    {
+      "id": "routing",
+      "owner": "skills/using-superpowers/SKILL.md",
+      "surfaces": [
+        "AGENTS.md",
+        "rules/08-specialty-rules-index.md",
+        "rules/common/skills-learning.md"
+      ],
+      "enforcement": "advisory"
+    },
+    {
+      "id": "verification",
+      "owner": "skills/verification-before-completion/SKILL.md",
+      "surfaces": [
+        "commands/verify.md",
+        "rules/common/testing.md"
+      ],
+      "enforcement": "blocking"
+    },
+    {
+      "id": "review",
+      "owner": "skills/code-review/SKILL.md",
+      "surfaces": [
+        "commands/code-review.md",
+        "agents/code-reviewer.md",
+        "rules/common/pr-automation.md"
+      ],
+      "enforcement": "blocking"
+    },
+    {
+      "id": "testing",
+      "owner": "skills/test-driven-development/SKILL.md",
+      "surfaces": [
+        "agents/tdd-guide.md",
+        "rules/common/testing.md"
+      ],
+      "enforcement": "advisory"
+    },
+    {
+      "id": "worktree-isolation",
+      "owner": "skills/using-git-worktrees/SKILL.md",
+      "surfaces": [
+        "rules/05-git-workflow.md"
+      ],
+      "enforcement": "blocking"
+    },
+    {
+      "id": "learning",
+      "owner": "skills/continuous-learning-v2/SKILL.md",
+      "surfaces": [
+        "commands/learn.md",
+        "rules/common/skills-learning.md"
+      ],
+      "enforcement": "advisory"
+    },
+    {
+      "id": "ticket-delivery",
+      "owner": "skills/to-tickets/SKILL.md",
+      "surfaces": [
+        "skills/implement/SKILL.md",
+        "skills/subagent-driven-development/SKILL.md",
+        "agents/planner.md"
+      ],
+      "enforcement": "blocking"
+    }
+  ]
+}

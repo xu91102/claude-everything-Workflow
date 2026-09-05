@@ -139,6 +139,8 @@ claude-everything-Workflow/
 │
 ├── references/                 # 按需加载的长参考材料
 │   └── agents/                 # Agent 详细检查清单与示例
+├── harness/
+│   └── manifest.json           # Skill 元数据与流程职责唯一登记表
 │
 ├── scripts/                    # 跨平台脚本
 │   ├── install.sh              # macOS / Linux / Git Bash / WSL 一键安装
@@ -284,6 +286,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 ```
 
 `verify-harness.js` 会检查 README 与 `commands/` 是否一致、薄封装 command 是否指向存在的 agent/skill、旧命令和旧衰减语义是否残留，并运行 `observe-v2` 最小 smoke test。
+
+`harness/manifest.json` 登记每个 Skill 的版本、兼容 Harness、调用策略和唯一 owner；`ownership.surfaces` 只表示引用方，不与 `owner` 并列定义。`allowedTools: null` 当前表示未声明限制，不冒充运行时权限控制。`verify-harness.js` 会检查登记路径、Skill frontmatter、重复名称/路径、职责引用和 enforcement 级别。
 
 ## Hook Profile 控制
 

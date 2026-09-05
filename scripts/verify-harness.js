@@ -4,6 +4,7 @@
 const path = require("path");
 const { createHarnessContext } = require("./verify/core");
 const { runMetadataChecks } = require("./verify/metadata-checks");
+const { runSkillManifestChecks } = require("./verify/skill-manifest-checks");
 const { runRepositoryChecks } = require("./verify/repository-checks");
 const { runWorkflowChecks } = require("./verify/workflow-checks");
 const { runRuntimeChecks } = require("./verify/runtime-checks");
@@ -13,6 +14,7 @@ function main() {
   const context = createHarnessContext(root);
 
   runMetadataChecks(context);
+  runSkillManifestChecks(context);
   runRepositoryChecks(context);
   runWorkflowChecks(context);
   runRuntimeChecks(context);
