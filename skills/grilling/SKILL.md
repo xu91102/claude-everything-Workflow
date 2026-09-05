@@ -1,6 +1,6 @@
 ---
 name: grilling
-description: "Resolve consequential user-owned decisions through a one-question-at-a-time interview. Use when the user says grill me, asks for challenge or pressure-testing, or when the central router finds an unresolved decision that materially changes the outcome; do not trigger for discoverable facts, ordinary complexity, file count, or high risk by itself."
+description: Resolve a consequential user-owned decision one question at a time; do not ask discoverable facts.
 ---
 
 # Grilling

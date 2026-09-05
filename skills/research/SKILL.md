@@ -1,6 +1,7 @@
 ---
 name: research
-description: "Investigate a question against high-trust primary sources and persist a cited Markdown report. Use when external documentation, source code, standards, APIs, papers, or delegated reading are needed; not for a narrow local code search already handled by iterative-retrieval."
+description: Investigate explicit external-source questions and persist a cited Markdown report.
+disable-model-invocation: true
 ---
 
 # Research

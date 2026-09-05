@@ -1,6 +1,6 @@
 ---
 name: iterative-retrieval
-description: "为事实、证据、盲点、subagent、代码探索、RAG 式检索和大仓库上下文收集设计迭代检索闭环。用于系统性缺口需要多次低成本调查、初始上下文不明确、一次性读全仓会污染上下文、子代理不知道该读哪些文件、或搜索结果需要逐轮收敛时。"
+description: "收敛大仓库、证据或盲点检索；避免一次性读取无关内容。"
 ---
 
 # Iterative Retrieval

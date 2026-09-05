@@ -1,6 +1,6 @@
 ---
 name: improve-codebase-architecture
-description: "Scan a codebase for deepening opportunities, present a visual architecture report, and grill through a selected candidate. Use for explicit architecture-health, deep-module, seam, testability, or AI-navigability audits; default to read-only analysis."
+description: Run an explicit read-only architecture-health audit and route selected findings to design or grilling.
 disable-model-invocation: true
 ---
 

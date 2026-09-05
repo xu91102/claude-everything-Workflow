@@ -29,6 +29,9 @@ jobs:
       - name: Verify harness
         run: npm run verify
 
+      - name: Test Skill manifest validator
+        run: npm run test:manifest
+
       - name: Validate npm package
         run: npm run pack:dry-run
 

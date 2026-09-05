@@ -26,11 +26,11 @@
 | 规则文件                | 内容与触发场景                                    |
 | ----------------------- | ------------------------------------------------- |
 | `01-base.md`            | 执行原则、最小实现决策阶梯、流程边界；实现或审查前读取 |
-| `02-code-size.md`       | 代码规模约束：文件/函数/参数/嵌套/行长上限         |
-| `03-architecture.md`    | 架构原则、分层设计、重构兼容、跨平台脚本          |
-| `04-error-handling.md`  | 错误处理：不吞错、HTTP 拦截器统一处理、异步 catch  |
+| `02-code-size.md`       | 项目规模标准优先、Hook 提示和职责审查             |
+| `03-architecture.md`    | 既有架构、局部性、重构兼容、跨平台脚本           |
+| `04-error-handling.md`  | 错误责任、不吞错、显式降级与异步处理             |
 | `05-git-workflow.md`    | Worktree 分支开发、提交格式、PR 授权边界          |
-| `06-comments.md`        | 注释规范：必注释场景与格式                        |
+| `06-comments.md`        | 项目注释惯例与非显然约束                         |
 | `07-forbidden.md`       | 禁止事项：代码、安全、提交禁止项                  |
 | `08-specialty-rules-index.md` | 专项规则触发矩阵，按需跳转到 `rules/common/` 专项规则 |
 | `09-first-principles-adversarial-testing.md` | 第一性原则与对抗性测试，复杂/高风险任务按需加载 |

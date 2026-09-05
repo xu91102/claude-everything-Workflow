@@ -1,6 +1,6 @@
 ---
 name: resolving-merge-conflicts
-description: "Resolve an in-progress Git merge or rebase conflict hunk by hunk from both sides' primary intent, then verify and finish only within the user's Git authorization. Use when conflict markers or an active merge/rebase state exists."
+description: Resolve an active merge or rebase conflict hunk by hunk with verification.
 ---
 
 # Resolving Merge Conflicts

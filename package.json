@@ -17,6 +17,7 @@
   },
   "scripts": {
     "verify": "node scripts/verify-harness.js",
+    "test:manifest": "node scripts/verify/skill-manifest-checks.test.js",
     "verify:upstream": "node scripts/verify-upstream-capability-map.js",
     "pack:dry-run": "npm pack --dry-run"
   },
@@ -35,6 +36,7 @@
     "hooks/",
     "references/",
     "rules/",
+    "harness/",
     "scripts/",
     "skills/"
   ],

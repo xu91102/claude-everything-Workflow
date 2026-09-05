@@ -24,6 +24,8 @@ const PACKAGE_ONLY_PATHS = [
   "scripts/verify/workflow-checks.js",
   "scripts/verify/workflow-ownership-fixtures.js",
   "scripts/verify/workflow-ownership.js",
+  "scripts/verify/skill-manifest-checks.js",
+  "scripts/verify/skill-manifest-checks.test.js",
 ];
 
 function bindContext(context) {
@@ -164,6 +166,7 @@ function checkInstallerSurface(ps, sh) {
     "hooks",
     "skills",
     "references",
+    "harness",
   ];
   for (const dir of sharedDirs) {
     if (!ps.includes(`"${dir}"`)) {

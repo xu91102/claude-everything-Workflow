@@ -103,6 +103,11 @@ copy_dir() {
         return
     fi
 
+    if [ -L "$dest_root/$name" ]; then
+        echo "Refusing to merge into symlinked destination: $dest_root/$name" >&2
+        exit 1
+    fi
+
     run mkdir -p "$dest_root/$name"
     run rsync -a "$ROOT_DIR/$name/" "$dest_root/$name/"
 }
@@ -128,6 +133,7 @@ install_shared_dirs() {
     copy_dir hooks "$dest"
     copy_dir skills "$dest"
     copy_dir references "$dest"
+    copy_dir harness "$dest"
 }
 
 remove_package_only_paths() {
@@ -144,7 +150,9 @@ remove_package_only_paths() {
         "scripts/verify/runtime-checks.js" \
         "scripts/verify/workflow-checks.js" \
         "scripts/verify/workflow-ownership-fixtures.js" \
-        "scripts/verify/workflow-ownership.js"
+        "scripts/verify/workflow-ownership.js" \
+        "scripts/verify/skill-manifest-checks.js" \
+        "scripts/verify/skill-manifest-checks.test.js"
     do
         if [ -f "$dest/$file" ]; then
             run rm -f "$dest/$file"

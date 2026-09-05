@@ -1,6 +1,7 @@
 ---
 name: code-review
-description: "Review changes since a user-supplied fixed point with two parallel subagents: one for repository standards and Fowler smell heuristics, one for Spec compliance. Use for branch, PR, or work-in-progress review before completion."
+description: Review a fixed-base diff with isolated Standards and Spec reviewers; use before completion or PR.
+disable-model-invocation: true
 ---
 
 # Code Review

@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: 新功能、bug 修复、重构或行为变化需要测试先行时使用。强调先写失败测试、确认失败原因、最小实现和保持测试绿色。
+description: "Use for behavior changes with a test path: RED, minimal GREEN, REFACTOR, then verify."
 ---
 
 # Test-Driven Development
@@ -19,7 +19,8 @@ description: 新功能、bug 修复、重构或行为变化需要测试先行时
 - 重构
 - 行为变化
 
-例外情况需要先和用户确认，例如一次性原型、生成代码、纯配置整理或没有可测试行为的文档修改。
+没有可测试行为的文档、格式或纯配置整理，直接运行对应校验，不需要为免写测试请求批准。
+生成代码验证生成入口；原型按用户要求验证所探索的行为。涉及可测试行为或用户明确要求 TDD 时执行下述流程。
 
 ## 核心规则
 

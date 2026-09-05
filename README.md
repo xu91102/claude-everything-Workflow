@@ -139,6 +139,8 @@ claude-everything-Workflow/
 │
 ├── references/                 # 按需加载的长参考材料
 │   └── agents/                 # Agent 详细检查清单与示例
+├── harness/
+│   └── manifest.json           # Skill 元数据与流程职责唯一登记表
 │
 ├── scripts/                    # 跨平台脚本
 │   ├── install.sh              # macOS / Linux / Git Bash / WSL 一键安装
@@ -204,6 +206,18 @@ claude-everything-Workflow/
 - 当用户级 Workflow 注入到没有 `rules/` 的项目时，不能把项目规则目录缺失等同于“无规则”；必须继续检查对应的用户级规则目录。
 - 回退只改变查找位置，不改变按需读取原则；仍然只读取当前任务直接相关的规则文件，不要默认全量加载 `rules/` 或 `rules/common/`。
 - `rules/common/` 是专项参考区，只在命令、agent、skill 或当前任务明确触发时读取。
+
+以上是本项目对 agent 主动读取的约定，不等于宿主的实际加载量；宿主自动注入的规则不能靠正文中的
+“按需读取”撤销。评估成本时区分常驻入口、Skill 名称与描述、触发后的正文和模式专用引用。
+
+## 精简原则
+
+- rules 保留长期约束与项目回退策略；目标项目的架构、lint、类型、覆盖率和注释惯例优先。
+- Skill 保留能改变决策的流程；普通任务只读所选入口，已在当前任务读过且未改变的内容可以复用。
+- `using-superpowers` 仅在 grilling/Spec 返回或跨会话交接时读取 `references/process-outcomes.md`。
+- `implement` 的普通交付共用实施、双轴审查和验证步骤；只有 ticket 路径读取 `references/ticket-delivery.md`。
+- 无可测试行为的文档、格式或纯配置整理运行对应校验；不为免写行为测试增加一次批准。
+- 精简不删除安全约束、用户决策门、真实验证或 PR 授权。安装目录与仓库可能不同，更新须走已有备份安装流程。
 
 ## 按需 MCP 与上下文控制
 
@@ -284,6 +298,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 ```
 
 `verify-harness.js` 会检查 README 与 `commands/` 是否一致、薄封装 command 是否指向存在的 agent/skill、旧命令和旧衰减语义是否残留，并运行 `observe-v2` 最小 smoke test。
+
+`harness/manifest.json` 登记每个 Skill 的版本、兼容 Harness、调用策略和唯一 owner；`ownership.surfaces` 只表示引用方，不与 `owner` 并列定义。`allowedTools: null` 当前表示未声明限制，不冒充运行时权限控制。`verify-harness.js` 会检查登记路径、Skill frontmatter、重复名称/路径、职责引用和 enforcement 级别。
 
 ## Hook Profile 控制
 
