@@ -1,6 +1,6 @@
 ---
 name: subagent-driven-development
-description: "Use when the router finds two or more independent, unblocked frontier tickets in a user-authorized delivery scope. Dispatch one fresh subagent per ticket in a separate worktree, then integrate reviewed diffs into a controller-owned worktree; tickets remain the implementation contract and no detailed execution plan is generated."
+description: Dispatch approved independent frontier tickets in isolated worktrees; use only when router selects SDD.
 ---
 
 # Subagent-Driven Development

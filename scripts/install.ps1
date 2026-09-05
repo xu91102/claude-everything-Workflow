@@ -137,6 +137,11 @@ function Copy-DirectoryMerge {
     }
 
     $destDir = Join-Path $DestinationRoot $Name
+    $existingDest = Get-Item -LiteralPath $destDir -Force -ErrorAction SilentlyContinue
+    if ($null -ne $existingDest -and ($existingDest.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+        throw "Refusing to merge into symlinked destination: $destDir"
+    }
+
     Invoke-InstallCommand `
         -Description "New-Item -ItemType Directory '$destDir'" `
         -Action { New-Item -ItemType Directory -Path $destDir -Force | Out-Null }
@@ -156,7 +161,8 @@ function Install-SharedDirs {
         "scripts",
         "hooks",
         "skills",
-        "references"
+        "references",
+        "harness"
     )
 
     foreach ($dir in $dirs) {
@@ -178,7 +184,9 @@ function Remove-PackageOnlyPaths {
         "scripts\verify\runtime-checks.js",
         "scripts\verify\workflow-checks.js",
         "scripts\verify\workflow-ownership-fixtures.js",
-        "scripts\verify\workflow-ownership.js"
+        "scripts\verify\workflow-ownership.js",
+        "scripts\verify\skill-manifest-checks.js",
+        "scripts\verify\skill-manifest-checks.test.js"
     )
 
     foreach ($relative in $packageOnlyFiles) {

@@ -1,6 +1,6 @@
 ---
 name: using-superpowers
-description: "Select the shortest workflow for a non-trivial task or a returned process outcome; distinguish direct delivery, unresolved user decisions, and formal Spec boundaries."
+description: Route non-trivial tasks through direct, decision, or formal lanes, then return for verification.
 ---
 
 # Using Superpowers

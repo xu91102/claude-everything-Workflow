@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: Diagnosis loop for hard bugs and performance regressions. Use when the user says "diagnose"/"debug this", or reports something broken/throwing/failing/slow.
+description: Diagnose reported failures, regressions, slowness, or flaky behavior from the real call chain.
 ---
 
 # Systematic Debugging

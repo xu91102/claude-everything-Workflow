@@ -1,6 +1,6 @@
 ---
 name: implement
-description: "Deliver one authorized scope through implementation, review, and verification. Load the tracker lifecycle only when executing a ticket."
+description: Deliver one authorized scope through implementation, review, and verification.
 ---
 
 # Implement
