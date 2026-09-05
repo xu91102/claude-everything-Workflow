@@ -30,8 +30,16 @@ function run() {
   assert.deepStrictEqual(validateManifest(valid, {
     exists: (file) => file === "skills/demo-skill/SKILL.md" || file === "AGENTS.md",
     skillPaths: ["skills/demo-skill/SKILL.md"],
-    read: () => "---\nname: demo-skill\ndescription: demo\n---\n\n# Demo\n",
+    // 元数据验证不应要求固定的流程正文；正文可以按需移到 references/。
+    read: () => "---\nname: demo-skill\ndescription: demo\n---\n",
   }), []);
+
+  const longDescription = structuredClone(valid);
+  assert.match(validateManifest(longDescription, {
+    exists: (file) => file === "skills/demo-skill/SKILL.md" || file === "AGENTS.md",
+    skillPaths: ["skills/demo-skill/SKILL.md"],
+    read: () => `---\nname: demo-skill\ndescription: ${"x".repeat(181)}\n---\n`,
+  }).join("\n"), /description exceeds/);
 
   const duplicate = structuredClone(valid);
   duplicate.skills.push({ ...duplicate.skills[0], name: "other", path: "skills/demo-skill/SKILL.md" });

@@ -1,6 +1,6 @@
 ---
 name: domain-modeling
-description: "Model domain vocabulary, entity relationships, invariants, lifecycle transitions, and bounded context changes. Use only when a task introduces or changes domain concepts or ownership boundaries; do not trigger for ordinary code complexity, file count, or merely consuming existing CONTEXT.md vocabulary."
+description: Model domain terms, relationships, invariants, and ownership when domain boundaries change.
 disable-model-invocation: true
 ---
 

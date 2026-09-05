@@ -12,7 +12,7 @@
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "implicit"
+      "invocation": "explicit-only"
     },
     {
       "name": "codebase-design",
@@ -24,7 +24,7 @@
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "implicit"
+      "invocation": "explicit-only"
     },
     {
       "name": "continuous-learning-v2",
@@ -60,7 +60,7 @@
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "implicit"
+      "invocation": "explicit-only"
     },
     {
       "name": "feature-acceptance",
@@ -168,7 +168,7 @@
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "implicit"
+      "invocation": "explicit-only"
     },
     {
       "name": "research",
@@ -180,7 +180,7 @@
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "implicit"
+      "invocation": "explicit-only"
     },
     {
       "name": "resolving-merge-conflicts",
@@ -312,7 +312,7 @@
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "implicit"
+      "invocation": "explicit-only"
     },
     {
       "name": "wayfinder",

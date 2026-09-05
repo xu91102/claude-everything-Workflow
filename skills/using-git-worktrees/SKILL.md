@@ -1,6 +1,6 @@
 ---
 name: using-git-worktrees
-description: Use before implementing substantial plans when work should be isolated from the current checkout, especially multi-step features, risky refactors, parallel agent work, or when the current worktree has unrelated user changes.
+description: Prepare an isolated worktree before substantial, risky, parallel, or dirty-checkout implementation.
 ---
 
 # Using Git Worktrees

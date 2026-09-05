@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: "Compact the current work into a redacted Markdown handoff for a fresh session. Use when the user explicitly invokes this skill, when a prototype detour needs an isolated session, or when the active context is leaving its reliable reasoning zone."
+description: Create a redacted handoff for an explicitly requested fresh session or context boundary.
 disable-model-invocation: true
 ---
 

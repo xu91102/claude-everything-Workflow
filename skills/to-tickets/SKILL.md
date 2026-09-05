@@ -1,6 +1,6 @@
 ---
 name: to-tickets
-description: "Break an approved Spec, issue, or conversation into tracer-bullet vertical-slice tickets with explicit blocking edges. Use when the router selects durable multi-session or tracker-coordinated delivery; require approval before publishing local or external tracker artifacts."
+description: Split an approved scope into demonstrable vertical tickets with real blocking edges; wait for approval.
 ---
 
 # To Tickets

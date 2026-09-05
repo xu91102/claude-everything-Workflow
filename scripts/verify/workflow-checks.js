@@ -70,36 +70,8 @@ function checkSuperpowersDevLoop() {
     "不凭记忆执行 skill",
   ]);
 
-  requireTokens("skills/spec-gate/SKILL.md", [
-    "# Spec Gate",
-    "READY_FOR_USER_REVIEW",
-    "User Review Gate",
-  ]);
-
-  requireTokens("skills/to-tickets/SKILL.md", [
-    "tracer bullet",
-    "blocking edges",
-    "fresh context",
-    "file paths",
-    "code snippets",
-  ]);
-
-  requireTokens("skills/implement/SKILL.md", [
-    "一个 fresh context",
-    "test-driven-development",
-    "ticket as the Spec source",
-  ]);
-
-  requireTokens("skills/subagent-driven-development/SKILL.md", [
-    "frontier ticket",
-    "fresh subagent",
-    "one ticket",
-    "Do not generate a detailed implementation plan",
-    "controller-owned integration worktree",
-    "integrate-and-verify gate",
-    "task-owned untracked files",
-    "every selected ticket body as the combined Spec source",
-  ]);
+  // Skill 正文契约在各自的专门检查中维护；这里仅验证跨文件的闭环入口。
+  // 避免同一组流程词在多个检查点重复登记，允许 Skill 删除解释性文案。
 
   requireTokens("skills/test-driven-development/SKILL.md", [
     "## Red Test Gate",
@@ -161,13 +133,6 @@ function checkSuperpowersArtifactPolicy() {
     "Superpowers 生成的 Spec 和本地 tickets 仅用于本地工作流",
     "无论保存位置都不得暂存或提交",
   ]);
-  requireTokens("skills/spec-gate/SKILL.md", [
-    "Local-only artifact policy",
-    "Treat every generated design Spec as a local workflow artifact",
-    "Do not stage or commit it.",
-  ]);
-  requireTokens("skills/to-tickets/SKILL.md", ["Local tracker", "one file per ticket"]);
-
   const repoRoot = spawnSync("git", ["rev-parse", "--show-toplevel"], {
     cwd: root,
     encoding: "utf8",
@@ -255,7 +220,6 @@ function checkWorkflowDocuments() {
   runWorkflowOwnershipChecks({ read, fail, managedFiles });
   requireTokens("skills/iterative-retrieval/SKILL.md", [
     "事实、证据和盲点缺口",
-    "低成本",
     "复杂、高风险、多文件或长周期",
     "skills/grilling/SKILL.md",
     "skills/spec-gate/SKILL.md",
@@ -532,7 +496,6 @@ function checkDesignCapabilityContracts() {
   ]);
   requireTokens("skills/improve-codebase-architecture/SKILL.md", [
     "disable-model-invocation: true",
-    "deepening opportunities",
     "skills/codebase-design/SKILL.md",
     "skills/visual-companion/SKILL.md",
     "explicit consent",

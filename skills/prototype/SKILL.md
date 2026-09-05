@@ -1,6 +1,7 @@
 ---
 name: prototype
-description: "Build throwaway runnable code to answer one design question. Use when a user needs to feel a state model or business-logic flow in a terminal, compare materially different UI shapes, or says they will know the answer when they can interact with it."
+description: Build a throwaway runnable probe for one explicit design question; do not silently ship it.
+disable-model-invocation: true
 ---
 
 # Prototype

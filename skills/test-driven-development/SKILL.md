@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: 新功能、bug 修复、重构或行为变化需要测试先行时使用。强调先写失败测试、确认失败原因、最小实现和保持测试绿色。
+description: "Use for behavior changes with a test path: RED, minimal GREEN, REFACTOR, then verify."
 ---
 
 # Test-Driven Development

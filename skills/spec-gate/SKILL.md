@@ -1,6 +1,6 @@
 ---
 name: spec-gate
-description: "Generate, self-review, persist, and request approval for a formal engineering design spec without interviewing the user. Use when the user explicitly requests a design spec, Spec Gate, /to-spec, or the full Superpowers workflow, and automatically for costly-to-reverse architecture or service boundaries, public-contract compatibility, authentication or authorization boundaries, persistent data/schema migrations, or irreversible external side effects."
+description: Create and self-review a formal Spec for explicit or costly-to-reverse work; wait for approval.
 ---
 
 # Spec Gate

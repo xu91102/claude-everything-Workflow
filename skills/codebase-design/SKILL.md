@@ -1,6 +1,7 @@
 ---
 name: codebase-design
-description: "Design or improve deep modules, interfaces, seams, adapters, leverage, locality, and testability. Use when a module interface is too broad, callers carry duplicated complexity, tests reach through internals, or architecture work needs the Matt Pocock deep-module vocabulary."
+description: Design deep modules and seams when interfaces leak complexity or tests cross internals.
+disable-model-invocation: true
 ---
 
 # Codebase Design

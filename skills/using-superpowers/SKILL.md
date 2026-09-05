@@ -1,6 +1,6 @@
 ---
 name: using-superpowers
-description: "Route delivery work through an agent-selected direct, serial-ticket, or safe SDD topology; use grilling for unresolved user-owned decisions and Spec Gate for explicitly requested or costly-to-reverse work. Use at task start, after a process Skill returns an outcome, and whenever continuation ownership is unclear."
+description: Route tasks through direct, decision, or formal lanes; choose one delivery path and return for verification.
 ---
 
 # Using Superpowers

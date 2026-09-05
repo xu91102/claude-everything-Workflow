@@ -1,6 +1,6 @@
 ---
 name: implement
-description: "Execute a user-authorized low-risk direct scope, approved scope, or agent-ready frontier ticket through TDD, review, and verification; claim, resolve, and frontier refresh apply only to ticket delivery."
+description: Execute an authorized direct scope, approved Spec scope, or ready frontier ticket, then verify.
 ---
 
 # Implement

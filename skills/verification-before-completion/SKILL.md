@@ -1,6 +1,6 @@
 ---
 name: verification-before-completion
-description: Use before claiming work is complete, fixed, passing, ready for PR, or moving to the next task. Requires fresh verification evidence from this turn, with exact commands, results, skipped checks, and remaining risk.
+description: Before claiming done, fixed, passing, or ready, run fresh checks and report skipped items and risks.
 ---
 
 # Verification Before Completion

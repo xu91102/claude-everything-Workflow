@@ -6,6 +6,7 @@ const path = require("path");
 const MANIFEST_PATH = "harness/manifest.json";
 const MAX_SKILL_LINES = 500;
 const MAX_SKILL_TOKENS = 5000;
+const MAX_DESCRIPTION_CHARS = 180;
 const NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const VERSION_PATTERN = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
 const COMPATIBILITIES = new Set(["claude-code", "codex"]);
@@ -77,7 +78,9 @@ function validateManifest(manifest, { exists, skillPaths, read = () => "" }) {
       const frontmatter = parseFrontmatter(body);
       if (!frontmatter) errors.push(`Skill is missing frontmatter: ${skill.path}`);
       else if (frontmatter.name !== skill.name) errors.push(`manifest name does not match frontmatter: ${skill.path}`);
-      if (frontmatter && !String(frontmatter.description || "").trim()) errors.push(`Skill description is empty: ${skill.path}`);
+      const description = String(frontmatter?.description || "").trim();
+      if (frontmatter && !description) errors.push(`Skill description is empty: ${skill.path}`);
+      if (description.length > MAX_DESCRIPTION_CHARS) errors.push(`Skill description exceeds ${MAX_DESCRIPTION_CHARS} characters: ${skill.path}`);
       if (frontmatter?.version && frontmatter.version !== skill.version) errors.push(`manifest version does not match frontmatter: ${skill.path}`);
       const skillDir = path.posix.dirname(skill.path);
       const policyPath = `${skillDir}/agents/openai.yaml`;
