@@ -38,7 +38,7 @@ function run() {
   assert.match(validateManifest(longDescription, {
     exists: (file) => file === "skills/demo-skill/SKILL.md" || file === "AGENTS.md",
     skillPaths: ["skills/demo-skill/SKILL.md"],
-    read: () => `---\nname: demo-skill\ndescription: ${"x".repeat(181)}\n---\n`,
+    read: () => `---\nname: demo-skill\ndescription: ${"x".repeat(129)}\n---\n`,
   }).join("\n"), /description exceeds/);
 
   const duplicate = structuredClone(valid);
