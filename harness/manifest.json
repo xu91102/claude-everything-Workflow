@@ -36,7 +36,7 @@
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "implicit"
+      "invocation": "explicit-only"
     },
     {
       "name": "domain-modeling",
@@ -48,7 +48,7 @@
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "implicit"
+      "invocation": "explicit-only"
     },
     {
       "name": "e2e-testing",
@@ -84,7 +84,7 @@
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "implicit"
+      "invocation": "explicit-only"
     },
     {
       "name": "grilling",

@@ -2,6 +2,8 @@
 
 正式 skill 保持 `skills/<skill-name>/SKILL.md` 平铺结构，兼容 Claude Code、Codex 和打包安装的发现方式。分类只在本索引维护，不用物理嵌套目录；需要长材料时，放到对应 skill 的 `references/`。
 
+调用策略登记在 `harness/manifest.json`，由 `npm run verify` 校验。`implicit` 只表示中央路由可以在命中触发条件时选择；`explicit-only` 只在用户明确请求或显式命令下启用，避免低频管理和设计能力误触发。Skill 正文仍按命中后加载，不能把分类索引当作全量加载清单。
+
 ## Process / 门禁
 
 - `using-superpowers`：非平凡任务的 skill 路由、优先级和完成声明纪律。

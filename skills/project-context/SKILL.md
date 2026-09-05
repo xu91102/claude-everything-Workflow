@@ -1,6 +1,7 @@
 ---
 name: project-context
 description: "Configure a repository's durable agent context: issue-tracker operations, triage role vocabulary, domain-document layout, and ADR policy. Only when the user explicitly asks to set up project context, domain-document locations, triage configuration, or team tracking."
+disable-model-invocation: true
 ---
 
 # Project Context
