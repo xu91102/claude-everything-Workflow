@@ -30,7 +30,6 @@ function checkRouterAndAgentLinks() {
 
   const expected = [
     ["agents/e2e-runner.md", "skills/e2e-testing/SKILL.md"],
-    ["agents/tdd-guide.md", "skills/test-driven-development/SKILL.md"],
   ];
 
   for (const [agent, skill] of expected) {
@@ -41,7 +40,7 @@ function checkRouterAndAgentLinks() {
     }
   }
 
-  for (const agent of ["agents/harness-optimizer.md", "agents/planner.md"]) {
+  for (const agent of ["agents/harness-optimizer.md"]) {
     if (!exists(agent)) {
       fail(`${agent} is missing`);
       continue;
@@ -63,8 +62,6 @@ function checkTicketFirstDelivery() {
       fail(`skills/${skill}/SKILL.md must be retired for the ticket-first flow`);
     }
   }
-
-  requireTokens("agents/planner.md", ["to-tickets", "ticket", "不写文件路径"]);
 
   requireTokens("skills/to-tickets/SKILL.md", [
     "tracer bullet",
@@ -222,13 +219,6 @@ function checkCodeReviewContracts() {
     "scope creep",
     "looks implemented but is wrong",
     "NOT RUN",
-  ]);
-
-  requireTokens("agents/code-reviewer.md", [
-    "skills/code-review/SKILL.md",
-    "## Standards",
-    "## Spec",
-    "two isolated review contexts",
   ]);
 
   requireTokens("README.md", [

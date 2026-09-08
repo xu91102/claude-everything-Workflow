@@ -26,4 +26,4 @@
 
 ## 端到端测试
 
-Playwright 的组织、等待、POM、CI 制品和 flake 处理以 `skills/e2e-testing/SKILL.md` 为准；探索工具不能替代可重复的 E2E。本地多 worktree 运行时隔离端口和环境变量，启动服务必须等待 Web/API ready。CI 失败时保留 trace、screenshot、HTML report 和 `test-results`。
+Playwright 的组织、等待、POM、CI 制品和 flake 处理以 `skills/e2e-testing/SKILL.md` 为准；探索工具不能替代可重复的 E2E。本地多 worktree 运行时隔离端口和环境变量，启动服务必须等待 Web/API ready。CI 失败时按 `skills/e2e-testing/SKILL.md` 保留失败制品。

@@ -32,12 +32,7 @@ description: 提交、推送和创建 Pull Request 的标准工作流
 1. 汇总本次改动范围。
 2. 按 `rules/common/pr-automation.md` 选择验证命令。
 3. 优先运行与改动范围匹配的最小验证。
-4. PR 前补齐完整质量门：
-   - 仓库卫生检查
-   - lint / format check
-   - 相关单测
-   - 类型检查或 build
-   - 关键路径 E2E
+4. PR 前补齐 `rules/common/testing.md` 定义的完整相关质量门（仓库卫生 → lint/format → 相关单测 → 类型与构建 → 关键路径 E2E）。
 5. 修复可安全修复的失败项，并重跑相关验证。
 6. 只暂存本次任务相关文件。
 7. 使用 conventional commit 提交。

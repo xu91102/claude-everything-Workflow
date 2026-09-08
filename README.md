@@ -123,15 +123,12 @@ claude-everything-Workflow/
 │       └── pr-automation.md    # PR 自动化与 CI 质量门
 │
 ├── agents/                     # 代理（专业任务委托）
-│   ├── architect.md            # 架构师
-│   ├── code-reviewer.md        # 代码审查员
-│   ├── tdd-guide.md            # TDD 指导
 │   ├── e2e-runner.md           # E2E / Playwright（可选 Agent Browser）
 │   ├── harness-optimizer.md    # Harness 配置调优
 │   └── ...                     # 其他专业代理
 │
 ├── commands/                   # 命令（斜杠快捷入口）
-│   ├── code-review.md          # /code-review → code-reviewer
+│   ├── code-review.md          # /code-review → skills/code-review
 │   ├── learn.md                # /learn 统一学习管理
 │   ├── pr.md                   # /pr 提交与创建 PR
 │   ├── to-spec.md              # /to-spec → spec-gate
@@ -434,7 +431,7 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 3. router 判断跨会话交付时调用 `to-tickets`，确认拆分、验收和依赖后发布；单会话跳过 tickets
 4. router 为无 blocker 的单张 ticket 或单会话 approved Spec 选择 `implement`；高风险或并行实现前，用 `using-git-worktrees` 隔离工作区。
    多张独立 frontier tickets 时，router 选择 `subagent-driven-development`。
-5. 有测试路径时由 `test-driven-development` 和 tdd-guide 执行测试先行实现；关键路径由 e2e-testing 和 e2e-runner 维护 Playwright
+5. 有测试路径时由 `test-driven-development` 执行测试先行实现；关键路径由 e2e-testing 和 e2e-runner 维护 Playwright
 6. 使用 /code-review 基于固定基点并行执行隔离的 Standards/Spec 双轴审查
 7. 使用 /verify 验证，通过后使用 /pr 进入提交与 PR 门
 8. 使用 `/learn` 的 eval、projects、promote、evolve 或 prune 子命令管理学习闭环

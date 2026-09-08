@@ -20,7 +20,7 @@ description: 运行全面验证检查
 
 `quick` 只执行项目识别和构建/类型检查；`full` 执行完整流程；`pre-pr` 在 `full` 基础上补充 PR 风险、制品和描述建议。
 
-按以下顺序执行：
+按以下顺序执行；层级遵循 `rules/common/testing.md` 的验证分层，此处只列出具体执行动作：
 
 1. **项目识别**
    - 读取 `package.json`、workspace 配置、CI 配置和 README
@@ -41,23 +41,19 @@ description: 运行全面验证检查
    - 报告通过/失败数量
    - 报告覆盖率（如项目已配置）
 
-5. **构建检查**
-   - 运行项目构建命令
-   - 失败则报告错误并停止
+5. **构建与类型**
+   - 运行项目构建命令；失败则报告错误并停止
+   - 运行 TypeScript 类型检查并报告所有错误（文件:行号）
 
-6. **类型检查**
-   - 运行 TypeScript 类型检查
-   - 报告所有错误（文件:行号）
-
-7. **E2E 检查**
+6. **E2E 检查**
    - 若项目已配置 Playwright，运行 E2E（如 `npx playwright test` 或 `package.json` 中的脚本）
    - 失败时报告 trace、screenshot、HTML report、test-results 路径
 
-8. **Console.log 审计**
+7. **Console.log 审计**
    - 搜索源文件中的 console.log
    - 报告位置
 
-9. **Git 状态**
+8. **Git 状态**
    - 显示未提交的更改
    - 显示自上次提交后修改的文件
 
