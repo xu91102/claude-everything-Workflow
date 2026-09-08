@@ -5,7 +5,7 @@ Git、分支、提交和外部授权以 `rules/05-git-workflow.md` 为准；验�
 ## PR 契约
 
 - PR 前完成选定的最终验证；描述只记录真实结果、未运行项和剩余风险。
-- CI 至少覆盖适用的 lint/format、测试/构建和关键 E2E；失败时保留 trace、screenshot、HTML report 和 `test-results`。
+- CI 至少覆盖适用的 lint/format、测试/构建和关键 E2E；失败制品保留清单见 `skills/e2e-testing/SKILL.md`。
 - 新提交应取消同一 PR 的过期 CI 运行，避免重复消耗。
 - 没有模板时，描述包含背景、核心改动、验证、风险与回滚。
 

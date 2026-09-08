@@ -264,7 +264,6 @@ function checkWorkflowDocuments() {
     "rules/01-base.md",
     "rules/common/agent-orchestration.md",
   ]);
-  requireTokens("agents/planner.md", ["to-tickets", "不写文件路径"]);
 }
 
 function checkComplexityRules() {
@@ -399,7 +398,6 @@ function checkCapabilityRouting() {
     "explicit workflow advice?",
     "workflow advice mode",
     "explicit TDD request?",
-    "agents/tdd-guide.md",
     "explicit E2E or Playwright request?",
     "skills/e2e-testing/SKILL.md",
     "agents/e2e-runner.md",

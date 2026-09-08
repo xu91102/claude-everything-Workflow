@@ -352,7 +352,6 @@
       "owner": "skills/code-review/SKILL.md",
       "surfaces": [
         "commands/code-review.md",
-        "agents/code-reviewer.md",
         "rules/common/pr-automation.md"
       ],
       "enforcement": "blocking"
@@ -361,7 +360,6 @@
       "id": "testing",
       "owner": "skills/test-driven-development/SKILL.md",
       "surfaces": [
-        "agents/tdd-guide.md",
         "rules/common/testing.md"
       ],
       "enforcement": "advisory"
@@ -388,8 +386,7 @@
       "owner": "skills/to-tickets/SKILL.md",
       "surfaces": [
         "skills/implement/SKILL.md",
-        "skills/subagent-driven-development/SKILL.md",
-        "agents/planner.md"
+        "skills/subagent-driven-development/SKILL.md"
       ],
       "enforcement": "blocking"
     }

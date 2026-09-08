@@ -8,9 +8,7 @@
 
 ## 交付拓扑
 
-- 跨会话或需要可恢复依赖图的范围使用 `skills/to-tickets/SKILL.md`；单会话连贯范围直接实施。
-- 只有至少两张已批准、无 blocker、写入面不重叠的 frontier tickets 才使用 `skills/subagent-driven-development/SKILL.md`。
-- 不能证明安全并行时串行执行；不得为使用多 Agent 人为拆分任务。
+to-tickets / implement / subagent-driven-development 的选择判据以 `skills/using-superpowers/SKILL.md` 为唯一权威来源；不能在无法证明安全并行时人为拆分任务。
 
 ## 上下文与权限
 

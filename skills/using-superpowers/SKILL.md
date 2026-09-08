@@ -38,7 +38,7 @@ Task arrives
   -> explicit handoff or fresh session or prototype branch?
                                                      -> skills/handoff/SKILL.md
   -> explicit triage request?                      -> skills/triage/SKILL.md
-  -> explicit TDD request?                         -> skills/test-driven-development/SKILL.md + agents/tdd-guide.md
+  -> explicit TDD request?                         -> skills/test-driven-development/SKILL.md
   -> explicit E2E or Playwright request?           -> skills/e2e-testing/SKILL.md + agents/e2e-runner.md
   -> explicit harness audit?                       -> agents/harness-optimizer.md
   -> huge effort beyond one session?               -> skills/wayfinder/SKILL.md

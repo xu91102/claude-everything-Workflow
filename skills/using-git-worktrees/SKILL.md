@@ -15,6 +15,7 @@ Use a git worktree when implementation needs isolation without disturbing the us
 - Do not create a worktree for simple single-file edits, documentation tweaks, or quick read-only analysis.
 - Never discard or overwrite existing user changes.
 - If the current worktree has unrelated changes and the task requires broad edits, prefer a new worktree.
+- Honor this repo's base-branch policy: when `rules/05-git-workflow.md` requires it, base on the latest upstream base (`origin/main`), never on an outdated local `main` or the current `HEAD`.
 
 ## Flow
 
@@ -28,10 +29,10 @@ git rev-parse --show-toplevel
 
 2. Choose a branch name with the project convention. For Codex-managed branches, prefer `codex/<short-task-name>` unless the user requested another name.
 
-3. Create the worktree from the current `HEAD` or an explicit base branch.
+3. Create the worktree from the base this repo's rules require (here `rules/05-git-workflow.md`): base on the latest required upstream, e.g. `origin/main`, not the current `HEAD` or an outdated local `main`.
 
 ```bash
-git worktree add ../<repo-name>-<short-task-name> -b codex/<short-task-name>
+git worktree add ../<repo-name>-<short-task-name> -b codex/<short-task-name> <base-ref>
 ```
 
 4. Run setup in the new worktree only when the project requires it. Do not reinstall dependencies if the project already supports shared caches or the task is docs-only.
