@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const YAML = require("yaml");
 
 const MANIFEST_PATH = "harness/manifest.json";
 const MAX_SKILL_LINES = 500;
@@ -20,18 +21,15 @@ function isSafeRelativePath(value) {
 function parseFrontmatter(body) {
   const match = body.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return null;
-  const values = {};
-  for (const line of match[1].split(/\r?\n/)) {
-    const separator = line.indexOf(":");
-    if (separator <= 0) continue;
-    const key = line.slice(0, separator).trim();
-    let value = line.slice(separator + 1).trim();
-    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-      value = value.slice(1, -1);
-    }
-    values[key] = value;
+  return parseMapping(match[1]);
+}
+
+function parseMapping(body) {
+  const value = YAML.parse(body);
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("metadata must be a YAML mapping");
   }
-  return values;
+  return value;
 }
 
 function validateManifest(manifest, { exists, skillPaths, read = () => "" }) {
@@ -75,7 +73,12 @@ function validateManifest(manifest, { exists, skillPaths, read = () => "" }) {
     if (skill.allowedTools !== null && (!Array.isArray(skill.allowedTools) || skill.allowedTools.some((item) => typeof item !== "string"))) errors.push(`allowedTools must be null or an array of strings: ${skill.name}`);
     if (skillPathExists) {
       const body = read(skill.path);
-      const frontmatter = parseFrontmatter(body);
+      let frontmatter;
+      try {
+        frontmatter = parseFrontmatter(body);
+      } catch (error) {
+        errors.push(`invalid frontmatter YAML: ${skill.path}: ${error.message}`);
+      }
       if (!frontmatter) errors.push(`Skill is missing frontmatter: ${skill.path}`);
       else if (frontmatter.name !== skill.name) errors.push(`manifest name does not match frontmatter: ${skill.path}`);
       const description = String(frontmatter?.description || "").trim();
@@ -85,17 +88,38 @@ function validateManifest(manifest, { exists, skillPaths, read = () => "" }) {
       const skillDir = path.posix.dirname(skill.path);
       const policyPath = `${skillDir}/agents/openai.yaml`;
       let disallowsImplicit = false;
-      const frontmatterDisablesImplicit = frontmatter?.["disable-model-invocation"] === "true";
+      const claudeFlag = frontmatter?.["disable-model-invocation"];
+      if (claudeFlag !== undefined && typeof claudeFlag !== "boolean") {
+        errors.push(`disable-model-invocation must be a boolean: ${skill.path}`);
+      }
+      const frontmatterDisablesImplicit = claudeFlag === true;
       if (exists(policyPath)) {
-        const policy = read(policyPath);
-        disallowsImplicit = /allow_implicit_invocation:\s*false\b/.test(policy);
+        try {
+          const policy = parseMapping(read(policyPath)).policy;
+          if (policy != null && (typeof policy !== "object" || Array.isArray(policy))) {
+            throw new Error("policy must be a YAML mapping");
+          }
+          const codexFlag = policy?.allow_implicit_invocation;
+          if (codexFlag !== undefined && typeof codexFlag !== "boolean") {
+            errors.push(`allow_implicit_invocation must be a boolean: ${policyPath}`);
+          }
+          disallowsImplicit = codexFlag === false;
+        } catch (error) {
+          errors.push(`invalid policy YAML: ${policyPath}: ${error.message}`);
+        }
         if (disallowsImplicit && skill.invocation !== "explicit-only") errors.push(`manifest invocation conflicts with policy: ${skill.name}`);
       }
       if (frontmatterDisablesImplicit && skill.invocation !== "explicit-only") {
         errors.push(`manifest invocation conflicts with frontmatter: ${skill.name}`);
       }
-      if (skill.invocation === "explicit-only" && frontmatter?.["disable-model-invocation"] !== "true" && !disallowsImplicit) {
-        errors.push(`explicit-only Skill must disable implicit invocation: ${skill.path}`);
+      if (skill.invocation === "explicit-only") {
+        const hosts = Array.isArray(skill.compatibility) ? skill.compatibility : [];
+        if (hosts.includes("claude-code") && !frontmatterDisablesImplicit) {
+          errors.push(`claude-code explicit-only Skill must disable implicit invocation in frontmatter: ${skill.path}`);
+        }
+        if (hosts.includes("codex") && !disallowsImplicit) {
+          errors.push(`codex explicit-only Skill must disable implicit invocation in agents/openai.yaml policy: ${skill.path}`);
+        }
       }
       const lineCount = body.split(/\r?\n/).length - (body.endsWith("\n") ? 1 : 0);
       const tokenCount = Math.ceil(body.length / 4);
@@ -153,7 +177,21 @@ function runSkillManifestChecks(context) {
     read,
     skillPaths,
   });
+  const router = "skills/using-superpowers/SKILL.md";
+  if (exists(router)) errors.push(...validateNativeRoutes(manifest, read(router)));
   for (const error of errors) fail(error);
 }
 
-module.exports = { MANIFEST_PATH, parseFrontmatter, validateManifest, runSkillManifestChecks };
+function validateNativeRoutes(manifest, routerBody) {
+  const errors = [];
+  const skills = Array.isArray(manifest?.skills) ? manifest.skills : [];
+  for (const match of routerBody.matchAll(/->\s*(native-entry\s+)?(skills\/[a-z0-9-]+\/SKILL\.md|[a-z0-9-]+)[ \t]*\r?$/gm)) {
+    const skill = skills.find((entry) => entry?.path === match[2] || entry?.name === match[2]);
+    if (skill?.invocation === "explicit-only" && !match[1]) {
+      errors.push(`router must use native-entry for explicit-only Skill: ${skill.name}`);
+    }
+  }
+  return errors;
+}
+
+module.exports = { MANIFEST_PATH, parseFrontmatter, validateManifest, validateNativeRoutes, runSkillManifestChecks };

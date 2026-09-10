@@ -6,25 +6,25 @@
       "name": "code-review",
       "path": "skills/code-review/SKILL.md",
       "owner": "skills/code-review/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "explicit-only"
+      "invocation": "implicit"
     },
     {
       "name": "codebase-design",
       "path": "skills/codebase-design/SKILL.md",
       "owner": "skills/codebase-design/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "explicit-only"
+      "invocation": "implicit"
     },
     {
       "name": "continuous-learning-v2",
@@ -36,31 +36,31 @@
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "explicit-only"
+      "invocation": "implicit"
     },
     {
       "name": "domain-modeling",
       "path": "skills/domain-modeling/SKILL.md",
       "owner": "skills/domain-modeling/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "explicit-only"
+      "invocation": "implicit"
     },
     {
       "name": "e2e-testing",
       "path": "skills/e2e-testing/SKILL.md",
       "owner": "skills/e2e-testing/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "explicit-only"
+      "invocation": "implicit"
     },
     {
       "name": "feature-acceptance",
@@ -78,7 +78,7 @@
       "name": "find-skills",
       "path": "skills/find-skills/SKILL.md",
       "owner": "skills/find-skills/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -102,7 +102,7 @@
       "name": "handoff",
       "path": "skills/handoff/SKILL.md",
       "owner": "skills/handoff/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -114,7 +114,7 @@
       "name": "implement",
       "path": "skills/implement/SKILL.md",
       "owner": "skills/implement/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -126,7 +126,7 @@
       "name": "improve-codebase-architecture",
       "path": "skills/improve-codebase-architecture/SKILL.md",
       "owner": "skills/improve-codebase-architecture/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -162,25 +162,25 @@
       "name": "prototype",
       "path": "skills/prototype/SKILL.md",
       "owner": "skills/prototype/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "explicit-only"
+      "invocation": "implicit"
     },
     {
       "name": "research",
       "path": "skills/research/SKILL.md",
       "owner": "skills/research/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "explicit-only"
+      "invocation": "implicit"
     },
     {
       "name": "resolving-merge-conflicts",
@@ -210,7 +210,7 @@
       "name": "subagent-driven-development",
       "path": "skills/subagent-driven-development/SKILL.md",
       "owner": "skills/subagent-driven-development/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -222,7 +222,7 @@
       "name": "systematic-debugging",
       "path": "skills/systematic-debugging/SKILL.md",
       "owner": "skills/systematic-debugging/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -234,7 +234,7 @@
       "name": "test-driven-development",
       "path": "skills/test-driven-development/SKILL.md",
       "owner": "skills/test-driven-development/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -258,7 +258,7 @@
       "name": "triage",
       "path": "skills/triage/SKILL.md",
       "owner": "skills/triage/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -270,7 +270,7 @@
       "name": "using-git-worktrees",
       "path": "skills/using-git-worktrees/SKILL.md",
       "owner": "skills/using-git-worktrees/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -282,7 +282,7 @@
       "name": "using-superpowers",
       "path": "skills/using-superpowers/SKILL.md",
       "owner": "skills/using-superpowers/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -294,7 +294,7 @@
       "name": "verification-before-completion",
       "path": "skills/verification-before-completion/SKILL.md",
       "owner": "skills/verification-before-completion/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -306,19 +306,19 @@
       "name": "visual-companion",
       "path": "skills/visual-companion/SKILL.md",
       "owner": "skills/visual-companion/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "explicit-only"
+      "invocation": "implicit"
     },
     {
       "name": "wayfinder",
       "path": "skills/wayfinder/SKILL.md",
       "owner": "skills/wayfinder/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"

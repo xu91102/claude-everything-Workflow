@@ -1,7 +1,6 @@
 ---
 name: prototype
 description: Build a throwaway runnable probe for one explicit design question; do not silently ship it.
-disable-model-invocation: true
 ---
 
 # Prototype

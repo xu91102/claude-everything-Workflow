@@ -4,14 +4,16 @@
 
 入口只维护选择与通用约束：`using-superpowers` 的过程返回处理在 `references/process-outcomes.md`，`implement` 的 ticket 状态机在 `references/ticket-delivery.md`。只在对应模式读取；普通直接交付不加载这两份引用。
 
-调用策略登记在 `harness/manifest.json`，由 `npm run verify` 校验。`implicit` 只表示中央路由可以在命中触发条件时选择；`explicit-only` 只在用户明确请求、显式命令或中央路由依据该明确请求选择时启用，避免低频管理和设计能力误触发。Skill 正文仍按命中后加载，不能把分类索引当作全量加载清单.
+调用策略登记在 `harness/manifest.json`，由 `npm run verify` 按宿主校验。`implicit` 允许模型在命中描述与正文条件时调用，不等于授权外部写入；`explicit-only` 要求用户用 `/name` 或 `$name` 原生显式调用，中央路由不能代调或绕行。Skill 正文仍按命中后加载，不能把分类索引当作全量加载清单。
+
+实施、审查、领域设计、E2E、研究、原型、视觉辅助和 `/learn` 依赖的能力允许工作流按条件调用，仍遵守各自的用户请求、同意和写入边界。`find-skills`、`handoff`、`improve-codebase-architecture`、`project-context`、`triage`、`wayfinder` 保留为显式入口；Claude 用 frontmatter 禁止自动调用，Codex 用 `agents/openai.yaml` 的 `policy.allow_implicit_invocation: false`。
 
 ## Process / 门禁
 
 - `using-superpowers`：非平凡任务的 skill 路由、优先级和完成声明纪律。
 - `grilling`：对计划、设计或重大用户决策进行单问式压力测试。
 - `spec-gate`：显式 formal spec 或高风险任务的零访谈成稿、自审和用户批准门。
-- `using-git-worktrees`：脏工作区、高风险或并行任务的隔离工作区准备。
+- `using-git-worktrees`：新功能必须使用 worktree；其他隔离条件与复用方式按 Git 规则执行。
 - `to-tickets`：把已批准工作拆成 tracer-bullet tickets 和 blocking graph。
 - `implement`：执行用户授权的低风险 direct scope、已批准 Spec scope 或 frontier ticket；仅 ticket 路径 claim、resolve 并刷新 frontier。
 - `subagent-driven-development`：router 对已授权范围发现多个相互独立的 frontier tickets 时，分派到隔离 worktree 的 fresh subagent。
@@ -31,9 +33,9 @@
 
 ## Engineering / 开发实践
 
-- `code-review`：用两个隔离 subagent 并行执行 Standards 与 Spec 双轴审查。
+- `code-review`：简单、明确、低风险且可验证的任务可自审；复杂或证据不足时使用一个独立子智能体，高风险使用 Standards/Spec 双轴；必要的独立审查不可用时阻塞。
 - `test-driven-development`：行为变化的 Red Test Gate。
-- `systematic-debugging`：失败、异常结果和 flaky 行为的根因调试。
+- `systematic-debugging`：区分普通明确失败与疑难故障；预期 TDD RED 留在实现循环。
 - `resolving-merge-conflicts`：按双方原始意图逐 hunk 解决 merge/rebase 冲突。
 - `e2e-testing`：Playwright E2E 模式、CI、制品和 flaky 处理。
 - `feature-acceptance`：以真实证据、用例矩阵和二次审核完成用户功能验收。

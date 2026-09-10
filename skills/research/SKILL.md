@@ -1,7 +1,6 @@
 ---
 name: research
 description: Investigate explicit external-source questions and persist a cited Markdown report.
-disable-model-invocation: true
 ---
 
 # Research

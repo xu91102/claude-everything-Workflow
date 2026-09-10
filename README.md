@@ -50,6 +50,8 @@ npx claude-everything-workflow install --codex-only
 npx claude-everything-workflow verify
 ```
 
+`verify` 检查分发的 Harness 内容；在源码 checkout 中还检查 GitHub 发布配置。npm 包不包含 `.github/`，因此不运行这部分仓库检查。CI 也会仅安装生产依赖后运行打包产物的 `cew verify`，验证实际分发入口。
+
 本地发布前检查：
 
 ```bash
@@ -79,14 +81,16 @@ Claude Code 会安装 `CLAUDE.md` 并合并 `settings.json` 作为 hooks 入口�
 ### Windows
 
 ```powershell
-Copy-Item -Recurse .\claude-everything-Workflow\* $env:USERPROFILE\.claude\ -Force
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -ClaudeOnly
 ```
 
 ### macOS / Linux
 
 ```bash
-cp -r ./claude-everything-Workflow/* ~/.claude/
+bash scripts/install.sh --claude-only
 ```
+
+即使从源码手动安装，也使用上述脚本；直接复制整个 `rules/` 会把专项参考重新变成 Claude 常驻规则。
 
 ## 目录结构
 
@@ -196,10 +200,10 @@ claude-everything-Workflow/
 
 ## 规则加载策略
 
-- 默认入口只加载 `AGENTS.md` 或 `CLAUDE.md` 中的硬规则和最小索引。
-- `AGENTS.md` 是权威规则入口；`CLAUDE.md` 是 Claude Code bootstrap，只保留启动必需规则和回退策略，避免两份完整规则漂移。
+- `AGENTS.md` 是权威规则入口；`CLAUDE.md` 通过原生 `@AGENTS.md` 导入硬规则与索引，避免两份正文漂移。
+- Claude 用户级 `rules/` 只安装 9 份顶层规则；8 份 `common/` 专项参考安装到 `references/rules/common/`，不由规则加载器自动注入。Codex 保留原 `rules/` 布局。
 - 简单问答、解释、格式调整、翻译或只读查看，不读取额外规则。
-- 规则路径解析顺序：先检查当前项目根目录 `rules/`；若项目无 `rules/` 或目标规则文件不存在，必须回退到用户级规则目录：Codex 使用 `~/.codex/rules/`，Claude Code 使用 `~/.claude/rules/`。
+- `rules/...` 是逻辑路径，解析以 `AGENTS.md` 为准：先查项目文件；Codex 回退 `~/.codex/rules/`，Claude 普通规则回退 `~/.claude/rules/`，`rules/common/...` 回退 `~/.claude/references/rules/common/...`。
 - 当用户级 Workflow 注入到没有 `rules/` 的项目时，不能把项目规则目录缺失等同于“无规则”；必须继续检查对应的用户级规则目录。
 - 回退只改变查找位置，不改变按需读取原则；仍然只读取当前任务直接相关的规则文件，不要默认全量加载 `rules/` 或 `rules/common/`。
 - `rules/common/` 是专项参考区，只在命令、agent、skill 或当前任务明确触发时读取。
@@ -207,12 +211,17 @@ claude-everything-Workflow/
 以上是本项目对 agent 主动读取的约定，不等于宿主的实际加载量；宿主自动注入的规则不能靠正文中的
 “按需读取”撤销。评估成本时区分常驻入口、Skill 名称与描述、触发后的正文和模式专用引用。
 
+升级时 `scripts/install-rules.js` 只移除内容匹配当前或已登记历史分发版本的旧 common 文件；个人修改与未知文件保留并提示。已存在的目标规则变更前保存内容摘要命名的备份，拒绝经过符号链接写入。保留在旧自动目录的个人规则仍会加载，估算节省时必须计入。该迁移不会修改用户的 MCP 或工具权限。
+
+启动预算须计入 `@AGENTS.md` 导入的正文，不能只统计短 bootstrap；专项参考移出后节省的 token 不等于实际账单降幅。
+
 ## 精简原则
 
 - rules 保留长期约束与项目回退策略；目标项目的架构、lint、类型、覆盖率和注释惯例优先。
 - Skill 保留能改变决策的流程；普通任务只读所选入口，已在当前任务读过且未改变的内容可以复用。
 - `using-superpowers` 仅在 grilling/Spec 返回或跨会话交接时读取 `references/process-outcomes.md`。
-- `implement` 的普通交付共用实施、双轴审查和验证步骤；只有 ticket 路径读取 `references/ticket-delivery.md`。
+- `implement` 的普通交付共用实施、相称审查和验证步骤；只有 ticket 路径读取 `references/ticket-delivery.md`。审查深度统一由 `code-review` 决定。
+- 预期 TDD RED 继续 GREEN；原因明确的失败修正后验证，根因不明或反复失败才进入完整诊断。已有证据仍对应最终状态时复用，不重复运行。
 - 无可测试行为的文档、格式或纯配置整理运行对应校验；不为免写行为测试增加一次批准。
 - 精简不删除安全约束、用户决策门、真实验证或 PR 授权。安装目录与仓库可能不同，更新须走已有备份安装流程。
 
@@ -273,7 +282,7 @@ claude-everything-Workflow/
 | 命令 | 功能 |
 | --- | --- |
 | `/to-spec` | 正式工程 Spec 的显式决策门 |
-| `/code-review` | 固定基点下并行执行隔离的 Standards 轴与 Spec 轴审查 |
+| `/code-review` | 固定基点下按风险选择自审、独立或双轴审查；简单低风险任务凭验证证据完成 |
 | `/verify` | 运行全面验证检查 |
 | `/pr` | 提交、推送和创建 PR 的标准工作流 |
 | `/learn` | 统一管理学习评估、状态、项目、推广、清理与演化 |
@@ -286,6 +295,8 @@ claude-everything-Workflow/
 
 ```bash
 node scripts/verify-harness.js
+npm run test:invocation
+npm run test:install-rules
 bash scripts/install.sh --dry-run
 npm run verify:upstream -- --upstream-root <mattpocock-skills-clone>
 ```
@@ -297,6 +308,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 `verify-harness.js` 会检查 README 与 `commands/` 是否一致、薄封装 command 是否指向存在的 agent/skill、旧命令和旧衰减语义是否残留，并运行 `observe-v2` 最小 smoke test。
 
 `harness/manifest.json` 登记每个 Skill 的版本、兼容 Harness、调用策略和唯一 owner；`ownership.surfaces` 只表示引用方，不与 `owner` 并列定义。`allowedTools: null` 当前表示未声明限制，不冒充运行时权限控制。`verify-harness.js` 会检查登记路径、Skill frontmatter、重复名称/路径、职责引用和 enforcement 级别。
+
+调用策略按宿主分别校验：仅显式入口必须同时声明 Claude 的 `disable-model-invocation: true` 和 Codex 的 `policy.allow_implicit_invocation: false`（只兼容一个宿主时只要求该宿主字段）。工作流需要自动调用的 Skill 不设置这些禁用项；具体名单和手动入口见 `skills/README.md`。允许调用不会自动授权外部写入、后台学习或启动视觉服务。
 
 ## Hook Profile 控制
 
@@ -323,8 +336,8 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
   -> using-superpowers 先路由到相关 process skill
   -> 可查事实直接检索；外部一手来源调查用 research；系统性本地缺口用 iterative-retrieval
   -> 需要可运行答案：prototype 选择 logic TUI 或 visual-companion UI 分支
-  -> 需要隔离 prototype 或接近上下文可靠区边界：handoff 到全新 session，再带结论返回
-  -> 超过单个 session 的模糊工作：wayfinder 维护 decision-ticket map
+  -> 需要隔离 prototype 或接近上下文可靠区边界：推荐 /handoff（Claude）或 $handoff（Codex），原生调用后交接
+  -> 超过单个 session 的模糊工作：推荐 /wayfinder（Claude）或 $wayfinder（Codex），原生调用后维护 decision-ticket map
   -> 标记用户显式 formal spec 或高回滚成本架构/公共契约、安全、持久数据、不可逆副作用
   -> 存在关键用户决策：grilling 一次只问一个最高价值问题，并返回结构化 handoff
   -> 明确低风险且无未决决策：direct，经 implement 的无 ticket 路径实施、审查并做相称验证
@@ -335,13 +348,13 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
   -> 多 session/tracker：to-tickets 拆垂直切片和 blocking edges，用户确认 ticket contract 后发布
   -> 单 session 的 direct/approved Spec 连贯范围或单张 frontier ticket：implement 在一个 fresh context 中实施
   -> 多张独立 frontier tickets：router 用 subagent-driven-development 在独立 worker worktree 并行，再汇入 integration worktree
-  -> using-git-worktrees 按需创建隔离工作区
+  -> using-git-worktrees：新功能必须隔离；其他改动按 Git 规则判断，已有合适任务 worktree 复用
   -> TDD 红绿重构
   -> 需求符合性审查
   -> 代码质量审查
   -> verification-before-completion 完成声明前确认新鲜验证证据
-  -> ticket 路径：ticket 验收、双轴审查和验证通过后 resolve，并返回 newly unlocked frontier
-  -> 无 ticket 路径：双轴审查和验证通过后报告证据，不 claim、resolve 或刷新 tracker
+  -> ticket 路径：ticket 验收、选定审查和验证通过后 resolve，并返回 newly unlocked frontier
+  -> 无 ticket 路径：选定审查和验证通过后报告证据，不 claim、resolve 或刷新 tracker
   -> /verify 质量门
   -> /pr 提交/PR
   -> /learn eval --preview 学习沉淀
@@ -376,13 +389,13 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 - 没有 failing test，不写行为代码。
 - 没有新鲜验证证据，不声明完成、通过、已修复或 ready。
 - 没有 verify，不进入 PR。
-- 有脏工作区、并行任务或高风险改动时，先考虑 `using-git-worktrees`。
+- 新功能必须使用 worktree，包括单文件新功能；其他隔离条件、基线与复用策略见 `rules/05-git-workflow.md`。
 
 ### Ticket-first 交付约束
 
 - `to-tickets` 只写端到端行为、验收标准和 blocking edges；一张 ticket 是一个可在 fresh context 完成的 tracer bullet。
 - 细节由实施会话结合当前代码发现；ticket 不写文件路径、行号、代码片段或分层改造步骤，避免文档在实现前过期。
-- `implement` 处理一张 frontier ticket，或用户授权的低风险 direct/approved Spec 连贯范围；ticket 以自身作为 Spec source，direct scope 以明确用户请求和相称验证为 scope source。两条路径都驱动 TDD、双轴审查和新鲜验证，只有 ticket 才 claim、resolve 并刷新依赖图。
+- `implement` 处理一张 frontier ticket，或用户授权的低风险 direct/approved Spec 连贯范围；ticket 以自身作为 Spec source，direct scope 以明确用户请求和相称验证为 scope source。两条路径都执行适用的 TDD、相称审查和新鲜验证，只有 ticket 才 claim、resolve 并刷新依赖图。
 - `subagent-driven-development` 是 router 选出的并行执行器：不再读取长计划，而是给每个 fresh subagent 一张已批准的 frontier ticket 和独立 worker worktree；通过 review 的 diff 必须汇入 integration worktree 并完成联合验证后才能 resolve。
 - Visual Companion 使用带 `?key=` 的 per-session URL，HTTP/WebSocket 请求都需要 session key；默认 idle timeout 为 4 小时，可用 `--idle-timeout-minutes` 调整。
 
@@ -429,10 +442,10 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 1. 复制到 ~/.claude/
 2. 首次需要长期协作上下文时，直接请求配置 project context；需求清楚时直接实现；关键未知按需请求 grilling；高风险任务或显式 opt-in 用 `/to-spec` 写 design spec
 3. router 判断跨会话交付时调用 `to-tickets`，确认拆分、验收和依赖后发布；单会话跳过 tickets
-4. router 为无 blocker 的单张 ticket 或单会话 approved Spec 选择 `implement`；高风险或并行实现前，用 `using-git-worktrees` 隔离工作区。
+4. router 为无 blocker 的单张 ticket 或单会话 approved Spec 选择 `implement`；新功能使用 `using-git-worktrees` 隔离工作区，其他改动按 Git 规则判断。
    多张独立 frontier tickets 时，router 选择 `subagent-driven-development`。
 5. 有测试路径时由 `test-driven-development` 执行测试先行实现；关键路径由 e2e-testing 和 e2e-runner 维护 Playwright
-6. 使用 /code-review 基于固定基点并行执行隔离的 Standards/Spec 双轴审查
+6. 使用 /code-review 基于固定基点和范围合同审查；简单、明确、局部可逆且可验证的任务可自审，复杂或证据不足时独立审查，高风险使用双轴。`--mode self` 不能绕过风险条件，代理不可用时也不能降级
 7. 使用 /verify 验证，通过后使用 /pr 进入提交与 PR 门
 8. 使用 `/learn` 的 eval、projects、promote、evolve 或 prune 子命令管理学习闭环
 ```

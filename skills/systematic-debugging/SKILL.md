@@ -1,12 +1,18 @@
 ---
 name: systematic-debugging
-description: Diagnose reported failures, regressions, slowness, or flaky behavior from the real call chain.
+description: Diagnose unexplained, repeated, or flaky failures; expected TDD RED continues implementation.
 ---
 
 # Systematic Debugging
 
-先完整读取 `references/diagnosing-bugs.upstream.md`，严格按其中六阶段的原始顺序与门禁执行；
-不得改写、缩减或跳过阶段，除非原文明确允许并记录理由。
+## 分级入口
+
+- 已确认失败原因正确的预期 TDD RED：回到实现的 GREEN，不加载完整诊断参考。
+- 原因已由错误信息和调用链证实的普通失败：最小修复并重跑对应验证，不制造多个假设。
+- 根因不明、修复后仍重复失败、flaky 或性能回归：进入完整诊断。先取得可重复的反馈，
+  再读取 `references/diagnosing-bugs.upstream.md`，按其中适用阶段执行；跳过不适用阶段时记录依据。
+
+所有路径都保留原始症状和修复后的验证证据。不能把非目标错误当作预期 RED，也不能跳过真实失败。
 
 ## 项目运行适配
 

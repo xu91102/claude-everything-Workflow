@@ -126,7 +126,6 @@ require_rsync() {
 install_shared_dirs() {
     local dest="$1"
 
-    copy_dir rules "$dest"
     copy_dir agents "$dest"
     copy_dir commands "$dest"
     copy_dir scripts "$dest"
@@ -142,6 +141,8 @@ remove_package_only_paths() {
     for file in \
         "scripts/install.sh" \
         "scripts/install.ps1" \
+        "scripts/install-rules.js" \
+        "scripts/legacy-common-rule-hashes.json" \
         "scripts/verify-harness.js" \
         "scripts/verify/core.js" \
         "scripts/verify/grilling-spec-gate-checks.js" \
@@ -152,7 +153,9 @@ remove_package_only_paths() {
         "scripts/verify/workflow-ownership-fixtures.js" \
         "scripts/verify/workflow-ownership.js" \
         "scripts/verify/skill-manifest-checks.js" \
-        "scripts/verify/skill-manifest-checks.test.js"
+        "scripts/verify/skill-manifest-checks.test.js" \
+        "scripts/verify/skill-invocation.test.js" \
+        "scripts/verify/install-rules.test.js"
     do
         if [ -f "$dest/$file" ]; then
             run rm -f "$dest/$file"
@@ -237,6 +240,7 @@ install_claude() {
     copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
     copy_claude_settings "$ROOT_DIR/settings.json" "$dest/settings.json"
     install_shared_dirs "$dest"
+    install_workflow_rules claude-code "$dest"
     cleanup_retired_skills "$dest"
     remove_package_only_paths "$dest"
 }
@@ -249,8 +253,17 @@ install_codex() {
     remove_obsolete_workflow_paths "$dest"
     copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
     install_shared_dirs "$dest"
+    install_workflow_rules codex "$dest"
     cleanup_retired_skills "$dest"
     remove_package_only_paths "$dest"
+}
+
+install_workflow_rules() {
+    local host_name="$1"
+    local dest="$2"
+    local options=()
+    if [ "$DRY_RUN" -eq 1 ]; then options+=(--dry-run); fi
+    node "$ROOT_DIR/scripts/install-rules.js" "$host_name" "$dest" "${options[@]}"
 }
 
 validate_retired_skill_manifest

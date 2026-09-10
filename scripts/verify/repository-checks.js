@@ -222,7 +222,7 @@ function checkCodeReviewContracts() {
   ]);
 
   requireTokens("README.md", [
-    "固定基点下并行执行隔离的 Standards 轴与 Spec 轴审查",
+    "固定基点下按风险选择自审、独立或双轴审查",
   ]);
 
   requireTokens("skills/implement/references/ticket-delivery.md", [
@@ -284,8 +284,8 @@ function checkTrackerDeliveryLifecycle() {
     "无 ticket 范围不得 claim 或写入任何 tracker",
   ]);
   requireTokens("rules/05-git-workflow.md", [
-    "除只读分析和单文件修改外，所有代码、配置、Harness 改动必须先创建独立" +
-      " `git worktree` 和任务分支",
+    "开发新功能必须使用独立 `git worktree` 和任务分支",
+    "单文件新功能也不例外",
   ]);
   requireTokens("skills/implement/references/ticket-delivery.md", [
     "## State Machine",
@@ -306,7 +306,7 @@ function checkTrackerDeliveryLifecycle() {
     "frontier 为空但仍有 open tickets",
     "BLOCKED_GRAPH",
     "open ticket count = 0",
-    "全分支双轴 review",
+    "全分支相称 review",
     "`/verify pre-pr`",
     "`/pr` 或 keep",
     "可重新选择串行 `implement` 或安全 SDD",
@@ -323,7 +323,8 @@ function checkExecutionSupportSkills() {
   requireTokens("skills/using-git-worktrees/SKILL.md", [
     "git worktree add",
     "git worktree remove",
-    "Do not create a worktree for simple single-file edits",
+    "rules/05-git-workflow.md",
+    "including a single-file feature",
   ]);
 
   requireTokens("skills/verification-before-completion/SKILL.md", [
@@ -393,6 +394,9 @@ function checkRuleLoadingPolicy() {
   }
   if (!agentsBody.includes("~/.claude/rules/")) {
     fail("AGENTS.md should mention Claude Code user-level rules fallback");
+  }
+  if (!agentsBody.includes("~/.claude/references/rules/common/")) {
+    fail("AGENTS.md should resolve Claude common rules from the cold reference directory");
   }
   if (!agentsBody.includes("不能把项目规则目录缺失等同于") || !agentsBody.includes("无规则")) {
     fail("AGENTS.md should forbid treating a missing project rules directory as no rules");

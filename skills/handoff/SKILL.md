@@ -14,8 +14,8 @@ Origin: `mattpocock/skills@2ab9580`, adapted to this repository's write-safety a
 
 - Use only for a fresh session or an intentional prototype branch. Built-in compaction is for continuing
   the same conversation at a phase boundary.
-- Creating the handoff document is authorized only by explicit invocation or explicit approval
-  after the router recommends it.
+- Creating the handoff document requires native invocation (`/handoff` in Claude or `$handoff` in
+  Codex). A router recommendation or plain approval does not replace this explicit-only entry.
 - Resolve the operating system's temporary directory with the available runtime. Create a unique
   private subdirectory with mode `0700`; fail closed if permissions cannot be enforced. Do not write
   the handoff into the repository, tracker, home directory, or a guessed path.

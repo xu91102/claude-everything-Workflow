@@ -35,6 +35,7 @@ originating Skill to recommend a successor.
 ## Cross-session handoff
 
 When a prototype detour needs isolation or the current context is leaving its reliable reasoning zone,
-recommend the `handoff` Skill and wait for explicit approval before creating the temporary document.
+recommend `/handoff` (Claude) or `$handoff` (Codex) and wait for that native invocation before creating
+the temporary document. A plain approval does not unlock a native explicit-only Skill.
 The handoff ends the current flow; a fresh session references the returned path and enters the router.
 Do not substitute handoff for durable Specs, ADRs, tickets, or verification evidence.

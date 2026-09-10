@@ -31,16 +31,18 @@ description: Deliver one authorized scope through implementation, review, and ve
 
 1. 以当前范围合同实施最小完整改动，不再生成逐文件、逐步骤的实施计划。行为变化按
    `test-driven-development` 的垂直切片推进；纯文档或没有可测试行为的整理运行对应校验。
-   出现失败测试、flaky 或意外结果时进入 `systematic-debugging`，修复后再继续。
+   已确认失败原因正确的预期 TDD RED 继续 GREEN，不触发调试。其他失败按
+   `systematic-debugging` 的分级入口处理，不跳过真实失败。
 2. 用 pre-delivery base 冻结包含 task-owned committed、staged、unstaged、untracked 的完整审查包，
-   范围合同作为 Spec source，执行 `skills/code-review/SKILL.md` 的 Standards/Spec 双轴 review。
-   任一轴未通过时修复 Critical/Important findings 后重审，不把部分完成报告为交付完成。
+   范围合同作为 Spec source，按 `skills/code-review/SKILL.md` 选择相称的 review 模式。
+   满足该 Skill 的低风险与验证条件时可自审；需要独立审查却无法启动时不得降级。
+   修复 Critical/Important findings 后复核受影响的验收与审查项，不把部分完成报告为交付完成。
 3. 逐条核对验收，按 `verification-before-completion` 运行 fresh commands。已在当前阶段运行且仍对应
    最终改动的证据可以复用；新改动、失败或未决风险才触发重跑。记录实际结果、未运行项和剩余风险。
 
 ## 收尾与授权
 
-- 无 ticket：双轴 review 与 fresh verification 均通过后报告范围、证据和风险；到此结束，不查询或刷新 frontier。
+- 无 ticket：选定的 review 与 fresh verification 均通过后报告范围、证据和风险；到此结束，不查询或刷新 frontier。
 - ticket：验收、review 和 verification 全部通过后，回到 ticket 引用完成 resolve 与后续处理。
 - 本地交付授权不覆盖 commit、push 或创建 PR，也不扩张产品范围。用户已明确授权的后续动作按授权继续，
   不重复索要同一批准；PR 仍须通过 `/verify pre-pr`。外部写入、merge 和 cleanup 遵循 Git 规则与用户授权。

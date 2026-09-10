@@ -155,7 +155,6 @@ function Install-SharedDirs {
     param([string]$Destination)
 
     $dirs = @(
-        "rules",
         "agents",
         "commands",
         "scripts",
@@ -176,6 +175,8 @@ function Remove-PackageOnlyPaths {
     $packageOnlyFiles = @(
         "scripts\install.sh",
         "scripts\install.ps1",
+        "scripts\install-rules.js",
+        "scripts\legacy-common-rule-hashes.json",
         "scripts\verify-harness.js",
         "scripts\verify\core.js",
         "scripts\verify\grilling-spec-gate-checks.js",
@@ -186,7 +187,9 @@ function Remove-PackageOnlyPaths {
         "scripts\verify\workflow-ownership-fixtures.js",
         "scripts\verify\workflow-ownership.js",
         "scripts\verify\skill-manifest-checks.js",
-        "scripts\verify\skill-manifest-checks.test.js"
+        "scripts\verify\skill-manifest-checks.test.js",
+        "scripts\verify\skill-invocation.test.js",
+        "scripts\verify\install-rules.test.js"
     )
 
     foreach ($relative in $packageOnlyFiles) {
@@ -307,6 +310,7 @@ function Install-ClaudeWorkflow {
     Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath
     Convert-ClaudeSettingsHookPaths -SettingsPath $settingsPath
     Install-SharedDirs -Destination $dest
+    Install-WorkflowRules -Destination $dest -HostName "claude-code"
     Remove-RetiredSkills -Destination $dest
     Remove-PackageOnlyPaths -Destination $dest
 }
@@ -322,8 +326,20 @@ function Install-CodexWorkflow {
     Remove-ObsoleteWorkflowPaths -Destination $dest
     Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
     Install-SharedDirs -Destination $dest
+    Install-WorkflowRules -Destination $dest -HostName "codex"
     Remove-RetiredSkills -Destination $dest
     Remove-PackageOnlyPaths -Destination $dest
+}
+
+function Install-WorkflowRules {
+    param([string]$Destination, [string]$HostName)
+
+    $ruleArgs = @((Join-Path $RootDir "scripts\install-rules.js"), $HostName, $Destination)
+    if ($DryRun) { $ruleArgs += "--dry-run" }
+    & node @ruleArgs
+    if ($LASTEXITCODE -ne 0) {
+        throw "Rule installation failed with exit code $LASTEXITCODE"
+    }
 }
 
 Test-RetiredSkillManifest

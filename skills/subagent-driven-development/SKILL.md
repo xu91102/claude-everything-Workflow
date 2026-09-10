@@ -54,7 +54,7 @@ source of truth; do not expand scope or start another ticket.
 Do not stage, commit, push, open a PR, claim/resolve/comment on a tracker, or perform any other external
 mutation. Leave only this ticket's worktree diff, including task-owned untracked files.
 
-Before reporting, run focused verification, self-review the diff, and report:
+Before reporting, run focused verification and report the diff for the controller's review:
 - status: DONE | BLOCKED | NEEDS_DECISION
 - changed files and tests run
 - task-owned untracked files created since dispatch

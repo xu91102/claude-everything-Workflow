@@ -14,7 +14,8 @@ Core rule: do not say work is complete, fixed, passing, or ready unless fresh ve
 Before making a completion claim:
 
 1. Identify the smallest command or manual check that proves the claim.
-2. Run the full relevant command now, unless the environment makes it impossible.
+2. Run the relevant command unless this turn already has evidence for the final unchanged state.
+   Reuse that evidence; rerun only after new changes, failures, or unresolved concerns.
 3. Read the output and exit code.
 4. Compare the result against the exact claim.
 5. Report the claim only with evidence.
@@ -31,7 +32,7 @@ If verification cannot run, say that it was not run and explain the remaining ri
 | Bug is fixed | Fresh reproduction or regression test showing the original symptom no longer occurs |
 | Task is complete | Spec, plan, or user request checklist verified against the changed files |
 | Ready for `/pr` | `/verify` or equivalent checks with skipped checks and risks stated |
-| Agent work is done | Independent inspection of the diff and required verification, not only the agent report |
+| Delegated agent work is done | Controller checks the returned diff and required verification; review depth follows `code-review`, and a worker report alone is insufficient |
 
 ## Red Flags
 
@@ -51,7 +52,7 @@ Stop and verify before using language like:
 If verification fails:
 
 1. State the exact failing command and result.
-2. Use `skills/systematic-debugging/SKILL.md` before changing code.
+2. Apply the graded entry in `skills/systematic-debugging/SKILL.md`; expected TDD RED is not a verification defect.
 3. Re-run the relevant verification after the fix.
 
 If verification is partial:

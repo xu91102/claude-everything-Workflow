@@ -1,7 +1,6 @@
 ---
 name: domain-modeling
 description: Model domain terms, relationships, invariants, and ownership when domain boundaries change.
-disable-model-invocation: true
 ---
 
 # Domain Modeling
