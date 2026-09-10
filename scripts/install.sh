@@ -261,9 +261,10 @@ install_codex() {
 install_workflow_rules() {
     local host_name="$1"
     local dest="$2"
-    local options=()
+    # Bash <4.4 treats empty arrays as unset under set -u.
+    local options=("$ROOT_DIR/scripts/install-rules.js" "$host_name" "$dest")
     if [ "$DRY_RUN" -eq 1 ]; then options+=(--dry-run); fi
-    node "$ROOT_DIR/scripts/install-rules.js" "$host_name" "$dest" "${options[@]}"
+    node "${options[@]}"
 }
 
 validate_retired_skill_manifest

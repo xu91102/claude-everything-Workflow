@@ -522,7 +522,7 @@ function checkGitHubWorkflows() {
     "npm run verify",
     "npm run pack:dry-run",
     "publish:",
-    "needs: verify",
+    "needs: [verify, test-macos-installer]",
     "id-token: write",
     "node-version: 22.14.0",
     "package-manager-cache: false",

@@ -47,7 +47,7 @@ function checkLegacyMigration() {
 function checkInstallerEntrypoint() {
   const profile = path.join(tempRoot, "installer-profile");
   const windows = process.platform === "win32";
-  const executable = windows ? "powershell.exe" : "bash";
+  const executable = windows ? "powershell.exe" : (process.env.CEW_TEST_BASH || "bash");
   const args = windows
     ? ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", path.join(sourceRoot, "scripts/install.ps1")]
     : [path.join(sourceRoot, "scripts/install.sh")];
