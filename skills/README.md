@@ -4,9 +4,9 @@
 
 入口只维护选择与通用约束：`using-superpowers` 的过程返回处理在 `references/process-outcomes.md`，`implement` 的 ticket 状态机在 `references/ticket-delivery.md`。只在对应模式读取；普通直接交付不加载这两份引用。
 
-调用策略登记在 `harness/manifest.json`，由 `npm run verify` 按宿主校验。`implicit` 允许模型在命中描述与正文条件时调用，不等于授权外部写入；`explicit-only` 要求用户用 `/name` 或 `$name` 原生显式调用，中央路由不能代调或绕行。Skill 正文仍按命中后加载，不能把分类索引当作全量加载清单。
+调用策略登记在 `harness/manifest.json`，由 `npm run verify` 按宿主校验。`implicit` 允许模型在命中描述与正文条件时调用，不等于授权外部写入；本项目需要明确请求的入口接受自然语言，不要求用户再输入 `/name` 或 `$name`；路由不能把任务复杂度当作用户请求。Skill 正文仍按命中后加载，不能把分类索引当作全量加载清单。
 
-实施、审查、领域设计、E2E、研究、原型、视觉辅助和 `/learn` 依赖的能力允许工作流按条件调用，仍遵守各自的用户请求、同意和写入边界。`find-skills`、`handoff`、`improve-codebase-architecture`、`project-context`、`triage`、`wayfinder` 保留为显式入口；Claude 用 frontmatter 禁止自动调用，Codex 用 `agents/openai.yaml` 的 `policy.allow_implicit_invocation: false`。
+实施、审查、领域设计、E2E、原型、视觉辅助和 `/learn` 依赖的能力允许工作流按条件调用，仍遵守各自的用户请求、同意和写入边界。`handoff`、`improve-codebase-architecture`、`triage` 仅在用户明确请求相应任务时使用；宿主允许模型识别自然语言请求，正文仍限制任务范围。
 
 ## Process / 门禁
 
@@ -17,14 +17,12 @@
 - `to-tickets`：把已批准工作拆成 tracer-bullet tickets 和 blocking graph。
 - `implement`：执行用户授权的低风险 direct scope、已批准 Spec scope 或 frontier ticket；仅 ticket 路径 claim、resolve 并刷新 frontier。
 - `subagent-driven-development`：router 对已授权范围发现多个相互独立的 frontier tickets 时，分派到隔离 worktree 的 fresh subagent。
-- `wayfinder`：为跨 session 的模糊工作维护 decision-ticket map/frontier。
 - `triage`：对 Issue/外部 PR 分类、验证并形成 agent-ready brief。
 - `handoff`：将当前上下文脱敏压缩到临时 Markdown，供全新 session 接续。
 - `verification-before-completion`：完成、通过、已修复或 ready 声明前的新鲜验证门。
 
 ## 旁路设计能力
 
-- `project-context`：显式配置项目工作追踪、领域文档和 ADR 的长期位置。
 - `domain-modeling`：领域术语、实体关系、不变量、生命周期和 bounded context 变化建模。
 - `codebase-design`：deep module、interface、seam、adapter、leverage 和 locality 设计词汇。
 - `improve-codebase-architecture`：扫描 deepening 机会、展示报告并收敛选中候选。
@@ -43,12 +41,7 @@
 ## Harness / 上下文与编排
 
 - `iterative-retrieval`：事实、证据、盲点、subagent 和大仓库探索的迭代检索闭环。
-- `research`：后台一手来源调查与逐项引用的 Markdown 研究记录。
 - `continuous-learning-v2`：Hook 观察、project/global instinct、学习评估和演化。
-
-## Meta / Skill 管理
-
-- `find-skills`：查找本地已有或开放生态中可安装的 agent skill。
 
 ## Learn / 学习沉淀
 

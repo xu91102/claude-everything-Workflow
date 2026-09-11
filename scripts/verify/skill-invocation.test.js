@@ -65,4 +65,22 @@ assert.match(validateNativeRoutes(routes, "  -> fresh session? -> skills/handoff
 assert.match(validateNativeRoutes(routes, "  -> fresh session? -> handoff\n").join("\n"), /native-entry/);
 assert.deepEqual(validateNativeRoutes(routes, "  -> fresh session? -> native-entry skills/handoff/SKILL.md\n"), []);
 assert.deepEqual(validateNativeRoutes(routes, "  -> delivery -> skills/implement/SKILL.md\n"), []);
-console.log("Skill invocation tests passed (33 host-gate, YAML and routing scenarios).");
+// Natural-language requests must remain selectable on both hosts after an upgrade.
+const fs = require("node:fs");
+const path = require("node:path");
+const YAML = require("yaml");
+const root = path.resolve(__dirname, "../..");
+const manifest = require("../../harness/manifest.json");
+for (const name of ["handoff", "improve-codebase-architecture", "triage"]) {
+  const entry = manifest.skills.find((skill) => skill.name === name);
+  assert.equal(entry?.invocation, "implicit", name);
+  const body = fs.readFileSync(path.join(root, entry.path), "utf8");
+  const frontmatter = YAML.parse(body.match(/^---\r?\n([\s\S]*?)\r?\n---/)[1]);
+  assert.notEqual(frontmatter["disable-model-invocation"], true, name);
+  const policy = YAML.parse(fs.readFileSync(path.join(root, "skills", name, "agents/openai.yaml"), "utf8"));
+  assert.equal(policy.policy.allow_implicit_invocation, true, name);
+}
+for (const name of ["research", "wayfinder", "find-skills", "project-context"]) {
+  assert.equal(manifest.skills.some((skill) => skill.name === name), false);
+}
+console.log("Skill invocation tests passed (33 host-gate scenarios, three natural-language entries, four retired skills).");

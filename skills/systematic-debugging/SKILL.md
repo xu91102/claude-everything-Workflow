@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: Diagnose unexplained, repeated, or flaky failures; expected TDD RED continues implementation.
+description: Diagnose bugs, recurring or flaky failures, slowness, and performance regressions; exclude expected TDD RED.
 ---
 
 # Systematic Debugging

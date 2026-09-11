@@ -2,7 +2,7 @@
 
 ## Skills 工作流
 
-正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构；分类维护在 `skills/README.md`。Skill 创建和更新遵循本规则；开放生态中的 skill 查找和安装由 `find-skills` 处理。
+正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构；分类维护在 `skills/README.md`。Skill 创建和更新遵循本规则；开放生态中的 skill 查找和安装按用户明确请求使用宿主已有工具，安装前核对来源与所需权限。
 
 - 目录名和 frontmatter `name` 使用小写 kebab-case；`description` 同时描述能力和触发场景。
 - 正文只写模型不能可靠推导的流程、边界和验证；详细资料放一层 `references/`。

@@ -105,7 +105,8 @@ function main(argv = process.argv.slice(2)) {
   if (upstreamRoot) verifyClone(upstreamRoot, manifest, baseline);
   process.stdout.write(
     `Verified upstream ${manifest.upstream.commit.slice(0, 7)}: ` +
-      `${manifest.capabilities.length} Engineering capabilities + handoff\n`,
+      `${manifest.capabilities.length} Engineering mappings ` +
+      `(${manifest.capabilities.filter((entry) => entry.status === "excluded").length} excluded) + handoff\n`,
   );
 }
 

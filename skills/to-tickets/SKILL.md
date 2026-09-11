@@ -16,8 +16,10 @@ topology does not approve ticket publication or change the approved product scop
 - Read the source artifact and comments completely. A ticket flow may start from an approved Spec, an
   existing issue, or the current conversation; do not create a second detailed implementation plan.
 - Read configured tracker, domain-doc and triage-label sections from
-  `docs/agent-workflow/project-context.md`.
-- If configuration is missing, return `NEEDS_PROJECT_CONTEXT`; do not invent an external tracker.
+  `docs/agent-workflow/project-context.md` when present, or use confirmed repository/session settings.
+- A missing configuration file does not block drafting. Before publication, resolve the target,
+  required labels and permissions from existing evidence or ask only for missing values; do not
+  invent an external tracker or require a setup Skill/configuration file.
 - Do not reopen approved product decisions. Return unresolved consequential decisions to the router.
 
 If the codebase has not been explored, inspect only the affected area to learn established domain terms,

@@ -63,6 +63,28 @@ function checkInstallerEntrypoint() {
   run([windows ? "-DryRun" : "--dry-run"]);
   assert.equal(fs.existsSync(path.join(profile, ".claude")), false);
   assert.equal(fs.existsSync(path.join(profile, ".codex")), false);
+  // Seed an older installation to exercise retirement and policy replacement through the real CLI.
+  for (const host of [".claude", ".codex"]) {
+    const skills = path.join(profile, host, "skills");
+    for (const retired of ["research", "wayfinder", "find-skills", "project-context"]) {
+      fs.mkdirSync(path.join(skills, retired), { recursive: true });
+      const known = {
+        research: ["SKILL.md"],
+        wayfinder: ["SKILL.md", "agents/openai.yaml"],
+        "find-skills": ["SKILL.md", "agents/openai.yaml", "references/skills-cli.md"],
+        "project-context": ["SKILL.md", "agents/openai.yaml", "references/project-context-template.md"],
+      };
+      for (const file of known[retired]) {
+        const target = path.join(skills, retired, file);
+        fs.mkdirSync(path.dirname(target), { recursive: true });
+        fs.writeFileSync(target, "Old distributed content\n");
+      }
+      fs.writeFileSync(path.join(skills, retired, "personal-notes.md"), "Keep my notes\n");
+    }
+    fs.mkdirSync(path.join(skills, "handoff/agents"), { recursive: true });
+    fs.writeFileSync(path.join(skills, "handoff/agents/openai.yaml"),
+      "policy:\n  allow_implicit_invocation: false\n");
+  }
   run();
   assert.equal(read(path.join(profile, ".claude/references/rules/common/testing.md")),
     read(path.join(sourceRoot, "rules/common/testing.md")));
@@ -71,9 +93,16 @@ function checkInstallerEntrypoint() {
     read(path.join(sourceRoot, "rules/common/testing.md")));
   assert.match(read(path.join(profile, ".claude/CLAUDE.md")), /^@AGENTS\.md$/m);
   for (const host of [".claude", ".codex"]) {
+    for (const retired of ["research", "wayfinder", "find-skills", "project-context"]) {
+      assert.equal(fs.existsSync(path.join(profile, host, "skills", retired, "SKILL.md")), false);
+      const remaining = fs.readdirSync(path.join(profile, host, "skills", retired));
+      assert.deepEqual(remaining, ["personal-notes.md"]);
+      assert.equal(read(path.join(profile, host, "skills", retired, "personal-notes.md")), "Keep my notes\n");
+    }
+    assert.equal(fs.existsSync(path.join(profile, host, "skills/wayfinder/agents")), false);
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/install-rules.js")), false);
     assert.match(read(path.join(profile, host, "skills/handoff/agents/openai.yaml")),
-      /allow_implicit_invocation: false/);
+      /allow_implicit_invocation: true/);
   }
 }
 

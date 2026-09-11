@@ -618,7 +618,6 @@ function checkSkillCategoryIndex() {
     "Process / 门禁",
     "Engineering / 开发实践",
     "Harness / 上下文与编排",
-    "Meta / Skill 管理",
     "Learn / 学习沉淀",
   ]);
 

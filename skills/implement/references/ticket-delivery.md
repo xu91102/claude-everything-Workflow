@@ -10,7 +10,8 @@
 
 ## PRECONDITION 与 CLAIM
 
-- 读取 `docs/agent-workflow/project-context.md`、完整 ticket 和 blocking 状态；必须位于
+- 优先读取已有 `docs/agent-workflow/project-context.md`，缺少时使用仓库或会话中已确认的追踪配置；
+  不因缺少文件要求执行初始化。读取完整 ticket 和 blocking 状态；必须位于
   open + unblocked + unclaimed frontier。`What to build`、验收标准和 blocker 构成交付合同。
 - 每次在一个 fresh context 中完成一张 ticket。pre-delivery base 同时记为 pre-ticket base。
 - 按入口完成隔离并取得 clean baseline 后，本地 tracker 可将选定 ticket 从 `ready-for-agent`

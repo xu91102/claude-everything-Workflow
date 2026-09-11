@@ -160,8 +160,6 @@ claude-everything-Workflow/
 │   │   └── references/
 │   ├── domain-modeling/        # 领域术语、关系、不变量和边界建模
 │   │   └── SKILL.md
-│   ├── project-context/        # 显式配置项目工作追踪、领域文档和 ADR 位置
-│   │   └── SKILL.md
 │   ├── subagent-driven-development/ # 独立 frontier ticket 的可选并行执行
 │   │   └── SKILL.md
 │   ├── visual-companion/       # 经同意后展示安全本地视觉方案
@@ -309,7 +307,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
 
 `harness/manifest.json` 登记每个 Skill 的版本、兼容 Harness、调用策略和唯一 owner；`ownership.surfaces` 只表示引用方，不与 `owner` 并列定义。`allowedTools: null` 当前表示未声明限制，不冒充运行时权限控制。`verify-harness.js` 会检查登记路径、Skill frontmatter、重复名称/路径、职责引用和 enforcement 级别。
 
-调用策略按宿主分别校验：仅显式入口必须同时声明 Claude 的 `disable-model-invocation: true` 和 Codex 的 `policy.allow_implicit_invocation: false`（只兼容一个宿主时只要求该宿主字段）。工作流需要自动调用的 Skill 不设置这些禁用项；具体名单和手动入口见 `skills/README.md`。允许调用不会自动授权外部写入、后台学习或启动视觉服务。
+调用策略按宿主分别校验：仅显式入口必须同时声明 Claude 的 `disable-model-invocation: true` 和 Codex 的 `policy.allow_implicit_invocation: false`（只兼容一个宿主时只要求该宿主字段）。工作流需要自动调用的 Skill 不设置这些禁用项；本项目按明确自然语言请求选择的入口保持可发现，具体名单和触发边界见 `skills/README.md`。允许调用不会自动授权外部写入、后台学习或启动视觉服务。
 
 ## Hook Profile 控制
 
@@ -334,10 +332,9 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 ```text
 任务
   -> using-superpowers 先路由到相关 process skill
-  -> 可查事实直接检索；外部一手来源调查用 research；系统性本地缺口用 iterative-retrieval
+  -> 可查事实和外部工程文档直接检索并引用来源；系统性本地缺口用 iterative-retrieval
   -> 需要可运行答案：prototype 选择 logic TUI 或 visual-companion UI 分支
-  -> 需要隔离 prototype 或接近上下文可靠区边界：推荐 /handoff（Claude）或 $handoff（Codex），原生调用后交接
-  -> 超过单个 session 的模糊工作：推荐 /wayfinder（Claude）或 $wayfinder（Codex），原生调用后维护 decision-ticket map
+  -> 需要隔离 prototype 或接近上下文可靠区边界：推荐 handoff，用户明确请求或接受后交接
   -> 标记用户显式 formal spec 或高回滚成本架构/公共契约、安全、持久数据、不可逆副作用
   -> 存在关键用户决策：grilling 一次只问一个最高价值问题，并返回结构化 handoff
   -> 明确低风险且无未决决策：direct，经 implement 的无 ticket 路径实施、审查并做相称验证
@@ -366,13 +363,20 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 ### Skill 迁移说明
 
-- `discover-unknowns-zh` 已退休：事实、证据和盲点检索转到 `iterative-retrieval`/`research`，可运行原型转到 `prototype`，多会话交付转到 `to-tickets`。
+- `find-skills`、`project-context` 已退休：不再分发独立的 Skill 发现和项目初始化流程。已有 `docs/agent-workflow/project-context.md` 继续兼容；缺少该文件不阻塞只读评估或草稿，仅在实际需要时确认追踪位置、标签映射和权限，不强制生成配置文件。
+
+- `wayfinder` 已退休：不再分发独立的跨会话决策地图流程；升级安装清理旧入口，保留个人附加文件。
+
+- `research` 已退休：工程资料直接检索并引用来源，不再自动创建研究报告；升级安装会清理旧的分发入口。
+
+- `discover-unknowns-zh` 已退休：事实、证据和盲点检索转到 `iterative-retrieval` 或直接检索一手资料，可运行原型转到 `prototype`，多会话交付转到 `to-tickets`。
 - 原 skill 的 `implementation-notes`、`explainer` 和 `quiz` 工件链不再属于本项目承诺的工作流。
-- `skill-creator` 已退休：Skill 写作与验证规则收敛到 `rules/common/skills-learning.md`，开放生态发现仍由 `find-skills` 处理。
+- `skill-creator` 已退休：Skill 写作与验证规则收敛到 `rules/common/skills-learning.md`，开放生态发现按明确请求使用宿主已有工具处理。
 - 详细实施计划、计划执行，以及依赖长计划的旧 SDD 辅助材料已退休：ticket 是唯一的跨会话实施合同；当前 SDD 只按 ticket 分派 fresh subagent。
 
 Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.json`；Harness 要求
-上游 17 项 promoted Engineering 能力都有本地 `covered` 或 `adapted` 证据，并覆盖主流程
+上游 17 项 promoted Engineering 能力保留映射记录；15 项有本地 `covered` 或 `adapted` 证据，
+`wayfinder` 与 `setup-matt-pocock-skills` 明确标为 `excluded` 并记录移除原因。保留主流程
 跨 session 所依赖的 Productivity `handoff`。`scripts/upstream-capability-baseline.json`
 记录固定 commit 的源文件 SHA-256；`verify:upstream` 可对 fresh clone 复核 commit、目录清单
 和每个源文件，避免只依赖本地映射自报。
@@ -440,7 +444,7 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 
 ```
 1. 复制到 ~/.claude/
-2. 首次需要长期协作上下文时，直接请求配置 project context；需求清楚时直接实现；关键未知按需请求 grilling；高风险任务或显式 opt-in 用 `/to-spec` 写 design spec
+2. 优先读取已有项目规则、追踪位置和领域文档，缺少必要信息时就地确认；需求清楚时直接实现；关键未知按需请求 grilling；高风险任务或显式 opt-in 用 `/to-spec` 写 design spec
 3. router 判断跨会话交付时调用 `to-tickets`，确认拆分、验收和依赖后发布；单会话跳过 tickets
 4. router 为无 blocker 的单张 ticket 或单会话 approved Spec 选择 `implement`；新功能使用 `using-git-worktrees` 隔离工作区，其他改动按 Git 规则判断。
    多张独立 frontier tickets 时，router 选择 `subagent-driven-development`。

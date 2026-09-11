@@ -18,7 +18,6 @@ function checkRouterAndAgentLinks() {
     "independent frontier tickets with no overlapping write surface?",
     "skills/subagent-driven-development/SKILL.md",
     "skill discovery or install request?",
-    "find-skills",
     "external skill learning or edit?",
     "process skills before implementation skills",
     "skills/grilling/SKILL.md",
@@ -232,42 +231,14 @@ function checkCodeReviewContracts() {
 }
 
 function checkProjectContextContracts() {
-  requireTokens("skills/project-context/SKILL.md", [
-    "Only when the user explicitly asks",
-    "docs/agent-workflow/project-context.md",
-    "CONFIGURED",
-    "Do not create an empty `CONTEXT.md`",
-    "references/project-context-template.md",
-    "bug",
-    "enhancement",
-  ]);
-  requireTokens("skills/project-context/references/project-context-template.md", [
-    "`bug`",
-    "`enhancement`",
-    "Claim",
-    "Progress",
-    "Resolve",
-  ]);
-
-  requireTokens("skills/project-context/agents/openai.yaml", [
-    "display_name",
-    "default_prompt",
-    "allow_implicit_invocation: false",
-  ]);
-
-  requireTokens("skills/domain-modeling/SKILL.md", [
-    "docs/agent-workflow/project-context.md",
-  ]);
-
-  requireTokens("skills/using-superpowers/SKILL.md", [
-    "explicit project-context setup request?",
-    "project-context",
-  ]);
-
-  requireTokens("README.md", [
-    "直接请求配置 project context",
-    "project-context",
-  ]);
+  for (const name of ["find-skills", "project-context"]) {
+    if (exists(`skills/${name}/SKILL.md`)) fail(`${name} Skill must be retired`);
+  }
+  for (const file of ["skills/to-tickets/SKILL.md", "skills/triage/SKILL.md", "skills/domain-modeling/SKILL.md"]) {
+    requireTokens(file, ["docs/agent-workflow/project-context.md"]);
+  }
+  requireTokens("skills/to-tickets/SKILL.md", ["does not block drafting", "Before publication"]);
+  requireTokens("skills/triage/SKILL.md", ["does not block read-only assessment", "before external changes"]);
 }
 
 function checkTrackerDeliveryLifecycle() {

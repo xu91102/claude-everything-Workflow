@@ -1,15 +1,15 @@
 ---
 name: triage
 description: Use only for explicit issue or pull-request triage; classify evidence and produce an agent-ready brief.
-disable-model-invocation: true
 ---
 
 # Triage
 
 Origin: `mattpocock/skills@2ab9580`, adapted to this repository's confirmation boundary.
 
-Read tracker operations and role mapping from `docs/agent-workflow/project-context.md`. If missing,
-return `NEEDS_PROJECT_CONTEXT`.
+Read tracker operations and role mapping from `docs/agent-workflow/project-context.md` when present,
+or use confirmed repository/session settings. A missing file does not block read-only assessment;
+confirm missing target, label mappings and permissions before external changes. Do not require a setup Skill.
 
 ## Roles
 
