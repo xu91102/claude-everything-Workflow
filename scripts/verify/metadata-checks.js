@@ -15,6 +15,8 @@ let requireTokens;
 const PACKAGE_ONLY_PATHS = [
   "scripts/install.sh",
   "scripts/install.ps1",
+  "scripts/install-rules.js",
+  "scripts/legacy-common-rule-hashes.json",
   "scripts/verify-harness.js",
   "scripts/verify/core.js",
   "scripts/verify/grilling-spec-gate-checks.js",
@@ -26,6 +28,8 @@ const PACKAGE_ONLY_PATHS = [
   "scripts/verify/workflow-ownership.js",
   "scripts/verify/skill-manifest-checks.js",
   "scripts/verify/skill-manifest-checks.test.js",
+  "scripts/verify/skill-invocation.test.js",
+  "scripts/verify/install-rules.test.js",
 ];
 
 function bindContext(context) {
@@ -125,6 +129,8 @@ function checkReadmeTreePaths() {
 
     const pathInTree = stack.join("/").replace(/\\/g, "/");
     if (ignored.has(pathInTree)) continue;
+    if (!exists(".git") && !exists(".github") &&
+      (pathInTree === ".github" || pathInTree.startsWith(".github/"))) continue;
 
     if (!exists(pathInTree)) {
       fail(`README directory tree lists missing path: ${pathInTree}`);
@@ -159,7 +165,6 @@ function checkPackageOnlyLists(ps, sh) {
 
 function checkInstallerSurface(ps, sh) {
   const sharedDirs = [
-    "rules",
     "agents",
     "commands",
     "scripts",
@@ -175,6 +180,15 @@ function checkInstallerSurface(ps, sh) {
     if (!sh.includes(`copy_dir ${dir} "$dest"`)) {
       fail(`scripts/install.sh shared dirs should include ${dir}`);
     }
+  }
+  for (const host of ["claude-code", "codex"]) {
+    if (!ps.includes(`Install-WorkflowRules -Destination $dest -HostName "${host}"`) ||
+        !sh.includes(`install_workflow_rules ${host} "$dest"`)) {
+      fail(`installers must route ${host} rules through the host adapter`);
+    }
+  }
+  if (sh.includes('copy_dir rules "$dest"') || /\$dirs\s*=\s*@\([^)]*"rules"/s.test(ps)) {
+    fail("installers must not copy cold common rules into the shared automatic rules directory");
   }
   if (ps.includes('"homunculus"')) {
     fail("scripts/install.ps1 should not install removed homunculus directory");
@@ -493,6 +507,13 @@ function checkReleaseRecoveryBehavior() {
 }
 
 function checkGitHubWorkflows() {
+  // npm packages omit repository-only CI files; a checkout must still retain them.
+  if (!exists(".github/workflows/ci.yml")) {
+    if (exists(".git") || exists(".github")) {
+      fail("repository CI is missing: .github/workflows/ci.yml");
+    }
+    return;
+  }
   const ci = read(".github/workflows/ci.yml");
 
   requireTokens(".github/workflows/ci.yml", [
@@ -501,7 +522,7 @@ function checkGitHubWorkflows() {
     "npm run verify",
     "npm run pack:dry-run",
     "publish:",
-    "needs: verify",
+    "needs: [verify, test-macos-installer]",
     "id-token: write",
     "node-version: 22.14.0",
     "package-manager-cache: false",
@@ -597,7 +618,6 @@ function checkSkillCategoryIndex() {
     "Process / 门禁",
     "Engineering / 开发实践",
     "Harness / 上下文与编排",
-    "Meta / Skill 管理",
     "Learn / 学习沉淀",
   ]);
 

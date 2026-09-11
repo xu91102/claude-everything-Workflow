@@ -79,10 +79,11 @@
     },
     {
       "upstream": "research",
-      "status": "covered",
+      "status": "adapted",
       "evidence": [
-        "skills/research/SKILL.md"
-      ]
+        "skills/using-superpowers/SKILL.md"
+      ],
+      "reason": "Engineering source lookup is handled directly with citations; the standalone report Skill is retired."
     },
     {
       "upstream": "resolving-merge-conflicts",
@@ -93,10 +94,12 @@
     },
     {
       "upstream": "setup-matt-pocock-skills",
-      "status": "adapted",
+      "status": "excluded",
       "evidence": [
-        "skills/project-context/SKILL.md"
-      ]
+        "scripts/retired-skill-files.json",
+        "README.md"
+      ],
+      "reason": "The standalone project-context setup Skill is retired; existing project configuration remains supported."
     },
     {
       "upstream": "tdd",
@@ -129,10 +132,12 @@
     },
     {
       "upstream": "wayfinder",
-      "status": "adapted",
+      "status": "excluded",
       "evidence": [
-        "skills/wayfinder/SKILL.md"
-      ]
+        "scripts/retired-skill-files.json",
+        "README.md"
+      ],
+      "reason": "Standalone multi-session decision mapping is intentionally removed from the engineering distribution."
     }
   ],
   "support_dependencies": [

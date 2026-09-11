@@ -32,12 +32,43 @@ jobs:
       - name: Test Skill manifest validator
         run: npm run test:manifest
 
+      - name: Test host invocation policies
+        run: npm run test:invocation
+
+      - name: Test rule installation and migration
+        run: npm run test:install-rules
+
       - name: Validate npm package
         run: npm run pack:dry-run
 
+      - name: Verify production package CLI
+        run: |
+          package_dir="$(mktemp -d)"
+          npm pack --pack-destination "$package_dir"
+          npm install --prefix "$package_dir" --omit=dev --ignore-scripts --no-audit --no-fund --package-lock=false "$package_dir/"*.tgz
+          node "$package_dir/node_modules/claude-everything-workflow/bin/claude-everything-workflow.js" verify
+
+  test-macos-installer:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Test installer with macOS system Bash
+        env:
+          CEW_TEST_BASH: /bin/bash
+        run: |
+          /bin/bash --version
+          npm run test:install-rules
+
   publish:
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-    needs: verify
+    needs: [verify, test-macos-installer]
     runs-on: ubuntu-latest
     permissions:
       contents: write

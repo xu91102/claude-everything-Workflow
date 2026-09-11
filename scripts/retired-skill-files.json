@@ -32,6 +32,23 @@
     ],
     "executing-plans": [
       "SKILL.md"
+    ],
+    "research": [
+      "SKILL.md"
+    ],
+    "wayfinder": [
+      "SKILL.md",
+      "agents/openai.yaml"
+    ],
+    "find-skills": [
+      "SKILL.md",
+      "agents/openai.yaml",
+      "references/skills-cli.md"
+    ],
+    "project-context": [
+      "SKILL.md",
+      "agents/openai.yaml",
+      "references/project-context-template.md"
     ]
   }
 }

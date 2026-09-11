@@ -1,18 +1,20 @@
 ---
 name: using-git-worktrees
-description: Prepare an isolated worktree before substantial, risky, parallel, or dirty-checkout implementation.
+description: Use a worktree for every new feature; follow Git rules for other isolation needs and reuse a suitable task worktree.
 ---
 
 # Using Git Worktrees
 
 Reference: https://github.com/obra/superpowers
 
-Use a git worktree when implementation needs isolation without disturbing the user's current checkout. Keep this skill lightweight: inspect first, create only when it materially reduces risk.
+Worktree triggers are owned by `rules/05-git-workflow.md`: every new feature uses a task worktree,
+including a single-file feature. Inspect first and reuse an existing suitable task worktree.
 
 ## Preconditions
 
 - Use only inside a git repository.
-- Do not create a worktree for simple single-file edits, documentation tweaks, or quick read-only analysis.
+- Read-only analysis needs no worktree. For non-feature changes, apply the isolation conditions in the Git rule;
+  file count alone is not a trigger or an exemption.
 - Never discard or overwrite existing user changes.
 - If the current worktree has unrelated changes and the task requires broad edits, prefer a new worktree.
 - Honor this repo's base-branch policy: when `rules/05-git-workflow.md` requires it, base on the latest upstream base (`origin/main`), never on an outdated local `main` or the current `HEAD`.

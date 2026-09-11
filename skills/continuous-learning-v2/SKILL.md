@@ -2,7 +2,6 @@
 name: continuous-learning-v2
 description: "管理观察、instinct、学习评估和演化；仅在显式学习或 Hook 配置请求时使用。"
 version: 2.1.0
-disable-model-invocation: true
 ---
 
 # Continuous Learning v2.1

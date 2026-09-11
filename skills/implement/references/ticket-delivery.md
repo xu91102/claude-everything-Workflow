@@ -10,7 +10,8 @@
 
 ## PRECONDITION 与 CLAIM
 
-- 读取 `docs/agent-workflow/project-context.md`、完整 ticket 和 blocking 状态；必须位于
+- 优先读取已有 `docs/agent-workflow/project-context.md`，缺少时使用仓库或会话中已确认的追踪配置；
+  不因缺少文件要求执行初始化。读取完整 ticket 和 blocking 状态；必须位于
   open + unblocked + unclaimed frontier。`What to build`、验收标准和 blocker 构成交付合同。
 - 每次在一个 fresh context 中完成一张 ticket。pre-delivery base 同时记为 pre-ticket base。
 - 按入口完成隔离并取得 clean baseline 后，本地 tracker 可将选定 ticket 从 `ready-for-agent`
@@ -25,7 +26,7 @@ ticket as the Spec source：`/code-review --worktree <pre-ticket-base> --spec <t
 
 ## RESOLVE 与 REFRESH_FRONTIER
 
-验收、双轴 review 与 fresh verification 全部通过后才 resolve：本地 tracker 更新状态并记录证据；
+验收、选定的 review 与 fresh verification 全部通过后才 resolve：本地 tracker 更新状态并记录证据；
 外部评论或关闭需要相应明确授权。不得自动关闭外部 Issue 或 parent issue。
 
 resolve 后重查依赖图并返回 router。newly unlocked tickets 仍在已授权范围内时，router
@@ -36,7 +37,7 @@ resolve 后重查依赖图并返回 router。newly unlocked tickets 仍在已授
 - frontier 非空：返回 graph、newly unlocked tickets 和 blockers；由 router 决定下一张。
 - frontier 为空但仍有 open tickets：返回 `BLOCKED_GRAPH`，列出依赖、循环、claim 冲突或状态异常，
   保持交付未完成，不能进入 PR 收尾。
-- 只有 open ticket count = 0：以 feature/worktree 起点为固定基点执行全分支双轴 review，再运行
+- 只有 open ticket count = 0：以 feature/worktree 起点为固定基点执行全分支相称 review，再运行
   `/verify pre-pr`。通过后展示 `/pr` 或 keep 当前 branch/worktree 的选择；已获授权的动作可继续。
 - tracker publication、claim、resolve、评论和关闭需要各自适用的授权；一次阶段授权不推导出下一阶段。
   不自动 merge、删除 branch 或清理 worktree。

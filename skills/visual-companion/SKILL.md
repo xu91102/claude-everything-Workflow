@@ -1,7 +1,6 @@
 ---
 name: visual-companion
 description: Use only with consent when a local visual companion materially improves a design decision.
-disable-model-invocation: true
 ---
 
 # Visual Companion

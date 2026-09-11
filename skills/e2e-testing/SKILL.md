@@ -2,7 +2,6 @@
 name: e2e-testing
 description: Use for explicit Playwright or E2E work; keep tests repeatable and load detailed patterns on demand.
 origin: ECC
-disable-model-invocation: true
 ---
 
 # E2E Testing

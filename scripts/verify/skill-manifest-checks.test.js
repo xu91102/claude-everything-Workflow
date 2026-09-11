@@ -84,7 +84,7 @@ function run() {
     exists: (file) => file === "skills/demo-skill/SKILL.md" || file === "AGENTS.md" || file === "skills/demo-skill/agents/openai.yaml",
     skillPaths: ["skills/demo-skill/SKILL.md"],
     read: (file) => file.endsWith("openai.yaml")
-      ? "allow_implicit_invocation: false\n"
+      ? "policy:\n  allow_implicit_invocation: false\n"
       : "---\nname: demo-skill\ndescription: demo\n---\n",
   }).join("\n"), /conflicts with policy/);
 

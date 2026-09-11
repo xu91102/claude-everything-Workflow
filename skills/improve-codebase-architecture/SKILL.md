@@ -1,7 +1,6 @@
 ---
 name: improve-codebase-architecture
 description: Run an explicit read-only architecture-health audit and route selected findings to design or grilling.
-disable-model-invocation: true
 ---
 
 # Improve Codebase Architecture

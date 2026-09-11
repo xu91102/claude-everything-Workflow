@@ -19,6 +19,13 @@ below and read only its Skill. Briefly announce the selection, then act. Do not 
 in anticipation of later stages. Reuse a Skill already read in this task unless it changed or context
 was lost; returning here means applying the routing decision, not reading this file again.
 
+Expected TDD RED stays in the current implementation loop. Do not reroute it as a reported bug.
+An explicit request may use ordinary language or a native `/name` or `$name` invocation.
+For handoff, triage and improve-codebase-architecture,
+require the corresponding user request; complexity or a router match alone is insufficient.
+Do not ask users to repeat an already clear request using command syntax. Skill selection never
+expands authorization for publishing, external writes, or other consequential actions.
+
 ## Three Lanes
 
 The three lanes are: direct (clear low-risk task), needs-decision (grilling inline), and formal-spec
@@ -32,7 +39,6 @@ Use process skills before implementation skills:
 ```text
 Task arrives
   -> explicit workflow advice?                    -> workflow advice mode
-  -> explicit project-context setup request?       -> project-context
   -> explicit documented grilling request?        -> grilling explicit + domain-modeling persistent mode
   -> explicit grilling request?                    -> grilling explicit
   -> explicit handoff or fresh session or prototype branch?
@@ -41,12 +47,11 @@ Task arrives
   -> explicit TDD request?                         -> skills/test-driven-development/SKILL.md
   -> explicit E2E or Playwright request?           -> skills/e2e-testing/SKILL.md + agents/e2e-runner.md
   -> explicit harness audit?                       -> agents/harness-optimizer.md
-  -> huge effort beyond one session?               -> skills/wayfinder/SKILL.md
   -> explicit architecture-health audit?           -> skills/improve-codebase-architecture/SKILL.md
   -> merge or rebase conflict?                     -> skills/resolving-merge-conflicts/SKILL.md
-  -> bug, failing test, or unexpected result?      -> skills/systematic-debugging/SKILL.md
+  -> reported bug or unexplained/repeated failure? -> skills/systematic-debugging/SKILL.md
   -> discoverable fact?                            -> inspect it; do not ask
-  -> primary-source research or cited research artifact? -> skills/research/SKILL.md
+  -> external engineering fact or documentation question? -> inspect primary sources directly; cite the answer
   -> systematic evidence or blind-spot gap?        -> iterative-retrieval
   -> explicit prototype or runnable design question? -> skills/prototype/SKILL.md
   -> unresolved user-owned decision?               -> skills/grilling/SKILL.md (grilling inline)
@@ -58,9 +63,9 @@ Task arrives
                                                      -> skills/subagent-driven-development/SKILL.md
        -> otherwise                                 -> skills/implement/SKILL.md
   -> behavior change with a test path?             -> test-driven-development
-  -> dirty worktree or risky branch work?          -> consider using-git-worktrees
+  -> new feature or other Git-rule isolation need? -> skills/using-git-worktrees/SKILL.md
   -> completion, fixed, or ready claim?            -> verification-before-completion
-  -> skill discovery or install request?           -> find-skills
+  -> skill discovery or install request?           -> use available host tooling for the explicit request
   -> external skill learning or edit?              -> rules/common/skills-learning.md
   -> otherwise                                     -> shortest applicable loop
 ```

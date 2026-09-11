@@ -32,6 +32,9 @@ description: "Use for behavior changes with a test path: RED, minimal GREEN, REF
 6. 重构不能引入新行为；新行为需要新的失败测试。
 7. 一次只推进一个垂直切片：一个可观察行为、一个失败测试、一个最小实现。
 
+预期 RED 是针对尚未实现行为的正确断言失败，确认原因后继续 GREEN，不进入疑难调试。
+测试加载、依赖、语法或其他非目标错误不算有效 RED；先修复测试环境或按调试入口定位实际失败。
+
 ## Public Seam
 
 测试 seam 是观察行为的公共接口。测试和调用方应穿过同一个 seam，不读取私有状态或绕过

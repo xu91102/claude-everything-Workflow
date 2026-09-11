@@ -18,7 +18,8 @@
 ## 规则加载策略
 
 - 默认不全量读取 `rules/`；涉及代码修改、审查、测试、提交或 Harness 调整时，只读取与当前任务直接相关的规则文件，回退场景不改变该原则。
-- 路径解析：先查项目根 `rules/`；项目无 `rules/` 或目标文件不存在时回退用户级目录：Codex 用 `~/.codex/rules/`，Claude Code 用 `~/.claude/rules/`。不能把项目规则目录缺失等同于“无规则”。
+- 文中的 `rules/...` 是逻辑路径：先查项目根 `rules/`；目标文件不存在时，Codex 回退 `~/.codex/rules/`，Claude Code 的普通规则回退 `~/.claude/rules/`，专项 `rules/common/...` 回退 `~/.claude/references/rules/common/...`。不能把项目规则目录缺失等同于“无规则”。
+- Claude 升级时若保留了个人修改的旧 `~/.claude/rules/common/...`，该用户规则仍生效；读取同名参考前先检查并尊重该修改，不把新版通用参考覆盖到个人约束上。
 - `rules/common/` 是专项参考区；仅命令、agent、skill 或当前任务明确触发时读取。
 
 ## 规则索引

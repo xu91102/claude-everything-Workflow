@@ -1,7 +1,6 @@
 ---
 name: domain-modeling
-description: Model domain terms, relationships, invariants, and ownership when domain boundaries change.
-disable-model-invocation: true
+description: Model changes to business concepts, entities, states, relationships, invariants, or ownership; exclude ordinary refactors.
 ---
 
 # Domain Modeling
@@ -71,7 +70,8 @@ schemas, or code merely because domain modeling triggered.
 **Persistent documentation mode** is enabled only by an explicit documented grilling request or
 direct user approval to maintain domain docs during the session. In that mode:
 
-1. Use the confirmed context and ADR locations from `docs/agent-workflow/project-context.md`.
+1. Use confirmed context and ADR locations from `docs/agent-workflow/project-context.md` when present,
+   otherwise from existing repository conventions or the user's confirmed request.
 2. When a term becomes stable, show the exact glossary change and obtain write approval before
    updating it inline.
 3. Offer an ADR only when the decision is hard to reverse, surprising without context and the result
