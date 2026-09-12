@@ -29,6 +29,7 @@ const PACKAGE_ONLY_PATHS = [
   "scripts/verify/skill-manifest-checks.js",
   "scripts/verify/skill-manifest-checks.test.js",
   "scripts/verify/skill-invocation.test.js",
+  "scripts/verify/continuation-checks.test.js",
   "scripts/verify/install-rules.test.js",
 ];
 

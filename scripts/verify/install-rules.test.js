@@ -106,6 +106,8 @@ function checkInstallerEntrypoint() {
     }
     assert.equal(fs.existsSync(path.join(profile, host, "skills/wayfinder/agents")), false);
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/install-rules.js")), false);
+    assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/continuation-checks.test.js")), false,
+      "安装不应保留仅供包内验证的续接测试");
     assert.match(read(path.join(profile, host, "skills/handoff/agents/openai.yaml")),
       /allow_implicit_invocation: true/);
   }
