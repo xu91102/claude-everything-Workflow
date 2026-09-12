@@ -48,7 +48,9 @@ BLOCKED_BY_UNRESOLVED_DECISION
 - evidence
 ```
 
-This is a terminal outcome. Do not ask a question, generate options, choose for the user, add `resume_target`, or invoke grilling.
+This ends only the current Spec drafting call. Return the outcome to `skills/using-superpowers/SKILL.md`
+for continuation within the authorized task. Do not ask a question, generate options, choose for the user,
+add `resume_target`, or invoke grilling here.
 
 If the same `decision_id` already has a confirmed resolution and evidence has not changed, report a `Spec Gate contract conflict` and stop. Reopen it only when reversal evidence appears or a foundational premise becomes invalid.
 

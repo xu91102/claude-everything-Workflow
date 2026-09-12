@@ -72,11 +72,13 @@ direct user approval to maintain domain docs during the session. In that mode:
 
 1. Use confirmed context and ADR locations from `docs/agent-workflow/project-context.md` when present,
    otherwise from existing repository conventions or the user's confirmed request.
-2. When a term becomes stable, show the exact glossary change and obtain write approval before
-   updating it inline.
-3. Offer an ADR only when the decision is hard to reverse, surprising without context and the result
+2. Reuse existing maintenance authorization for stable glossary edits within the approved paths and scope;
+   do not request per-term approval. Show the diff when reporting progress or completion.
+3. If maintenance is not yet authorized, obtain approval before writing. New paths or scope, changes to
+   confirmed decisions, and unresolved consequential decisions require approval before the affected edit.
+4. Offer an ADR only when the decision is hard to reverse, surprising without context and the result
    of a real trade-off; show its path/content before writing.
-4. Keep `CONTEXT.md` implementation-free and keep ADRs concise.
+5. Keep `CONTEXT.md` implementation-free and keep ADRs concise.
 
 Outside that mode, persistence after an approved Spec remains a router-selected ticket or implementation task.
 If project context is absent, do not invent a documentation layout.

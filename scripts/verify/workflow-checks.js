@@ -31,12 +31,11 @@ function checkReadmeWorkflowContract() {
     "using-superpowers",
     "?key=",
     "4 小时",
-    "using-git-worktrees",
-    "iterative-retrieval",
+    "rules/05-git-workflow.md",
     "to-tickets",
     "implement",
     "subagent-driven-development",
-    "verification-before-completion",
+    "rules/common/testing.md",
     "完整流程适用时",
     "没有批准的必需 Spec 不进入 ticket 或 implement",
     "没有用户审核不进入实现",
@@ -218,13 +217,6 @@ function checkRouteOrdering() {
 
 function checkWorkflowDocuments() {
   runWorkflowOwnershipChecks({ read, fail, managedFiles });
-  requireTokens("skills/iterative-retrieval/SKILL.md", [
-    "事实、证据和盲点缺口",
-    "复杂、高风险、多文件或长周期",
-    "skills/grilling/SKILL.md",
-    "skills/spec-gate/SKILL.md",
-    "返回 `skills/using-superpowers/SKILL.md`",
-  ]);
   requireTokens("skills/using-superpowers/SKILL.md", [
     "shortest applicable path",
     "File count, new features, and ordinary complexity affect",
@@ -296,10 +288,6 @@ function checkGrillingWorkflow() {
 }
 
 function checkSuperpowersRoutingConsistency() {
-  requireTokens("skills/iterative-retrieval/SKILL.md", [
-    "返回 `skills/using-superpowers/SKILL.md` 重新路由",
-    "不要自行枚举或调用下一 skill",
-  ]);
   requireTokens("skills/using-superpowers/SKILL.md", [
     "explicit formal Spec",
     "high-risk boundary",
@@ -311,19 +299,6 @@ function checkSuperpowersRoutingConsistency() {
     "BLOCKED_BY_UNRESOLVED_DECISION",
     "Spec Gate contract conflict",
   ]);
-
-  const retrieval = read("skills/iterative-retrieval/SKILL.md");
-  for (const staleRoute of [
-    "交接到 `brainstorming`、`test-driven-development` 或 `executing-plans` skill",
-    "再进入 `brainstorming`、`test-driven-development` 或 `executing-plans`",
-  ]) {
-    if (retrieval.includes(staleRoute)) {
-      fail(
-        "skills/iterative-retrieval/SKILL.md should return to the router " +
-          `instead of enumerating follow-up skills: ${staleRoute}`,
-      );
-    }
-  }
 
 }
 
@@ -588,6 +563,9 @@ function checkRemovedSkillReferences() {
   }
 
   const retiredSkills = [
+    "iterative-retrieval",
+    "using-git-worktrees",
+    "verification-before-completion",
     "discover-unknowns-zh",
     "skill-creator",
     "writing-plans",
@@ -621,7 +599,7 @@ function checkRemovedSkillReferences() {
   requireTokens("README.md", [
     "Skill 迁移说明",
     "`discover-unknowns-zh` 已退休",
-    "`iterative-retrieval`",
+    "`iterative-retrieval` 已退休",
     "`research`",
     "`prototype`",
     "`to-tickets`",

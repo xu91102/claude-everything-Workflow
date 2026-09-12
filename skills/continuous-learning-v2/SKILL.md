@@ -1,6 +1,6 @@
 ---
 name: continuous-learning-v2
-description: "管理观察、instinct、学习评估和演化；仅在显式学习或 Hook 配置请求时使用。"
+description: "管理学习系统的观察 Hook、instinct 评估、迁移和演化；用于明确配置或管理该学习系统的请求。"
 version: 2.1.0
 ---
 
@@ -10,10 +10,12 @@ version: 2.1.0
 
 ## 何时使用
 
-- 配置或排查自动观察 Hook。
+- 配置或排查学习系统的自动观察 Hook。
 - 查看、审查、迁移 project/global instincts。
 - 判断 project instinct 是否应推广到 global。
 - 评估 instinct 是否应演化为 skill、command 或 agent。
+
+其他 Hook 配置和一般知识学习问题不触发本 skill。
 
 ## 核心模型
 

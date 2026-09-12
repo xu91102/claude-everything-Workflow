@@ -151,7 +151,7 @@ function validateManifest(manifest, { exists, skillPaths, read = () => "" }) {
     if (!safeOwnerPath) errors.push(`unsafe ownership owner: ${entry.id}`);
     const ownerPathExists = safeOwnerPath && exists(entry.owner);
     if (!ownerPathExists) errors.push(`owner path does not exist: ${entry.owner}`);
-    if (!declaredPaths.has(entry.owner)) errors.push(`ownership owner must be a registered Skill: ${entry.id} -> ${entry.owner}`);
+    if (!declaredPaths.has(entry.owner) && !(safeOwnerPath && /^rules\/(?:common\/)?[a-z0-9-]+\.md$/.test(entry.owner))) errors.push(`ownership owner must be a registered Skill or rule: ${entry.id} -> ${entry.owner}`);
     if (!Array.isArray(entry.surfaces) || entry.surfaces.length === 0) errors.push(`ownership surfaces must be non-empty: ${entry.id}`);
     for (const surface of entry.surfaces || []) {
       if (!isSafeRelativePath(surface)) errors.push(`unsafe ownership surface: ${entry.id} -> ${surface}`);

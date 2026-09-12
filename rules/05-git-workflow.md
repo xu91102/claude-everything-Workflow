@@ -1,5 +1,7 @@
 # Git 提交规范
 
+需要创建、复用或清理 worktree 的具体命令时，按需读取 `references/git-worktrees.md`；隔离条件和授权边界仍以本规则为准。
+
 ## Worktree 分支开发 (CRITICAL)
 
 - 开发新功能必须使用独立 `git worktree` 和任务分支，单文件新功能也不例外；已有属于本任务且基线正确的 worktree 直接复用。

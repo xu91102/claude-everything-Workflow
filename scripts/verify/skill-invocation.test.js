@@ -80,7 +80,8 @@ for (const name of ["handoff", "improve-codebase-architecture", "triage"]) {
   const policy = YAML.parse(fs.readFileSync(path.join(root, "skills", name, "agents/openai.yaml"), "utf8"));
   assert.equal(policy.policy.allow_implicit_invocation, true, name);
 }
-for (const name of ["research", "wayfinder", "find-skills", "project-context"]) {
+for (const name of ["research", "wayfinder", "find-skills", "project-context", "iterative-retrieval", "using-git-worktrees", "verification-before-completion"]) {
   assert.equal(manifest.skills.some((skill) => skill.name === name), false);
+  assert.equal(fs.existsSync(path.join(root, "skills", name, "SKILL.md")), false, name);
 }
-console.log("Skill invocation tests passed (33 host-gate scenarios, three natural-language entries, four retired skills).");
+console.log("Skill invocation tests passed (33 host-gate scenarios, three natural-language entries, seven retired skills).");

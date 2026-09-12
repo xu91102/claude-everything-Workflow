@@ -1,11 +1,16 @@
 ---
 name: using-superpowers
-description: Route non-trivial tasks through direct, decision, or formal lanes, then return for verification.
+description: Route engineering delivery and explicitly requested engineering workflows; resume their process outcomes.
 ---
 
 # Using Superpowers
 
 Own routing and continuation. Skills return outcomes here instead of selecting one another.
+
+## Applicability
+
+用于工程交付（实现、调试、测试、审查）及用户明确请求的工程工作流，并接续这些流程的返回结果。
+普通问答、翻译、总结和一般资料检索直接处理；复杂度本身不触发本路由。
 
 ## Priority
 
@@ -52,7 +57,6 @@ Task arrives
   -> reported bug or unexplained/repeated failure? -> skills/systematic-debugging/SKILL.md
   -> discoverable fact?                            -> inspect it; do not ask
   -> external engineering fact or documentation question? -> inspect primary sources directly; cite the answer
-  -> systematic evidence or blind-spot gap?        -> iterative-retrieval
   -> explicit prototype or runnable design question? -> skills/prototype/SKILL.md
   -> unresolved user-owned decision?               -> skills/grilling/SKILL.md (grilling inline)
        high-risk or explicit formal Spec context?  -> resume_target: spec-gate
@@ -63,8 +67,8 @@ Task arrives
                                                      -> skills/subagent-driven-development/SKILL.md
        -> otherwise                                 -> skills/implement/SKILL.md
   -> behavior change with a test path?             -> test-driven-development
-  -> new feature or other Git-rule isolation need? -> skills/using-git-worktrees/SKILL.md
-  -> completion, fixed, or ready claim?            -> verification-before-completion
+  -> new feature or other Git-rule isolation need? -> rules/05-git-workflow.md
+  -> completion, fixed, or ready claim?            -> rules/common/testing.md
   -> skill discovery or install request?           -> use available host tooling for the explicit request
   -> external skill learning or edit?              -> rules/common/skills-learning.md
   -> otherwise                                     -> shortest applicable loop
@@ -105,4 +109,4 @@ For one release cycle, interpret a user explicitly asking for the old name `brai
 
 ## Completion
 
-Before saying work is complete, fixed, passing, or ready, apply `skills/verification-before-completion/SKILL.md` and report fresh evidence, skipped checks, and remaining risk.
+Before saying work is complete, fixed, passing, or ready, apply `rules/common/testing.md` and report fresh evidence, skipped checks, and remaining risk.

@@ -34,6 +34,18 @@ function run() {
     read: () => "---\nname: demo-skill\ndescription: demo\n---\n",
   }), []);
 
+  for (const owner of ["rules/05-git-workflow.md", "rules/common/testing.md", "README.md", "skills/unregistered/SKILL.md", "rules/../README.md"]) {
+    const ruleOwned = structuredClone(valid);
+    ruleOwned.ownership[0].owner = owner;
+    const errors = validateManifest(ruleOwned, {
+      exists: (file) => [owner, "AGENTS.md", "skills/demo-skill/SKILL.md"].includes(file),
+      skillPaths: ["skills/demo-skill/SKILL.md"],
+      read: () => "---\nname: demo-skill\ndescription: demo\n---\n",
+    });
+    if (owner === "rules/05-git-workflow.md" || owner === "rules/common/testing.md") assert.deepStrictEqual(errors, []);
+    else assert(errors.length > 0, `must reject non-rule owner: ${owner}`);
+  }
+
   const longDescription = structuredClone(valid);
   assert.match(validateManifest(longDescription, {
     exists: (file) => file === "skills/demo-skill/SKILL.md" || file === "AGENTS.md",
