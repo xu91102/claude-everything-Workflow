@@ -23,8 +23,8 @@ description: Deliver one authorized scope through implementation, review, and ve
 检查 branch、worktree、staged、unstaged 和 untracked，记录 `git rev-parse HEAD` 为 pre-delivery base，
 并记录 task-owned 改动。已有无关改动必须排除，不能回滚。
 
-是否创建 worktree 以 `rules/05-git-workflow.md` 为准；需要隔离时使用
-`skills/using-git-worktrees/SKILL.md`，不嵌套创建。只做必要 setup 与相关 baseline tests。
+是否创建 worktree 及具体操作按 `rules/05-git-workflow.md` 执行，不嵌套创建。
+只做必要 setup 与相关 baseline tests。
 只有 clean baseline 才进入实施；失败时记录命令、失败与工作区状态，返回 router 处理，不能伪装通过。
 
 ## 实施、审查与验证
@@ -37,7 +37,7 @@ description: Deliver one authorized scope through implementation, review, and ve
    范围合同作为 Spec source，按 `skills/code-review/SKILL.md` 选择相称的 review 模式。
    满足该 Skill 的低风险与验证条件时可自审；需要独立审查却无法启动时不得降级。
    修复 Critical/Important findings 后复核受影响的验收与审查项，不把部分完成报告为交付完成。
-3. 逐条核对验收，按 `verification-before-completion` 运行 fresh commands。已在当前阶段运行且仍对应
+3. 逐条核对验收，按 `rules/common/testing.md` 运行 fresh commands。已在当前阶段运行且仍对应
    最终改动的证据可以复用；新改动、失败或未决风险才触发重跑。记录实际结果、未运行项和剩余风险。
 
 ## 收尾与授权

@@ -19,6 +19,7 @@
     "verify": "node scripts/verify-harness.js",
     "test:manifest": "node scripts/verify/skill-manifest-checks.test.js",
     "test:invocation": "node scripts/verify/skill-invocation.test.js",
+    "test:continuation": "node scripts/verify/continuation-checks.test.js",
     "test:install-rules": "node scripts/verify/install-rules.test.js",
     "verify:upstream": "node scripts/verify-upstream-capability-map.js",
     "pack:dry-run": "npm pack --dry-run"

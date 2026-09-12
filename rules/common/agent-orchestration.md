@@ -4,7 +4,7 @@
 
 - 简单、明确、低风险且上下文连贯的任务由当前 agent 直接完成。
 - 只有独立搜索、失败日志、专项审查或可安全并行的交付能减少主上下文噪音时才委派。
-- 非平凡任务的 Skill/Agent 选择和交付拓扑以 `skills/using-superpowers/SKILL.md` 为权威来源。
+- 工程交付及明确请求的工程工作流的 Skill/Agent 选择和交付拓扑以 `skills/using-superpowers/SKILL.md` 为权威来源。
 
 ## 交付拓扑
 

@@ -166,13 +166,7 @@ claude-everything-Workflow/
 │   │   ├── SKILL.md
 │   │   ├── references/
 │   │   └── scripts/
-│   ├── using-git-worktrees/    # 隔离式 worktree 执行准备
-│   │   └── SKILL.md
-│   ├── verification-before-completion/ # 完成声明前的新鲜验证门
-│   │   └── SKILL.md
 │   ├── e2e-testing/            # Playwright E2E 模式（POM、CI、制品）
-│   │   └── SKILL.md
-│   ├── iterative-retrieval/     # Subagent 迭代检索与上下文收敛
 │   │   └── SKILL.md
 │   ├── continuous-learning-v2/ # 自主学习系统
 │   │   ├── SKILL.md            # 技能说明
@@ -221,6 +215,9 @@ claude-everything-Workflow/
 - `implement` 的普通交付共用实施、相称审查和验证步骤；只有 ticket 路径读取 `references/ticket-delivery.md`。审查深度统一由 `code-review` 决定。
 - 预期 TDD RED 继续 GREEN；原因明确的失败修正后验证，根因不明或反复失败才进入完整诊断。已有证据仍对应最终状态时复用，不重复运行。
 - 无可测试行为的文档、格式或纯配置整理运行对应校验；不为免写行为测试增加一次批准。
+- 已授权的领域文档维护复用会话授权，新增范围和未决决策仍需确认，见 `skills/domain-modeling/SKILL.md`。
+- 检索只围绕证据缺口展开，避免无进展重复并遵守用户预算，见 `rules/common/context-hygiene.md`。
+- Spec 发现缺失决策后，在原任务内直接澄清并继续；最终 Spec 批准仍保留，见 `skills/using-superpowers/references/process-outcomes.md`。
 - 精简不删除安全约束、用户决策门、真实验证或 PR 授权。安装目录与仓库可能不同，更新须走已有备份安装流程。
 
 ## 按需 MCP 与上下文控制
@@ -332,7 +329,7 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 ```text
 任务
   -> using-superpowers 先路由到相关 process skill
-  -> 可查事实和外部工程文档直接检索并引用来源；系统性本地缺口用 iterative-retrieval
+  -> 可查事实和证据缺口直接检索；外部工程文档引用一手来源
   -> 需要可运行答案：prototype 选择 logic TUI 或 visual-companion UI 分支
   -> 需要隔离 prototype 或接近上下文可靠区边界：推荐 handoff，用户明确请求或接受后交接
   -> 标记用户显式 formal spec 或高回滚成本架构/公共契约、安全、持久数据、不可逆副作用
@@ -345,11 +342,11 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
   -> 多 session/tracker：to-tickets 拆垂直切片和 blocking edges，用户确认 ticket contract 后发布
   -> 单 session 的 direct/approved Spec 连贯范围或单张 frontier ticket：implement 在一个 fresh context 中实施
   -> 多张独立 frontier tickets：router 用 subagent-driven-development 在独立 worker worktree 并行，再汇入 integration worktree
-  -> using-git-worktrees：新功能必须隔离；其他改动按 Git 规则判断，已有合适任务 worktree 复用
+  -> rules/05-git-workflow.md：新功能必须隔离；其他改动按 Git 规则判断，已有合适任务 worktree 复用
   -> TDD 红绿重构
   -> 需求符合性审查
   -> 代码质量审查
-  -> verification-before-completion 完成声明前确认新鲜验证证据
+  -> rules/common/testing.md 完成声明前确认新鲜验证证据
   -> ticket 路径：ticket 验收、选定审查和验证通过后 resolve，并返回 newly unlocked frontier
   -> 无 ticket 路径：选定审查和验证通过后报告证据，不 claim、resolve 或刷新 tracker
   -> /verify 质量门
@@ -363,13 +360,16 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
 
 ### Skill 迁移说明
 
+- `verification-before-completion` 已退休：证据要求合入 `rules/common/testing.md`。`using-git-worktrees` 已退休：隔离要求由 `rules/05-git-workflow.md` 统一管理，操作参考见 `references/git-worktrees.md`。升级只清理已知旧文件，保留个人附加文件。
+- `iterative-retrieval` 已退休：不再分发检索技能或描述；检索直接使用现有工具，必要的上下文与停止原则见 `rules/common/context-hygiene.md`。升级清理旧技能文件，保留个人附加文件。
+
 - `find-skills`、`project-context` 已退休：不再分发独立的 Skill 发现和项目初始化流程。已有 `docs/agent-workflow/project-context.md` 继续兼容；缺少该文件不阻塞只读评估或草稿，仅在实际需要时确认追踪位置、标签映射和权限，不强制生成配置文件。
 
 - `wayfinder` 已退休：不再分发独立的跨会话决策地图流程；升级安装清理旧入口，保留个人附加文件。
 
 - `research` 已退休：工程资料直接检索并引用来源，不再自动创建研究报告；升级安装会清理旧的分发入口。
 
-- `discover-unknowns-zh` 已退休：事实、证据和盲点检索转到 `iterative-retrieval` 或直接检索一手资料，可运行原型转到 `prototype`，多会话交付转到 `to-tickets`。
+- `discover-unknowns-zh` 已退休：事实、证据和盲点直接检索一手资料，可运行原型转到 `prototype`，多会话交付转到 `to-tickets`。
 - 原 skill 的 `implementation-notes`、`explainer` 和 `quiz` 工件链不再属于本项目承诺的工作流。
 - `skill-creator` 已退休：Skill 写作与验证规则收敛到 `rules/common/skills-learning.md`，开放生态发现按明确请求使用宿主已有工具处理。
 - 详细实施计划、计划执行，以及依赖长计划的旧 SDD 辅助材料已退休：ticket 是唯一的跨会话实施合同；当前 SDD 只按 ticket 分派 fresh subagent。
@@ -385,9 +385,8 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 
 硬门禁：
 
-- 开始非平凡任务前，先用 `using-superpowers` 判断并加载相关 process skill。
+- 开始工程交付及明确请求的工程工作流前，先用 `using-superpowers` 判断并加载相关 process skill。
 - 上下文或工具面变重时，先盘点常驻 Token 开销，再决定新增或删除 MCP/skill/agent。
-- 子代理需要探索大仓库时，先用 `iterative-retrieval` 的 Dispatch/Evaluate/Refine/Loop 闭环收敛上下文，再回传证据。
 - 完整流程适用时：没有批准的必需 Spec 不进入 ticket 或 implement，没有用户审核不进入实现，没有 review 不标记任务完成。
 - 每张 ticket 必须说明交付行为、验收标准和真实 blocker；不要在 ticket 中复制文件路径、代码或逐步计划。
 - 没有 failing test，不写行为代码。
@@ -446,7 +445,7 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 1. 复制到 ~/.claude/
 2. 优先读取已有项目规则、追踪位置和领域文档，缺少必要信息时就地确认；需求清楚时直接实现；关键未知按需请求 grilling；高风险任务或显式 opt-in 用 `/to-spec` 写 design spec
 3. router 判断跨会话交付时调用 `to-tickets`，确认拆分、验收和依赖后发布；单会话跳过 tickets
-4. router 为无 blocker 的单张 ticket 或单会话 approved Spec 选择 `implement`；新功能使用 `using-git-worktrees` 隔离工作区，其他改动按 Git 规则判断。
+4. router 为无 blocker 的单张 ticket 或单会话 approved Spec 选择 `implement`；新功能使用 `rules/05-git-workflow.md` 隔离工作区，其他改动按 Git 规则判断。
    多张独立 frontier tickets 时，router 选择 `subagent-driven-development`。
 5. 有测试路径时由 `test-driven-development` 执行测试先行实现；关键路径由 e2e-testing 和 e2e-runner 维护 Playwright
 6. 使用 /code-review 基于固定基点和范围合同审查；简单、明确、局部可逆且可验证的任务可自审，复杂或证据不足时独立审查，高风险使用双轴。`--mode self` 不能绕过风险条件，代理不可用时也不能降级

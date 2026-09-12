@@ -10,16 +10,14 @@
 
 ## Process / 门禁
 
-- `using-superpowers`：非平凡任务的 skill 路由、优先级和完成声明纪律。
+- `using-superpowers`：工程交付及明确请求的工程工作流的 skill 路由、优先级和完成声明纪律。
 - `grilling`：对计划、设计或重大用户决策进行单问式压力测试。
 - `spec-gate`：显式 formal spec 或高风险任务的零访谈成稿、自审和用户批准门。
-- `using-git-worktrees`：新功能必须使用 worktree；其他隔离条件与复用方式按 Git 规则执行。
 - `to-tickets`：把已批准工作拆成 tracer-bullet tickets 和 blocking graph。
 - `implement`：执行用户授权的低风险 direct scope、已批准 Spec scope 或 frontier ticket；仅 ticket 路径 claim、resolve 并刷新 frontier。
 - `subagent-driven-development`：router 对已授权范围发现多个相互独立的 frontier tickets 时，分派到隔离 worktree 的 fresh subagent。
 - `triage`：对 Issue/外部 PR 分类、验证并形成 agent-ready brief。
 - `handoff`：将当前上下文脱敏压缩到临时 Markdown，供全新 session 接续。
-- `verification-before-completion`：完成、通过、已修复或 ready 声明前的新鲜验证门。
 
 ## 旁路设计能力
 
@@ -36,12 +34,11 @@
 - `systematic-debugging`：区分普通明确失败与疑难故障；预期 TDD RED 留在实现循环。
 - `resolving-merge-conflicts`：按双方原始意图逐 hunk 解决 merge/rebase 冲突。
 - `e2e-testing`：Playwright E2E 模式、CI、制品和 flaky 处理。
-- `feature-acceptance`：以真实证据、用例矩阵和二次审核完成用户功能验收。
+- `feature-acceptance`：用户明确要求真实流程验收、截图或日志证据时，输出用例矩阵与复核结论。
 
 ## Harness / 上下文与编排
 
-- `iterative-retrieval`：事实、证据、盲点、subagent 和大仓库探索的迭代检索闭环。
-- `continuous-learning-v2`：Hook 观察、project/global instinct、学习评估和演化。
+- `continuous-learning-v2`：学习系统的观察 Hook、project/global instinct、学习评估和演化。
 
 ## Learn / 学习沉淀
 

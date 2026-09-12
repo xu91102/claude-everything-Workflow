@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "description": "CEW Harness \u7684 Skill \u5143\u6570\u636e\u4e0e\u6d41\u7a0b\u804c\u8d23\u552f\u4e00\u767b\u8bb0\u8868\u3002",
+  "description": "CEW Harness 的 Skill 元数据与流程职责唯一登记表。",
   "skills": [
     {
       "name": "code-review",
@@ -42,7 +42,7 @@
       "name": "domain-modeling",
       "path": "skills/domain-modeling/SKILL.md",
       "owner": "skills/domain-modeling/SKILL.md",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "compatibility": [
         "claude-code",
         "codex"
@@ -66,7 +66,7 @@
       "name": "feature-acceptance",
       "path": "skills/feature-acceptance/SKILL.md",
       "owner": "skills/feature-acceptance/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -78,7 +78,7 @@
       "name": "grilling",
       "path": "skills/grilling/SKILL.md",
       "owner": "skills/grilling/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -123,18 +123,6 @@
       "invocation": "implicit"
     },
     {
-      "name": "iterative-retrieval",
-      "path": "skills/iterative-retrieval/SKILL.md",
-      "owner": "skills/iterative-retrieval/SKILL.md",
-      "version": "0.1.0",
-      "compatibility": [
-        "claude-code",
-        "codex"
-      ],
-      "allowedTools": null,
-      "invocation": "implicit"
-    },
-    {
       "name": "prototype",
       "path": "skills/prototype/SKILL.md",
       "owner": "skills/prototype/SKILL.md",
@@ -162,7 +150,7 @@
       "name": "spec-gate",
       "path": "skills/spec-gate/SKILL.md",
       "owner": "skills/spec-gate/SKILL.md",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "compatibility": [
         "claude-code",
         "codex"
@@ -231,34 +219,10 @@
       "invocation": "implicit"
     },
     {
-      "name": "using-git-worktrees",
-      "path": "skills/using-git-worktrees/SKILL.md",
-      "owner": "skills/using-git-worktrees/SKILL.md",
-      "version": "0.1.1",
-      "compatibility": [
-        "claude-code",
-        "codex"
-      ],
-      "allowedTools": null,
-      "invocation": "implicit"
-    },
-    {
       "name": "using-superpowers",
       "path": "skills/using-superpowers/SKILL.md",
       "owner": "skills/using-superpowers/SKILL.md",
-      "version": "0.1.1",
-      "compatibility": [
-        "claude-code",
-        "codex"
-      ],
-      "allowedTools": null,
-      "invocation": "implicit"
-    },
-    {
-      "name": "verification-before-completion",
-      "path": "skills/verification-before-completion/SKILL.md",
-      "owner": "skills/verification-before-completion/SKILL.md",
-      "version": "0.1.1",
+      "version": "0.1.3",
       "compatibility": [
         "claude-code",
         "codex"
@@ -292,7 +256,7 @@
     },
     {
       "id": "verification",
-      "owner": "skills/verification-before-completion/SKILL.md",
+      "owner": "rules/common/testing.md",
       "surfaces": [
         "commands/verify.md",
         "rules/common/testing.md"
@@ -318,7 +282,7 @@
     },
     {
       "id": "worktree-isolation",
-      "owner": "skills/using-git-worktrees/SKILL.md",
+      "owner": "rules/05-git-workflow.md",
       "surfaces": [
         "rules/05-git-workflow.md"
       ],

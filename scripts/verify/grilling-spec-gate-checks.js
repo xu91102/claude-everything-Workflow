@@ -44,10 +44,10 @@ const ROUTING_SCENARIOS = [
     }],
   },
   {
-    name: "user explicitly continues after blocking",
+    name: "authorized task continues after focused clarification",
     checks: [{
       file: PROCESS_OUTCOMES,
-      tokens: ["new grilling session", "new Spec Gate", "do not resume the old call stack"],
+      tokens: ["grilling inline", "Wait for the user's answer", "new Spec Gate", "do not resume the old call stack"],
     }],
   },
   {
@@ -117,6 +117,7 @@ function checkSpecGateContract({ exists, read, fail, requireTokens }) {
     "Local-only artifact policy",
     "Do not stage or commit it.",
     "Spec Gate contract conflict",
+    "the user has explicitly approved it",
   ]);
   if (!exists(file)) return;
 
@@ -143,7 +144,13 @@ function checkRouterContract({ exists, read, fail, requireTokens }) {
   requireTokens(PROCESS_OUTCOMES, [
     "BLOCKED_BY_UNRESOLVED_DECISION",
     "decision map",
-    "new grilling session",
+    "grilling inline",
+    "do not ask whether to continue clarification",
+    "Wait for the user's answer",
+    "Silence is not a decision or approval.",
+    "If the user pauses or ends the task, stop.",
+    "A new scope or external action still requires its own",
+    "authorization; clarification does not expand the original request.",
     "new Spec Gate",
     "do not resume the old call stack",
     "spec-gate",
@@ -151,15 +158,22 @@ function checkRouterContract({ exists, read, fail, requireTokens }) {
   if (!exists(file) || !exists(PROCESS_OUTCOMES)) return;
 
   const body = read(PROCESS_OUTCOMES);
-  if (/BLOCKED_BY_UNRESOLVED_DECISION[\s\S]{0,240}(?:automatically|auto).*grilling/i.test(body)) {
-    fail("Router must stop on Spec Gate blocking instead of automatically invoking grilling");
+  for (const staleGate of [
+    "Only an explicit choice to continue",
+    "Let the user choose to continue clarification",
+    "Stop without drafting, guessing, or invoking another Skill.",
+    "is terminal for the current call chain",
+  ]) {
+    if (body.includes(staleGate)) {
+      fail("Router must ask the missing decision within the authorized task, not request permission to clarify");
+    }
   }
   for (const scenario of ROUTING_SCENARIOS) {
     for (const check of scenario.checks) requireTokens(check.file, check.tokens);
   }
 }
 
-function checkSupportingSkills({ requireTokens }) {
+function checkSupportingSkills({ exists, read, fail, requireTokens }) {
   requireTokens("skills/grilling/SKILL.md", [
     "Route context:",
     "Risk classification:",
@@ -172,7 +186,24 @@ function checkSupportingSkills({ requireTokens }) {
     "lifecycle",
     "CONTEXT.md",
     "approved Spec",
+    "Reuse existing maintenance authorization",
+    "within the approved paths and scope",
+    "If maintenance is not yet authorized, obtain approval before writing",
+    "New paths or scope",
   ]);
+  const domain = "skills/domain-modeling/SKILL.md";
+  if (exists(domain)) {
+    const body = read(domain).replace(/\s+/g, " ");
+    if (body.includes("When a term becomes stable, show the exact glossary change and obtain write approval before")) {
+      fail("Domain documentation must reuse in-scope maintenance authorization, not require per-term approval");
+    }
+    for (const constraint of [
+      "changes to confirmed decisions",
+      "unresolved consequential decisions require approval before the affected edit.",
+    ]) {
+      if (!body.includes(constraint)) fail(`${domain} should include ${constraint}`);
+    }
+  }
   requireTokens("skills/visual-companion/SKILL.md", [
     "user consent",
     "grilling owns the decision loop",

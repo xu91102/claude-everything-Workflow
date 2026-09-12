@@ -66,10 +66,13 @@ function checkInstallerEntrypoint() {
   // Seed an older installation to exercise retirement and policy replacement through the real CLI.
   for (const host of [".claude", ".codex"]) {
     const skills = path.join(profile, host, "skills");
-    for (const retired of ["research", "wayfinder", "find-skills", "project-context"]) {
+    for (const retired of ["research", "wayfinder", "find-skills", "project-context", "iterative-retrieval", "using-git-worktrees", "verification-before-completion"]) {
       fs.mkdirSync(path.join(skills, retired), { recursive: true });
       const known = {
         research: ["SKILL.md"],
+        "iterative-retrieval": ["SKILL.md"],
+        "using-git-worktrees": ["SKILL.md"],
+        "verification-before-completion": ["SKILL.md"],
         wayfinder: ["SKILL.md", "agents/openai.yaml"],
         "find-skills": ["SKILL.md", "agents/openai.yaml", "references/skills-cli.md"],
         "project-context": ["SKILL.md", "agents/openai.yaml", "references/project-context-template.md"],
@@ -93,7 +96,9 @@ function checkInstallerEntrypoint() {
     read(path.join(sourceRoot, "rules/common/testing.md")));
   assert.match(read(path.join(profile, ".claude/CLAUDE.md")), /^@AGENTS\.md$/m);
   for (const host of [".claude", ".codex"]) {
-    for (const retired of ["research", "wayfinder", "find-skills", "project-context"]) {
+    assert.equal(read(path.join(profile, host, "references/git-worktrees.md")),
+      read(path.join(sourceRoot, "references/git-worktrees.md")));
+    for (const retired of ["research", "wayfinder", "find-skills", "project-context", "iterative-retrieval", "using-git-worktrees", "verification-before-completion"]) {
       assert.equal(fs.existsSync(path.join(profile, host, "skills", retired, "SKILL.md")), false);
       const remaining = fs.readdirSync(path.join(profile, host, "skills", retired));
       assert.deepEqual(remaining, ["personal-notes.md"]);
@@ -101,6 +106,8 @@ function checkInstallerEntrypoint() {
     }
     assert.equal(fs.existsSync(path.join(profile, host, "skills/wayfinder/agents")), false);
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/install-rules.js")), false);
+    assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/continuation-checks.test.js")), false,
+      "安装不应保留仅供包内验证的续接测试");
     assert.match(read(path.join(profile, host, "skills/handoff/agents/openai.yaml")),
       /allow_implicit_invocation: true/);
   }

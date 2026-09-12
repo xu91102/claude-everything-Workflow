@@ -1,11 +1,15 @@
 ---
 name: feature-acceptance
-description: "验收真实用户流程、界面和日志证据；用于确认修复或交付是否真正生效。"
+description: "用于用户明确要求真实流程验收、截图或日志证据的任务；产出可复核的验收结论。"
 ---
 
 # 功能验收
 
 把验收请求转成可复现、可复核的结论。优先验证用户可观察的行为，不用代码阅读、模拟页面或单个 API 响应替代真实流程。
+
+## 何时使用
+
+仅在用户明确要求验收真实用户流程，或要求截图、视频、日志作为验收证据时使用。普通修复、一般“测一下”及完成前的常规验证按 `rules/common/testing.md` 执行。
 
 ## 输出协议
 
@@ -22,7 +26,7 @@ description: "验收真实用户流程、界面和日志证据；用于确认修
 
 - 需要新增或维护可提交、可在 CI 重跑的浏览器测试时，读取 `skills/e2e-testing/SKILL.md`，必要时委派 `agents/e2e-runner.md`。
 - 需要定位失败根因时，先读取 `skills/systematic-debugging/SKILL.md`，不要在验收报告中猜测修复方案。
-- 完成声明仍须遵守 `skills/verification-before-completion/SKILL.md` 的新鲜验证证据要求。
+- 完成声明仍须遵守 `rules/common/testing.md` 的新鲜验证证据要求。
 - 仅在用例相互独立、运行环境允许且任务授权并行时并发执行；共享状态、顺序依赖或无并发授权时串行执行，并说明原因。
 
 ## 流程

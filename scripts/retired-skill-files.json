@@ -36,6 +36,9 @@
     "research": [
       "SKILL.md"
     ],
+    "iterative-retrieval": [
+      "SKILL.md"
+    ],
     "wayfinder": [
       "SKILL.md",
       "agents/openai.yaml"
@@ -49,6 +52,12 @@
       "SKILL.md",
       "agents/openai.yaml",
       "references/project-context-template.md"
+    ],
+    "using-git-worktrees": [
+      "SKILL.md"
+    ],
+    "verification-before-completion": [
+      "SKILL.md"
     ]
   }
 }

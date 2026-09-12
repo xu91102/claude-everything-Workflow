@@ -155,6 +155,7 @@ remove_package_only_paths() {
         "scripts/verify/skill-manifest-checks.js" \
         "scripts/verify/skill-manifest-checks.test.js" \
         "scripts/verify/skill-invocation.test.js" \
+        "scripts/verify/continuation-checks.test.js" \
         "scripts/verify/install-rules.test.js"
     do
         if [ -f "$dest/$file" ]; then

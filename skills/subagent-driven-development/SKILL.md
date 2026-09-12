@@ -30,7 +30,7 @@ one ticket. Do not manufacture extra tickets merely to justify parallelism.
 2. Confirm the selected tickets form the frontier and have no overlapping write surface. If overlap is
    uncertain, run them sequentially.
 3. Create one clean controller-owned integration worktree at the common base, plus one separate worktree
-   and branch per ticket using `skills/using-git-worktrees/SKILL.md`. The integration worktree is the only
+   and branch per ticket using `rules/05-git-workflow.md`. The integration worktree is the only
    delivery target; do not share a checkout between implementers.
 4. Record the common base and every worktree path. The integration worktree must have no unrelated dirty
    or untracked files before the first diff is applied.

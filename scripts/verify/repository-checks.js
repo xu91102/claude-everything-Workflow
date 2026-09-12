@@ -23,7 +23,7 @@ function checkRouterAndAgentLinks() {
     "skills/grilling/SKILL.md",
     "spec-gate",
     "skills/systematic-debugging/SKILL.md",
-    "skills/verification-before-completion/SKILL.md",
+    "rules/common/testing.md",
     "User instructions",
   ]);
 
@@ -248,7 +248,6 @@ function checkTrackerDeliveryLifecycle() {
 
   requireTokens("skills/implement/SKILL.md", [
     "rules/05-git-workflow.md",
-    "skills/using-git-worktrees/SKILL.md",
     "clean baseline",
     "pre-delivery base",
     "不覆盖 commit、push 或创建 PR",
@@ -291,28 +290,18 @@ function checkTrackerDeliveryLifecycle() {
 }
 
 function checkExecutionSupportSkills() {
-  requireTokens("skills/using-git-worktrees/SKILL.md", [
+  requireTokens("references/git-worktrees.md", [
     "git worktree add",
     "git worktree remove",
     "rules/05-git-workflow.md",
-    "including a single-file feature",
+    "git status --short",
   ]);
 
-  requireTokens("skills/verification-before-completion/SKILL.md", [
-    "fresh verification evidence",
+  requireTokens("rules/common/testing.md", [
+    "本轮",
     "skills/systematic-debugging/SKILL.md",
-    "skipped checks",
-    "remaining risk",
-  ]);
-
-  requireTokens("skills/iterative-retrieval/SKILL.md", [
-    "Dispatch",
-    "Evaluate",
-    "Refine",
-    "最多跑 3 轮",
-    "回传格式",
-    "事实、证据和盲点缺口",
-    "skills/using-superpowers/SKILL.md",
+    "未运行",
+    "剩余风险",
   ]);
 
   requireTokens("skills/feature-acceptance/SKILL.md", [

@@ -13,7 +13,6 @@ Reference: https://github.com/mattpocock/skills/blob/main/skills/productivity/gr
 
 - Do not ask for discoverable facts. Inspect files, documentation, logs, history, and tools first.
 - Ask only about a user-owned decision whose alternatives materially change the result.
-- Route systematic evidence or blind-spot gaps back through `skills/using-superpowers/SKILL.md` for `skills/iterative-retrieval/SKILL.md`.
 - High risk alone does not trigger an interview. If high-risk work has a real unresolved user decision, resolve it and record `resume_target: spec-gate`.
 - Do not generate or approve a Spec, implement code, or own workflow continuation.
 
@@ -80,4 +79,6 @@ Use `resume_target: spec-gate` only when the router already classified the task 
 
 For an explicit session, ask whether shared understanding has been reached. Do not act, write files, or enter implementation before confirmation. Inline mode may return without an extra confirmation gate when the blocking decision is resolved.
 
-After exit, return to `skills/using-superpowers/SKILL.md` for routing. A fresh session created after `BLOCKED_BY_UNRESOLVED_DECISION` must not resume the old Spec Gate call stack; it returns a new handoff to the router.
+After exit, return to `skills/using-superpowers/SKILL.md` for routing. Inline clarification after
+`BLOCKED_BY_UNRESOLVED_DECISION` returns the resolved decision and updated handoff to the router for a new
+Spec Gate call; it does not resume incomplete drafting or approve the Spec.
