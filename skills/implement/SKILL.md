@@ -25,12 +25,12 @@ description: Deliver one authorized scope through implementation, review, and ve
 
 是否创建 worktree 及具体操作按 `rules/05-git-workflow.md` 执行，不嵌套创建。
 只做必要 setup 与相关 baseline tests。
-只有 clean baseline 才进入实施；失败时记录命令、失败与工作区状态，返回 router 处理，不能伪装通过。
+按 `rules/common/testing.md` 分类基线失败：目标失败是有效复现，可以继续修复；已证实无关的历史失败记录后继续；影响结果判断的环境或相关失败需处理或明确报告验证受阻。不得伪装通过。
 
 ## 实施、审查与验证
 
-1. 以当前范围合同实施最小完整改动，不再生成逐文件、逐步骤的实施计划。行为变化按
-   `test-driven-development` 的垂直切片推进；纯文档或没有可测试行为的整理运行对应校验。
+1. 以当前范围合同实施最小完整改动，不再生成逐文件、逐步骤的实施计划。测试方法按
+   `rules/common/testing.md` 选择；采用 TDD 时读取 `test-driven-development`，纯文档或没有可测试行为的整理运行对应校验。
    已确认失败原因正确的预期 TDD RED 继续 GREEN，不触发调试。其他失败按
    `systematic-debugging` 的分级入口处理，不跳过真实失败。
 2. 用 pre-delivery base 冻结包含 task-owned committed、staged、unstaged、untracked 的完整审查包，

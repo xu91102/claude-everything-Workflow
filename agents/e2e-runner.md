@@ -2,7 +2,6 @@
 name: e2e-runner
 description: 端到端测试专家，负责发现项目现有测试入口，优先使用 Playwright 创建、维护和运行可重复的 E2E 自动化测试；Agent Browser 或 MCP 仅作为可选探索和调试辅助。输出执行命令、测试结果、失败原因和产物路径。
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
-model: sonnet
 ---
 
 # E2E 测试运行器

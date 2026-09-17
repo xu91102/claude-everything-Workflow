@@ -45,7 +45,7 @@ check_observations() {
 analyze_patterns() {
     log "开始分析模式..."
     
-    # 这里应该调用 Claude API (Haiku) 进行分析
+    # 这里应该调用 Claude API（沿用用户授权的模型配置） 进行分析
     # 由于需要 API 密钥，这里只是示例
     
     OBSERVATION_COUNT=$(check_observations)

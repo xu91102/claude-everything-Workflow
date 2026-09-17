@@ -17,6 +17,7 @@
   },
   "scripts": {
     "verify": "node scripts/verify-harness.js",
+    "test:adaptive-contracts": "node scripts/verify/adaptive-contract-checks.test.js",
     "test:manifest": "node scripts/verify/skill-manifest-checks.test.js",
     "test:invocation": "node scripts/verify/skill-invocation.test.js",
     "test:continuation": "node scripts/verify/continuation-checks.test.js",

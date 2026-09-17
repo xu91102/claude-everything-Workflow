@@ -39,7 +39,11 @@ verification intensity, not the lane. Resolve only consequential user decisions 
 
 ## Routing
 
-Use process skills before implementation skills:
+Select only the capabilities needed for the goal; this map is not a mandatory sequence of artifacts.
+Audit and advice are read-only unless the user authorizes implementation; routing never grants write permission.
+TDD and isolation follow their rule owners; a low-risk small feature on a safe task branch needs no extra Spec, ticket or worktree unless explicitly requested.
+
+Routing map:
 
 ```text
 Task arrives
@@ -66,8 +70,8 @@ Task arrives
        -> independent frontier tickets with no overlapping write surface?
                                                      -> skills/subagent-driven-development/SKILL.md
        -> otherwise                                 -> skills/implement/SKILL.md
-  -> behavior change with a test path?             -> test-driven-development
-  -> new feature or other Git-rule isolation need? -> rules/05-git-workflow.md
+  -> testing method or behavior verification?      -> rules/common/testing.md
+  -> Git-rule isolation need?                      -> rules/05-git-workflow.md
   -> completion, fixed, or ready claim?            -> rules/common/testing.md
   -> skill discovery or install request?           -> use available host tooling for the explicit request
   -> external skill learning or edit?              -> rules/common/skills-learning.md

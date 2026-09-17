@@ -6,7 +6,7 @@ Read this reference only after a Spec has been written and the main self-review 
 Review the Spec at [SPEC_FILE_PATH] for implementation-planning readiness.
 
 Check:
-- Completeness: no TODO, TBD, placeholder, missing contract, or incomplete section.
+- Completeness: no TODO, TBD, placeholder, missing necessary contract, or substantive gap; merged or inapplicable sections are not defects.
 - Decision integrity: no unresolved user-owned choice is disguised as an implementation detail.
 - Consistency: requirements, architecture, interfaces, data flow, error handling, migration, and rollback agree.
 - Testability: each acceptance criterion has an automated seam or explicit repeatable manual check.

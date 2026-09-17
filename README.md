@@ -247,7 +247,7 @@ claude-everything-Workflow/
 
 ### 2. 节省 Token（与主仓 `rules/common/performance.md` 一致）
 
-- MCP 工具描述会占用上下文；建议**同时启用的 MCP 少于 10 个**，并控制活跃工具数量。
+- MCP 工具描述会占用上下文；按相关性、歧义、实际开销和运行效果启用，遵守宿主上限，不设置无依据的通用数量门槛。模型与推理配置默认尊重用户选择。
 - **策略**：从 **0 个或只开 Context7** 开始，需要再加其它 MCP。
 - **缓存命中策略**：保持入口文件前缀稳定，默认只加载小型 bootstrap 和规则索引；长参考材料、专项规则、agent 详细清单和学习材料必须按需加载。
 - **入口预算**：`CLAUDE.md` 控制在约 1.5K 字符内，`AGENTS.md` 控制在约 3.6K 字符内；超过预算时优先把细节下沉到 `rules/`、`references/` 或专项 skill。
@@ -336,14 +336,14 @@ Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件�
   -> 存在关键用户决策：grilling 一次只问一个最高价值问题，并返回结构化 handoff
   -> 明确低风险且无未决决策：direct，经 implement 的无 ticket 路径实施、审查并做相称验证
   -> 高风险/formal spec 且上下文充分：spec-gate 零访谈写 design spec 并自审
-  -> Spec Gate 阻塞：停止并展示决策地图；用户明确继续才创建新 grilling 会话
+  -> Spec Gate 缺少实质决策：router 在现有授权内提出具体问题，等待回答；决策解决后重新评估
   -> 用户审核并批准 spec
   -> router 按交付持续性、依赖图、写入面和验证成本选择执行拓扑
   -> 多 session/tracker：to-tickets 拆垂直切片和 blocking edges，用户确认 ticket contract 后发布
-  -> 单 session 的 direct/approved Spec 连贯范围或单张 frontier ticket：implement 在一个 fresh context 中实施
+  -> 单 session 的 direct/approved Spec 连贯范围或单张 frontier ticket：implement 在当前会话或确有需要的隔离上下文中实施
   -> 多张独立 frontier tickets：router 用 subagent-driven-development 在独立 worker worktree 并行，再汇入 integration worktree
-  -> rules/05-git-workflow.md：新功能必须隔离；其他改动按 Git 规则判断，已有合适任务 worktree 复用
-  -> TDD 红绿重构
+  -> rules/05-git-workflow.md：按实际隔离需求选择，已有安全任务分支或合适 worktree 可复用
+  -> 选择适合的测试方法（明确要求 TDD 时严格执行）
   -> 需求符合性审查
   -> 代码质量审查
   -> rules/common/testing.md 完成声明前确认新鲜验证证据
@@ -383,22 +383,22 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 
 升级安装会按精确的退役文件清单删除旧分发文件；同名目录中的未知用户文件和 symlink 会保留并报告。
 
-硬门禁：
+边界与方法：
 
 - 开始工程交付及明确请求的工程工作流前，先用 `using-superpowers` 判断并加载相关 process skill。
 - 上下文或工具面变重时，先盘点常驻 Token 开销，再决定新增或删除 MCP/skill/agent。
 - 完整流程适用时：没有批准的必需 Spec 不进入 ticket 或 implement，没有用户审核不进入实现，没有 review 不标记任务完成。
 - 每张 ticket 必须说明交付行为、验收标准和真实 blocker；不要在 ticket 中复制文件路径、代码或逐步计划。
-- 没有 failing test，不写行为代码。
+- 测试方法见 `rules/common/testing.md`；选择或明确要求 TDD 时，行为实现前须有有效 RED，已有失败测试可复用。
 - 没有新鲜验证证据，不声明完成、通过、已修复或 ready。
 - 没有 verify，不进入 PR。
-- 新功能必须使用 worktree，包括单文件新功能；其他隔离条件、基线与复用策略见 `rules/05-git-workflow.md`。
+- worktree 按用户改动保护、并行、分支保护和回退需求选择；基线与复用策略见 `rules/05-git-workflow.md`。
 
 ### Ticket-first 交付约束
 
 - `to-tickets` 只写端到端行为、验收标准和 blocking edges；一张 ticket 是一个可在 fresh context 完成的 tracer bullet。
 - 细节由实施会话结合当前代码发现；ticket 不写文件路径、行号、代码片段或分层改造步骤，避免文档在实现前过期。
-- `implement` 处理一张 frontier ticket，或用户授权的低风险 direct/approved Spec 连贯范围；ticket 以自身作为 Spec source，direct scope 以明确用户请求和相称验证为 scope source。两条路径都执行适用的 TDD、相称审查和新鲜验证，只有 ticket 才 claim、resolve 并刷新依赖图。
+- `implement` 处理一张 frontier ticket，或用户授权的低风险 direct/approved Spec 连贯范围；ticket 以自身作为 Spec source，direct scope 以明确用户请求和相称验证为 scope source。两条路径都选择适用的测试方法、执行相称审查和新鲜验证，只有 ticket 才 claim、resolve 并刷新依赖图。
 - `subagent-driven-development` 是 router 选出的并行执行器：不再读取长计划，而是给每个 fresh subagent 一张已批准的 frontier ticket 和独立 worker worktree；通过 review 的 diff 必须汇入 integration worktree 并完成联合验证后才能 resolve。
 - Visual Companion 使用带 `?key=` 的 per-session URL，HTTP/WebSocket 请求都需要 session key；默认 idle timeout 为 4 小时，可用 `--idle-timeout-minutes` 调整。
 
@@ -413,7 +413,7 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 ```
 会话活动 → Hooks 观察 → projects/<project-id>/observations.jsonl
                             ↓
-                     Observer Agent (Haiku)
+                     Observer Agent（继承用户模型选择）
                             ↓
                projects/<project-id>/instincts/
                   ↓                    ↓
@@ -452,3 +452,6 @@ Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.j
 7. 使用 /verify 验证，通过后使用 /pr 进入提交与 PR 门
 8. 使用 `/learn` 的 eval、projects、promote、evolve 或 prune 子命令管理学习闭环
 ```
+
+方法约束的静态回归可运行 `npm run test:adaptive-contracts`；真实模型对照入口见
+[轻量工程行为场景](references/adaptive-engineering-scenarios.md)。静态、脚本和安装测试通过不代表模型行为评测通过。

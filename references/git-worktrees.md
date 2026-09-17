@@ -11,7 +11,7 @@ git rev-parse --show-toplevel
 git worktree list
 ```
 
-需要新建时，按 Git 规则取得最新基线，替换以下占位符；Codex 分支默认用 `codex/` 前缀：
+需要新建时，按 Git 规则确认任务基线，替换以下占位符；Codex 分支默认用 `codex/` 前缀：
 
 ```sh
 git worktree add ../<repo>-<task> -b codex/<task> <base-ref>
