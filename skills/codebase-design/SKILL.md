@@ -34,7 +34,8 @@ question is specifically about a module, interface or seam.
 3. Apply the deletion test: if the module vanished, would complexity disappear or spread into callers?
 4. Reduce methods, parameters, ordering knowledge and configuration callers must carry.
 5. Hide policy and orchestration behind the interface while preserving observable behavior.
-6. Treat the interface as the test surface; tests and callers should cross the same seam.
+6. Prefer the stable interface as the test surface; choose lower-level or persistence checks when the
+   property requires them, following `rules/common/testing.md`.
 7. Introduce an adapter only when something actually varies. One adapter is hypothetical; two make a
    seam real.
 8. Compare at least two materially different interfaces when the decision is consequential.

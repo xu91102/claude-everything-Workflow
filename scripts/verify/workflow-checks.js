@@ -39,7 +39,7 @@ function checkReadmeWorkflowContract() {
     "完整流程适用时",
     "没有批准的必需 Spec 不进入 ticket 或 implement",
     "没有用户审核不进入实现",
-    "没有 failing test，不写行为代码",
+    "选择或明确要求 TDD 时",
     "没有 review 不标记任务完成",
     "没有新鲜验证证据，不声明完成、通过、已修复或 ready",
     "没有 verify，不进入 PR",
@@ -75,7 +75,7 @@ function checkSuperpowersDevLoop() {
   requireTokens("skills/test-driven-development/SKILL.md", [
     "## Red Test Gate",
     "失败测试",
-    "替代验证",
+    "已有有效失败测试即满足 RED",
   ]);
 
   requireTokens("commands/verify.md", [
@@ -519,7 +519,7 @@ function checkDeliveryCapabilityContracts() {
   ]);
   requireTokens("skills/test-driven-development/SKILL.md", [
     "Public Seam",
-    "测试和调用方应穿过同一个 seam",
+    "需要证明持久化不变量",
     "固定事实",
     "真实系统边界",
     "tracer bullet",

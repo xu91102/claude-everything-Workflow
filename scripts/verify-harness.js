@@ -9,6 +9,8 @@ const { runRepositoryChecks } = require("./verify/repository-checks");
 const { runWorkflowChecks } = require("./verify/workflow-checks");
 const { runRuntimeChecks } = require("./verify/runtime-checks");
 
+const { runAdaptiveContractChecks } = require("./verify/adaptive-contract-checks");
+
 function main() {
   const root = path.resolve(__dirname, "..");
   const context = createHarnessContext(root);
@@ -16,6 +18,7 @@ function main() {
   runMetadataChecks(context);
   runSkillManifestChecks(context);
   runRepositoryChecks(context);
+  runAdaptiveContractChecks(context);
   runWorkflowChecks(context);
   runRuntimeChecks(context);
 

@@ -29,7 +29,7 @@ one ticket. Do not manufacture extra tickets merely to justify parallelism.
    scope.
 2. Confirm the selected tickets form the frontier and have no overlapping write surface. If overlap is
    uncertain, run them sequentially.
-3. Create one clean controller-owned integration worktree at the common base, plus one separate worktree
+3. Create or reuse one suitable controller-owned integration worktree at the common base, plus one separate worktree
    and branch per ticket using `rules/05-git-workflow.md`. The integration worktree is the only
    delivery target; do not share a checkout between implementers.
 4. Record the common base and every worktree path. The integration worktree must have no unrelated dirty
@@ -48,7 +48,7 @@ Base: <commit>
 Context: <why this behavior exists, confirmed interfaces, and completed blockers>
 
 Implement only this ticket. Inspect the current code to choose files and implementation details.
-Use test-driven-development for behavior changes. Keep the ticket's acceptance criteria as the
+Select testing methods under rules/common/testing.md; honor explicit TDD requirements. Keep the ticket's acceptance criteria as the
 source of truth; do not expand scope or start another ticket.
 
 Do not stage, commit, push, open a PR, claim/resolve/comment on a tracker, or perform any other external

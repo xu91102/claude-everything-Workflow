@@ -1,7 +1,6 @@
 ---
 name: observer
-description: 后台代理，分析会话观察以检测模式并创建直觉。使用 Haiku 以提高成本效益。
-model: haiku
+description: 后台代理，分析会话观察以检测模式并创建直觉。仅在用户授权启用时运行；模型与推理配置遵循 rules/common/performance.md。
 run_mode: background
 ---
 

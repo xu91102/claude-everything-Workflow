@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "description": "CEW Harness 的 Skill 元数据与流程职责唯一登记表。",
+  "description": "CEW Harness 的 Skill 元数据与流程职责唯一登记表。enforcement 是规范强度，不代表已有运行时强制保障；blocking 仅覆盖 owner 定义的适用边界，advisory 不覆盖用户或项目明确要求。",
   "skills": [
     {
       "name": "code-review",

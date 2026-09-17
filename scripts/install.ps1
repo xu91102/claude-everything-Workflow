@@ -179,6 +179,8 @@ function Remove-PackageOnlyPaths {
         "scripts\legacy-common-rule-hashes.json",
         "scripts\verify-harness.js",
         "scripts\verify\core.js",
+        "scripts\verify\adaptive-contract-checks.js",
+        "scripts\verify\adaptive-contract-checks.test.js",
         "scripts\verify\grilling-spec-gate-checks.js",
         "scripts\verify\metadata-checks.js",
         "scripts\verify\repository-checks.js",

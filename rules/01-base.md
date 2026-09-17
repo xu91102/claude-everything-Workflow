@@ -7,3 +7,4 @@
 - 目标项目的架构、lint、类型、测试和风格配置优先于本套通用默认值；没有配置时才使用相关规则的回退建议。
 - 流程路由与升级条件只由 `skills/using-superpowers/SKILL.md` 维护；验证范围见 `rules/common/testing.md`，
   Git 与授权见 `rules/05-git-workflow.md`。不在 rules 重写 Skill 的状态机。
+- 以目标、事实、授权与验收选择调查、设计、实现和验证方法；默认方法可调整，不能放宽授权、安全、用户改动保护、项目明确要求或真实报告。
