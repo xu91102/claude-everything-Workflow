@@ -5,6 +5,8 @@ const path = require("path");
 
 const MANAGED_ROOTS = [
   "README.md",
+  "README.zh-CN.md",
+  "references/workflow-guide.zh-CN.md",
   "AGENTS.md",
   "CLAUDE.md",
   "settings.json",
