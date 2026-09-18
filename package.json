@@ -33,6 +33,7 @@
     "CLAUDE.md",
     "LICENSE",
     "README.md",
+    "README.zh-CN.md",
     "settings.json",
     "agents/",
     "bin/",

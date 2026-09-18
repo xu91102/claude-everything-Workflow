@@ -26,7 +26,7 @@ function bindContext(context) {
 }
 
 function checkReadmeWorkflowContract() {
-  requireTokens("README.md", [
+  requireTokens("references/workflow-guide.zh-CN.md", [
     "Ticket-first 工程交付闭环",
     "using-superpowers",
     "?key=",
@@ -269,7 +269,7 @@ function checkComplexityRules() {
       "rules/01-base.md should not classify new or multi-file behavior work as full-flow by default",
     );
   }
-  requireTokens("README.md", [
+  requireTokens("references/workflow-guide.zh-CN.md", [
     "直接提出 grilling 请求",
     "`/to-spec`",
     "`grilling` 是唯一需求澄清引擎",
@@ -573,6 +573,7 @@ function checkRemovedSkillReferences() {
     "wayfinder",
   ];
   const allowedRetirementFiles = new Set([
+    "references/workflow-guide.zh-CN.md",
     "README.md",
     "scripts/retired-skill-files.json",
     "scripts/upstream-capability-map.json",
@@ -596,7 +597,7 @@ function checkRemovedSkillReferences() {
     }
   }
 
-  requireTokens("README.md", [
+  requireTokens("references/workflow-guide.zh-CN.md", [
     "Skill 迁移说明",
     "`discover-unknowns-zh` 已退休",
     "`iterative-retrieval` 已退休",
