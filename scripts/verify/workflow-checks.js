@@ -25,30 +25,7 @@ function bindContext(context) {
   } = context);
 }
 
-function checkReadmeWorkflowContract() {
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "Ticket-first 工程交付闭环",
-    "using-superpowers",
-    "?key=",
-    "4 小时",
-    "rules/05-git-workflow.md",
-    "to-tickets",
-    "implement",
-    "subagent-driven-development",
-    "rules/common/testing.md",
-    "完整流程适用时",
-    "没有批准的必需 Spec 不进入 ticket 或 implement",
-    "没有用户审核不进入实现",
-    "没有 failing test，不写行为代码",
-    "没有 review 不标记任务完成",
-    "没有新鲜验证证据，不声明完成、通过、已修复或 ready",
-    "没有 verify，不进入 PR",
-    "`/learn eval --preview` 是非阻塞学习建议门",
-  ]);
-}
-
 function checkSuperpowersDevLoop() {
-  checkReadmeWorkflowContract();
 
   requireTokens("rules/01-base.md", [
     "# 执行原则",
@@ -269,15 +246,6 @@ function checkComplexityRules() {
       "rules/01-base.md should not classify new or multi-file behavior work as full-flow by default",
     );
   }
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "直接提出 grilling 请求",
-    "`/to-spec`",
-    "`grilling` 是唯一需求澄清引擎",
-    "默认最短闭环",
-    "按风险逐级升级",
-    "完整流程适用时",
-    "明确低风险且无未决决策",
-  ]);
 }
 
 function checkGrillingWorkflow() {
@@ -573,7 +541,6 @@ function checkRemovedSkillReferences() {
     "wayfinder",
   ];
   const allowedRetirementFiles = new Set([
-    "references/workflow-guide.zh-CN.md",
     "README.md",
     "scripts/retired-skill-files.json",
     "scripts/upstream-capability-map.json",
@@ -597,18 +564,6 @@ function checkRemovedSkillReferences() {
     }
   }
 
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "Skill 迁移说明",
-    "`discover-unknowns-zh` 已退休",
-    "`iterative-retrieval` 已退休",
-    "`research`",
-    "`prototype`",
-    "`to-tickets`",
-    "`implementation-notes`、`explainer` 和 `quiz` 工件链不再属于",
-    "`skill-creator` 已退休",
-    "`rules/common/skills-learning.md`",
-    "scripts/upstream-capability-map.json",
-  ]);
   requireTokens("scripts/retired-skill-files.json", retiredSkills);
   requireTokens("rules/common/skills-learning.md", [
     "Skill 创建和更新遵循本规则",

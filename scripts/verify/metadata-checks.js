@@ -221,10 +221,6 @@ function checkInstallerSurface(ps, sh) {
 }
 
 function checkInstallRuntimePolicy() {
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`",
-    "Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks",
-  ]);
 
   requireTokens("scripts/install.ps1", [
     "Copy-ClaudeSettings",
@@ -551,13 +547,6 @@ function checkGitHubWorkflows() {
   }
   checkReleaseRecoveryBehavior();
 
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "npm 发布",
-    "版本号通过 PR",
-    "ci.yml",
-    "受信任的发布商",
-    "npm 发布成功后才创建",
-  ]);
 }
 
 function checkLearningPathPolicy() {
@@ -596,10 +585,6 @@ function checkLearningPathPolicy() {
     }
   }
 
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "skills/learn/<category>/",
-    "观察、候选和迁移来源",
-  ]);
   requireTokens("commands/learn.md", [
     "/learn eval",
     "/learn evolve",
@@ -648,12 +633,6 @@ function checkSkillCategoryIndex() {
       fail(`skills/README.md lists missing skill ${name}`);
     }
   }
-
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "Skill 分类索引",
-    "物理目录保持平铺以兼容发现",
-    "只有学习产物使用物理分类目录 `skills/learn/<category>/`",
-  ]);
 
   requireTokens("rules/common/skills-learning.md", [
     "正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构",
@@ -737,8 +716,8 @@ function checkNpmPackageSurface() {
 
 function runMetadataChecks(context) {
   bindContext(context);
-  requireTokens("README.md", ["[简体中文](README.zh-CN.md)", "(LICENSE)", "(references/workflow-guide.zh-CN.md)"]);
-  requireTokens("README.zh-CN.md", ["[English](README.md)", "(LICENSE)", "(references/workflow-guide.zh-CN.md)"]);
+  requireTokens("README.md", ["[简体中文](README.zh-CN.md)", "(LICENSE)"]);
+  requireTokens("README.zh-CN.md", ["[English](README.md)", "(LICENSE)"]);
   checkCommands();
   checkReadmeTreePaths();
   checkInstallRuntimePolicy();
