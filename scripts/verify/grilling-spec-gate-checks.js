@@ -1,12 +1,13 @@
 "use strict";
 
 const ACTIVE_BRAINSTORMING_REFERENCE = "skills/brainstorming/SKILL.md";
-const PROCESS_OUTCOMES = "skills/using-superpowers/references/process-outcomes.md";
+const PROCESS_OUTCOMES = "references/process-outcomes.md";
 const BRAINSTORMING_REFERENCE_ALLOWLIST = new Set([
   "README.md",
   "skills/using-superpowers/SKILL.md",
   "scripts/install.sh",
   "scripts/install.ps1",
+  "scripts/legacy-install-hashes.json",
 ]);
 
 const ROUTING_SCENARIOS = [
@@ -137,7 +138,7 @@ function checkRouterContract({ exists, read, fail, requireTokens }) {
   const file = "skills/using-superpowers/SKILL.md";
   requireTokens(file, [
     "three lanes",
-    "[references/process-outcomes.md](references/process-outcomes.md)",
+    "[process outcomes](../../references/process-outcomes.md)",
     "Ordinary direct delivery does not load this reference",
     "spec-gate",
   ]);
@@ -179,7 +180,7 @@ function checkSupportingSkills({ exists, read, fail, requireTokens }) {
     "Risk classification:",
     "Resume target:",
     "resume_target: spec-gate",
-    "return to `skills/using-superpowers/SKILL.md`",
+    "return to `references/process-outcomes.md`",
   ]);
   requireTokens("skills/domain-modeling/SKILL.md", [
     "bounded context",
@@ -253,22 +254,7 @@ function checkVisualCompanionSecurity({ requireTokens }) {
 }
 
 function checkInstallerCleanupContract({ requireTokens }) {
-  requireTokens("scripts/install.sh", [
-    "cleanup_retired_skills",
-    "cleanup-retired-skills.js",
-    "validate_retired_skill_manifest",
-    "--dry-run",
-    "rules/08-ecc-integration.md",
-    "skills/subagent-driven-development/implementer-prompt.md",
-  ]);
-  requireTokens("scripts/install.ps1", [
-    "Remove-RetiredSkills",
-    "cleanup-retired-skills.js",
-    "Test-RetiredSkillManifest",
-    "--dry-run",
-    "rules\\08-ecc-integration.md",
-    "skills\\subagent-driven-development\\implementer-prompt.md",
-  ]);
+  requireTokens("scripts/install-host.js", ["cleanup-retired-skills.js", "--dry-run", "legacy-install-hashes.json"]);
   requireTokens("scripts/retired-skill-files.json", [
     "brainstorming",
     "SKILL.md",

@@ -1,15 +1,9 @@
-# Agent 编排
+# 独立审查与并行写入边界
 
-## 使用边界
+代理发现、选择、创建、转发和会话管理使用宿主原生能力。
 
-- 简单、明确、低风险且上下文连贯的任务由当前 agent 直接完成。
-- 只有独立搜索、失败日志、专项审查或可安全并行的交付能减少主上下文噪音时才委派。
-- 工程交付及明确请求的工程工作流的 Skill/Agent 选择和交付拓扑以 `skills/using-superpowers/SKILL.md` 为权威来源。
-
-## 交付拓扑
-
-to-tickets / implement / subagent-driven-development 的选择判据以 `skills/using-superpowers/SKILL.md` 为唯一权威来源；不能在无法证明安全并行时人为拆分任务。
-
-## 上下文与权限
-
-Fresh/Fork、agent `description`、回传格式、上下文隔离以及 Subagent 的 Git 与外部写入权限，均以 `rules/common/context-hygiene.md` 为唯一来源。
+- 需要独立审查时，实施者不能充当自己的独立审查者；审查上下文只读，固定基线、范围和证据。独立审查不可用时报告 NOT RUN，不伪装通过。
+- 并行写入必须有不重叠的责任范围和隔离工作区；共享依赖或同一写入面应串行。
+- 集成方负责合入、解决冲突及整体回归。单个代理测试通过不等于集成通过。
+- 子代理不得自行扩大范围或外部写入；提交、推送、PR、tracker 和部署按明确授权执行。
+- 只交回可定位证据、未解决风险和验证结果。专项 ticket 并行交付见 `skills/subagent-driven-development/SKILL.md`。

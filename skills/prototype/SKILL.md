@@ -28,7 +28,7 @@ or state code defaults to logic; page/component work defaults to UI. State the a
 6. Surface full relevant state after every action or variant change.
 7. Never connect UI variants to real mutations.
 8. Capture the answer: decision, evidence and remaining uncertainty.
-9. Promote only the validated decision. Rewrite production code under normal TDD and review gates.
+9. Promote only the validated decision. Rewrite production code under the testing strategy in `rules/common/testing.md` and applicable review gates.
 
 Prototype creation is an authorized implementation step only when the user requested it. Commit,
 branch, browser and external-system actions keep their own approval requirements.
@@ -44,7 +44,7 @@ Observed answer:
 Validated decision:
 Discarded assumptions:
 Prototype cleanup/capture status:
-Next router input:
+Next current task input:
 ```
 
-Then return to `skills/using-superpowers/SKILL.md`. Do not silently continue into production code.
+Then return to `references/process-outcomes.md`. Do not silently continue into production code.

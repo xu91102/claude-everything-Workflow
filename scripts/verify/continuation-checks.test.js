@@ -8,7 +8,7 @@ const { runGrillingSpecGateChecks } = require("./grilling-spec-gate-checks");
 
 const root = path.resolve(__dirname, "../..");
 const domain = "skills/domain-modeling/SKILL.md";
-const outcomes = "skills/using-superpowers/references/process-outcomes.md";
+const outcomes = "references/process-outcomes.md";
 const spec = "skills/spec-gate/SKILL.md";
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 

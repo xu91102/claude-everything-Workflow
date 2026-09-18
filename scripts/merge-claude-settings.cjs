@@ -2,55 +2,62 @@
 
 const fs = require("fs");
 
-const LEGACY_HOOK_PATTERNS = [
-  "scripts/hooks/run-with-flags.js",
-  "scripts/hooks/commit-quality.js",
-  "scripts/hooks/session-start.js",
-  "scripts/hooks/session-end.js",
-  "scripts/lib/hook-flags.js",
-  "scripts/lib/utils.js",
-  "hooks/observe.js",
-  "hooks/review-confidence.js",
-  "hooks/session-start.js",
-  "hooks/session-end.js",
-  "hooks/evaluate-session.js",
-  "hooks/pre-compact.js",
-  "hooks/runtime/session-utils.js",
-];
+const path = require("node:path");
+const LEGACY_HOOK_COMMANDS = require("./legacy-hook-commands.json").commands;
 
-function isLegacyHook(hookDefinition) {
-  if (typeof hookDefinition !== "object" || !hookDefinition.command) return false;
-  return LEGACY_HOOK_PATTERNS.some((pattern) => hookDefinition.command.includes(pattern));
+function isLegacyHook(hookDefinition, installRoot) {
+  if (hookDefinition?.type !== "command" || typeof hookDefinition.command !== "string") return false;
+  // Exact historical command plus a CEW install root: suffixes and relative paths prove no ownership.
+  const roots = ["$HOME/.claude", "~/.claude"];
+  if (installRoot) {
+    roots.push(installRoot, installRoot.replace(/[\\$`"]/g, "\\$&"));
+  }
+  return LEGACY_HOOK_COMMANDS.some(({ command }) => roots.some(root =>
+    hookDefinition.command === command.replaceAll("$HOME/.claude", root)));
 }
 
-function filterHooks(entries) {
+function filterHooks(entries, installRoot) {
   if (!Array.isArray(entries)) return entries;
   return entries
     .map((entry) => {
       if (!entry || !Array.isArray(entry.hooks)) return entry;
-      const hooks = entry.hooks.filter((hook) => !isLegacyHook(hook));
+      const hooks = entry.hooks.filter((hook) => !isLegacyHook(hook, installRoot));
       return { ...entry, hooks };
     })
     .filter((entry) => entry.hooks && entry.hooks.length > 0);
 }
 
-function cleanHooks(hooks) {
+function cleanHooks(hooks, installRoot) {
   if (!hooks || typeof hooks !== "object") return hooks;
   const cleaned = {};
   for (const [eventType, entries] of Object.entries(hooks)) {
-    const filtered = filterHooks(entries);
+    const filtered = filterHooks(entries, installRoot);
     if (filtered.length > 0) cleaned[eventType] = filtered;
   }
   return cleaned;
 }
 
-function mergeSettings(source, existing) {
+function mergeSettings(source, existing, { installRoot } = {}) {
+  const hooks = cleanHooks(existing.hooks || {}, installRoot);
+  for (const [event, entries] of Object.entries(source.hooks || {})) {
+    const combined = [...(hooks[event] || [])];
+    for (const entry of entries) {
+      const target = combined.find(item => item.matcher === entry.matcher);
+      if (!target) combined.push(entry);
+      else for (const hook of entry.hooks) {
+        const index = target.hooks.findIndex(item => item.command === hook.command);
+        if (index < 0) target.hooks.push(hook);
+        else target.hooks[index] = hook;
+      }
+    }
+    hooks[event] = combined;
+  }
   return {
     ...existing,
     ...source,
     env: { ...(source.env || {}), ...(existing.env || {}) },
     mcpServers: { ...(source.mcpServers || {}), ...(existing.mcpServers || {}) },
-    hooks: cleanHooks({ ...(existing.hooks || {}), ...(source.hooks || {}) }),
+    hooks,
   };
 }
 
@@ -66,7 +73,7 @@ function main() {
   const existing = fs.existsSync(destinationPath)
     ? readJson(destinationPath)
     : {};
-  const merged = mergeSettings(source, existing);
+  const merged = mergeSettings(source, existing, { installRoot: path.dirname(path.resolve(destinationPath)) });
   fs.writeFileSync(destinationPath, JSON.stringify(merged, null, 2) + "\n");
 }
 

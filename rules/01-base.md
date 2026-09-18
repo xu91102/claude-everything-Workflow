@@ -5,5 +5,9 @@
 - 优先复用项目现有入口、标准库和已安装依赖；最后才写最小新增代码，并修在共同根因位置。
 - 最小实现不得省略安全、输入校验、错误处理、兼容性、无障碍和必要验证。
 - 目标项目的架构、lint、类型、测试和风格配置优先于本套通用默认值；没有配置时才使用相关规则的回退建议。
-- 流程路由与升级条件只由 `skills/using-superpowers/SKILL.md` 维护；验证范围见 `rules/common/testing.md`，
-  Git 与授权见 `rules/05-git-workflow.md`。不在 rules 重写 Skill 的状态机。
+- 普通开发直接完成，不要求经过 using-superpowers、implement 或先生成 tickets。专项任务才读取对应 Skill。
+- 沿用项目架构、风格、错误边界和文档惯例；错误保留原因，不吞错或伪装成功，异步失败须有处理方。
+- 注释只补非显然约束；不为假设复用增加抽象；保持接口兼容，破坏性变更先确认。
+- 本项目脚本使用 Node.js，兼容 Windows/macOS/Linux 路径和进程调用，不硬编码开发机路径。
+- 验证范围见 `rules/common/testing.md`，Git 与授权见 `rules/05-git-workflow.md`。
+- 方法可调整；授权、安全、用户改动保护、项目明确要求和真实报告不能放宽。

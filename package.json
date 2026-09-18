@@ -17,12 +17,14 @@
   },
   "scripts": {
     "verify": "node scripts/verify-harness.js",
+    "test:adaptive-contracts": "node scripts/verify/adaptive-contract-checks.test.js",
     "test:manifest": "node scripts/verify/skill-manifest-checks.test.js",
     "test:invocation": "node scripts/verify/skill-invocation.test.js",
     "test:continuation": "node scripts/verify/continuation-checks.test.js",
     "test:install-rules": "node scripts/verify/install-rules.test.js",
     "verify:upstream": "node scripts/verify-upstream-capability-map.js",
-    "pack:dry-run": "npm pack --dry-run"
+    "pack:dry-run": "npm pack --dry-run",
+    "test:install-host": "node scripts/verify/install-host.test.js"
   },
   "dependencies": {
     "commonmark": "0.31.2",

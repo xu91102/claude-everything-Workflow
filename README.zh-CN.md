@@ -58,20 +58,20 @@ node bin/claude-everything-workflow.js install --dry-run
 node bin/claude-everything-workflow.js install
 ```
 
-命令行入口会按系统选择 shell 或 PowerShell 安装器，同样支持 `--claude-only` 和 `--codex-only`。npm 命令安装已发布版本；源码命令安装当前 checkout 中的内容。
+命令行、shell 和 PowerShell 入口共用一个按宿主裁剪的 Node.js 安装器，同样支持 `--claude-only` 和 `--codex-only`。npm 命令安装已发布版本；源码命令安装当前 checkout 中的内容。
 
 ### 安装会修改什么
 
 | 宿主 | 安装目录 | 接入方式 |
 | --- | --- | --- |
 | Claude Code | `~/.claude/` | 共享工作流文件、`CLAUDE.md` 入口、规则，以及合并后的 hooks 配置。 |
-| Codex | `~/.codex/` | 共享工作流文件和 `AGENTS.md`；不会自动启用 Claude Code hooks。 |
+| Codex | `~/.codex/` | 专项技能、必要规则和 `AGENTS.md`；不安装通用路由或 Claude hooks。 |
 
 安装修改的是用户级目录，可能影响多个项目。顶层配置内容不同时会先备份；共享目录中的同名文件按仓库版本同步。未知文件通常保留，已登记的退役文件按明确清单清理。升级前请备份对共享文件的个人修改。不要直接复制整个 `rules/` 目录，安装器会处理两个宿主不同的规则加载位置。
 
 ## 如何使用
 
-直接用自然语言描述任务，路由会选择相关技能，不需要记住所有 Skill 名称。
+直接用自然语言描述任务；Codex 直接开发，只有专项任务才加载对应技能。
 
 ```text
 提出任务 → 读取现场 → 选择相关工作流
@@ -82,17 +82,17 @@ node bin/claude-everything-workflow.js install
 
 > 排查这个请求为什么偶发失败。沿实际调用链验证不同解释，确认根因后修复，报告验证结果和仍未验证的部分。
 
-明确、低风险的工作走较短路径；未决用户选择、正式设计和回退成本高的工作需要更多确认与验证。需要时可使用跨会话任务与并行代理。具体路由及授权边界由[工作流入口](skills/using-superpowers/SKILL.md)和[项目规则](AGENTS.md)维护。
+明确、低风险的工作走较短路径；未决用户选择、正式设计和回退成本高的工作需要更多确认与验证。需要时可使用跨会话任务与并行代理。普通开发直接进行；专项验收与授权边界见[项目规则](AGENTS.md)。
 
 | 入口 | 用途 |
 | --- | --- |
 | `/to-spec` | 编写正式工程设计，交由用户批准。 |
-| `/code-review` | 按明确范围和固定基线审查改动。 |
+| Codex 原生审查 / 专项 `code-review` | 按明确范围和固定基线审查改动。 |
 | `/verify` | 运行相关验证。 |
 | `/pr` | 在用户授权内整理提交与 PR。 |
-| `/learn` | 显式管理可复用学习及其评估。 |
+| `/learn`（选装） | 显式管理可复用学习及其评估。 |
 
-这些是仓库提供的命令定义，是否显示为原生斜杠命令取决于宿主；也可以用自然语言提出相同需求。
+除 Codex 原生审查外，其余为仓库命令定义，是否显示为斜杠命令取决于宿主；也可以用自然语言提出相同需求。
 
 ## 设计原则
 
@@ -154,3 +154,16 @@ npm run pack:dry-run
 ## 许可证
 
 采用 [MIT 开源许可证](LICENSE)。Copyright © 2026 xu91102。
+
+## 按宿主裁剪
+
+普通开发、审查、恢复、压缩和技能发现交给 Codex 原生入口；保留专项验收、隔离和授权约束。
+两端默认不安装 handoff 和 continuous-learning-v2；需要时使用
+`cew install --with-skill handoff` 或 `--with-skill continuous-learning-v2`。
+安装测试用 `--home DIR` 指向临时目录。默认不启用学习 Hook。
+[原生能力核实与边界](references/codex-native-capabilities.md)记录了本机版本和官方来源。
+
+PowerShell 对应参数为 `-CodexOnly`、`-ClaudeOnly`、`-DryRun`、`-InstallHome` 和
+`-WithSkill handoff,continuous-learning-v2`。升级只删除内容匹配已知分发版本的旧文件；
+个人修改与未知文件保留并提示，可能仍会被宿主加载。Codex 不写 config.toml，
+Claude 合并设置时保留个人环境变量、MCP 与同事件 hooks。

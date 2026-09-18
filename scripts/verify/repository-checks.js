@@ -19,7 +19,7 @@ function checkRouterAndAgentLinks() {
     "skills/subagent-driven-development/SKILL.md",
     "skill discovery or install request?",
     "external skill learning or edit?",
-    "process skills before implementation skills",
+    "not a mandatory sequence of artifacts",
     "skills/grilling/SKILL.md",
     "spec-gate",
     "skills/systematic-debugging/SKILL.md",
@@ -72,20 +72,20 @@ function checkTicketFirstDelivery() {
   ]);
   requireTokens("skills/implement/SKILL.md", [
     "test-driven-development",
-    "direct-scope contract",
+    "仅执行已批准的 tracker ticket",
     "无 ticket 范围不得 claim 或写入任何 tracker",
     "[references/ticket-delivery.md](references/ticket-delivery.md)",
   ]);
   requireTokens("skills/implement/references/ticket-delivery.md", [
-    "一个 fresh context",
+    "上下文隔离确有需要",
     "ticket as the Spec source",
-    "`/code-review --worktree <pre-ticket-base> --spec <ticket>`",
+    "fixed-base review with `skills/code-review/SKILL.md`",
   ]);
   requireTokens("skills/subagent-driven-development/SKILL.md", [
     "frontier ticket",
     "fresh subagent",
     "one ticket",
-    "router is executing a user-authorized delivery scope",
+    "current task is executing a user-authorized delivery scope",
     "separate worktree",
     "controller-owned integration worktree",
     "integrate-and-verify gate",
@@ -176,17 +176,7 @@ function checkDebuggingSkill() {
 }
 
 function checkCodeReviewContracts() {
-  requireTokens("commands/code-review.md", [
-    "固定基点",
-    "`git diff <base>...HEAD`",
-    "`git diff <base>`",
-    "--worktree",
-    "--spec <path>",
-    "Spec 轴",
-    "skills/code-review/SKILL.md",
-    "并行",
-  ]);
-
+  if (exists("commands/code-review.md")) fail("ordinary review wrapper must be removed");
   requireTokens("skills/code-review/SKILL.md", [
     "two parallel subagents",
     "tracked staged and unstaged",
@@ -244,24 +234,24 @@ function checkTrackerDeliveryLifecycle() {
 
   requireTokens("skills/implement/SKILL.md", [
     "rules/05-git-workflow.md",
-    "clean baseline",
+    "基线失败",
     "pre-delivery base",
     "不覆盖 commit、push 或创建 PR",
     "无 ticket 范围不得 claim 或写入任何 tracker",
   ]);
   requireTokens("rules/05-git-workflow.md", [
-    "开发新功能必须使用独立 `git worktree` 和任务分支",
-    "单文件新功能也不例外",
+    "已有安全任务分支",
+    "不丢弃或覆盖用户已有改动",
   ]);
   requireTokens("skills/implement/references/ticket-delivery.md", [
     "## State Machine",
     deliveryLifecycle,
     "docs/agent-workflow/project-context.md",
-    "clean baseline",
+    "基线失败",
     "pre-ticket base",
-    "一个 fresh context",
+    "上下文隔离确有需要",
     "ticket as the Spec source",
-    "`/code-review --worktree <pre-ticket-base> --spec <ticket>`",
+    "fixed-base review with `skills/code-review/SKILL.md`",
     "frontier",
     "claim",
     "in-progress",

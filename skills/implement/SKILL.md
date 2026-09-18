@@ -1,22 +1,17 @@
 ---
 name: implement
-description: Deliver one authorized scope through implementation, review, and verification.
+description: Deliver an approved tracker ticket with acceptance, claim/resolve authorization and integration verification.
 ---
 
 # Implement
 
-执行 router 选定的一个连贯交付范围。Origin: `mattpocock/skills@2ab9580`，适配本项目授权与审查边界。
+执行已批准 ticket 的专项交付。Origin: `mattpocock/skills@2ab9580`，适配本项目授权与审查边界。
 
 ## 入口
 
-- direct scope：明确、低风险的用户交付请求。原始请求、目标行为、范围边界和相称验证组成
-  `direct-scope contract`；咨询不等于交付授权。
-- approved Spec scope：已获用户批准的 Spec 是范围与验收来源。
-- ticket：仅此路径先读取 [references/ticket-delivery.md](references/ticket-delivery.md)，核实 frontier，
-  再按该引用与下方共用步骤交付。无 ticket 范围不得 claim 或写入任何 tracker。
-
-缺少可复核验收、存在实质用户决策或命中尚未批准的 formal Spec/高风险边界时，返回 router，不能猜测或实施。
-普通范围使用当前会话，不为满足流程创建新的上下文或 tracker。
+仅执行已批准的 tracker ticket；普通开发直接使用宿主能力，不加载本 Skill。
+先读取 [references/ticket-delivery.md](references/ticket-delivery.md)，确认验收、frontier 和相应授权。
+无 ticket 范围不得 claim 或写入任何 tracker。尚未批准的必需 Spec 或关键用户决策需先解决。
 
 ## 隔离与基线
 
@@ -25,12 +20,12 @@ description: Deliver one authorized scope through implementation, review, and ve
 
 是否创建 worktree 及具体操作按 `rules/05-git-workflow.md` 执行，不嵌套创建。
 只做必要 setup 与相关 baseline tests。
-只有 clean baseline 才进入实施；失败时记录命令、失败与工作区状态，返回 router 处理，不能伪装通过。
+按 `rules/common/testing.md` 分类基线失败：目标失败是有效复现，可以继续修复；已证实无关的历史失败记录后继续；影响结果判断的环境或相关失败需处理或明确报告验证受阻。不得伪装通过。
 
 ## 实施、审查与验证
 
-1. 以当前范围合同实施最小完整改动，不再生成逐文件、逐步骤的实施计划。行为变化按
-   `test-driven-development` 的垂直切片推进；纯文档或没有可测试行为的整理运行对应校验。
+1. 以当前范围合同实施最小完整改动，不再生成逐文件、逐步骤的实施计划。测试方法按
+   `rules/common/testing.md` 选择；采用 TDD 时读取 `test-driven-development`，纯文档或没有可测试行为的整理运行对应校验。
    已确认失败原因正确的预期 TDD RED 继续 GREEN，不触发调试。其他失败按
    `systematic-debugging` 的分级入口处理，不跳过真实失败。
 2. 用 pre-delivery base 冻结包含 task-owned committed、staged、unstaged、untracked 的完整审查包，
@@ -42,7 +37,6 @@ description: Deliver one authorized scope through implementation, review, and ve
 
 ## 收尾与授权
 
-- 无 ticket：选定的 review 与 fresh verification 均通过后报告范围、证据和风险；到此结束，不查询或刷新 frontier。
 - ticket：验收、review 和 verification 全部通过后，回到 ticket 引用完成 resolve 与后续处理。
 - 本地交付授权不覆盖 commit、push 或创建 PR，也不扩张产品范围。用户已明确授权的后续动作按授权继续，
   不重复索要同一批准；PR 仍须通过 `/verify pre-pr`。外部写入、merge 和 cleanup 遵循 Git 规则与用户授权。

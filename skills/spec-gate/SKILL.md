@@ -29,7 +29,7 @@ Treat a confirmed handoff as approved input. Reopen a decision only when its rec
 1. Confirm that a formal Spec is explicitly requested or that the task crosses a high-risk boundary.
 2. Inspect discoverable facts instead of turning them into questions.
 3. Build a decision inventory from the task, handoff, and repository evidence.
-4. Identify the highest stable public seams where acceptance behavior will be tested. Prefer existing
+4. Identify the suitable stable seams under `rules/common/testing.md` where acceptance behavior will be tested. Prefer existing
    seams; a new seam that changes a public contract or architecture is a consequential decision.
 5. Separate agent-owned reversible details from user-owned consequential decisions.
 6. Return an outcome immediately if the task is not applicable or a consequential decision remains unresolved.
@@ -48,7 +48,7 @@ BLOCKED_BY_UNRESOLVED_DECISION
 - evidence
 ```
 
-This ends only the current Spec drafting call. Return the outcome to `skills/using-superpowers/SKILL.md`
+This ends only the current Spec drafting call. Return the outcome to `references/process-outcomes.md`
 for continuation within the authorized task. Do not ask a question, generate options, choose for the user,
 add `resume_target`, or invoke grilling here.
 
@@ -62,25 +62,17 @@ Save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` unless the user pr
 
 ## Spec Schema
 
-Use this section order, omitting only optional numbered User Stories when they do not fit the task:
+Judge completeness by decisions and acceptance, not section count or order. Merge related topics and omit
+inapplicable sections; do not create placeholders to fill a template. Cover what affects implementation:
 
-1. `背景` — problem statement and current cost.
-2. `目标`.
-3. `非目标` / out of scope.
-4. `需求` — behavior, compatibility, constraints, and optional User Stories.
-5. `现有上下文` — code facts, domain vocabulary, ADRs, patterns, and test precedents.
-6. `方案对比` — considered approaches and real trade-offs.
-7. `推荐方案` — selected solution and why.
-8. `Implementation Decisions` — modules, interfaces, public contracts, schemas, interactions, and migration decisions.
-9. `架构设计`.
-10. `组件与文件`.
-11. `数据流 / 接口`.
-12. `错误处理`.
-13. `测试策略` — testing decisions, highest available seam, precedents, normal and adversarial cases.
-14. `验收标准`.
-15. `风险与取舍`.
-16. `回滚`.
-17. `开放问题` — only non-blocking questions; write `无` when empty.
+- goal, scope, non-goals, current evidence and consequential decisions;
+- chosen approach and meaningful alternatives, interfaces and compatibility;
+- relevant architecture, data flow, failure behavior and migration;
+- test strategy at suitable seams and repeatable acceptance criteria;
+- risks, rollback and any non-blocking open questions.
+
+High-risk designs must make authorization, compatibility, migration safety and recovery clear where relevant.
+No blocking decision may be hidden by omitting a section.
 
 Do not include implementation snippets that will become stale. Do not present an unresolved branch as a settled decision.
 
@@ -92,7 +84,7 @@ Before returning a review outcome:
 2. Verify every consequential choice is resolved or explicitly delegated.
 3. Verify architecture, interfaces, failure behavior, migration, tests, acceptance, risk, and rollback agree.
 4. Verify each acceptance criterion maps to a repeatable automated or manual check.
-5. Verify the scope can produce either one coherent implementation ticket or a coherent ticket breakdown.
+5. Verify the scope can produce either one coherent delivery scope or, when needed, a ticket breakdown.
 6. For complex or high-risk specs, read `references/spec-document-reviewer-prompt.md` and apply its calibrated review.
 
 Fix non-decision defects inline and repeat the self-review. A newly exposed consequential decision returns the blocking contract instead of entering user review.
@@ -119,7 +111,7 @@ Read `docs/agent-workflow/project-context.md` when it exists:
 Record the local path and optional tracker reference together so `to-tickets` can consume one canonical
 approved source. Publication does not authorize tickets, implementation, commit or PR creation.
 
-After approval/publication, return control to `skills/using-superpowers/SKILL.md`; do not invoke
+After approval/publication, return control to `references/process-outcomes.md`; do not invoke
 planning directly.
 
 ## Outcomes

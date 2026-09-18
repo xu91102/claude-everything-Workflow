@@ -1,7 +1,7 @@
 {
   "version": 1,
   "algorithm": "sha256-lf",
-  "source": "origin/main history through a4f938bc70f3f85e4dcfad4d2534f522b823ea20",
+  "source": "origin/main history through a4f938bc70f3f85e4dcfad4d2534f522b823ea20; context-hygiene and testing from f74c46848d98167d44ed30411b3bb1a04897a377",
   "files": {
     "common/agent-orchestration.md": [
       "0518525f093f91b60dbae5259e0f228686687abdd65787b880f59e286c2e546c",
@@ -14,6 +14,7 @@
     "common/context-hygiene.md": [
       "0e98ade57a4739e99f0f9651b2e01507241849ba6f8dcdb676755694b4347a39",
       "366c50d792cac5339e90e23d727dff5e818b2797a904284f3aac809377ee9a0c",
+      "65bc9a40aa4f79f0e882853a6c355e4109c46468073ba617cdced00a8ed3ced4",
       "d6462e16f190e9d8b737f9fb57039606a637920ca681641b0bcf6dbaad671ea2",
       "de9a23f664094629974ec24697a196822f33d4f222b70b821831089d4d761a6e"
     ],
@@ -63,6 +64,7 @@
       "e54cd3640e4d8e858e384161b710c9cd7ccb1fa7bdeb612b5ca1d5855a5a4d8f"
     ],
     "common/testing.md": [
+      "2cd3c94326ac5ba58bb040d9f1850e71ad82cc60cdefb49a264984130ba3fdeb",
       "5e8226b3bb360f107b68e99ead86799f3b3180635ab2c114dd32021feecbe4c9",
       "660ec721b0a9d2a8b8c7806039454f6e30e509c57c2329b3f705627b81ed06f3",
       "6cd550064aee456c58d2424c38f7c63f90afe8f89114bfc3ccfb1c4dd07ccfc6",

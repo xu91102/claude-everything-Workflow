@@ -2,7 +2,7 @@
 
 正式 skill 保持 `skills/<skill-name>/SKILL.md` 平铺结构，兼容 Claude Code、Codex 和打包安装的发现方式。分类只在本索引维护，不用物理嵌套目录；需要长材料时，放到对应 skill 的 `references/`。
 
-入口只维护选择与通用约束：`using-superpowers` 的过程返回处理在 `references/process-outcomes.md`，`implement` 的 ticket 状态机在 `references/ticket-delivery.md`。只在对应模式读取；普通直接交付不加载这两份引用。
+普通开发直接使用宿主能力；专项续接见 `references/process-outcomes.md`，ticket 状态机见 `skills/implement/references/ticket-delivery.md`。Codex 不安装通用路由，handoff 和 continuous-learning-v2 在两端均为选装。
 
 调用策略登记在 `harness/manifest.json`，由 `npm run verify` 按宿主校验。`implicit` 允许模型在命中描述与正文条件时调用，不等于授权外部写入；本项目需要明确请求的入口接受自然语言，不要求用户再输入 `/name` 或 `$name`；路由不能把任务复杂度当作用户请求。Skill 正文仍按命中后加载，不能把分类索引当作全量加载清单。
 
@@ -10,14 +10,14 @@
 
 ## Process / 门禁
 
-- `using-superpowers`：工程交付及明确请求的工程工作流的 skill 路由、优先级和完成声明纪律。
+- `using-superpowers`：仅 Claude Code 的显式流程咨询，不是普通开发入口。
 - `grilling`：对计划、设计或重大用户决策进行单问式压力测试。
 - `spec-gate`：显式 formal spec 或高风险任务的零访谈成稿、自审和用户批准门。
 - `to-tickets`：把已批准工作拆成 tracer-bullet tickets 和 blocking graph。
-- `implement`：执行用户授权的低风险 direct scope、已批准 Spec scope 或 frontier ticket；仅 ticket 路径 claim、resolve 并刷新 frontier。
-- `subagent-driven-development`：router 对已授权范围发现多个相互独立的 frontier tickets 时，分派到隔离 worktree 的 fresh subagent。
+- `implement`：仅执行已批准 ticket，检查验收与 claim/resolve 授权。
+- `subagent-driven-development`：当前任务在已授权范围发现多个相互独立的 frontier tickets 时，分派到隔离 worktree 的 fresh subagent。
 - `triage`：对 Issue/外部 PR 分类、验证并形成 agent-ready brief。
-- `handoff`：将当前上下文脱敏压缩到临时 Markdown，供全新 session 接续。
+- `handoff`：选装；明确要求时生成脱敏可移植交接文档。
 
 ## 旁路设计能力
 
@@ -38,7 +38,7 @@
 
 ## Harness / 上下文与编排
 
-- `continuous-learning-v2`：学习系统的观察 Hook、project/global instinct、学习评估和演化。
+- `continuous-learning-v2`：选装的学习系统的观察 Hook、project/global instinct、学习评估和演化。
 
 ## Learn / 学习沉淀
 

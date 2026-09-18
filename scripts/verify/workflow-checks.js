@@ -35,16 +35,10 @@ function checkSuperpowersDevLoop() {
     "标准库",
     "已安装依赖",
     "最小新增代码",
-    "skills/using-superpowers/SKILL.md",
+    "普通开发直接完成",
   ]);
 
-  requireTokens("rules/common/skills-learning.md", [
-    "skills/using-superpowers/SKILL.md",
-    "路由权威来源",
-    "rules/01-base.md",
-    "rules/common/agent-orchestration.md",
-    "不凭记忆执行 skill",
-  ]);
+  requireTokens("rules/common/skills-learning.md", ["学习系统为可选安装", "最终可复用学习产物"]);
 
   // Skill 正文契约在各自的专门检查中维护；这里仅验证跨文件的闭环入口。
   // 避免同一组流程词在多个检查点重复登记，允许 Skill 删除解释性文案。
@@ -52,7 +46,7 @@ function checkSuperpowersDevLoop() {
   requireTokens("skills/test-driven-development/SKILL.md", [
     "## Red Test Gate",
     "失败测试",
-    "替代验证",
+    "已有有效失败测试即满足 RED",
   ]);
 
   requireTokens("commands/verify.md", [
@@ -152,7 +146,7 @@ function checkGrillingCoreContracts() {
     "Risk classification:",
     "Resume target:",
     "Reversal evidence:",
-    "return to `skills/using-superpowers/SKILL.md` for routing",
+    "return to `references/process-outcomes.md` for routing",
     "Existing Confirmed Handoff",
     "Do not re-ask them",
     "recorded reversal evidence appears",
@@ -194,58 +188,17 @@ function checkRouteOrdering() {
 
 function checkWorkflowDocuments() {
   runWorkflowOwnershipChecks({ read, fail, managedFiles });
-  requireTokens("skills/using-superpowers/SKILL.md", [
-    "shortest applicable path",
-    "File count, new features, and ordinary complexity affect",
-    "verification intensity, not the lane",
-    "A high-risk boundary",
-  ]);
-  requireTokens("rules/01-base.md", [
-    "rules/common/testing.md",
-    "skills/using-superpowers/SKILL.md",
-  ]);
-  requireTokens("rules/common/testing.md", [
-    "隔离端口和环境变量",
-    "等待 Web/API ready",
-  ]);
-  requireTokens("rules/common/context-hygiene.md", [
-    "任何外部 mutation",
-    "发送消息",
-    "写入云文档",
-  ]);
-  requireTokens("rules/common/hooks.md", [
-    "敏感内容只记录风险和证据位置",
-  ]);
-  requireTokens("rules/common/pr-automation.md", [
-    "失败检查不得跳过",
-    "Git/PR 操作按 `rules/05-git-workflow.md` 的授权边界执行",
-  ]);
-  for (const file of [
-    "rules/common/context-hygiene.md",
-    "rules/common/harness-engineering.md",
-    "rules/common/performance.md",
-  ]) {
-    requireTokens(file, ["rules/common/agent-orchestration.md"]);
-  }
-  requireTokens("rules/common/skills-learning.md", [
-    "路由权威来源",
-    "不要因为多文件或普通复杂度加载完整 process skill 链",
-    "rules/01-base.md",
-    "rules/common/agent-orchestration.md",
-  ]);
+  requireTokens("rules/01-base.md", ["rules/common/testing.md", "普通开发直接完成"]);
+  requireTokens("rules/common/testing.md", ["隔离端口和环境变量", "等待 Web/API ready"]);
+  requireTokens("rules/common/agent-orchestration.md", ["独立审查", "隔离工作区", "集成方负责", "明确授权"]);
+  requireTokens("rules/common/hooks.md", ["敏感内容只记录风险和证据位置"]);
+  requireTokens("rules/common/pr-automation.md", ["失败检查不得跳过"]);
 }
 
 function checkComplexityRules() {
-  const baseRules = read("rules/01-base.md");
-  if (
-    baseRules.includes(
-      "复杂任务包括新功能、架构调整、多文件行为变化",
-    )
-  ) {
-    fail(
-      "rules/01-base.md should not classify new or multi-file behavior work as full-flow by default",
-    );
-  }
+  requireTokens("rules/01-base.md", ["普通开发直接完成"]);
+  requireTokens("skills/implement/SKILL.md", ["仅执行已批准的 tracker ticket"]);
+  requireTokens("skills/using-superpowers/SKILL.md", ["Codex 不安装本技能", "不作为普通开发必经入口"]);
 }
 
 function checkGrillingWorkflow() {
@@ -351,7 +304,7 @@ function checkCapabilityRouting() {
     "Agent-selected Delivery Topology",
     "delivery request in defined scope?",
     "independent frontier tickets with no overlapping write surface?",
-    "skills/implement/SKILL.md",
+    "direct development",
     "skills/subagent-driven-development/SKILL.md",
     "explicit prototype or runnable design question?",
     "skills/prototype/SKILL.md",
@@ -487,7 +440,7 @@ function checkDeliveryCapabilityContracts() {
   ]);
   requireTokens("skills/test-driven-development/SKILL.md", [
     "Public Seam",
-    "测试和调用方应穿过同一个 seam",
+    "需要证明持久化不变量",
     "固定事实",
     "真实系统边界",
     "tracer bullet",
@@ -543,6 +496,7 @@ function checkRemovedSkillReferences() {
   const allowedRetirementFiles = new Set([
     "README.md",
     "scripts/retired-skill-files.json",
+    "scripts/legacy-install-hashes.json",
     "scripts/upstream-capability-map.json",
     "scripts/upstream-capability-baseline.json",
   ]);

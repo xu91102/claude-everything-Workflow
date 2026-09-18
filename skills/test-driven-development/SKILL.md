@@ -1,6 +1,6 @@
 ---
 name: test-driven-development
-description: "Use for behavior changes with a test path: RED, minimal GREEN, REFACTOR, then verify."
+description: "Use when TDD is requested, project-required, or selected for a behavior change."
 ---
 
 # Test-Driven Development
@@ -14,17 +14,13 @@ description: "Use for behavior changes with a test path: RED, minimal GREEN, REF
 
 ## 何时使用
 
-- 新功能
-- bug 修复
-- 重构
-- 行为变化
-
-没有可测试行为的文档、格式或纯配置整理，直接运行对应校验，不需要为免写测试请求批准。
-生成代码验证生成入口；原型按用户要求验证所探索的行为。涉及可测试行为或用户明确要求 TDD 时执行下述流程。
+方法选择以 `rules/common/testing.md` 为准。用户或目标项目明确要求 TDD 时严格执行；其他任务选择 TDD 时使用下述循环。
+已有测试正确复现目标失败时复用该 RED，不重复创建测试。无行为变化的重构不人为制造 RED；
+文档、配置和探索任务使用适合目标的验证，正式交付不免除质量要求。
 
 ## 核心规则
 
-1. 先写一个最小失败测试。
+1. 复用正确复现目标失败的测试，或先写最小失败测试。
 2. 运行测试，确认它失败且失败原因正确。
 3. 写最少生产代码让测试通过。
 4. 再运行测试，确认相关测试全部通过。
@@ -37,19 +33,16 @@ description: "Use for behavior changes with a test path: RED, minimal GREEN, REF
 
 ## Public Seam
 
-测试 seam 是观察行为的公共接口。测试和调用方应穿过同一个 seam，不读取私有状态或绕过
-接口到数据库验证。
+测试 seam 是观察待证明性质的接口。优先稳定、合适的公开接口；需要证明持久化不变量、
+协议契约或低层性质时，可以检查数据库状态、使用契约测试或更低层验证，不为测试暴露无关接口。
 
-- formal Spec、plan 或 agent-ready ticket 必须预先记录关键测试 seams。
-- direct 小任务若现有公共接口和测试先例已明确，先声明所用 seam 后直接推进，不制造用户问题。
-- 若 seam 选择会改变公共契约、架构或测试成本，返回中央路由解决该用户决策。
-- 优先最高层且稳定的 seam；减少跨代码库暴露的测试接口数量。
+- 在确有需要的 Spec 或 ticket 中记录关键验证接口；直接任务可沿用现有测试先例，不制造额外工件。
+- 可逆的测试层级选择由模型决定；实质改变公共契约或架构且无法查明的用户决策返回中央路由。
 
 ## Red Test Gate
 
-新功能、bug 修复、重构引起行为变化、公共 API 变化和用户流程变化，必须先写失败测试并运行确认失败原因正确，才能写行为实现代码。
-
-如果当前任务确实没有可测试行为，先记录原因，并给出替代验证方式，例如脚本 smoke test、文档 diff 检查、人工验收步骤或 harness 验证命令。
+本门槛适用于已选择或被明确要求的 TDD：在行为实现前确认测试失败且原因正确；已有有效失败测试即满足 RED。
+测试加载、依赖或语法错误不算有效 RED。不得通过删除有效测试、削弱断言或修改预期掩盖错误。
 
 ## 垂直切片纪律
 
@@ -83,9 +76,9 @@ description: "Use for behavior changes with a test path: RED, minimal GREEN, REF
 
 ## 完成检查
 
-- 看见测试先失败。
+- 所选 TDD 切片有实现前的有效失败证据，可来自已有测试。
 - 失败原因符合预期。
 - 最小实现后测试通过。
 - 相关测试无错误、无警告。
 - 边界条件和错误路径有覆盖。
-- 每个新增行为都能追溯到对应失败测试。
+- TDD 切片能追溯到对应失败测试；最终验收仍按测试规则覆盖完整范围。

@@ -1,6 +1,6 @@
 ---
 name: using-superpowers
-description: Route engineering delivery and explicitly requested engineering workflows; resume their process outcomes.
+description: Claude Code only — select specialized workflows when workflow guidance is explicitly requested.
 ---
 
 # Using Superpowers
@@ -9,7 +9,7 @@ Own routing and continuation. Skills return outcomes here instead of selecting o
 
 ## Applicability
 
-用于工程交付（实现、调试、测试、审查）及用户明确请求的工程工作流，并接续这些流程的返回结果。
+仅供 Claude Code 的显式工作流咨询；不作为普通开发必经入口，Codex 不安装本技能。
 普通问答、翻译、总结和一般资料检索直接处理；复杂度本身不触发本路由。
 
 ## Priority
@@ -39,7 +39,11 @@ verification intensity, not the lane. Resolve only consequential user decisions 
 
 ## Routing
 
-Use process skills before implementation skills:
+Select only the capabilities needed for the goal; this map is not a mandatory sequence of artifacts.
+Audit and advice are read-only unless the user authorizes implementation; routing never grants write permission.
+TDD and isolation follow their rule owners; a low-risk small feature on a safe task branch needs no extra Spec, ticket or worktree unless explicitly requested.
+
+Routing map:
 
 ```text
 Task arrives
@@ -65,9 +69,9 @@ Task arrives
        -> durable multi-session/tracker graph?     -> skills/to-tickets/SKILL.md
        -> independent frontier tickets with no overlapping write surface?
                                                      -> skills/subagent-driven-development/SKILL.md
-       -> otherwise                                 -> skills/implement/SKILL.md
-  -> behavior change with a test path?             -> test-driven-development
-  -> new feature or other Git-rule isolation need? -> rules/05-git-workflow.md
+       -> otherwise                                 -> direct development
+  -> testing method or behavior verification?      -> rules/common/testing.md
+  -> Git-rule isolation need?                      -> rules/05-git-workflow.md
   -> completion, fixed, or ready claim?            -> rules/common/testing.md
   -> skill discovery or install request?           -> use available host tooling for the explicit request
   -> external skill learning or edit?              -> rules/common/skills-learning.md
@@ -83,15 +87,15 @@ A high-risk boundary is a costly-to-reverse architecture or service boundary, pu
 
 ### Agent-selected Delivery Topology
 
-用户要求完成一个定义明确的交付范围后，router 自行选择 `implement`、`to-tickets` 或
+显式咨询交付方法时，按范围建议直接开发、ticket 专项 `implement`、`to-tickets` 或
 `subagent-driven-development`；选择依据是持续性、依赖图、写入面和验证成本，而不是用户是否记得某个
 Skill 名称。开始时用一行说明所选拓扑及理由，然后继续执行。
 
-- 一个可在当前上下文完成的连贯范围，使用 `implement`。
+- 一个可在当前上下文完成的连贯范围，直接开发；`implement` 仅用于已批准 ticket。
 - 需要跨会话、tracker 或可恢复依赖图时，使用 `to-tickets`。这仍必须展示 ticket 的行为、验收标准与
   blocker，并在发布前获得用户对 ticket contract 的批准。
 - 只有至少两张已批准、无 blocker、写入面不重叠的 frontier tickets，才使用 SDD。不能安全并行时选择
-  串行 `implement`，不要为了使用 subagent 人为拆票。
+  串行交付，不要为了使用 subagent 人为拆票。
 
 用户的交付授权覆盖已批准范围内的本地实现与拓扑选择，不覆盖新的产品范围、未决用户决策、外部 tracker
 mutation、commit、push、PR 或不可逆副作用。新的 frontier 只有仍在该授权范围内时才能由 router 再次选择
@@ -100,7 +104,7 @@ mutation、commit、push、PR 或不可逆副作用。新的 frontier 只有仍�
 ## Process Outcomes
 
 Only when processing a grilling/Spec outcome or preparing a cross-session handoff, read
-[references/process-outcomes.md](references/process-outcomes.md). Follow the matching outcome before
+[process outcomes](../../references/process-outcomes.md). Follow the matching outcome before
 continuing; a self-reviewed Spec is not user approval. Ordinary direct delivery does not load this reference.
 
 ## Compatibility Alias

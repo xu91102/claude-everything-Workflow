@@ -13,15 +13,15 @@
 - 优先读取已有 `docs/agent-workflow/project-context.md`，缺少时使用仓库或会话中已确认的追踪配置；
   不因缺少文件要求执行初始化。读取完整 ticket 和 blocking 状态；必须位于
   open + unblocked + unclaimed frontier。`What to build`、验收标准和 blocker 构成交付合同。
-- 每次在一个 fresh context 中完成一张 ticket。pre-delivery base 同时记为 pre-ticket base。
-- 按入口完成隔离并取得 clean baseline 后，本地 tracker 可将选定 ticket 从 `ready-for-agent`
+- 每次完成一张 ticket，只有上下文隔离确有需要时使用 fresh context。pre-delivery base 同时记为 pre-ticket base。
+- 按入口确认隔离需求并分类记录基线失败后，本地 tracker 可将选定 ticket 从 `ready-for-agent`
   改为 `in-progress`；不改其他 ticket。外部 tracker 先展示准确 mutation，并取得 explicit confirmation，
   已覆盖该动作的明确授权有效。
 - 每个已验证切片只向当前 ticket 追加简短 progress 记录。
 
 ## REVIEW 与 VERIFY
 
-ticket as the Spec source：`/code-review --worktree <pre-ticket-base> --spec <ticket>`。
+ticket as the Spec source：fixed-base review with `skills/code-review/SKILL.md`。
 审查包和 fresh verification 要求以入口为准；失败时 ticket 保持 `in-progress`，不得进入 RESOLVE。
 
 ## RESOLVE 与 REFRESH_FRONTIER
@@ -29,12 +29,12 @@ ticket as the Spec source：`/code-review --worktree <pre-ticket-base> --spec <t
 验收、选定的 review 与 fresh verification 全部通过后才 resolve：本地 tracker 更新状态并记录证据；
 外部评论或关闭需要相应明确授权。不得自动关闭外部 Issue 或 parent issue。
 
-resolve 后重查依赖图并返回 router。newly unlocked tickets 仍在已授权范围内时，router
+resolve 后重查依赖图并返回 当前任务。newly unlocked tickets 仍在已授权范围内时，当前任务
 可重新选择串行 `implement` 或安全 SDD；超出范围则报告 frontier 并停止。
 
 ## FINISH_DELIVERY
 
-- frontier 非空：返回 graph、newly unlocked tickets 和 blockers；由 router 决定下一张。
+- frontier 非空：返回 graph、newly unlocked tickets 和 blockers；由 当前任务 决定下一张。
 - frontier 为空但仍有 open tickets：返回 `BLOCKED_GRAPH`，列出依赖、循环、claim 冲突或状态异常，
   保持交付未完成，不能进入 PR 收尾。
 - 只有 open ticket count = 0：以 feature/worktree 起点为固定基点执行全分支相称 review，再运行

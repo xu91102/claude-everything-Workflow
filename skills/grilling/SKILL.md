@@ -48,7 +48,7 @@ After each answer:
 
 ### Inline uncertainty mode
 
-Use when the central router finds a consequential decision blocking the shortest safe path. Ask only the highest-value unresolved question and stop as soon as the answer is sufficient.
+Use when the central current task finds a consequential decision blocking the shortest safe path. Ask only the highest-value unresolved question and stop as soon as the answer is sufficient.
 
 For a low-risk task, return the handoff for direct or narrow-process routing. For high-risk/formal work, preserve its prior classification and use `resume_target: spec-gate`; do not call Spec Gate directly.
 
@@ -75,10 +75,10 @@ Rejected alternatives:
 Remaining risks:
 ```
 
-Use `resume_target: spec-gate` only when the router already classified the task as high-risk/formal. Do not invent a high-risk classification during handoff formatting.
+Use `resume_target: spec-gate` only when the current task already classified the task as high-risk/formal. Do not invent a high-risk classification during handoff formatting.
 
 For an explicit session, ask whether shared understanding has been reached. Do not act, write files, or enter implementation before confirmation. Inline mode may return without an extra confirmation gate when the blocking decision is resolved.
 
-After exit, return to `skills/using-superpowers/SKILL.md` for routing. Inline clarification after
-`BLOCKED_BY_UNRESOLVED_DECISION` returns the resolved decision and updated handoff to the router for a new
+After exit, return to `references/process-outcomes.md` for routing. Inline clarification after
+`BLOCKED_BY_UNRESOLVED_DECISION` returns the resolved decision and updated handoff to the current task for a new
 Spec Gate call; it does not resume incomplete drafting or approve the Spec.

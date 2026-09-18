@@ -9,15 +9,9 @@
 - 只有确定性、重复或高风险操作才增加 `scripts/`，新增脚本必须实际运行验证。
 - 不增加独立 README、安装指南或变更日志；修改后运行 `npm run verify`。
 
-## 路由权威来源
-
-- 工程交付及明确请求的工程工作流读取 `skills/using-superpowers/SKILL.md`；不要因为多文件或普通复杂度加载完整 process skill 链。
-- 全局门禁以 `rules/01-base.md` 为准；ticket/SDD 以 `rules/common/agent-orchestration.md` 和当前 Skill 为准。
-- 不凭记忆执行 skill；用户指令、AGENTS/CLAUDE 和项目 Rules 优先。
-
 ## 按需学习
 
-默认不后台学习。先用 `/learn eval --preview` 评估；确认可复用后保存到 `skills/learn/<category>/`。观察、instinct 和 `observations.jsonl` 只是候选证据，最终可复用学习产物以该分类目录为准。
+学习系统为可选安装，默认不安装或后台学习。先用 `/learn eval --preview` 评估；确认可复用后保存到 `skills/learn/<category>/`。观察、instinct 和 `observations.jsonl` 只是候选证据，最终可复用学习产物以该分类目录为准。
 
 ## 外部 Skill
 

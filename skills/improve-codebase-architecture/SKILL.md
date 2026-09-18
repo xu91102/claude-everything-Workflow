@@ -42,6 +42,6 @@ After the user chooses a candidate:
 1. Use `skills/grilling/SKILL.md` for consequential choices.
 2. Use `skills/domain-modeling/SKILL.md` when domain language or an ADR-worthy decision changes.
 3. Use `skills/codebase-design/references/design-it-twice.md` when interface alternatives remain.
-4. Return the resolved candidate to the central router for Spec/planning classification.
+4. Return the resolved candidate to the central current task for Spec/planning classification.
 
 Do not turn an architecture audit into an unapproved refactor.

@@ -1,7 +1,6 @@
 # Process Outcomes
 
-Read only for a grilling/Spec outcome or a cross-session handoff. Routing belongs to
-`skills/using-superpowers/SKILL.md`; this reference owns the outcome handling details.
+Read only for a grilling/Spec outcome or a cross-session handoff. The current task owns continuation; this reference only handles specialized outcomes.
 
 ## Grilling handoff
 
@@ -11,12 +10,12 @@ process. A high-risk/formal task with `resume_target: spec-gate` enters a fresh 
 ## Spec Gate ready
 
 `READY_FOR_USER_REVIEW` means the local artifact passed self-review but is not approved. Present the
-path and wait for explicit approval. Approval returns to the router, which selects a delivery topology
+path and wait for explicit approval. Approval returns to the current task, which selects a delivery topology
 from the approved scope without waiting for the user to name the next Skill.
 
 ## Spec Gate blocked
 
-`BLOCKED_BY_UNRESOLVED_DECISION` ends the current Spec drafting call and returns to the router:
+`BLOCKED_BY_UNRESOLVED_DECISION` ends the current Spec drafting call and returns to the current task:
 
 1. Preserve the confirmed decisions and evidence; do not draft through an unresolved decision.
 2. Show a compact decision map and use grilling inline to ask the missing consequential question within
@@ -32,13 +31,9 @@ Do not repeat the question. Only reversal evidence or an invalidated premise can
 
 ## Spec Gate not applicable
 
-`NOT_APPLICABLE` returns to the router. Select the shortest applicable path without asking the
+`NOT_APPLICABLE` returns to the current task. Select the shortest applicable path without asking the
 originating Skill to recommend a successor.
 
-## Cross-session handoff
+## Optional handoff
 
-When a prototype detour needs isolation or the current context is leaving its reliable reasoning zone,
-recommend a handoff and wait for the user's request or acceptance before creating the temporary
-document. A clear natural-language request is sufficient; do not require command syntax.
-The handoff ends the current flow; a fresh session references the returned path and enters the router.
-Do not substitute handoff for durable Specs, ADRs, tickets, or verification evidence.
+Only create a redacted portable handoff when explicitly requested. Native resume and compaction handle ordinary continuation. Handoff does not replace durable Specs, tickets or evidence.

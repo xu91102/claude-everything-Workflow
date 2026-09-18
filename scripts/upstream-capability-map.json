@@ -18,7 +18,6 @@
       "upstream": "code-review",
       "status": "adapted",
       "evidence": [
-        "commands/code-review.md",
         "skills/code-review/SKILL.md",
         "skills/code-review/references/standards-reviewer-prompt.md",
         "skills/code-review/references/spec-reviewer-prompt.md"
