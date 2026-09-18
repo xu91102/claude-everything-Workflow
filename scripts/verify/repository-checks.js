@@ -210,10 +210,6 @@ function checkCodeReviewContracts() {
     "NOT RUN",
   ]);
 
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "固定基点下按风险选择自审、独立或双轴审查",
-  ]);
-
   requireTokens("skills/implement/references/ticket-delivery.md", [
     "pre-ticket base",
     "ticket as the Spec source",

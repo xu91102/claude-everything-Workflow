@@ -25,12 +25,7 @@ function bindContext(context) {
   } = context);
 }
 
-function checkReadmeWorkflowContract() {
-  requireTokens("references/workflow-guide.zh-CN.md", ["普通开发直接", "原生入口", "默认不安装 handoff", "选择或明确要求 TDD 时", "没有新鲜验证证据", "没有 verify，不进入 PR"]);
-}
-
 function checkSuperpowersDevLoop() {
-  checkReadmeWorkflowContract();
 
   requireTokens("rules/01-base.md", [
     "# 执行原则",
@@ -499,7 +494,6 @@ function checkRemovedSkillReferences() {
     "wayfinder",
   ];
   const allowedRetirementFiles = new Set([
-    "references/workflow-guide.zh-CN.md",
     "README.md",
     "scripts/retired-skill-files.json",
     "scripts/upstream-capability-map.json",
@@ -523,18 +517,6 @@ function checkRemovedSkillReferences() {
     }
   }
 
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "Skill 迁移说明",
-    "`discover-unknowns-zh` 已退休",
-    "`iterative-retrieval` 已退休",
-    "`research`",
-    "`prototype`",
-    "`to-tickets`",
-    "`implementation-notes`、`explainer` 和 `quiz` 工件链不再属于",
-    "`skill-creator` 已退休",
-    "`rules/common/skills-learning.md`",
-    "scripts/upstream-capability-map.json",
-  ]);
   requireTokens("scripts/retired-skill-files.json", retiredSkills);
   requireTokens("rules/common/skills-learning.md", [
     "Skill 创建和更新遵循本规则",

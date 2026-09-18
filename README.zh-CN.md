@@ -126,7 +126,6 @@ claude-everything-Workflow/
 ## 文档
 
 - [Skill 分类索引](skills/README.md)：可用工作流及其分类。
-- [Workflow 进阶指南](references/workflow-guide.zh-CN.md)：安装细节、流程约定、迁移和维护说明。
 - [排障工作流](skills/systematic-debugging/SKILL.md)：调查方法与完成条件。
 - [验证规则](rules/common/testing.md)：声明完成前需要哪些证据。
 
@@ -163,3 +162,8 @@ npm run pack:dry-run
 `cew install --with-skill handoff` 或 `--with-skill continuous-learning-v2`。
 安装测试用 `--home DIR` 指向临时目录。默认不启用学习 Hook。
 [原生能力核实与边界](references/codex-native-capabilities.md)记录了本机版本和官方来源。
+
+PowerShell 对应参数为 `-CodexOnly`、`-ClaudeOnly`、`-DryRun`、`-InstallHome` 和
+`-WithSkill handoff,continuous-learning-v2`。升级只删除内容匹配已知分发版本的旧文件；
+个人修改与未知文件保留并提示，可能仍会被宿主加载。Codex 不写 config.toml，
+Claude 合并设置时保留个人环境变量、MCP 与同事件 hooks。

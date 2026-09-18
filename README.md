@@ -126,7 +126,6 @@ claude-everything-Workflow/
 ## Documentation
 
 - [Skill catalog](skills/README.md) — available workflows and their categories (Chinese).
-- [Advanced workflow guide](references/workflow-guide.zh-CN.md) — installation details, workflow contracts, migration notes, and maintenance (Chinese).
 - [Debugging workflow](skills/systematic-debugging/SKILL.md) — investigation and completion criteria.
 - [Verification rules](rules/common/testing.md) — evidence needed before declaring work complete.
 

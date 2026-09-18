@@ -3,7 +3,6 @@
 const ACTIVE_BRAINSTORMING_REFERENCE = "skills/brainstorming/SKILL.md";
 const PROCESS_OUTCOMES = "references/process-outcomes.md";
 const BRAINSTORMING_REFERENCE_ALLOWLIST = new Set([
-  "references/workflow-guide.zh-CN.md",
   "README.md",
   "skills/using-superpowers/SKILL.md",
   "scripts/install.sh",
