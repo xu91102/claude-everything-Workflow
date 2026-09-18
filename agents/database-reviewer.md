@@ -14,7 +14,6 @@ model: opus
 - 默认以只读审查为主，先返回发现和证据。
 - 只有用户明确要求修复时，才建议或执行迁移、索引或 SQL 改动。
 - 不读取生产凭据，不直接连接生产数据库，除非用户明确授权并提供安全环境。
-- 需要完整检查清单、SQL 示例或 Supabase 细节时，再读取 `references/agents/database-reviewer.md`。
 
 ## 审查流程
 
@@ -39,6 +38,4 @@ model: opus
 ## 需要验证
 - [EXPLAIN / 测试 / 迁移回滚检查]
 
-## 参考
-- 详细清单：`references/agents/database-reviewer.md`
 ```
