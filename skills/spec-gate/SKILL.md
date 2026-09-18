@@ -48,7 +48,7 @@ BLOCKED_BY_UNRESOLVED_DECISION
 - evidence
 ```
 
-This ends only the current Spec drafting call. Return the outcome to `skills/using-superpowers/SKILL.md`
+This ends only the current Spec drafting call. Return the outcome to `references/process-outcomes.md`
 for continuation within the authorized task. Do not ask a question, generate options, choose for the user,
 add `resume_target`, or invoke grilling here.
 
@@ -111,7 +111,7 @@ Read `docs/agent-workflow/project-context.md` when it exists:
 Record the local path and optional tracker reference together so `to-tickets` can consume one canonical
 approved source. Publication does not authorize tickets, implementation, commit or PR creation.
 
-After approval/publication, return control to `skills/using-superpowers/SKILL.md`; do not invoke
+After approval/publication, return control to `references/process-outcomes.md`; do not invoke
 planning directly.
 
 ## Outcomes

@@ -69,9 +69,21 @@ jobs:
           /bin/bash --version
           npm run test:install-rules
 
+  test-windows-installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Test PowerShell installer and host profiles in temporary directories
+        run: |
+          npm run test:install-rules
+          npm run test:install-host
+
   publish:
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-    needs: [verify, test-macos-installer]
+    needs: [verify, test-macos-installer, test-windows-installer]
     runs-on: ubuntu-latest
     permissions:
       contents: write

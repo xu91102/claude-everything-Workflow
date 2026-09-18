@@ -16,17 +16,6 @@
             "timeout": 5
           }
         ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" post:observe \"$HOME/.claude/skills/continuous-learning-v2/hooks/observe-v2.js\" strict post",
-            "async": true,
-            "timeout": 10
-          }
-        ]
       }
     ],
     "PreToolUse": [

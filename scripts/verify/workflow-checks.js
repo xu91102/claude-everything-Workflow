@@ -26,25 +26,7 @@ function bindContext(context) {
 }
 
 function checkReadmeWorkflowContract() {
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "Ticket-first 工程交付闭环",
-    "using-superpowers",
-    "?key=",
-    "4 小时",
-    "rules/05-git-workflow.md",
-    "to-tickets",
-    "implement",
-    "subagent-driven-development",
-    "rules/common/testing.md",
-    "完整流程适用时",
-    "没有批准的必需 Spec 不进入 ticket 或 implement",
-    "没有用户审核不进入实现",
-    "选择或明确要求 TDD 时",
-    "没有 review 不标记任务完成",
-    "没有新鲜验证证据，不声明完成、通过、已修复或 ready",
-    "没有 verify，不进入 PR",
-    "`/learn eval --preview` 是非阻塞学习建议门",
-  ]);
+  requireTokens("references/workflow-guide.zh-CN.md", ["普通开发直接", "原生入口", "默认不安装 handoff", "选择或明确要求 TDD 时", "没有新鲜验证证据", "没有 verify，不进入 PR"]);
 }
 
 function checkSuperpowersDevLoop() {
@@ -58,16 +40,10 @@ function checkSuperpowersDevLoop() {
     "标准库",
     "已安装依赖",
     "最小新增代码",
-    "skills/using-superpowers/SKILL.md",
+    "普通开发直接完成",
   ]);
 
-  requireTokens("rules/common/skills-learning.md", [
-    "skills/using-superpowers/SKILL.md",
-    "路由权威来源",
-    "rules/01-base.md",
-    "rules/common/agent-orchestration.md",
-    "不凭记忆执行 skill",
-  ]);
+  requireTokens("rules/common/skills-learning.md", ["学习系统为可选安装", "最终可复用学习产物"]);
 
   // Skill 正文契约在各自的专门检查中维护；这里仅验证跨文件的闭环入口。
   // 避免同一组流程词在多个检查点重复登记，允许 Skill 删除解释性文案。
@@ -175,7 +151,7 @@ function checkGrillingCoreContracts() {
     "Risk classification:",
     "Resume target:",
     "Reversal evidence:",
-    "return to `skills/using-superpowers/SKILL.md` for routing",
+    "return to `references/process-outcomes.md` for routing",
     "Existing Confirmed Handoff",
     "Do not re-ask them",
     "recorded reversal evidence appears",
@@ -217,67 +193,17 @@ function checkRouteOrdering() {
 
 function checkWorkflowDocuments() {
   runWorkflowOwnershipChecks({ read, fail, managedFiles });
-  requireTokens("skills/using-superpowers/SKILL.md", [
-    "shortest applicable path",
-    "File count, new features, and ordinary complexity affect",
-    "verification intensity, not the lane",
-    "A high-risk boundary",
-  ]);
-  requireTokens("rules/01-base.md", [
-    "rules/common/testing.md",
-    "skills/using-superpowers/SKILL.md",
-  ]);
-  requireTokens("rules/common/testing.md", [
-    "隔离端口和环境变量",
-    "等待 Web/API ready",
-  ]);
-  requireTokens("rules/common/context-hygiene.md", [
-    "任何外部 mutation",
-    "发送消息",
-    "写入云文档",
-  ]);
-  requireTokens("rules/common/hooks.md", [
-    "敏感内容只记录风险和证据位置",
-  ]);
-  requireTokens("rules/common/pr-automation.md", [
-    "失败检查不得跳过",
-    "Git/PR 操作按 `rules/05-git-workflow.md` 的授权边界执行",
-  ]);
-  for (const file of [
-    "rules/common/context-hygiene.md",
-    "rules/common/harness-engineering.md",
-    "rules/common/performance.md",
-  ]) {
-    requireTokens(file, ["rules/common/agent-orchestration.md"]);
-  }
-  requireTokens("rules/common/skills-learning.md", [
-    "路由权威来源",
-    "不要因为多文件或普通复杂度加载完整 process skill 链",
-    "rules/01-base.md",
-    "rules/common/agent-orchestration.md",
-  ]);
+  requireTokens("rules/01-base.md", ["rules/common/testing.md", "普通开发直接完成"]);
+  requireTokens("rules/common/testing.md", ["隔离端口和环境变量", "等待 Web/API ready"]);
+  requireTokens("rules/common/agent-orchestration.md", ["独立审查", "隔离工作区", "集成方负责", "明确授权"]);
+  requireTokens("rules/common/hooks.md", ["敏感内容只记录风险和证据位置"]);
+  requireTokens("rules/common/pr-automation.md", ["失败检查不得跳过"]);
 }
 
 function checkComplexityRules() {
-  const baseRules = read("rules/01-base.md");
-  if (
-    baseRules.includes(
-      "复杂任务包括新功能、架构调整、多文件行为变化",
-    )
-  ) {
-    fail(
-      "rules/01-base.md should not classify new or multi-file behavior work as full-flow by default",
-    );
-  }
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "直接提出 grilling 请求",
-    "`/to-spec`",
-    "`grilling` 是唯一需求澄清引擎",
-    "默认最短闭环",
-    "按风险逐级升级",
-    "完整流程适用时",
-    "明确低风险且无未决决策",
-  ]);
+  requireTokens("rules/01-base.md", ["普通开发直接完成"]);
+  requireTokens("skills/implement/SKILL.md", ["仅执行已批准的 tracker ticket"]);
+  requireTokens("skills/using-superpowers/SKILL.md", ["Codex 不安装本技能", "不作为普通开发必经入口"]);
 }
 
 function checkGrillingWorkflow() {
@@ -383,7 +309,7 @@ function checkCapabilityRouting() {
     "Agent-selected Delivery Topology",
     "delivery request in defined scope?",
     "independent frontier tickets with no overlapping write surface?",
-    "skills/implement/SKILL.md",
+    "direct development",
     "skills/subagent-driven-development/SKILL.md",
     "explicit prototype or runnable design question?",
     "skills/prototype/SKILL.md",

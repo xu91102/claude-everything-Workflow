@@ -1,12 +1,14 @@
 ---
 name: code-review
-description: Review a fixed diff and confirmed scope; use self-review for verifiable low-risk work and independent review as risk grows.
+description: Review approved ticket/Spec acceptance or perform independent risk review beyond ordinary native code review.
 ---
 
 # Code Review
 
 Origin: `mattpocock/skills@2ab9580`, adapted to fixed-base review and proportionate verification.
 Review depth belongs here; callers supply the scope, base, risk and available evidence.
+
+Ordinary Codex reviews use native `/review` or `codex review`. Use this supplement for ticket/Spec acceptance or required independent review. Native review alone does not prove those gates passed.
 
 ## Pin the review package
 

@@ -60,5 +60,5 @@ Compatibility and migration:
 Open consequential decisions:
 ```
 
-Return unresolved user decisions to `skills/using-superpowers/SKILL.md`. Do not implement or persist
+Return unresolved user decisions to `references/process-outcomes.md`. Do not implement or persist
 an architectural decision unless the active workflow authorizes it.

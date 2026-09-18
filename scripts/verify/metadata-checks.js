@@ -48,7 +48,6 @@ function checkCommands() {
         .sort()
     : [];
   const expectedCommands = [
-    "code-review.md",
     "learn.md",
     "pr.md",
     "to-spec.md",
@@ -72,7 +71,7 @@ function checkCommands() {
     .sort();
 
   for (const file of listed) {
-    if (!commands.includes(file)) {
+    if (!["review.md", "compact.md", "resume.md", "skills.md"].includes(file) && !commands.includes(file)) {
       fail(
         `README lists /${file.replace(/\.md$/, "")} but commands/${file} is missing`,
       );
@@ -141,120 +140,27 @@ function checkReadmeTreePaths() {
   }
 }
 
-function quotedPackageOnlyPaths(source, bodyPattern) {
-  const body = source.match(bodyPattern)?.[1] ?? "";
-  return [...body.matchAll(/"([^"]+)"/g)].map((match) =>
-    match[1].replaceAll("\\", "/"),
-  );
-}
-
-function checkPackageOnlyLists(ps, sh) {
-  const psPaths = quotedPackageOnlyPaths(
-    ps,
-    /\$packageOnlyFiles = @\(([\s\S]*?)\r?\n\s*\)/,
-  );
-  const shPaths = quotedPackageOnlyPaths(
-    sh,
-    /remove_package_only_paths\(\) \{[\s\S]*?for file in \\\r?\n([\s\S]*?)\r?\n\s*do/,
-  );
-  const expected = JSON.stringify(PACKAGE_ONLY_PATHS);
-  if (JSON.stringify(psPaths) !== expected) {
-    fail(`scripts/install.ps1 package-only list mismatch: ${psPaths.join(", ")}`);
-  }
-  if (JSON.stringify(shPaths) !== expected) {
-    fail(`scripts/install.sh package-only list mismatch: ${shPaths.join(", ")}`);
-  }
-}
-
-function checkInstallerSurface(ps, sh) {
-  const sharedDirs = [
-    "agents",
-    "commands",
-    "scripts",
-    "hooks",
-    "skills",
-    "references",
-    "harness",
-  ];
-  for (const dir of sharedDirs) {
-    if (!ps.includes(`"${dir}"`)) {
-      fail(`scripts/install.ps1 shared dirs should include ${dir}`);
-    }
-    if (!sh.includes(`copy_dir ${dir} "$dest"`)) {
-      fail(`scripts/install.sh shared dirs should include ${dir}`);
-    }
-  }
-  for (const host of ["claude-code", "codex"]) {
-    if (!ps.includes(`Install-WorkflowRules -Destination $dest -HostName "${host}"`) ||
-        !sh.includes(`install_workflow_rules ${host} "$dest"`)) {
-      fail(`installers must route ${host} rules through the host adapter`);
-    }
-  }
-  if (sh.includes('copy_dir rules "$dest"') || /\$dirs\s*=\s*@\([^)]*"rules"/s.test(ps)) {
-    fail("installers must not copy cold common rules into the shared automatic rules directory");
-  }
-  if (ps.includes('"homunculus"')) {
-    fail("scripts/install.ps1 should not install removed homunculus directory");
-  }
-  if (sh.includes('copy_dir homunculus "$dest"')) {
-    fail("scripts/install.sh should not install removed homunculus directory");
-  }
-  const retiredCommands = [
-    "e2e.md", "evolve.md", "grill.md", "harness-audit.md", "instinct-status.md",
-    "learn-eval.md", "projects.md", "promote.md", "prune.md", "setup-workflow.md",
-    "tdd.md",
-  ];
-  for (const command of retiredCommands) {
-    if (!sh.includes(`commands/${command}`)) {
-      fail(`scripts/install.sh should remove retired commands/${command}`);
-    }
-    if (!ps.includes(`commands\\${command}`)) {
-      fail(`scripts/install.ps1 should remove retired commands/${command}`);
-    }
-  }
-  const psCodexBody = ps.match(/function Install-CodexWorkflow \{[\s\S]*?\n\}/);
-  if (psCodexBody && psCodexBody[0].includes("settings.json")) {
-    fail("Install-CodexWorkflow should not install Claude Code settings.json");
-  }
-  const shCodexBody = sh.match(/install_codex\(\) \{[\s\S]*?\n\}/);
-  if (shCodexBody && shCodexBody[0].includes("settings.json")) {
-    fail("install_codex should not install Claude Code settings.json");
-  }
-}
-
 function checkInstallRuntimePolicy() {
-  requireTokens("references/workflow-guide.zh-CN.md", [
-    "Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`",
-    "Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks",
-  ]);
-
-  requireTokens("scripts/install.ps1", [
-    "Copy-ClaudeSettings",
-    "Install-CodexWorkflow",
-    "Copy-ConfigFile -Source (Join-Path $RootDir \"AGENTS.md\")",
-    "Remove-PackageOnlyPaths",
-    "scripts\\install.ps1",
-    "scripts\\verify-harness.js",
-    "scripts\\verify",
-    "scripts\\verify\\workflow-ownership-fixtures.js",
-    "scripts\\verify\\workflow-ownership.js",
-  ]);
-  requireTokens("scripts/install.sh", [
-    "copy_claude_settings",
-    "install_codex()",
-    "copy_file \"$ROOT_DIR/AGENTS.md\" \"$dest/AGENTS.md\"",
-    "remove_package_only_paths",
-    "scripts/install.sh",
-    "scripts/verify-harness.js",
-    "scripts/verify",
-    "scripts/verify/workflow-ownership-fixtures.js",
-    "scripts/verify/workflow-ownership.js",
-  ]);
-
-  const ps = read("scripts/install.ps1");
-  const sh = read("scripts/install.sh");
-  checkPackageOnlyLists(ps, sh);
-  checkInstallerSurface(ps, sh);
+  for (const file of ["scripts/install.sh", "scripts/install.ps1", "bin/claude-everything-workflow.js"]) {
+    requireTokens(file, ["install-host.js"]);
+  }
+  const manifest = JSON.parse(read("harness/manifest.json"));
+  for (const skill of manifest.skills) {
+    if (typeof skill.defaultInstall !== "boolean") fail(`${skill.name}: defaultInstall must be boolean`);
+  }
+  const { selectedFiles } = require("../install-host");
+  for (const host of ["codex", "claude-code"]) {
+    const files = selectedFiles(host);
+    for (const file of files) if (!exists(file)) fail(`missing install payload: ${file}`);
+    for (const name of ["handoff", "continuous-learning-v2"]) {
+      if (files.includes(`skills/${name}/SKILL.md`)) fail(`${name} must be optional`);
+    }
+    if (host === "codex" && files.some(file => file.startsWith("hooks/") || file.startsWith("skills/using-superpowers/") || file.startsWith("scripts/"))) {
+      fail("Codex default payload must omit generic router, Claude hooks and scripts");
+    }
+  }
+  const result = spawnSync(process.execPath, [rel("scripts/verify/install-host.test.js")], { encoding: "utf8", timeout: 60000 });
+  if (result.status !== 0) fail(`Host installation regression: ${result.stdout}${result.stderr}`);
 }
 
 function checkHookConfigReferences() {
@@ -320,7 +226,7 @@ function checkHookConfigReferences() {
     "mergeSettings",
   ]);
 
-  for (const installer of ["scripts/install.sh", "scripts/install.ps1"]) {
+  for (const installer of ["scripts/install-host.js"]) {
     if (!exists(installer)) continue;
     const body = read(installer);
     if (!body.includes("merge-claude-settings.cjs")) {
@@ -525,7 +431,7 @@ function checkGitHubWorkflows() {
     "npm run verify",
     "npm run pack:dry-run",
     "publish:",
-    "needs: [verify, test-macos-installer]",
+    "needs: [verify, test-macos-installer, test-windows-installer]",
     "id-token: write",
     "node-version: 22.14.0",
     "package-manager-cache: false",
@@ -665,7 +571,6 @@ function checkSkillCategoryIndex() {
 
 function checkRouterTargets() {
   const expected = [
-    ["commands/code-review.md", ["skills/code-review/SKILL.md"]],
     ["commands/learn.md", ["skills/continuous-learning-v2/SKILL.md"]],
     ["commands/to-spec.md", ["skills/spec-gate/SKILL.md"]],
   ];

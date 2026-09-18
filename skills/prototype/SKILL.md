@@ -44,7 +44,7 @@ Observed answer:
 Validated decision:
 Discarded assumptions:
 Prototype cleanup/capture status:
-Next router input:
+Next current task input:
 ```
 
-Then return to `skills/using-superpowers/SKILL.md`. Do not silently continue into production code.
+Then return to `references/process-outcomes.md`. Do not silently continue into production code.

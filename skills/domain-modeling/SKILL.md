@@ -60,7 +60,7 @@ Unresolved consequential decisions:
 - stable decision subject and evidence
 ```
 
-If an unresolved item changes product meaning, ownership, a public contract, persistence, or a high-cost boundary, return it to the current router/Spec Gate contract. Do not interview or choose for the user.
+If an unresolved item changes product meaning, ownership, a public contract, persistence, or a high-cost boundary, return it to the current current task/Spec Gate contract. Do not interview or choose for the user.
 
 ## Persistence Gate
 
@@ -80,7 +80,7 @@ direct user approval to maintain domain docs during the session. In that mode:
    of a real trade-off; show its path/content before writing.
 5. Keep `CONTEXT.md` implementation-free and keep ADRs concise.
 
-Outside that mode, persistence after an approved Spec remains a router-selected ticket or implementation task.
+Outside that mode, persistence after an approved Spec remains a current task-selected ticket or implementation task.
 If project context is absent, do not invent a documentation layout.
 
 ### Glossary shape

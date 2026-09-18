@@ -58,20 +58,20 @@ node bin/claude-everything-workflow.js install --dry-run
 node bin/claude-everything-workflow.js install
 ```
 
-The CLI selects the shell or PowerShell installer for your platform. The same `--claude-only` and `--codex-only` options apply. The npm command uses the published package; the source command uses your checkout.
+The CLI, shell and PowerShell entry points share one Node.js host-profile installer. The same `--claude-only` and `--codex-only` options apply. The npm command uses the published package; the source command uses your checkout.
 
 ### What changes on your machine
 
 | Host | Destination | Integration |
 | --- | --- | --- |
 | Claude Code | `~/.claude/` | Shared workflow files, `CLAUDE.md` bootstrap, rules, and merged hook settings. |
-| Codex | `~/.codex/` | Shared workflow files and `AGENTS.md`; Claude Code hooks are not automatically enabled. |
+| Codex | `~/.codex/` | Selected task-specific skills and `AGENTS.md`; no generic router or Claude hooks. |
 
 Installation updates user-level files and can affect multiple projects. Changed top-level configuration files are backed up; matching files inside shared directories are synchronized from the repository. Unknown files are generally retained, while known retired files are removed by an explicit cleanup list. Back up any personal edits to shared files before upgrading. Use the installer instead of copying the entire `rules/` directory: it handles the different rule locations used by each host.
 
 ## How it works
 
-Start with a normal task request. The workflow router selects relevant skills; you do not need to memorize every skill name.
+Start with a normal task request. Codex works directly; specialized skills add ticket, acceptance and authorization contracts only when needed.
 
 ```text
 Request → inspect context → select the relevant workflow
@@ -82,17 +82,17 @@ For example:
 
 > Find why this request intermittently fails. Trace the actual call chain, test the competing explanations, and fix the confirmed cause. Report the verification results and anything still unverified.
 
-Clear, low-risk work can take a short route. Unresolved user decisions, formal specifications, and work with costly-to-reverse consequences receive additional attention. Multi-session tickets and parallel agents are available for work that benefits from them. Exact routing and approval boundaries live in the [router](skills/using-superpowers/SKILL.md) and [project rules](AGENTS.md).
+Clear, low-risk work can take a short route. Unresolved user decisions, formal specifications, and work with costly-to-reverse consequences receive additional attention. Multi-session tickets and parallel agents are available for work that benefits from them. Specialized approval boundaries live in the [project rules](AGENTS.md).
 
 | Entry point | Purpose |
 | --- | --- |
 | `/to-spec` | Prepare a formal engineering specification for approval. |
-| `/code-review` | Review a defined change against its scope and baseline. |
+| Codex native review / specialized `code-review` | Review a defined change against its scope and baseline. |
 | `/verify` | Run the relevant verification checks. |
 | `/pr` | Prepare commits and a pull request within the user's authorization. |
-| `/learn` | Explicitly manage reusable learning and its evaluation. |
+| `/learn` (optional) | Explicitly manage reusable learning and its evaluation. |
 
-These are repository command definitions; availability as native slash commands depends on the host. Ordinary language can also express the intended workflow.
+Except native Codex review, these are repository command definitions; slash-command availability depends on the host. Ordinary language can also express the intended workflow.
 
 ## Design principles
 
@@ -155,3 +155,12 @@ CEW draws on [Everything Claude Code](https://github.com/affaan-m/everything-cla
 ## License
 
 Released under the [MIT License](LICENSE). Copyright © 2026 xu91102.
+
+## Host profiles / 按宿主裁剪
+
+Codex uses native development, review, resume, compaction and skill discovery.
+CEW retains specialized acceptance, isolation and authorization contracts.
+`handoff` and `continuous-learning-v2` are optional on both hosts:
+`cew install --with-skill handoff` or `--with-skill continuous-learning-v2`.
+Use `--home DIR` for isolated installation tests; default installs do not enable observation hooks.
+See [verified capability boundaries](references/codex-native-capabilities.md).

@@ -30,21 +30,7 @@ function main() {
 }
 
 function runInstall(args) {
-  if (process.platform === "win32") {
-    const script = path.join(root, "scripts", "install.ps1");
-    const psArgs = [
-      "-NoProfile",
-      "-ExecutionPolicy",
-      "Bypass",
-      "-File",
-      script,
-      ...toPowerShellArgs(args),
-    ];
-    run("powershell", psArgs);
-    return;
-  }
-
-  run("bash", [path.join(root, "scripts", "install.sh"), ...args]);
+  runNodeScript("scripts/install-host.js", args);
 }
 
 function runNodeScript(relativeScript, args) {
@@ -65,20 +51,11 @@ function run(command, args) {
   process.exit(typeof result.status === "number" ? result.status : 1);
 }
 
-function toPowerShellArgs(args) {
-  return args.map((arg) => {
-    if (arg === "--claude-only") return "-ClaudeOnly";
-    if (arg === "--codex-only") return "-CodexOnly";
-    if (arg === "--dry-run") return "-DryRun";
-    return arg;
-  });
-}
-
 function printHelp() {
   process.stdout.write(`claude-everything-workflow
 
 Usage:
-  cew install [--claude-only|--codex-only] [--dry-run]
+  cew install [--claude-only|--codex-only] [--home DIR] [--with-skill NAME] [--dry-run]
   cew verify
 
 Examples:

@@ -83,7 +83,7 @@ function installRules({ sourceRoot, installRoot, host, dryRun = false, log = con
   }
 }
 
-module.exports = { installRules };
+module.exports = { installRules, checkedPath, copyRule, digest };
 
 if (require.main === module) {
   const [host, installRoot, ...options] = process.argv.slice(2);

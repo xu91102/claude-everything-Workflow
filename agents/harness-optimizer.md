@@ -14,7 +14,7 @@ tools: ["Read", "Grep", "Glob", "Bash", "Edit"]
 
 - 当审计结论存在真实用户未决决策时使用 `grilling`；涉及显式 formal spec 或高风险边界时使用 `spec-gate`。
 - 不把 grilling 或 Spec Gate 当成固定前置流程；已授权的简单重复、冲突、过期配置清理直接处理。
-- 禁止引用已删除的旧需求澄清 Skill；所有 continuation 返回 `using-superpowers`。
+- 禁止引用已删除的旧需求澄清 Skill；专项结果返回当前任务。
 
 审计/咨询默认只读，路由到本 agent 不构成写入授权。只有明确授权实施时才能编辑；只审计时返回建议与证据。
 

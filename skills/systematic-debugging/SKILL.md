@@ -35,7 +35,7 @@ description: Diagnose bugs, recurring or flaky failures, slowness, and performan
    连续三次修复无效，或修复不断引出不同组件的异常时，重新检查问题模型、环境和共享状态/耦合；
    次数只提示重新审视策略，不能证明架构有错或禁止继续调查、修复；超出授权范围的架构变更先提交具体证据和决策。
 
-调查预算、信息增益与压缩边界见 `rules/common/context-hygiene.md`；有有效新路径时继续，不因第四次调查而停止。
+调查预算、信息增益与压缩边界见 `rules/common/agent-orchestration.md`；有有效新路径时继续，不因第四次调查而停止。
 
 ## 退出与报告
 

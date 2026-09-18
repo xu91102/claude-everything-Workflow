@@ -27,5 +27,5 @@
 ## 与其他规则的关系
 
 - 具体测试分层和命令选择见 `rules/common/testing.md`。
-- 架构分层、兼容迁移和重构步骤见 `rules/03-architecture.md`。
-- 错误处理细节见 `rules/04-error-handling.md`。
+- 架构分层、兼容迁移和重构步骤见 `rules/01-base.md`。
+- 错误处理细节见 `rules/01-base.md`。

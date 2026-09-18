@@ -72,20 +72,20 @@ function checkTicketFirstDelivery() {
   ]);
   requireTokens("skills/implement/SKILL.md", [
     "test-driven-development",
-    "direct-scope contract",
+    "仅执行已批准的 tracker ticket",
     "无 ticket 范围不得 claim 或写入任何 tracker",
     "[references/ticket-delivery.md](references/ticket-delivery.md)",
   ]);
   requireTokens("skills/implement/references/ticket-delivery.md", [
     "上下文隔离确有需要",
     "ticket as the Spec source",
-    "`/code-review --worktree <pre-ticket-base> --spec <ticket>`",
+    "fixed-base review with `skills/code-review/SKILL.md`",
   ]);
   requireTokens("skills/subagent-driven-development/SKILL.md", [
     "frontier ticket",
     "fresh subagent",
     "one ticket",
-    "router is executing a user-authorized delivery scope",
+    "current task is executing a user-authorized delivery scope",
     "separate worktree",
     "controller-owned integration worktree",
     "integrate-and-verify gate",
@@ -176,17 +176,7 @@ function checkDebuggingSkill() {
 }
 
 function checkCodeReviewContracts() {
-  requireTokens("commands/code-review.md", [
-    "固定基点",
-    "`git diff <base>...HEAD`",
-    "`git diff <base>`",
-    "--worktree",
-    "--spec <path>",
-    "Spec 轴",
-    "skills/code-review/SKILL.md",
-    "并行",
-  ]);
-
+  if (exists("commands/code-review.md")) fail("ordinary review wrapper must be removed");
   requireTokens("skills/code-review/SKILL.md", [
     "two parallel subagents",
     "tracked staged and unstaged",
@@ -265,7 +255,7 @@ function checkTrackerDeliveryLifecycle() {
     "pre-ticket base",
     "上下文隔离确有需要",
     "ticket as the Spec source",
-    "`/code-review --worktree <pre-ticket-base> --spec <ticket>`",
+    "fixed-base review with `skills/code-review/SKILL.md`",
     "frontier",
     "claim",
     "in-progress",

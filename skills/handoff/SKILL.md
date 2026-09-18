@@ -5,7 +5,7 @@ description: Create a redacted handoff for an explicitly requested fresh session
 
 # Handoff
 
-Bridge one context window to a fresh session without copying the repository or mutating project files.
+Optional portable, redacted handoff document. Native resume and compaction handle ordinary session continuity.
 
 Origin: `mattpocock/skills@2ab9580`, adapted to this repository's write-safety and verification contracts.
 
@@ -51,5 +51,4 @@ After writing, verify that the file exists and is readable. Return:
   private directory, and verify both removals;
 - any information intentionally omitted or redacted.
 
-Do not continue the old workflow after returning the handoff. The fresh session re-enters
-`skills/using-superpowers/SKILL.md` and loads the suggested skills from disk before acting.
+Do not continue the old workflow after returning the handoff. The recipient verifies the current repository state and recorded authorization before acting.

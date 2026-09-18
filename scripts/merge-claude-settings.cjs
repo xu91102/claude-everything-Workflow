@@ -45,12 +45,26 @@ function cleanHooks(hooks) {
 }
 
 function mergeSettings(source, existing) {
+  const hooks = cleanHooks(existing.hooks || {});
+  for (const [event, entries] of Object.entries(source.hooks || {})) {
+    const combined = [...(hooks[event] || [])];
+    for (const entry of entries) {
+      const target = combined.find(item => item.matcher === entry.matcher);
+      if (!target) combined.push(entry);
+      else for (const hook of entry.hooks) {
+        const index = target.hooks.findIndex(item => item.command === hook.command);
+        if (index < 0) target.hooks.push(hook);
+        else target.hooks[index] = hook;
+      }
+    }
+    hooks[event] = combined;
+  }
   return {
     ...existing,
     ...source,
     env: { ...(source.env || {}), ...(existing.env || {}) },
     mcpServers: { ...(source.mcpServers || {}), ...(existing.mcpServers || {}) },
-    hooks: cleanHooks({ ...(existing.hooks || {}), ...(source.hooks || {}) }),
+    hooks,
   };
 }
 

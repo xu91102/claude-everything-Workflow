@@ -1,6 +1,6 @@
 ---
 name: subagent-driven-development
-description: Dispatch approved independent frontier tickets in isolated worktrees; use only when router selects SDD.
+description: Dispatch approved independent frontier tickets in isolated worktrees; use only when current task selects SDD.
 ---
 
 # Subagent-Driven Development
@@ -14,7 +14,7 @@ communication.
 
 Use only when all of the following are true:
 
-- the router is executing a user-authorized delivery scope and records why SDD is safer or faster than
+- the current task is executing a user-authorized delivery scope and records why SDD is safer or faster than
   serial `implement`;
 - at least two selected tickets are `ready-for-agent`, unclaimed and have no unresolved blocker;
 - the tickets do not modify the same files, shared migration, release boundary or external state;
@@ -62,7 +62,7 @@ Before reporting, run focused verification and report the diff for the controlle
 - unresolved risk or assumption
 ```
 
-If an agent finds a consequential decision, stop that ticket and return it to `using-superpowers`; do not
+If an agent finds a consequential decision, stop that ticket and return it to the current task; do not
 let a parallel worker decide it unilaterally.
 
 ## Review, Integrate and Resolve
@@ -84,7 +84,7 @@ let a parallel worker decide it unilaterally.
    this integrate-and-verify gate passes.
 5. Update a local tracker only for integrated tickets that pass the gate. External claim, comment or close
    operations still require the confirmation specified by `implement`.
-6. Refresh the graph after every resolve and return it to the router. The router may select the next
+6. Refresh the graph after every resolve and return it to the current task. The current task may select the next
    topology only for frontier tickets that remain inside the same user-authorized delivery scope.
 
 ## Boundaries
@@ -100,7 +100,7 @@ let a parallel worker decide it unilaterally.
 
 ## Example
 
-Tickets `01` and `02` are both unblocked and modify different packages. The router selects SDD, creates one
+Tickets `01` and `02` are both unblocked and modify different packages. The current task selects SDD, creates one
 integration worktree plus two worker worktrees, then dispatches two fresh subagents. Each implements and
 verifies only its own ticket. Review both worker diffs, apply passing diffs to the integration worktree, and
-run the combined gate before resolving either ticket or returning the unlocked frontier to the router.
+run the combined gate before resolving either ticket or returning the unlocked frontier to the current task.

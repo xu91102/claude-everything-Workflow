@@ -8,7 +8,7 @@ description: Split an approved scope into demonstrable vertical tickets with rea
 Origin: `mattpocock/skills@2ab9580`, adapted to `docs/agent-workflow/project-context.md` and this
 repository's external-write approval boundary.
 
-The router may select this Skill after the user authorizes a defined delivery scope; selecting a ticket
+The current task may select this Skill after the user authorizes a defined delivery scope; selecting a ticket
 topology does not approve ticket publication or change the approved product scope.
 
 ## Gather Context
@@ -20,7 +20,7 @@ topology does not approve ticket publication or change the approved product scop
 - A missing configuration file does not block drafting. Before publication, resolve the target,
   required labels and permissions from existing evidence or ask only for missing values; do not
   invent an external tracker or require a setup Skill/configuration file.
-- Do not reopen approved product decisions. Return unresolved consequential decisions to the router.
+- Do not reopen approved product decisions. Return unresolved consequential decisions to the current task.
 
 If the codebase has not been explored, inspect only the affected area to learn established domain terms,
 existing ADRs and possible prefactoring. Do not turn that exploration into per-file implementation notes.

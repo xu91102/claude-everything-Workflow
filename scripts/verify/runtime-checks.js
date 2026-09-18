@@ -73,26 +73,9 @@ function checkScriptLayout() {
     "hooks/check-console-log.js",
     "hooks/check-code-size.js",
     "hooks/commit-quality.js",
-    "skills/continuous-learning-v2/hooks/observe-v2.js",
   ]);
 
-  requireTokens("scripts/install.ps1", [
-    "Remove-ObsoleteWorkflowPaths",
-    "Remove-RetiredSkills",
-    "Test-RetiredSkillManifest",
-    "scripts\\hooks\\run-with-flags.js",
-    "hooks\\review-confidence.js",
-    "rules\\08-ecc-integration.md",
-  ]);
-
-  requireTokens("scripts/install.sh", [
-    "remove_obsolete_workflow_paths",
-    "cleanup_retired_skills",
-    "validate_retired_skill_manifest",
-    "scripts/hooks/run-with-flags.js",
-    "hooks/review-confidence.js",
-    "rules/08-ecc-integration.md",
-  ]);
+  requireTokens("scripts/install-host.js", ["cleanup-retired-skills.js", "legacy-install-hashes.json"]);
 
   checkLegacyScriptReferences();
 }

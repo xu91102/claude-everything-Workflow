@@ -2,9 +2,9 @@
 
 // Static policy regression guards, not a model behavior evaluation or runtime permission layer.
 const contracts = [
-  ["README.md", ["选择或明确要求 TDD 时"], /没有 failing test，不写行为代码|新功能必须使用 worktree|Observer Agent \(Haiku\)/],
+  ["README.md", ["Host profiles"], /没有 failing test，不写行为代码|新功能必须使用 worktree|Observer Agent \(Haiku\)/],
   ["skills/continuous-learning-v2/agents/observer.md", ["rules/common/performance.md"], /使用 Haiku 以提高成本效益/],
-  ["rules/common/context-hygiene.md", ["不以固定检索轮数终止", "关键已否定假设及反证", "缺少必要访问权限"], /最多进行三轮检索|等待用户明确要求继续，不自行追加轮次/],
+  ["rules/common/agent-orchestration.md", ["实施者不能充当自己的独立审查者", "并行写入", "整体回归"], /最多进行三轮检索|等待用户明确要求继续，不自行追加轮次/],
   ["rules/common/performance.md", ["尊重用户选择的模型与推理配置", "用户明确启用成本优先策略", "宿主权限", "用户预算"], /最低成本模型|少于 10 个 MCP|少于 80 个/],
   ["rules/common/testing.md", ["有效复现，继续修复", "已证实无关的历史失败", "验证受阻", "不人为制造 RED", "用户或目标项目明确要求时严格执行", "不得删除有效测试"], null],
   ["skills/implement/SKILL.md", ["rules/common/testing.md", "可以继续修复", "需要独立审查却无法启动时不得降级"], /只有 clean baseline 才进入实施/],

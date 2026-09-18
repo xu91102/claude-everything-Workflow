@@ -1,22 +1,17 @@
 ---
 name: implement
-description: Deliver one authorized scope through implementation, review, and verification.
+description: Deliver an approved tracker ticket with acceptance, claim/resolve authorization and integration verification.
 ---
 
 # Implement
 
-执行 router 选定的一个连贯交付范围。Origin: `mattpocock/skills@2ab9580`，适配本项目授权与审查边界。
+执行已批准 ticket 的专项交付。Origin: `mattpocock/skills@2ab9580`，适配本项目授权与审查边界。
 
 ## 入口
 
-- direct scope：明确、低风险的用户交付请求。原始请求、目标行为、范围边界和相称验证组成
-  `direct-scope contract`；咨询不等于交付授权。
-- approved Spec scope：已获用户批准的 Spec 是范围与验收来源。
-- ticket：仅此路径先读取 [references/ticket-delivery.md](references/ticket-delivery.md)，核实 frontier，
-  再按该引用与下方共用步骤交付。无 ticket 范围不得 claim 或写入任何 tracker。
-
-缺少可复核验收、存在实质用户决策或命中尚未批准的 formal Spec/高风险边界时，返回 router，不能猜测或实施。
-普通范围使用当前会话，不为满足流程创建新的上下文或 tracker。
+仅执行已批准的 tracker ticket；普通开发直接使用宿主能力，不加载本 Skill。
+先读取 [references/ticket-delivery.md](references/ticket-delivery.md)，确认验收、frontier 和相应授权。
+无 ticket 范围不得 claim 或写入任何 tracker。尚未批准的必需 Spec 或关键用户决策需先解决。
 
 ## 隔离与基线
 
@@ -42,7 +37,6 @@ description: Deliver one authorized scope through implementation, review, and ve
 
 ## 收尾与授权
 
-- 无 ticket：选定的 review 与 fresh verification 均通过后报告范围、证据和风险；到此结束，不查询或刷新 frontier。
 - ticket：验收、review 和 verification 全部通过后，回到 ticket 引用完成 resolve 与后续处理。
 - 本地交付授权不覆盖 commit、push 或创建 PR，也不扩张产品范围。用户已明确授权的后续动作按授权继续，
   不重复索要同一批准；PR 仍须通过 `/verify pre-pr`。外部写入、merge 和 cleanup 遵循 Git 规则与用户授权。
