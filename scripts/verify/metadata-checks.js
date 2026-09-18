@@ -104,9 +104,9 @@ function checkReadmeTreePaths() {
   if (!exists("README.md")) return;
 
   const body = read("README.md");
-  const treeMatch = body.match(/## 目录结构[\s\S]*?```([\s\S]*?)```/);
+  const treeMatch = body.match(/## Repository structure[\s\S]*?```([\s\S]*?)```/);
   if (!treeMatch) {
-    fail("README.md should include a directory tree under ## 目录结构");
+    fail("README.md should include a directory tree under ## Repository structure");
     return;
   }
 
@@ -223,7 +223,7 @@ function checkInstallerSurface(ps, sh) {
 }
 
 function checkInstallRuntimePolicy() {
-  requireTokens("README.md", [
+  requireTokens("references/workflow-guide.zh-CN.md", [
     "Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`",
     "Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks",
   ]);
@@ -553,7 +553,7 @@ function checkGitHubWorkflows() {
   }
   checkReleaseRecoveryBehavior();
 
-  requireTokens("README.md", [
+  requireTokens("references/workflow-guide.zh-CN.md", [
     "npm 发布",
     "版本号通过 PR",
     "ci.yml",
@@ -598,7 +598,7 @@ function checkLearningPathPolicy() {
     }
   }
 
-  requireTokens("README.md", [
+  requireTokens("references/workflow-guide.zh-CN.md", [
     "skills/learn/<category>/",
     "观察、候选和迁移来源",
   ]);
@@ -651,7 +651,7 @@ function checkSkillCategoryIndex() {
     }
   }
 
-  requireTokens("README.md", [
+  requireTokens("references/workflow-guide.zh-CN.md", [
     "Skill 分类索引",
     "物理目录保持平铺以兼容发现",
     "只有学习产物使用物理分类目录 `skills/learn/<category>/`",
@@ -710,6 +710,9 @@ function checkNpmPackageSurface() {
   ]);
 
   const packageFiles = JSON.parse(read("package.json")).files ?? [];
+  if (!packageFiles.includes("README.zh-CN.md")) {
+    fail("package.json should publish README.zh-CN.md so the language link works in the package");
+  }
   const publishesHomunculus = packageFiles.some((file) => {
     const normalized = file.replace(/\\/g, "/").replace(/^\.\//, "");
     return normalized === "homunculus" || normalized.startsWith("homunculus/");
@@ -736,6 +739,8 @@ function checkNpmPackageSurface() {
 
 function runMetadataChecks(context) {
   bindContext(context);
+  requireTokens("README.md", ["[简体中文](README.zh-CN.md)", "(LICENSE)", "(references/workflow-guide.zh-CN.md)"]);
+  requireTokens("README.zh-CN.md", ["[English](README.md)", "(LICENSE)", "(references/workflow-guide.zh-CN.md)"]);
   checkCommands();
   checkReadmeTreePaths();
   checkInstallRuntimePolicy();

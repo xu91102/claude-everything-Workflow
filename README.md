@@ -1,457 +1,157 @@
 # Claude Everything Workflow
 
-> 一套通用的 Agent Harness 工程模板，可直接复制到 `~/.claude/` 使用。
-> 学习 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) 的最佳 Harness 工程实践。
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/xu91102/claude-everything-Workflow/actions/workflows/ci.yml/badge.svg)](https://github.com/xu91102/claude-everything-Workflow/actions/workflows/ci.yml)
 
-## 一键安装
+**A reusable engineering workflow for Claude Code and Codex.**
 
-macOS / Linux / Git Bash / WSL：
+**English** · [简体中文](README.zh-CN.md)
 
-```bash
-bash scripts/install.sh
-```
+Give your coding agent a consistent way to investigate problems, implement changes, review work, and report what was actually verified. Claude Everything Workflow (CEW) packages rules, task-specific skills, command entry points, and supporting scripts into an installable agent harness—the instructions and tools around your agent.
 
-Windows PowerShell：
+CEW works with your existing projects and model. It does not provide a model or replace Claude Code or Codex. The README is available in English and Chinese; most bundled workflow instructions are currently written in Chinese.
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
-```
+[Install](#installation) · [How it works](#how-it-works) · [Design principles](#design-principles) · [Documentation](#documentation)
 
-只安装某个工具：
+## What it helps you do
 
-```bash
-bash scripts/install.sh --claude-only
-bash scripts/install.sh --codex-only
-```
+| Task | What CEW adds |
+| --- | --- |
+| Deliver a change | A path from a clear request to implementation, review, and verification. |
+| Investigate a bug | Call-chain tracing, testable hypotheses, targeted experiments, and evidence-based root-cause reports. |
+| Review code | Review against a fixed baseline and agreed scope, with depth matched to risk. |
+| Handle larger work | Specification, dependent tickets, isolated parallel work, and handoff tools when needed. |
+| Keep context focused | Small entry points and references loaded for the relevant task. |
+| Report progress honestly | Separate claims for diagnosis, fixes, tests, CI, and release status. |
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -ClaudeOnly
-powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -CodexOnly
-```
+## Installation
 
-预览将要写入的文件：
+### Requirements
 
-```bash
-bash scripts/install.sh --dry-run
-```
+- Claude Code and/or Codex, already installed and configured.
+- Node.js **18+** and npm/npx.
+- macOS/Linux: Bash and `rsync`. Windows: PowerShell; Git Bash/WSL can use the shell installer if Bash and `rsync` are available.
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
-```
+### Install from npm
 
-## npm / npx 安装
+Preview the changes, then install to both hosts:
 
-发布到 npm 后，可以不 clone 仓库，直接运行：
-
-```bash
+```sh
+npx claude-everything-workflow install --dry-run
 npx claude-everything-workflow install
+```
+
+To install for only one host:
+
+```sh
 npx claude-everything-workflow install --claude-only
 npx claude-everything-workflow install --codex-only
-npx claude-everything-workflow verify
 ```
 
-`verify` 检查分发的 Harness 内容；在源码 checkout 中还检查 GitHub 发布配置。npm 包不包含 `.github/`，因此不运行这部分仓库检查。CI 也会仅安装生产依赖后运行打包产物的 `cew verify`，验证实际分发入口。
+### Install from source
 
-本地发布前检查：
-
-```bash
-npm pack --dry-run
-npm publish --dry-run
+```sh
+git clone https://github.com/xu91102/claude-everything-Workflow.git
+cd claude-everything-Workflow
+npm install --ignore-scripts --no-package-lock
+node bin/claude-everything-workflow.js install --dry-run
+node bin/claude-everything-workflow.js install
 ```
 
-## npm 发布
+The CLI selects the shell or PowerShell installer for your platform. The same `--claude-only` and `--codex-only` options apply. The npm command uses the published package; the source command uses your checkout.
 
-版本号通过 PR 更新 `package.json`，并与功能改动一起接受审查。PR 合并到 `main` 后，`.github/workflows/ci.yml` 会先运行 `npm run verify` 与 `npm run pack:dry-run`，只有 `verify` 成功时才发布该提交中的版本。
+### What changes on your machine
 
-发布会拒绝不高于 npm `latest` 的新版本，通过 npm 受信任的发布商 OIDC 执行 `npm publish`，并在 npm 发布成功后才创建指向当前提交的 `v<version>` tag。重跑时，当前版本已在 npm 会跳过重复发布并补齐缺失 tag；已有正确 tag 但 npm 尚未发布时会继续发布；tag 已指向其他提交时仍会失败并要求先审计。
+| Host | Destination | Integration |
+| --- | --- | --- |
+| Claude Code | `~/.claude/` | Shared workflow files, `CLAUDE.md` bootstrap, rules, and merged hook settings. |
+| Codex | `~/.codex/` | Shared workflow files and `AGENTS.md`; Claude Code hooks are not automatically enabled. |
 
-如需重试发布，可在 `main` 上手动触发 `CI`；流程不会修改、提交或推送 `main`。
+Installation updates user-level files and can affect multiple projects. Changed top-level configuration files are backed up; matching files inside shared directories are synchronized from the repository. Unknown files are generally retained, while known retired files are removed by an explicit cleanup list. Back up any personal edits to shared files before upgrading. Use the installer instead of copying the entire `rules/` directory: it handles the different rule locations used by each host.
 
-npm 包设置里必须添加 GitHub Actions 受信任的发布商，仓库为 `xu91102/claude-everything-Workflow`，workflow 文件名为 `ci.yml`，并允许 `npm publish`。
+## How it works
 
-安装目标：
-
-- Claude Code: `~/.claude/`
-- Codex: `~/.codex/`
-
-Claude Code 会安装 `CLAUDE.md` 并合并 `settings.json` 作为 hooks 入口；Codex 安装共享 Workflow 材料，不默认消费 Claude Code `settings.json`。顶层配置文件已存在且内容不同时，会先生成 `.bak.<timestamp>` 备份再覆盖；目录内容按仓库版本同步。
-
-## 手动安装
-
-### Windows
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -ClaudeOnly
-```
-
-### macOS / Linux
-
-```bash
-bash scripts/install.sh --claude-only
-```
-
-即使从源码手动安装，也使用上述脚本；直接复制整个 `rules/` 会把专项参考重新变成 Claude 常驻规则。
-
-## 目录结构
-
-```
-claude-everything-Workflow/
-├── README.md                   # 本文档
-├── AGENTS.md                   # Codex 与通用权威规则入口
-├── CLAUDE.md                   # Claude Code 最小 bootstrap 入口
-├── settings.json               # Claude Code Hooks 配置入口
-├── .github/
-│   ├── scripts/
-│   │   └── publish-release.js   # 可重试的 npm 发布与 tag 事务
-│   └── workflows/
-│       └── ci.yml               # PR / main 校验与 verify 后发布 npm
-│
-├── rules/                      # 规则索引与按需加载规则
-│   ├── 01-base.md              # 基础设定
-│   ├── 02-code-size.md         # 代码规模约束
-│   ├── 03-architecture.md      # 架构原则
-│   ├── 04-error-handling.md    # 错误处理
-│   ├── 05-git-workflow.md      # Git 规范
-│   ├── 06-comments.md          # 注释规范
-│   ├── 07-forbidden.md         # 禁止事项
-│   ├── 08-specialty-rules-index.md # 专项规则索引
-│   ├── 09-first-principles-adversarial-testing.md # 第一性原则与对抗性测试
-│   └── common/                 # 通用最佳实践
-│       ├── harness-engineering.md # Agent Harness 六层与执行循环
-│       ├── context-hygiene.md   # 上下文卫生与 Subagent 边界
-│       ├── agent-orchestration.md # Agent 编排
-│       ├── performance.md      # Token 优化 & 模型选择
-│       ├── hooks.md            # Hook 系统最佳实践
-│       ├── skills-learning.md  # Skills 与持续学习
-│       ├── testing.md          # 测试与验证
-│       └── pr-automation.md    # PR 自动化与 CI 质量门
-│
-├── agents/                     # 代理（专业任务委托）
-│   ├── e2e-runner.md           # E2E / Playwright（可选 Agent Browser）
-│   ├── harness-optimizer.md    # Harness 配置调优
-│   └── ...                     # 其他专业代理
-│
-├── commands/                   # 命令（斜杠快捷入口）
-│   ├── code-review.md          # /code-review → skills/code-review
-│   ├── learn.md                # /learn 统一学习管理
-│   ├── pr.md                   # /pr 提交与创建 PR
-│   ├── to-spec.md              # /to-spec → spec-gate
-│   └── verify.md               # /verify 验证
-│
-├── references/                 # 按需加载的长参考材料
-│   └── agents/                 # Agent 详细检查清单与示例
-├── harness/
-│   └── manifest.json           # Skill 元数据与流程职责唯一登记表
-│
-├── scripts/                    # 跨平台脚本
-│   ├── install.sh              # macOS / Linux / Git Bash / WSL 一键安装
-│   ├── install.ps1             # Windows PowerShell 一键安装
-│   └── learning/               # 学习系统手动维护脚本
-│       └── review-confidence.js # 置信度审查报告
-│
-├── skills/
-│   ├── README.md               # Skill 分类索引；物理目录保持平铺以兼容发现
-│   ├── using-superpowers/      # Skill 路由、优先级与门禁纪律
-│   │   └── SKILL.md
-│   ├── grilling/               # 重大用户决策的单问式压力测试
-│   │   └── SKILL.md
-│   ├── spec-gate/              # 零访谈工程 Spec 成稿、自审和用户批准
-│   │   ├── SKILL.md
-│   │   └── references/
-│   ├── domain-modeling/        # 领域术语、关系、不变量和边界建模
-│   │   └── SKILL.md
-│   ├── subagent-driven-development/ # 独立 frontier ticket 的可选并行执行
-│   │   └── SKILL.md
-│   ├── visual-companion/       # 经同意后展示安全本地视觉方案
-│   │   ├── SKILL.md
-│   │   ├── references/
-│   │   └── scripts/
-│   ├── e2e-testing/            # Playwright E2E 模式（POM、CI、制品）
-│   │   └── SKILL.md
-│   ├── continuous-learning-v2/ # 自主学习系统
-│   │   ├── SKILL.md            # 技能说明
-│   │   ├── config.json         # 配置
-│   │   ├── agents/             # Observer Agent
-│   │   └── hooks/              # observe-v2.js 增强观察脚本
-│   ├── test-driven-development/ # TDD 测试先行规则
-│   └── learn/                  # 学习到的模式，按分类保存
-│       ├── pr/
-│       ├── testing/
-│       └── debugging/
-│
-└── hooks/                      # 钩子脚本
-    ├── runtime/                # Hook 运行时与 Profile 控制
-    │   ├── run-with-flags.js
-    │   └── hook-flags.js
-    ├── commit-quality.js       # 可选 Pre-commit 质量门
-    ├── check-console-log.js    # 禁止模式检测（console.log/debugger/@ts-ignore/any）
-    └── check-code-size.js      # 代码规模与行长检测
-```
-
-正式 skill 目录保持 `skills/<skill-name>/SKILL.md` 平铺结构，避免破坏 Claude Code、Codex 和安装脚本的发现方式；分类维护在 `skills/README.md`。只有学习产物使用物理分类目录 `skills/learn/<category>/`。
-
-## 规则加载策略
-
-- `AGENTS.md` 是权威规则入口；`CLAUDE.md` 通过原生 `@AGENTS.md` 导入硬规则与索引，避免两份正文漂移。
-- Claude 用户级 `rules/` 只安装 9 份顶层规则；8 份 `common/` 专项参考安装到 `references/rules/common/`，不由规则加载器自动注入。Codex 保留原 `rules/` 布局。
-- 简单问答、解释、格式调整、翻译或只读查看，不读取额外规则。
-- `rules/...` 是逻辑路径，解析以 `AGENTS.md` 为准：先查项目文件；Codex 回退 `~/.codex/rules/`，Claude 普通规则回退 `~/.claude/rules/`，`rules/common/...` 回退 `~/.claude/references/rules/common/...`。
-- 当用户级 Workflow 注入到没有 `rules/` 的项目时，不能把项目规则目录缺失等同于“无规则”；必须继续检查对应的用户级规则目录。
-- 回退只改变查找位置，不改变按需读取原则；仍然只读取当前任务直接相关的规则文件，不要默认全量加载 `rules/` 或 `rules/common/`。
-- `rules/common/` 是专项参考区，只在命令、agent、skill 或当前任务明确触发时读取。
-
-以上是本项目对 agent 主动读取的约定，不等于宿主的实际加载量；宿主自动注入的规则不能靠正文中的
-“按需读取”撤销。评估成本时区分常驻入口、Skill 名称与描述、触发后的正文和模式专用引用。
-
-升级时 `scripts/install-rules.js` 只移除内容匹配当前或已登记历史分发版本的旧 common 文件；个人修改与未知文件保留并提示。已存在的目标规则变更前保存内容摘要命名的备份，拒绝经过符号链接写入。保留在旧自动目录的个人规则仍会加载，估算节省时必须计入。该迁移不会修改用户的 MCP 或工具权限。
-
-启动预算须计入 `@AGENTS.md` 导入的正文，不能只统计短 bootstrap；专项参考移出后节省的 token 不等于实际账单降幅。
-
-## 精简原则
-
-- rules 保留长期约束与项目回退策略；目标项目的架构、lint、类型、覆盖率和注释惯例优先。
-- Skill 保留能改变决策的流程；普通任务只读所选入口，已在当前任务读过且未改变的内容可以复用。
-- `using-superpowers` 仅在 grilling/Spec 返回或跨会话交接时读取 `references/process-outcomes.md`。
-- `implement` 的普通交付共用实施、相称审查和验证步骤；只有 ticket 路径读取 `references/ticket-delivery.md`。审查深度统一由 `code-review` 决定。
-- 预期 TDD RED 继续 GREEN；原因明确的失败修正后验证，根因不明或反复失败才进入完整诊断。已有证据仍对应最终状态时复用，不重复运行。
-- 无可测试行为的文档、格式或纯配置整理运行对应校验；不为免写行为测试增加一次批准。
-- 已授权的领域文档维护复用会话授权，新增范围和未决决策仍需确认，见 `skills/domain-modeling/SKILL.md`。
-- 检索只围绕证据缺口展开，避免无进展重复并遵守用户预算，见 `rules/common/context-hygiene.md`。
-- Spec 发现缺失决策后，在原任务内直接澄清并继续；最终 Spec 批准仍保留，见 `skills/using-superpowers/references/process-outcomes.md`。
-- 精简不删除安全约束、用户决策门、真实验证或 PR 授权。安装目录与仓库可能不同，更新须走已有备份安装流程。
-
-## 按需 MCP 与上下文控制
-
-默认 MCP 必须同时满足“通用”和“MCP 明显优于 CLI/API/原生能力”。GitHub、文档查询、Exa 搜索、Playwright E2E、memory 和 sequential-thinking 这类纯请求/响应或已有原生替代的能力，优先通过 skill、CLI/API 或 harness 原生能力按需触发，而不是默认常驻。
-
-### 1. Claude Code：用户级 `~/.claude/settings.json`
-
-复制 Workflow 到 `~/.claude/` 后，在 **`~/.claude/settings.json`**（没有则新建）里配置 **`mcpServers`**，与主仓根目录 **`.mcp.json`** 中 **`context7`** 条目保持一致：
-
-```json
-{
-  "mcpServers": {
-    "context7": {
-      "command": "npx",
-      "args": ["-y", "@upstash/context7-mcp@2.1.4"]
-    }
-  }
-}
-```
-
-- 若文件中已有 hooks、其它字段，请**合并**进同一 JSON，**不要**整文件覆盖。
-- 需要本机 **Node / npx**（`npx` 首次会拉取包）。
-- 更全的 MCP 列表与说明见主仓 **`mcp-configs/mcp-servers.json`** 与主仓 **README「Configure MCPs」**。
-
-**仅查文档时**：用户级只保留 **`context7`** 即可，不必一次打开主仓里的 GitHub、Exa、Playwright 等全部服务。
-
-### 2. 节省 Token（与主仓 `rules/common/performance.md` 一致）
-
-- MCP 工具描述会占用上下文；按相关性、歧义、实际开销和运行效果启用，遵守宿主上限，不设置无依据的通用数量门槛。模型与推理配置默认尊重用户选择。
-- **策略**：从 **0 个或只开 Context7** 开始，需要再加其它 MCP。
-- **缓存命中策略**：保持入口文件前缀稳定，默认只加载小型 bootstrap 和规则索引；长参考材料、专项规则、agent 详细清单和学习材料必须按需加载。
-- **入口预算**：`CLAUDE.md` 控制在约 1.5K 字符内，`AGENTS.md` 控制在约 3.6K 字符内；超过预算时优先把细节下沉到 `rules/`、`references/` 或专项 skill。
-- **按项目禁用**（Claude Code）：在具体仓库的 **`.claude/settings.json`** 中使用 **`disabledMcpServers`**，写上全局已启用、但本项目不用的服务名（与 `mcpServers` 的**键名**一致），例如：
-
-```json
-{
-  "disabledMcpServers": [
-    "github",
-    "exa",
-    "playwright",
-    "sequential-thinking",
-    "memory"
-  ]
-}
-```
-
-- **跑 ECC 安装/同步且你已有同名自建 MCP**：可设置 `export ECC_DISABLED_MCPS="github,context7,exa,playwright,sequential-thinking,memory"`，避免重复写入（见主仓 README）。
-- **新增 MCP 前先评估**：判断它是否应该默认启用、按需启用，还是改为 CLI/API skill。
-
-### 3. Cursor
-
-在项目根使用 **`.mcp.json`**，放入与上文相同的 **`context7`** 段即可；用 MCP 面板关闭不需要的服务，效果与 `disabledMcpServers` 类似。
-
-## 可用命令
-
-| 命令 | 功能 |
-| --- | --- |
-| `/to-spec` | 正式工程 Spec 的显式决策门 |
-| `/code-review` | 固定基点下按风险选择自审、独立或双轴审查；简单低风险任务凭验证证据完成 |
-| `/verify` | 运行全面验证检查 |
-| `/pr` | 提交、推送和创建 PR 的标准工作流 |
-| `/learn` | 统一管理学习评估、状态、项目、推广、清理与演化 |
-
-新增的上游等价能力全部以 Skill 形式由中央路由调用，不增加薄包装 command。其中
-`using-superpowers` 提供只读流程建议，`grilling` 与 `domain-modeling` 组合带文档访谈，
-`implement` 执行已批准工作的交付闭环。
-
-## 验证 Harness
-
-```bash
-node scripts/verify-harness.js
-npm run test:invocation
-npm run test:install-rules
-bash scripts/install.sh --dry-run
-npm run verify:upstream -- --upstream-root <mattpocock-skills-clone>
-```
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -DryRun
-```
-
-`verify-harness.js` 会检查 README 与 `commands/` 是否一致、薄封装 command 是否指向存在的 agent/skill、旧命令和旧衰减语义是否残留，并运行 `observe-v2` 最小 smoke test。
-
-`harness/manifest.json` 登记每个 Skill 的版本、兼容 Harness、调用策略和唯一 owner；`ownership.surfaces` 只表示引用方，不与 `owner` 并列定义。`allowedTools: null` 当前表示未声明限制，不冒充运行时权限控制。`verify-harness.js` 会检查登记路径、Skill frontmatter、重复名称/路径、职责引用和 enforcement 级别。
-
-调用策略按宿主分别校验：仅显式入口必须同时声明 Claude 的 `disable-model-invocation: true` 和 Codex 的 `policy.allow_implicit_invocation: false`（只兼容一个宿主时只要求该宿主字段）。工作流需要自动调用的 Skill 不设置这些禁用项；本项目按明确自然语言请求选择的入口保持可发现，具体名单和触发边界见 `skills/README.md`。允许调用不会自动授权外部写入、后台学习或启动视觉服务。
-
-## Hook Profile 控制
-
-通过环境变量控制 Hook 行为:
-
-```bash
-# minimal | standard | strict (默认: standard)
-export ECC_HOOK_PROFILE=standard
-
-# 禁用特定 Hook (逗号分隔 ID)
-export ECC_DISABLED_HOOKS="post:edit:console-log"
-```
-
-当前仓库以根目录 `settings.json` 作为 Claude Code hooks 入口；`hooks/` 目录统一保存低噪音 Hook 运行时和脚本实现。默认不启用会话启动、会话结束、停止或压缩前的弱摘要 Hook，避免污染上下文。`scripts/learning/` 只保存手动学习治理脚本，不作为 Hook 自动触发。
-Codex 安装同一套 `hooks/` 脚本材料，但不会因为安装本仓文件而自动启用 Claude Code hooks；如未来需要 Codex 原生自动化，应新增明确 adapter。
-
-## Ticket-first 工程交付闭环
-
-本仓默认最短闭环、按风险逐级升级；跨会话交付参考
-[mattpocock/skills](https://github.com/mattpocock/skills) 的 ticket-first 模型。主线是：
+Start with a normal task request. The workflow router selects relevant skills; you do not need to memorize every skill name.
 
 ```text
-任务
-  -> using-superpowers 先路由到相关 process skill
-  -> 可查事实和证据缺口直接检索；外部工程文档引用一手来源
-  -> 需要可运行答案：prototype 选择 logic TUI 或 visual-companion UI 分支
-  -> 需要隔离 prototype 或接近上下文可靠区边界：推荐 handoff，用户明确请求或接受后交接
-  -> 标记用户显式 formal spec 或高回滚成本架构/公共契约、安全、持久数据、不可逆副作用
-  -> 存在关键用户决策：grilling 一次只问一个最高价值问题，并返回结构化 handoff
-  -> 明确低风险且无未决决策：direct，经 implement 的无 ticket 路径实施、审查并做相称验证
-  -> 高风险/formal spec 且上下文充分：spec-gate 零访谈写 design spec 并自审
-  -> Spec Gate 缺少实质决策：router 在现有授权内提出具体问题，等待回答；决策解决后重新评估
-  -> 用户审核并批准 spec
-  -> router 按交付持续性、依赖图、写入面和验证成本选择执行拓扑
-  -> 多 session/tracker：to-tickets 拆垂直切片和 blocking edges，用户确认 ticket contract 后发布
-  -> 单 session 的 direct/approved Spec 连贯范围或单张 frontier ticket：implement 在当前会话或确有需要的隔离上下文中实施
-  -> 多张独立 frontier tickets：router 用 subagent-driven-development 在独立 worker worktree 并行，再汇入 integration worktree
-  -> rules/05-git-workflow.md：按实际隔离需求选择，已有安全任务分支或合适 worktree 可复用
-  -> 选择适合的测试方法（明确要求 TDD 时严格执行）
-  -> 需求符合性审查
-  -> 代码质量审查
-  -> rules/common/testing.md 完成声明前确认新鲜验证证据
-  -> ticket 路径：ticket 验收、选定审查和验证通过后 resolve，并返回 newly unlocked frontier
-  -> 无 ticket 路径：选定审查和验证通过后报告证据，不 claim、resolve 或刷新 tracker
-  -> /verify 质量门
-  -> /pr 提交/PR
-  -> /learn eval --preview 学习沉淀
+Request → inspect context → select the relevant workflow
+        → investigate / implement → review → verify → report evidence
 ```
 
-需要压力测试计划、设计或重大决策时直接提出 grilling 请求；需要正式工程 Spec 时使用 `/to-spec`。显式 grilling 会话保留共同理解确认；自动触发只使用更短的微型访谈。明确任务、多文件任务、普通行为变化和可查事实不会因此增加交互轮数。
+For example:
 
-旧入口名 `brainstorming` 兼容一个发布周期：中央路由会提示迁移并按 formal Spec 请求处理，但不再安装或发现同名 Skill。`grilling` 是唯一需求澄清引擎，`spec-gate` 只负责零访谈成稿、自审和用户批准。
+> Find why this request intermittently fails. Trace the actual call chain, test the competing explanations, and fix the confirmed cause. Report the verification results and anything still unverified.
 
-### Skill 迁移说明
+Clear, low-risk work can take a short route. Unresolved user decisions, formal specifications, and work with costly-to-reverse consequences receive additional attention. Multi-session tickets and parallel agents are available for work that benefits from them. Exact routing and approval boundaries live in the [router](skills/using-superpowers/SKILL.md) and [project rules](AGENTS.md).
 
-- `verification-before-completion` 已退休：证据要求合入 `rules/common/testing.md`。`using-git-worktrees` 已退休：隔离要求由 `rules/05-git-workflow.md` 统一管理，操作参考见 `references/git-worktrees.md`。升级只清理已知旧文件，保留个人附加文件。
-- `iterative-retrieval` 已退休：不再分发检索技能或描述；检索直接使用现有工具，必要的上下文与停止原则见 `rules/common/context-hygiene.md`。升级清理旧技能文件，保留个人附加文件。
+| Entry point | Purpose |
+| --- | --- |
+| `/to-spec` | Prepare a formal engineering specification for approval. |
+| `/code-review` | Review a defined change against its scope and baseline. |
+| `/verify` | Run the relevant verification checks. |
+| `/pr` | Prepare commits and a pull request within the user's authorization. |
+| `/learn` | Explicitly manage reusable learning and its evaluation. |
 
-- `find-skills`、`project-context` 已退休：不再分发独立的 Skill 发现和项目初始化流程。已有 `docs/agent-workflow/project-context.md` 继续兼容；缺少该文件不阻塞只读评估或草稿，仅在实际需要时确认追踪位置、标签映射和权限，不强制生成配置文件。
+These are repository command definitions; availability as native slash commands depends on the host. Ordinary language can also express the intended workflow.
 
-- `wayfinder` 已退休：不再分发独立的跨会话决策地图流程；升级安装清理旧入口，保留个人附加文件。
+## Design principles
 
-- `research` 已退休：工程资料直接检索并引用来源，不再自动创建研究报告；升级安装会清理旧的分发入口。
+1. **Evidence before claims.** A plausible explanation is not a confirmed root cause. A passing local check is not a production release.
+2. **The shortest appropriate workflow.** Match the process and verification effort to the task and risk; do not create artifacts just to satisfy a template.
+3. **Load context when needed.** Keep entry points small and load specialized rules, skills, and references only when relevant.
+4. **Respect project conventions and user control.** Preserve existing work and follow the target project's requirements. Installing a skill does not authorize publishing, external writes, or destructive actions.
+5. **One owner per policy.** Keep routing, Git boundaries, and verification requirements in their designated sources rather than duplicating competing rules.
 
-- `discover-unknowns-zh` 已退休：事实、证据和盲点直接检索一手资料，可运行原型转到 `prototype`，多会话交付转到 `to-tickets`。
-- 原 skill 的 `implementation-notes`、`explainer` 和 `quiz` 工件链不再属于本项目承诺的工作流。
-- `skill-creator` 已退休：Skill 写作与验证规则收敛到 `rules/common/skills-learning.md`，开放生态发现按明确请求使用宿主已有工具处理。
-- 详细实施计划、计划执行，以及依赖长计划的旧 SDD 辅助材料已退休：ticket 是唯一的跨会话实施合同；当前 SDD 只按 ticket 分派 fresh subagent。
+These instructions guide agent behavior; they are not a runtime security boundary or a guarantee of successful diagnosis. Repository validation checks structure and contracts. Real task performance needs separate evaluation.
 
-Matt Pocock Engineering 能力映射固定在 `scripts/upstream-capability-map.json`；Harness 要求
-上游 17 项 promoted Engineering 能力保留映射记录；15 项有本地 `covered` 或 `adapted` 证据，
-`wayfinder` 与 `setup-matt-pocock-skills` 明确标为 `excluded` 并记录移除原因。保留主流程
-跨 session 所依赖的 Productivity `handoff`。`scripts/upstream-capability-baseline.json`
-记录固定 commit 的源文件 SHA-256；`verify:upstream` 可对 fresh clone 复核 commit、目录清单
-和每个源文件，避免只依赖本地映射自报。
+## Repository structure
 
-升级安装会按精确的退役文件清单删除旧分发文件；同名目录中的未知用户文件和 symlink 会保留并报告。
-
-边界与方法：
-
-- 开始工程交付及明确请求的工程工作流前，先用 `using-superpowers` 判断并加载相关 process skill。
-- 上下文或工具面变重时，先盘点常驻 Token 开销，再决定新增或删除 MCP/skill/agent。
-- 完整流程适用时：没有批准的必需 Spec 不进入 ticket 或 implement，没有用户审核不进入实现，没有 review 不标记任务完成。
-- 每张 ticket 必须说明交付行为、验收标准和真实 blocker；不要在 ticket 中复制文件路径、代码或逐步计划。
-- 测试方法见 `rules/common/testing.md`；选择或明确要求 TDD 时，行为实现前须有有效 RED，已有失败测试可复用。
-- 没有新鲜验证证据，不声明完成、通过、已修复或 ready。
-- 没有 verify，不进入 PR。
-- worktree 按用户改动保护、并行、分支保护和回退需求选择；基线与复用策略见 `rules/05-git-workflow.md`。
-
-### Ticket-first 交付约束
-
-- `to-tickets` 只写端到端行为、验收标准和 blocking edges；一张 ticket 是一个可在 fresh context 完成的 tracer bullet。
-- 细节由实施会话结合当前代码发现；ticket 不写文件路径、行号、代码片段或分层改造步骤，避免文档在实现前过期。
-- `implement` 处理一张 frontier ticket，或用户授权的低风险 direct/approved Spec 连贯范围；ticket 以自身作为 Spec source，direct scope 以明确用户请求和相称验证为 scope source。两条路径都选择适用的测试方法、执行相称审查和新鲜验证，只有 ticket 才 claim、resolve 并刷新依赖图。
-- `subagent-driven-development` 是 router 选出的并行执行器：不再读取长计划，而是给每个 fresh subagent 一张已批准的 frontier ticket 和独立 worker worktree；通过 review 的 diff 必须汇入 integration worktree 并完成联合验证后才能 resolve。
-- Visual Companion 使用带 `?key=` 的 per-session URL，HTTP/WebSocket 请求都需要 session key；默认 idle timeout 为 4 小时，可用 `--idle-timeout-minutes` 调整。
-
-复杂度只影响执行与验证强度，不自动触发完整流程。普通新功能、多文件行为变化和存在低风险关键未知的任务仍走最短适用闭环；只有上述高风险类别或显式 opt-in 才进入完整流程。简单问答、翻译、格式调整、窄范围文档修正和无行为变化的小修复，可以直接处理，但完成前仍需运行与改动范围匹配的最小验证。
-
-收尾阶段按 `/verify` -> `/pr` -> `/learn eval --preview` 推进。`/learn eval --preview` 是非阻塞学习建议门，只在模式高频、稳定、可复用时保存。
-
-## Continuous Learning v2
-
-### 工作流程
-
-```
-会话活动 → Hooks 观察 → projects/<project-id>/observations.jsonl
-                            ↓
-                     Observer Agent（继承用户模型选择）
-                            ↓
-               projects/<project-id>/instincts/
-                  ↓                    ↓
-       /learn eval 质量门     /learn promote 预览推广
-                  ↓                    ↓
-        skills/learn/<category>/   global/instincts
-                  ↓
-        /learn evolve 评估是否升级为正式 skills/commands/agents
+```text
+claude-everything-Workflow/
+├── README.md             # English overview
+├── README.zh-CN.md       # Chinese overview
+├── LICENSE               # MIT license
+├── AGENTS.md             # Shared policy entry point
+├── CLAUDE.md             # Claude Code bootstrap
+├── skills/               # Task-specific workflows
+├── rules/                # Project and specialist rules
+├── commands/             # Command entry points
+├── agents/               # Specialized agent definitions
+├── hooks/                # Hook implementations
+├── scripts/              # Installers and validators
+├── references/           # Detailed guides and supporting material
+└── harness/              # Skill metadata and ownership manifest
 ```
 
-默认学习数据根目录为 `${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus`。旧版 `~/.claude/homunculus` 可用 `node scripts/learning/migrate-homunculus.js --dry-run` 预览迁移。
+## Documentation
 
-`observations.jsonl`、project instincts 和 global instincts 是观察、候选和迁移来源；经 `/learn eval` 质量门确认后，最终学习产物以 `skills/learn/<category>/` 为权威路径。只有高频、稳定、可组合的模式才通过 `/learn evolve` 升级为正式 `skills/`、`commands/` 或 `agents/`。
+- [Skill catalog](skills/README.md) — available workflows and their categories (Chinese).
+- [Advanced workflow guide](references/workflow-guide.zh-CN.md) — installation details, workflow contracts, migration notes, and maintenance (Chinese).
+- [Debugging workflow](skills/systematic-debugging/SKILL.md) — investigation and completion criteria.
+- [Verification rules](rules/common/testing.md) — evidence needed before declaring work complete.
 
-### 置信度系统
+## Development
 
-| 分数 | 含义   | AI 行为      |
-| ---- | ------ | ------------ |
-| 0.3  | 试探性 | 建议但不强制 |
-| 0.5  | 中等   | 相关时应用   |
-| 0.7  | 强     | 主动应用     |
-| 0.9  | 核心   | 始终应用     |
+From a source checkout with dependencies installed:
 
-> 置信度不会因时间流逝自动衰减。使用 `scripts/learning/review-confidence.js` 审查、`/learn prune` 清理。
-
-## 使用流程
-
-```
-1. 复制到 ~/.claude/
-2. 优先读取已有项目规则、追踪位置和领域文档，缺少必要信息时就地确认；需求清楚时直接实现；关键未知按需请求 grilling；高风险任务或显式 opt-in 用 `/to-spec` 写 design spec
-3. router 判断跨会话交付时调用 `to-tickets`，确认拆分、验收和依赖后发布；单会话跳过 tickets
-4. router 为无 blocker 的单张 ticket 或单会话 approved Spec 选择 `implement`；新功能使用 `rules/05-git-workflow.md` 隔离工作区，其他改动按 Git 规则判断。
-   多张独立 frontier tickets 时，router 选择 `subagent-driven-development`。
-5. 有测试路径时由 `test-driven-development` 执行测试先行实现；关键路径由 e2e-testing 和 e2e-runner 维护 Playwright
-6. 使用 /code-review 基于固定基点和范围合同审查；简单、明确、局部可逆且可验证的任务可自审，复杂或证据不足时独立审查，高风险使用双轴。`--mode self` 不能绕过风险条件，代理不可用时也不能降级
-7. 使用 /verify 验证，通过后使用 /pr 进入提交与 PR 门
-8. 使用 `/learn` 的 eval、projects、promote、evolve 或 prune 子命令管理学习闭环
+```sh
+npm run verify
+npm run test:manifest
+npm run test:invocation
+npm run test:continuation
+npm run test:install-rules
+npm run verify:upstream
+npm run pack:dry-run
 ```
 
-方法约束的静态回归可运行 `npm run test:adaptive-contracts`；真实模型对照入口见
-[轻量工程行为场景](references/adaptive-engineering-scenarios.md)。静态、脚本和安装测试通过不代表模型行为评测通过。
+`verify:upstream` checks the recorded capability mapping; it does not establish parity with the latest upstream version. `npx claude-everything-workflow verify` validates the published distribution rather than your local project. Neither command proves an agent's effectiveness on real tasks.
+
+For contributions, describe the problem and expected behavior, keep the change focused, and include the checks you actually ran. See the [Git rules](rules/05-git-workflow.md).
+
+## Acknowledgments
+
+CEW draws on [Everything Claude Code](https://github.com/affaan-m/everything-claude-code), [Superpowers](https://github.com/obra/superpowers), and [Matt Pocock's skills](https://github.com/mattpocock/skills), adapting their ideas to this repository's workflows.
+
+## License
+
+Released under the [MIT License](LICENSE). Copyright © 2026 xu91102.
