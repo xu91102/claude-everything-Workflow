@@ -126,7 +126,6 @@ claude-everything-Workflow/
 ## 文档
 
 - [Skill 分类索引](skills/README.md)：可用工作流及其分类。
-- [Workflow 进阶指南](references/workflow-guide.zh-CN.md)：安装细节、流程约定、迁移和维护说明。
 - [排障工作流](skills/systematic-debugging/SKILL.md)：调查方法与完成条件。
 - [验证规则](rules/common/testing.md)：声明完成前需要哪些证据。
 
