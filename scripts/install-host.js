@@ -34,6 +34,8 @@ function selectedFiles(host, optional = []) {
 
 function installHost({ host, installRoot, optional = [], dryRun = false, log = console.log, platform = process.platform }) {
   const root = path.resolve(installRoot);
+  const hookRoot = platform === "win32" ? root : root.replace(/[\\$`"]/g, "\\$&");
+
   const files = selectedFiles(host, optional);
   const legacy = JSON.parse(fs.readFileSync(path.join(__dirname, "legacy-install-hashes.json"), "utf8")).files;
   const ruleFiles = filesUnder("rules");
@@ -64,12 +66,11 @@ function installHost({ host, installRoot, optional = [], dryRun = false, log = c
     // Only retire our exact observer command; user hooks on the same event survive.
     for (const [event, entries] of Object.entries(existing.hooks || {})) {
       existing.hooks[event] = entries.map(entry => ({ ...entry, hooks: entry.hooks.filter(h =>
-        h.command !== observerCommand && h.command !== observerCommand.replaceAll('$HOME/.claude', root)) })).filter(entry => entry.hooks.length);
+        h.command !== observerCommand && h.command !== observerCommand.replaceAll('$HOME/.claude', hookRoot)) })).filter(entry => entry.hooks.length);
     }
     const settings = JSON.parse(fs.readFileSync(path.join(sourceRoot, "settings.json"), "utf8"));
     if (optional.includes("continuous-learning-v2")) settings.hooks.PostToolUse.push({ matcher: "*", hooks: [{ type: "command", command: observerCommand, async: true, timeout: 10 }] });
     // Expand the source before deduplication, including custom --home installations.
-    const hookRoot = platform === "win32" ? root : root.replace(/[\\$`"]/g, "\\$&");
     for (const config of [settings, existing]) {
       for (const entries of Object.values(config.hooks || {})) for (const entry of entries) for (const hook of entry.hooks) {
         if (hook.command) hook.command = hook.command.replaceAll('$HOME/.claude', hookRoot);

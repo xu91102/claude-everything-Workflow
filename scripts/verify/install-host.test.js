@@ -81,7 +81,7 @@ try {
   install(cold, "claude-code");
   assert.equal(exists(cold, "references/rules/common/context-hygiene.md"), false);
   for (const platform of ["win32", "darwin"]) {
-    const root = path.join(temp, `repeat-${platform}`);
+    const root = path.join(temp, `repeat-${platform}-$quoted`);
     for (let i = 0; i < 3; i++) install(root, "claude-code", { platform });
     const settings = JSON.parse(read(root, "settings.json"));
     assert.equal(settings.hooks.PostToolUse.flatMap(e => e.hooks).length, 2);
