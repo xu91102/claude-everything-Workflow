@@ -88,6 +88,7 @@ function checkLegacyScriptReferences() {
         "scripts/install.ps1",
         "scripts/install.sh",
         "scripts/merge-claude-settings.cjs",
+        "scripts/legacy-hook-commands.json",
       ].includes(file)
     ) continue;
     if (!/\.(md|json|js|ps1|sh)$/.test(file)) continue;
@@ -324,7 +325,7 @@ function createRetiredSkillFixture() {
   const at = (...parts) => path.join(tempRoot, ...parts);
   const fixture = {
     tempRoot,
-    known: at("skills", "brainstorming", "SKILL.md"),
+    known: at("skills", "research", "SKILL.md"),
     unknown: at("skills", "brainstorming", "user-notes.md"),
     dryRunKnown: at("skills", "discover-unknowns-zh", "SKILL.md"),
     creatorKnown: at("skills", "skill-creator", "scripts", "quick_validate.py"),
@@ -361,6 +362,7 @@ function createRetiredSkillFixture() {
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, "fixture");
   }
+  fs.writeFileSync(fixture.known, read("scripts/verify/fixtures/legacy-research.md"));
   fs.mkdirSync(path.dirname(fixture.rootExternalKnown), { recursive: true });
   fs.writeFileSync(fixture.rootExternalKnown, "must stay");
   fs.mkdirSync(path.dirname(fixture.rootSymlink), { recursive: true });
@@ -405,18 +407,11 @@ function isSymlink(file) {
 }
 
 function assertRetiredSkillCleanup(fixture) {
-  if (
-    fs.existsSync(fixture.known) ||
-    fs.existsSync(fixture.dryRunKnown) ||
-    fs.existsSync(fixture.creatorKnown)
-  ) {
-    fail("retired skill cleanup did not remove known files");
-  }
-  if (
-    !fs.existsSync(fixture.unknown) ||
-    !fs.existsSync(fixture.creatorUnknown)
-  ) {
-    fail("retired skill cleanup removed an unknown user file");
+  if (fs.existsSync(fixture.known)) fail("retired skill cleanup did not remove fingerprinted CEW content");
+  for (const file of [fixture.dryRunKnown, fixture.creatorKnown, fixture.unknown, fixture.creatorUnknown]) {
+    if (!fs.existsSync(file) || fs.readFileSync(file, "utf8") !== "fixture") {
+      fail("retired skill cleanup removed or changed content without a CEW fingerprint");
+    }
   }
   if (
     !fs.existsSync(fixture.rootExternalKnown) ||

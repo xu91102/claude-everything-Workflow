@@ -1,0 +1,61 @@
+{
+  "description": "Exact CEW commands from the recorded settings.json revisions. Relative or changed commands are deliberately not recognized.",
+  "commands": [
+    {
+      "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" session:start \"$HOME/.claude/hooks/session-start.js\" minimal,standard,strict",
+      "commit": "36d305fc609b1466edc5883eebbf9ecbce9ecb10"
+    },
+    {
+      "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" stop:evaluate-session \"$HOME/.claude/hooks/evaluate-session.js\" strict",
+      "commit": "36d305fc609b1466edc5883eebbf9ecbce9ecb10"
+    },
+    {
+      "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" session:end \"$HOME/.claude/hooks/session-end.js\" minimal,standard,strict",
+      "commit": "36d305fc609b1466edc5883eebbf9ecbce9ecb10"
+    },
+    {
+      "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" precompact:save-context \"$HOME/.claude/hooks/pre-compact.js\" minimal,standard,strict",
+      "commit": "36d305fc609b1466edc5883eebbf9ecbce9ecb10"
+    },
+    {
+      "command": "node \"$HOME/.claude/hooks/runtime/run-with-flags.js\" stop:evaluate-session \"$HOME/.claude/hooks/evaluate-session.js\" standard,strict",
+      "commit": "4eb1edfa5ff8b67d9ab559ed51ae2761adec3e1d"
+    },
+    {
+      "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" session:start \"$HOME/.claude/scripts/hooks/session-start.js\" minimal,standard,strict",
+      "commit": "2b3f81e962f3d507fc1c83bce26bcead420f129c"
+    },
+    {
+      "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" post:edit:console-log \"$HOME/.claude/hooks/check-console-log.js\" standard,strict",
+      "commit": "2b3f81e962f3d507fc1c83bce26bcead420f129c"
+    },
+    {
+      "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" post:write:console-log \"$HOME/.claude/hooks/check-console-log.js\" standard,strict",
+      "commit": "2b3f81e962f3d507fc1c83bce26bcead420f129c"
+    },
+    {
+      "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" post:multiedit:console-log \"$HOME/.claude/hooks/check-console-log.js\" standard,strict",
+      "commit": "2b3f81e962f3d507fc1c83bce26bcead420f129c"
+    },
+    {
+      "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" post:observe \"$HOME/.claude/skills/continuous-learning-v2/hooks/observe-v2.js\" strict post",
+      "commit": "2b3f81e962f3d507fc1c83bce26bcead420f129c"
+    },
+    {
+      "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" stop:evaluate-session \"$HOME/.claude/hooks/evaluate-session.js\" standard,strict",
+      "commit": "2b3f81e962f3d507fc1c83bce26bcead420f129c"
+    },
+    {
+      "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" session:end \"$HOME/.claude/scripts/hooks/session-end.js\" minimal,standard,strict",
+      "commit": "2b3f81e962f3d507fc1c83bce26bcead420f129c"
+    },
+    {
+      "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" precompact:save-context \"$HOME/.claude/hooks/pre-compact.js\" minimal,standard,strict",
+      "commit": "2b3f81e962f3d507fc1c83bce26bcead420f129c"
+    },
+    {
+      "command": "node \"$HOME/.claude/scripts/hooks/run-with-flags.js\" post:observe \"$HOME/.claude/hooks/observe.js\" strict post",
+      "commit": "8a165f44cfb669743ca933902034edfe951663ec"
+    }
+  ]
+}

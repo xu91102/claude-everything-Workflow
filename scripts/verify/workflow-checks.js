@@ -496,6 +496,7 @@ function checkRemovedSkillReferences() {
   const allowedRetirementFiles = new Set([
     "README.md",
     "scripts/retired-skill-files.json",
+    "scripts/legacy-install-hashes.json",
     "scripts/upstream-capability-map.json",
     "scripts/upstream-capability-baseline.json",
   ]);

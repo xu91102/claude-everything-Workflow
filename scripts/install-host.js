@@ -71,12 +71,14 @@ function installHost({ host, installRoot, optional = [], dryRun = false, log = c
     const settings = JSON.parse(fs.readFileSync(path.join(sourceRoot, "settings.json"), "utf8"));
     if (optional.includes("continuous-learning-v2")) settings.hooks.PostToolUse.push({ matcher: "*", hooks: [{ type: "command", command: observerCommand, async: true, timeout: 10 }] });
     // Expand the source before deduplication, including custom --home installations.
+    const managedCommands = new Set(Object.values(settings.hooks).flatMap(entries =>
+      entries.flatMap(entry => entry.hooks.map(hook => hook.command))));
     for (const config of [settings, existing]) {
       for (const entries of Object.values(config.hooks || {})) for (const entry of entries) for (const hook of entry.hooks) {
-        if (hook.command) hook.command = hook.command.replaceAll('$HOME/.claude', hookRoot);
+        if (managedCommands.has(hook.command)) hook.command = hook.command.replaceAll('$HOME/.claude', hookRoot);
       }
     }
-    const merged = mergeSettings(settings, existing);
+    const merged = mergeSettings(settings, existing, { installRoot: root });
     const content = JSON.stringify(merged, null, 2) + "\n";
     log(`${dryRun ? "[dry-run] " : ""}Merge Claude settings: ${target}`);
     if (!dryRun && content !== previous) {
@@ -88,7 +90,7 @@ function installHost({ host, installRoot, optional = [], dryRun = false, log = c
     log(`${dryRun ? "[dry-run] " : ""}Retire unchanged CEW file: ${target}`);
     if (!dryRun) fs.unlinkSync(target);
   }
-  // Keep the older, explicit retired-skill migration for versions predating host profiles.
+  // Older migrations use the same distribution fingerprints; a retired name alone never authorizes deletion.
   const result = spawnSync(process.execPath, [path.join(__dirname, "cleanup-retired-skills.js"), root, ...(dryRun ? ["--dry-run"] : [])], { encoding: "utf8" });
   if (result.status !== 0) throw new Error(result.stderr || "Retired skill cleanup failed");
   if (result.stdout.trim()) log(result.stdout.trim());

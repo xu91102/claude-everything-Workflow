@@ -3,6 +3,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { digest } = require("./install-rules");
 
 function writeLine(message) {
   process.stdout.write(`${message}\n`);
@@ -93,10 +94,9 @@ function collectKnownDirectories(skillRoot, relative, directories) {
   }
 }
 
-function removeKnownFiles({ skillRoot, knownFiles, directories, dryRun }) {
+function removeKnownFiles({ installRoot, skillRoot, knownFiles, hashes, directories, dryRun }) {
   for (const relative of knownFiles) {
     const target = path.join(skillRoot, relative);
-    collectKnownDirectories(skillRoot, relative, directories);
     if (hasSymlinkParent(skillRoot, target)) {
       writeLine(`Preserving retired path through symlink: ${target}`);
       continue;
@@ -111,6 +111,13 @@ function removeKnownFiles({ skillRoot, knownFiles, directories, dryRun }) {
       writeLine(`Preserving non-file retired path: ${target}`);
       continue;
     }
+    const distributedPath = path.relative(installRoot, target).split(path.sep).join("/");
+    if (!(hashes[distributedPath] || []).includes(digest(fs.readFileSync(target)))) {
+      writeLine(`Preserving modified/unknown retired file (ownership unconfirmed): ${target}`);
+      continue;
+    }
+    directories.add(skillRoot);
+    collectKnownDirectories(skillRoot, relative, directories);
     writeLine(`${dryRun ? "[dry-run] " : ""}Remove retired file: ${target}`);
     if (!dryRun) fs.unlinkSync(target);
   }
@@ -133,9 +140,9 @@ function removeEmptyKnownDirectories(directories) {
   }
 }
 
-function cleanupSkill({ installRoot, skill, knownFiles, dryRun }) {
+function cleanupSkill({ installRoot, skill, knownFiles, hashes, dryRun }) {
   const skillRoot = path.join(installRoot, "skills", skill);
-  const directories = new Set([skillRoot]);
+  const directories = new Set();
   const knownFileSet = new Set(
     knownFiles.map((relative) => relative.split(/[\\/]/).join("/")),
   );
@@ -149,7 +156,7 @@ function cleanupSkill({ installRoot, skill, knownFiles, dryRun }) {
     return;
   }
 
-  removeKnownFiles({ skillRoot, knownFiles, directories, dryRun });
+  removeKnownFiles({ installRoot, skillRoot, knownFiles, hashes, directories, dryRun });
   if (dryRun && lstatIfExists(skillRoot)) {
     for (const relative of listUnknownPaths(skillRoot, knownFileSet)) {
       writeLine(
@@ -185,9 +192,14 @@ function main(argv = process.argv.slice(2)) {
   const manifestPath = path.join(__dirname, "retired-skill-files.json");
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   const retiredSkills = validateManifest(manifest);
+  const hashes = JSON.parse(fs.readFileSync(path.join(__dirname, "legacy-install-hashes.json"), "utf8")).files;
   if (validateOnly) return 0;
 
   const installRoot = path.resolve(positional[0]);
+  if (lstatIfExists(installRoot)?.isSymbolicLink()) {
+    writeLine(`Preserving symlinked install root: ${installRoot}`);
+    return 0;
+  }
   const skillsRoot = path.join(installRoot, "skills");
   const skillsRootStat = lstatIfExists(skillsRoot);
   if (skillsRootStat?.isSymbolicLink()) {
@@ -199,7 +211,7 @@ function main(argv = process.argv.slice(2)) {
   }
 
   for (const [skill, knownFiles] of retiredSkills) {
-    cleanupSkill({ installRoot, skill, knownFiles, dryRun });
+    cleanupSkill({ installRoot, skill, knownFiles, hashes, dryRun });
   }
   return 0;
 }

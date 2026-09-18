@@ -63,7 +63,7 @@ function checkInstallerEntrypoint() {
   run([windows ? "-DryRun" : "--dry-run"]);
   assert.equal(fs.existsSync(path.join(profile, ".claude")), false);
   assert.equal(fs.existsSync(path.join(profile, ".codex")), false);
-  // Seed an older installation to exercise retirement and policy replacement through the real CLI.
+  // A historical filename alone must not authorize retirement through the real CLI.
   for (const host of [".claude", ".codex"]) {
     const skills = path.join(profile, host, "skills");
     for (const retired of ["research", "wayfinder", "find-skills", "project-context", "iterative-retrieval", "using-git-worktrees", "verification-before-completion"]) {
@@ -80,7 +80,7 @@ function checkInstallerEntrypoint() {
       for (const file of known[retired]) {
         const target = path.join(skills, retired, file);
         fs.mkdirSync(path.dirname(target), { recursive: true });
-        fs.writeFileSync(target, "Old distributed content\n");
+        fs.writeFileSync(target, "Unverified personal content\n");
       }
       fs.writeFileSync(path.join(skills, retired, "personal-notes.md"), "Keep my notes\n");
     }
@@ -99,12 +99,10 @@ function checkInstallerEntrypoint() {
     assert.equal(read(path.join(profile, host, "references/git-worktrees.md")),
       read(path.join(sourceRoot, "references/git-worktrees.md")));
     for (const retired of ["research", "wayfinder", "find-skills", "project-context", "iterative-retrieval", "using-git-worktrees", "verification-before-completion"]) {
-      assert.equal(fs.existsSync(path.join(profile, host, "skills", retired, "SKILL.md")), false);
-      const remaining = fs.readdirSync(path.join(profile, host, "skills", retired));
-      assert.deepEqual(remaining, ["personal-notes.md"]);
+      assert.equal(read(path.join(profile, host, "skills", retired, "SKILL.md")), "Unverified personal content\n");
       assert.equal(read(path.join(profile, host, "skills", retired, "personal-notes.md")), "Keep my notes\n");
     }
-    assert.equal(fs.existsSync(path.join(profile, host, "skills/wayfinder/agents")), false);
+    assert.equal(read(path.join(profile, host, "skills/wayfinder/agents/openai.yaml")), "Unverified personal content\n");
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/install-rules.js")), false);
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/continuation-checks.test.js")), false,
       "安装不应保留仅供包内验证的续接测试");

@@ -221,7 +221,7 @@ function checkHookConfigReferences() {
   }
 
   requireTokens("scripts/merge-claude-settings.cjs", [
-    "LEGACY_HOOK_PATTERNS",
+    "LEGACY_HOOK_COMMANDS",
     "cleanHooks",
     "mergeSettings",
   ]);

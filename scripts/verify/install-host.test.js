@@ -116,3 +116,6 @@ try {
   assert.equal(exists(cliHome, ".claude"), false);
   console.log("Host-profile installation passed: defaults, optional dependencies, links, upgrade, backups, hooks, isolation and CLI.");
 } finally { fs.rmSync(temp, { recursive: true, force: true }); }
+
+// Keep ownership regressions in the platform installer job as well as package verification.
+require("./install-ownership.test.js");

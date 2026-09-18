@@ -7,6 +7,7 @@ const BRAINSTORMING_REFERENCE_ALLOWLIST = new Set([
   "skills/using-superpowers/SKILL.md",
   "scripts/install.sh",
   "scripts/install.ps1",
+  "scripts/legacy-install-hashes.json",
 ]);
 
 const ROUTING_SCENARIOS = [
