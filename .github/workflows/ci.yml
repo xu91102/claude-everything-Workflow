@@ -41,6 +41,9 @@ jobs:
       - name: Test rule installation and migration
         run: npm run test:install-rules
 
+      - name: Test plugin distribution
+        run: npm run test:plugins
+
       - name: Validate npm package
         run: npm run pack:dry-run
 

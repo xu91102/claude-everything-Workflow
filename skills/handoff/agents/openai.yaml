@@ -1,2 +1,5 @@
+interface:
+  display_name: "Handoff"
+  short_description: "Create a redacted handoff for an explicitly requested fresh session."
 policy:
   allow_implicit_invocation: true

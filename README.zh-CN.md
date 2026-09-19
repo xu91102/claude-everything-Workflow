@@ -26,6 +26,8 @@ CEW 使用你已有的项目和模型，不提供模型，也不替代 Claude Co
 
 ## 安装
 
+也支持 **Claude Code / Codex 插件安装**，从 GitHub 插件市场获取并更新，保留原有 npm 安装方式。见[插件安装与更新](docs/plugins.md)。
+
 ### 环境要求
 
 - 已安装并配置 Claude Code 和/或 Codex。

@@ -1,0 +1,20 @@
+{
+  "name": "claude-everything-workflow",
+  "version": "0.2.4",
+  "description": "Evidence-based engineering workflows: implement, debug, review and verify.",
+  "author": { "name": "xu91102" },
+  "homepage": "https://github.com/xu91102/claude-everything-Workflow",
+  "repository": "https://github.com/xu91102/claude-everything-Workflow",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Claude Everything Workflow",
+    "shortDescription": "Implement, debug, review and verify with evidence.",
+    "longDescription": "Reusable engineering workflows for Claude Code and Codex, with focused rules and verification. Start with the using-superpowers skill.",
+    "developerName": "xu91102",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/xu91102/claude-everything-Workflow",
+    "defaultPrompt": ["Use the CEW using-superpowers skill to handle this engineering task."]
+  }
+}

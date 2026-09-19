@@ -26,6 +26,8 @@ CEW works with your existing projects and model. It does not provide a model or 
 
 ## Installation
 
+**Claude Code and Codex plugins are also supported**, with GitHub marketplace installation and updates. The npm installer remains available. See [plugin installation and updates (Chinese)](docs/plugins.md).
+
 ### Requirements
 
 - Claude Code and/or Codex, already installed and configured.

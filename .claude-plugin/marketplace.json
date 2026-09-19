@@ -1,0 +1,12 @@
+{
+  "name": "cew",
+  "owner": { "name": "xu91102" },
+  "metadata": { "description": "Reusable engineering workflows for Claude Code and Codex." },
+  "plugins": [
+    {
+      "name": "claude-everything-workflow",
+      "source": "./",
+      "description": "Reusable engineering workflows for Claude Code and Codex."
+    }
+  ]
+}
