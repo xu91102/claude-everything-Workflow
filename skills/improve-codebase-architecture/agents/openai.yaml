@@ -1,2 +1,5 @@
+interface:
+  display_name: "Architecture Health Review"
+  short_description: "Audit architecture health and route selected findings to design."
 policy:
   allow_implicit_invocation: true

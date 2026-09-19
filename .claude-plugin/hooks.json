@@ -1,0 +1,33 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/runtime/run-with-flags.js\" post:edit:console-log hooks/check-console-log.js standard,strict",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/runtime/run-with-flags.js\" post:edit:code-size hooks/check-code-size.js standard,strict",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/runtime/run-with-flags.js\" pre:bash:commit-quality hooks/commit-quality.js standard,strict",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

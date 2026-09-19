@@ -190,7 +190,8 @@ function Remove-PackageOnlyPaths {
         "scripts\verify\skill-manifest-checks.test.js",
         "scripts\verify\skill-invocation.test.js",
         "scripts\verify\continuation-checks.test.js",
-        "scripts\verify\install-rules.test.js"
+        "scripts\verify\install-rules.test.js",
+        "scripts\verify\plugin-distribution.test.js"
     )
 
     foreach ($relative in $packageOnlyFiles) {

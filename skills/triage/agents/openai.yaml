@@ -1,2 +1,5 @@
+interface:
+  display_name: "Issue and Pull Request Triage"
+  short_description: "Classify explicit issue or pull request requests using evidence."
 policy:
   allow_implicit_invocation: true

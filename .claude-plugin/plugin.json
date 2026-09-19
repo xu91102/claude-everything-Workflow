@@ -1,0 +1,10 @@
+{
+  "name": "claude-everything-workflow",
+  "version": "0.2.4",
+  "description": "Evidence-based engineering workflows: implement, debug, review and verify.",
+  "author": { "name": "xu91102" },
+  "homepage": "https://github.com/xu91102/claude-everything-Workflow",
+  "repository": "https://github.com/xu91102/claude-everything-Workflow",
+  "license": "MIT",
+  "hooks": "./.claude-plugin/hooks.json"
+}
