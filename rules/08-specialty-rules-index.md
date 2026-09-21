@@ -15,4 +15,4 @@
 | 测试策略、TDD、E2E、验证范围             | `common/testing.md`                                                     |
 | 提交、推送、PR、CI 质量门                | `05-git-workflow.md`、`common/pr-automation.md`                        |
 | 安全敏感实现或安全审查                   | `07-forbidden.md`                                                       |
-| 跨平台脚本、不可变性                     | `03-architecture.md`                                                    |
+| 架构与兼容、错误处理、代码规模、注释                     | `02-implementation.md`                                                    |

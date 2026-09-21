@@ -3,7 +3,7 @@
  * Check Code Size Hook
  *
  * 编辑后只检查本次改动的代码文件：文件行数上限与单行长度。
- * 正常静默，避免增加上下文噪音。对应 rules/02-code-size.md。
+ * 正常静默，避免增加上下文噪音。对应 rules/02-implementation.md。
  */
 
 'use strict'
