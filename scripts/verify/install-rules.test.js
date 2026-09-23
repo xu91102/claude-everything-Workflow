@@ -25,17 +25,23 @@ function checkLegacyMigration() {
   const previous = "Previous distribution\n";
   const hash = crypto.createHash("sha256").update(previous).digest("hex");
   fs.writeFileSync(path.join(fixture, "scripts/legacy-common-rule-hashes.json"),
-    JSON.stringify({ files: { "common/testing.md": [hash] } }));
+    JSON.stringify({ files: { "common/testing.md": [hash], "common/security.md": [hash] } }));
   const target = path.join(tempRoot, "legacy-target");
   fs.mkdirSync(path.join(target, "rules/common"), { recursive: true });
   fs.writeFileSync(path.join(target, "rules/common/testing.md"), previous.replace(/\n/g, "\r\n"));
+  fs.writeFileSync(path.join(target, "rules/common/security.md"), previous);
   const options = { sourceRoot: fixture, installRoot: target, host: "claude-code", log: () => {} };
   installRules({ ...options, dryRun: true });
   assert.equal(read(path.join(target, "rules/common/testing.md")), previous);
   assert.equal(fs.existsSync(path.join(target, "references")), false);
   installRules(options);
+  assert.equal(fs.existsSync(path.join(target, "rules/common/security.md")), false);
   assert.equal(fs.existsSync(path.join(target, "rules/common/testing.md")), false);
   assert.equal(read(path.join(target, "references/rules/common/testing.md")), "Current distribution\n");
+
+  fs.writeFileSync(path.join(target, "rules/common/security.md"), "Personal security policy\n");
+  installRules(options);
+  assert.equal(read(path.join(target, "rules/common/security.md")), "Personal security policy\n");
 
   const cold = path.join(target, "references/rules/common/testing.md");
   fs.writeFileSync(cold, previous);
@@ -53,6 +59,8 @@ function checkInstallerEntrypoint() {
     : [path.join(sourceRoot, "scripts/install.sh")];
   // The child gets a disposable profile; never update this process's home or the user's installation.
   const env = { ...process.env, USERPROFILE: profile, HOME: profile };
+  // Let Windows PowerShell resolve its own modules instead of inheriting PowerShell 7 modules.
+  if (windows) delete env.PSModulePath;
   const run = (extra = []) => {
     const result = spawnSync(executable, [...args, ...extra], {
       cwd: sourceRoot, env, encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024,
@@ -66,10 +74,12 @@ function checkInstallerEntrypoint() {
   // Seed an older installation to exercise retirement and policy replacement through the real CLI.
   for (const host of [".claude", ".codex"]) {
     const skills = path.join(profile, host, "skills");
-    for (const retired of ["research", "wayfinder", "find-skills", "project-context", "iterative-retrieval", "using-git-worktrees", "verification-before-completion"]) {
+    for (const retired of ["research", "wayfinder", "find-skills", "project-context", "iterative-retrieval", "using-git-worktrees", "verification-before-completion", "context-budget", "documentation-lookup"]) {
       fs.mkdirSync(path.join(skills, retired), { recursive: true });
       const known = {
         research: ["SKILL.md"],
+        "context-budget": ["SKILL.md"],
+        "documentation-lookup": ["SKILL.md"],
         "iterative-retrieval": ["SKILL.md"],
         "using-git-worktrees": ["SKILL.md"],
         "verification-before-completion": ["SKILL.md"],
@@ -84,21 +94,34 @@ function checkInstallerEntrypoint() {
       }
       fs.writeFileSync(path.join(skills, retired, "personal-notes.md"), "Keep my notes\n");
     }
+    fs.mkdirSync(path.join(skills, "wayfinder/references/empty"), { recursive: true });
     fs.mkdirSync(path.join(skills, "handoff/agents"), { recursive: true });
     fs.writeFileSync(path.join(skills, "handoff/agents/openai.yaml"),
       "policy:\n  allow_implicit_invocation: false\n");
   }
+  const settingsFile = path.join(profile, ".claude/settings.json");
+  const obsolete = Object.fromEntries([
+    ["SessionStart", "session-start"], ["SessionEnd", "session-end"], ["PreCompact", "pre-compact"],
+  ].map(([event, file]) => [event, [{ hooks: [{ type: "command",
+    command: `node "${path.join(profile, ".claude").replace(/\\/g, "/")}/hooks/${file}.js"` }] }]]));
+  fs.writeFileSync(settingsFile, JSON.stringify({ hooks: { ...obsolete,
+    Notification: [{ hooks: [{ type: "command", command: "echo personal-hook" }] }],
+  } }));
   run();
+  run(); // Upgrades are idempotent, including settings cleanup and custom rule preservation.
+  const installedSettings = JSON.parse(read(settingsFile).replace(/^﻿/, ""));
+  for (const event of Object.keys(obsolete)) assert.equal(installedSettings.hooks[event], undefined);
+  assert.equal(installedSettings.hooks.Notification[0].hooks[0].command, "echo personal-hook");
   assert.equal(read(path.join(profile, ".claude/references/rules/common/testing.md")),
     read(path.join(sourceRoot, "rules/common/testing.md")));
   assert.equal(fs.existsSync(path.join(profile, ".claude/rules/common/testing.md")), false);
-  assert.equal(read(path.join(profile, ".codex/rules/common/testing.md")),
+  assert.equal(read(path.join(profile, ".codex/references/rules/common/testing.md")),
     read(path.join(sourceRoot, "rules/common/testing.md")));
   assert.match(read(path.join(profile, ".claude/CLAUDE.md")), /^@AGENTS\.md$/m);
   for (const host of [".claude", ".codex"]) {
     assert.equal(read(path.join(profile, host, "references/git-worktrees.md")),
       read(path.join(sourceRoot, "references/git-worktrees.md")));
-    for (const retired of ["research", "wayfinder", "find-skills", "project-context", "iterative-retrieval", "using-git-worktrees", "verification-before-completion"]) {
+    for (const retired of ["research", "wayfinder", "find-skills", "project-context", "iterative-retrieval", "using-git-worktrees", "verification-before-completion", "context-budget", "documentation-lookup"]) {
       assert.equal(fs.existsSync(path.join(profile, host, "skills", retired, "SKILL.md")), false);
       const remaining = fs.readdirSync(path.join(profile, host, "skills", retired));
       assert.deepEqual(remaining, ["personal-notes.md"]);
@@ -117,6 +140,7 @@ function checkInstallerEntrypoint() {
 
 try {
   install("fresh");
+  assert.equal(fs.existsSync(path.join(tempRoot, "fresh/rules/07-forbidden.md")), false);
   const fresh = path.join(tempRoot, "fresh");
   const common = fs.readdirSync(path.join(sourceRoot, "rules/common"));
   assert.equal(common.length, 8);
@@ -125,11 +149,11 @@ try {
       read(path.join(sourceRoot, "rules/common", file)));
     assert.equal(fs.existsSync(path.join(fresh, "rules/common", file)), false);
   }
-  assert.equal(read(path.join(fresh, "rules/07-forbidden.md")),
+  assert.equal(read(path.join(fresh, "references/rules/07-forbidden.md")),
     read(path.join(sourceRoot, "rules/07-forbidden.md")));
 
   install("codex", "codex");
-  assert.equal(read(path.join(tempRoot, "codex/rules/common/testing.md")),
+  assert.equal(read(path.join(tempRoot, "codex/references/rules/common/testing.md")),
     read(path.join(sourceRoot, "rules/common/testing.md")));
   install("preview", "claude-code", true);
   assert.equal(fs.existsSync(path.join(tempRoot, "preview")), false);
@@ -140,7 +164,14 @@ try {
     path.join(upgrade, "rules/common/testing.md"));
   fs.writeFileSync(path.join(upgrade, "rules/common/hooks.md"), "Personal hook policy\n");
   fs.writeFileSync(path.join(upgrade, "rules/common/personal.md"), "Keep my rules\n");
+  fs.copyFileSync(path.join(sourceRoot, "rules/05-git-workflow.md"),
+    path.join(upgrade, "rules/05-git-workflow.md"));
+  fs.writeFileSync(path.join(upgrade, "rules/07-forbidden.md"), "Personal safety policy\n");
+  fs.writeFileSync(path.join(upgrade, "rules/default.rules"), "Personal command permissions\n");
   install("upgrade");
+  assert.equal(fs.existsSync(path.join(upgrade, "rules/05-git-workflow.md")), false);
+  assert.equal(read(path.join(upgrade, "rules/07-forbidden.md")), "Personal safety policy\n");
+  assert.equal(read(path.join(upgrade, "rules/default.rules")), "Personal command permissions\n");
   assert.equal(fs.existsSync(path.join(upgrade, "rules/common/testing.md")), false);
   assert.equal(read(path.join(upgrade, "rules/common/hooks.md")), "Personal hook policy\n");
   assert.equal(read(path.join(upgrade, "rules/common/personal.md")), "Keep my rules\n");

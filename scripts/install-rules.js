@@ -44,11 +44,11 @@ function copyRule({ source, root, relative, dryRun, log }) {
   }
 }
 
-function retireCommon({ source, root, relative, knownHashes, dryRun, log }) {
+function retireRule({ source, root, relative, knownHashes, dryRun, log }) {
   const target = checkedPath(root, relative);
   if (!fs.existsSync(target)) return;
   const hash = digest(fs.readFileSync(target));
-  if (hash !== digest(fs.readFileSync(source)) && !knownHashes.includes(hash)) {
+  if ((!source || hash !== digest(fs.readFileSync(source))) && !knownHashes.includes(hash)) {
     log(`保留个人修改，仍可能自动加载: ${target}`);
     return;
   }
@@ -67,19 +67,28 @@ function installRules({ sourceRoot, installRoot, host, dryRun = false, log = con
   const commonFiles = fs.readdirSync(path.join(rulesRoot, "common"), { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
     .map((entry) => `common/${entry.name}`);
+  const current = [...files, ...commonFiles];
+  const retired = Object.keys(legacy.files).filter((relative) => !current.includes(relative));
+  for (const relative of retired) {
+    checkedPath(root, `rules/${relative}`);
+    checkedPath(root, `references/rules/${relative}`);
+  }
   // Validate all managed destinations before the first write, including upgrade cleanup paths.
   for (const relative of [...files, ...commonFiles]) {
     checkedPath(root, `rules/${relative}`);
-    if (host === "claude-code" && relative.startsWith("common/")) {
-      checkedPath(root, `references/rules/${relative}`);
-    }
+    checkedPath(root, `references/rules/${relative}`);
   }
   for (const relative of [...files, ...commonFiles]) {
     const source = path.join(rulesRoot, relative);
-    const cold = host === "claude-code" && relative.startsWith("common/");
-    copyRule({ source, root, relative: `${cold ? "references/rules" : "rules"}/${relative}`, dryRun, log });
-    if (cold) retireCommon({ source, root, relative: `rules/${relative}`,
+    copyRule({ source, root, relative: `references/rules/${relative}`, dryRun, log });
+    retireRule({ source, root, relative: `rules/${relative}`,
       knownHashes: legacy.files[relative] || [], dryRun, log });
+  }
+  for (const relative of retired) {
+    for (const directory of ["rules", "references/rules"]) {
+      retireRule({ root, relative: `${directory}/${relative}`,
+        knownHashes: legacy.files[relative], dryRun, log });
+    }
   }
 }
 

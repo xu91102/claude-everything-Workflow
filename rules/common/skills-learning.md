@@ -12,7 +12,7 @@
 ## 路由权威来源
 
 - 工程交付及明确请求的工程工作流读取 `skills/using-superpowers/SKILL.md`；不要因为多文件或普通复杂度加载完整 process skill 链。
-- 全局门禁以 `rules/01-base.md` 为准；ticket/SDD 以 `rules/common/agent-orchestration.md` 和当前 Skill 为准。
+- 全局门禁以 `rules/01-base.md` 为准；ticket/SDD 的交付选择沿用上述路由，具体执行以当前 Skill 为准。
 - 不凭记忆执行 skill；用户指令、AGENTS/CLAUDE 和项目 Rules 优先。
 
 ## 按需学习

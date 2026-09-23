@@ -42,7 +42,7 @@ function checkSuperpowersDevLoop() {
     "skills/using-superpowers/SKILL.md",
     "路由权威来源",
     "rules/01-base.md",
-    "rules/common/agent-orchestration.md",
+    "具体执行以当前 Skill 为准",
     "不凭记忆执行 skill",
   ]);
 
@@ -231,7 +231,7 @@ function checkWorkflowDocuments() {
     "路由权威来源",
     "不要因为多文件或普通复杂度加载完整 process skill 链",
     "rules/01-base.md",
-    "rules/common/agent-orchestration.md",
+    "具体执行以当前 Skill 为准",
   ]);
 }
 
@@ -523,7 +523,7 @@ function checkUpstreamCapabilityParity() {
 function checkRemovedSkillReferences() {
   for (const skill of ["context-budget", "documentation-lookup"]) {
     for (const file of managedFiles()) {
-      if (isVerifierImplementation(file)) continue;
+      if (isVerifierImplementation(file) || file === "scripts/retired-skill-files.json") continue;
       if (read(file).includes(skill)) {
         fail(`${file} still references removed skill ${skill}`);
       }

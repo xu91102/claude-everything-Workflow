@@ -69,7 +69,7 @@ The CLI selects the shell or PowerShell installer for your platform. The same `-
 | Claude Code | `~/.claude/` | Shared workflow files, `CLAUDE.md` bootstrap, rules, and merged hook settings. |
 | Codex | `~/.codex/` | Shared workflow files and `AGENTS.md`; Claude Code hooks are not automatically enabled. |
 
-Installation updates user-level files and can affect multiple projects. Changed top-level configuration files are backed up; matching files inside shared directories are synchronized from the repository. Unknown files are generally retained, while known retired files are removed by an explicit cleanup list. Back up any personal edits to shared files before upgrading. Use the installer instead of copying the entire `rules/` directory: it handles the different rule locations used by each host.
+Installation updates user-level files and can affect multiple projects. Changed top-level configuration files are backed up; matching files inside shared directories are synchronized from the repository. Unknown files are generally retained, while known retired files are removed by an explicit cleanup list. Back up any personal edits to shared files before upgrading. The repository's `rules/` is the authoring source: the installer puts all detailed rules under `references/rules/` on both hosts. Always-loaded constraints live in `AGENTS.md`, imported by Claude's `CLAUDE.md`. Historical content hashes identify distributed rules for cleanup; personal edits remain with a warning and may still load in Claude. Retired hooks are cleaned when an upgrade merges settings; editing this repository does not update an existing installation.
 
 ## How it works
 
@@ -156,3 +156,7 @@ CEW draws on [Everything Claude Code](https://github.com/affaan-m/everything-cla
 ## License
 
 Released under the [MIT License](LICENSE). Copyright © 2026 xu91102.
+
+## Optional project context
+
+Existing projects may keep `docs/agent-workflow/project-context.md`; without it, skills use confirmed repository and session settings. No retired generator skill is required. Use Markdown to record project goals and boundaries, verification commands, documentation and ADR locations, tracker/project/status mappings, and Spec/ticket conventions. Include only confirmed facts; inspect missing facts and ask only about consequential decisions that cannot be discovered. This file supplies context, not permission for external writes.

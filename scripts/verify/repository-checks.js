@@ -328,35 +328,11 @@ function checkRuleLoadingPolicy() {
   }
 
   const agentsBody = read("AGENTS.md");
-  if (!agentsBody.includes("规则加载策略")) {
-    fail("AGENTS.md should include a rule loading policy section");
-  }
-
-  const forbidsFullRulesLoad =
-    agentsBody.includes("不要默认全量加载 `rules/`") ||
-    agentsBody.includes("不要默认全量加载`rules/`") ||
-    agentsBody.includes("仍然只读取当前任务直接相关的规则文件");
-
-  const forbidsFullCommonLoad =
-    agentsBody.includes("不要默认全量加载 `rules/common/`") ||
-    agentsBody.includes("不要默认全量加载`rules/common/`") ||
-    agentsBody.includes("`rules/common/` 是专项参考区");
-
-  if (!forbidsFullRulesLoad || !forbidsFullCommonLoad) {
-    fail("AGENTS.md should forbid loading all rules by default");
-  }
-  if (!agentsBody.includes("~/.codex/rules/")) {
-    fail("AGENTS.md should mention Codex user-level rules fallback");
-  }
-  if (!agentsBody.includes("~/.claude/rules/")) {
-    fail("AGENTS.md should mention Claude Code user-level rules fallback");
-  }
-  if (!agentsBody.includes("~/.claude/references/rules/common/")) {
-    fail("AGENTS.md should resolve Claude common rules from the cold reference directory");
-  }
-  if (!agentsBody.includes("不能把项目规则目录缺失等同于") || !agentsBody.includes("无规则")) {
-    fail("AGENTS.md should forbid treating a missing project rules directory as no rules");
-  }
+  requireTokens("AGENTS.md", [
+    "## 常驻约束", "## 按需参考", "只读当前任务相关内容，不全量加载",
+    "~/.codex/references/rules/", "~/.claude/references/rules/",
+    "授权持续有效，不重复确认", "创建 PR 不等于授权合并", "个人规则仍须尊重",
+  ]);
 
   if (exists("CLAUDE.md")) {
     const claudeBody = read("CLAUDE.md");
