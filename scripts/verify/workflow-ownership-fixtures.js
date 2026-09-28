@@ -364,8 +364,24 @@ function rejectedFixtures(definition) {
   return fixtures;
 }
 
+const contractFixtures = [
+  { body: "verification owner: `commands/verify.md`", error: /ownership mismatch/ },
+  { body: "verification owner: [执行器](commands/verify.md)", error: /ownership mismatch/ },
+  { body: "完成声明的证据以 `commands/verify.md` 为唯一来源。", error: /ownership mismatch/ },
+  { body: "verification owner: `rules/common/testing.md`" },
+  { body: "执行验证见 `commands/verify.md`。" },
+  { body: "完成验证以 `commands/verify.md` 执行，完成声明的证据仍以 `rules/common/testing.md` 为唯一来源。" },
+  { body: "参见 **`08-ecc-integration.md`**。", error: /missing rule reference/ },
+  { body: "参见 [旧规则](common/missing.md)。", error: /missing rule reference/ },
+  { body: "参见 `common/testing.md`、`skills/using-superpowers/SKILL.md`。" },
+  { body: "示例路径 `skills/<skill-name>/SKILL.md` 与 `observations.jsonl`。" },
+  { body: "外部文档 [说明](https://example.com/missing.md)。" },
+  { body: "```md\nverification owner: `commands/verify.md`\n`missing.md`\n```" },
+];
+
 module.exports = {
   allowedFixtures,
   rejectedFixtures,
   repositoryScopeFixture,
+  contractFixtures,
 };

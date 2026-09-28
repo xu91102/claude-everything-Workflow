@@ -1,10 +1,12 @@
 "use strict";
 
 const commonmark = require("commonmark");
+const path = require("node:path");
 const {
   allowedFixtures,
   rejectedFixtures,
   repositoryScopeFixture,
+  contractFixtures,
 } = require("./workflow-ownership-fixtures");
 
 const markdownReader = new commonmark.Parser();
@@ -102,7 +104,7 @@ const WORKFLOW_DEFINITIONS = [
     minimumSignatureMatches: 3,
   },
   {
-    file: "rules/common/agent-orchestration.md",
+    file: "rules/08-specialty-rules-index.md",
     label: "ticket and SDD execution procedure",
     authorityPath: "skills/subagent-driven-development/SKILL.md",
     headings: ["Tickets 先于跨会话执行"],
@@ -759,15 +761,99 @@ function verifyRepositoryScopeFixture(definition, fail) {
   }
 }
 
+function ruleReferencePath(file, value) {
+  const target = value.split("#")[0];
+  if (!/^[\w./-]+\.(?:md|js|cjs|json|yaml|yml)$/.test(target)) return null;
+  if (/^(?:rules|skills|commands|agents|hooks|scripts|references)\//.test(target) ||
+      /^(?:AGENTS|CLAUDE)\.md$/.test(target)) return target;
+  if (target.startsWith("common/")) return `rules/${target}`;
+  return path.posix.normalize(path.posix.join(path.posix.dirname(file), target));
+}
+
+function checkRuleReferences(file, body, exists, fail) {
+  const walker = markdownReader.parse(body).walker();
+  let event;
+  while ((event = walker.next())) {
+    if (!event.entering) continue;
+    const value = event.node.type === "code" ? event.node.literal :
+      event.node.type === "link" ? event.node.destination : "";
+    const target = ruleReferencePath(file, value);
+    if (target && !exists(target)) fail(`${file} has missing rule reference: ${value} -> ${target}`);
+  }
+}
+
+function checkOwnershipClaims(file, body, ownership, fail) {
+  const { prose } = markdownPolicyStructure(body);
+  for (const entry of ownership) {
+    if (typeof entry.id !== "string" || !/^[a-z0-9-]+$/.test(entry.id)) continue;
+    const terms = Array.isArray(entry.claim_terms) ? entry.claim_terms : [];
+    const signatureTokens = [entry.id, ...terms.filter((term) => typeof term === "string" && term.trim())];
+    const definition = { signatureTokens, minimumSignatureMatches: 1, authorityPath: entry.owner };
+    if (!containsOwnedSignatures(prose, definition)) continue;
+    const labels = signatureTokens.map((token) => token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+    const ownerPath = "((?:rules|skills|commands|agents)/[\\w./-]+\\.md)";
+    const linkLabel = "[^/。;\\n]{0,80}?";
+    const claims = new RegExp(
+      `(?:${labels})\\s*(?:的\\s*)?(?:owner\\s*[:：]\\s*${linkLabel}${ownerPath}|` +
+      `以\\s*${linkLabel}${ownerPath}\\s*为(?:唯一来源|权威来源|准))`, "gi");
+    for (const record of prose) {
+      for (const match of record.content.matchAll(claims)) {
+        const claimedOwner = match[1] || match[2];
+        if (claimedOwner !== entry.owner) {
+          fail(`${file} ownership mismatch for ${entry.id}: ${claimedOwner} != ${entry.owner}`);
+        }
+      }
+    }
+  }
+}
+
+function checkOwnershipContracts({ read, exists, fail }, ruleFiles) {
+  const manifest = JSON.parse(read("harness/manifest.json"));
+  const ownership = Array.isArray(manifest.ownership) ? manifest.ownership : [];
+  const surfaces = new Set(ruleFiles);
+  for (const entry of ownership) {
+    if (typeof entry.owner === "string") surfaces.add(entry.owner);
+    for (const file of Array.isArray(entry.surfaces) ? entry.surfaces : []) surfaces.add(file);
+  }
+  for (const file of surfaces) {
+    if (typeof file !== "string" || !exists(file)) continue;
+    const body = read(file);
+    checkOwnershipClaims(file, body, ownership, fail);
+    if (ruleFiles.includes(file)) checkRuleReferences(file, body, exists, fail);
+  }
+}
+
+function verifyContractFixtures(fail) {
+  for (const fixture of contractFixtures) {
+    const files = {
+      "rules/probe.md": fixture.body,
+      "rules/common/testing.md": "",
+      "commands/verify.md": "",
+      "skills/using-superpowers/SKILL.md": "",
+      "harness/manifest.json": JSON.stringify({ ownership: [
+        { id: "verification", owner: "rules/common/testing.md", surfaces: ["rules/probe.md"],
+          claim_terms: ["完成声明的证据", "完成验证"] },
+      ] }),
+    };
+    const errors = [];
+    checkOwnershipContracts({ read: (file) => files[file], exists: (file) => file in files,
+      fail: (message) => errors.push(message) }, ["rules/probe.md"]);
+    const passed = fixture.error ? errors.some((message) => fixture.error.test(message)) : errors.length === 0;
+    if (!passed) fail(`ownership contract detector fixture failed: ${fixture.body}`);
+  }
+}
+
 /**
  * Check that Rules reference workflow owners instead of copying their procedures.
  * @param {object} context Harness file access and failure collector.
  * @returns {void}
  */
-function runWorkflowOwnershipChecks({ read, fail, managedFiles }) {
+function runWorkflowOwnershipChecks({ read, exists, fail, managedFiles }) {
   const ruleFiles = managedFiles().filter(
     (file) => file.startsWith("rules/") && file.endsWith(".md"),
   );
+  verifyContractFixtures(fail);
+  checkOwnershipContracts({ read, exists, fail }, ruleFiles);
   for (const definition of WORKFLOW_DEFINITIONS) {
     verifyDetectorFixtures(definition, fail);
     verifyRepositoryScopeFixture(definition, fail);

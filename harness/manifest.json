@@ -261,7 +261,8 @@
         "commands/verify.md",
         "rules/common/testing.md"
       ],
-      "enforcement": "blocking"
+      "enforcement": "blocking",
+      "claim_terms": ["完成声明的证据", "完成验证", "验证门禁", "Verify Gate"]
     },
     {
       "id": "review",

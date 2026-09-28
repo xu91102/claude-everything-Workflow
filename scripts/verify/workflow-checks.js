@@ -42,7 +42,6 @@ function checkSuperpowersDevLoop() {
     "skills/using-superpowers/SKILL.md",
     "路由权威来源",
     "rules/01-base.md",
-    "rules/common/agent-orchestration.md",
     "不凭记忆执行 skill",
   ]);
 
@@ -193,7 +192,7 @@ function checkRouteOrdering() {
 }
 
 function checkWorkflowDocuments() {
-  runWorkflowOwnershipChecks({ read, fail, managedFiles });
+  runWorkflowOwnershipChecks({ read, exists, fail, managedFiles });
   requireTokens("skills/using-superpowers/SKILL.md", [
     "shortest applicable path",
     "File count, new features, and ordinary complexity affect",
@@ -225,13 +224,13 @@ function checkWorkflowDocuments() {
     "rules/common/harness-engineering.md",
     "rules/common/performance.md",
   ]) {
-    requireTokens(file, ["rules/common/agent-orchestration.md"]);
+    requireTokens(file, ["skills/using-superpowers/SKILL.md"]);
   }
   requireTokens("rules/common/skills-learning.md", [
     "路由权威来源",
     "不要因为多文件或普通复杂度加载完整 process skill 链",
     "rules/01-base.md",
-    "rules/common/agent-orchestration.md",
+    "skills/using-superpowers/SKILL.md",
   ]);
 }
 

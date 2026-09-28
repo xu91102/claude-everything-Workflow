@@ -7,7 +7,7 @@
 | 场景                                     | 读取                                                                    |
 | ---------------------------------------- | ----------------------------------------------------------------------- |
 | Harness 审计、命令/agent/skill/hook 调整 | `common/harness-engineering.md`、必要时读取 `common/context-hygiene.md` |
-| Ticket/SDD 编排、并行探索               | `common/agent-orchestration.md`                                         |
+| Ticket/SDD 编排、并行探索               | 直接读 `skills/using-superpowers/SKILL.md`；委派上下文与权限见 `common/context-hygiene.md` |
 | Fresh/Fork、Subagent 回传、上下文隔离   | `common/context-hygiene.md`                                             |
 | Hook 行为、退出码、Profile、权限         | `common/hooks.md`                                                       |
 | Token、MCP、模型和上下文成本             | `common/performance.md`                                                 |

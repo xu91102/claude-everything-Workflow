@@ -67,6 +67,16 @@ function run() {
     skillPaths: ["skills/demo-skill/SKILL.md"],
   }).join("\n"), /owner path does not exist/);
 
+  for (const claimTerms of [[], [""], "完成验证", [1]]) {
+    const badTerms = structuredClone(valid);
+    badTerms.ownership[0].claim_terms = claimTerms;
+    assert.match(validateManifest(badTerms, {
+      exists: (file) => file === "skills/demo-skill/SKILL.md" || file === "AGENTS.md",
+      skillPaths: ["skills/demo-skill/SKILL.md"],
+      read: () => "---\nname: demo-skill\ndescription: demo\n---\n",
+    }).join("\n"), /claim_terms/);
+  }
+
   const unsafePath = structuredClone(valid);
   unsafePath.skills[0].path = "../outside/SKILL.md";
   assert.match(validateManifest(unsafePath, {
