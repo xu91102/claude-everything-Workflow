@@ -116,6 +116,17 @@ function removeKnownFiles({ skillRoot, knownFiles, directories, dryRun }) {
   }
 }
 
+function collectEmptyCandidates(directory, directories) {
+  if (!lstatIfExists(directory)) return;
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if (entry.isDirectory() && !entry.isSymbolicLink()) {
+      const child = path.join(directory, entry.name);
+      directories.add(child);
+      collectEmptyCandidates(child, directories);
+    }
+  }
+}
+
 function removeEmptyKnownDirectories(directories) {
   const deepestFirst = [...directories].sort(
     (left, right) => right.length - left.length,
@@ -162,6 +173,7 @@ function cleanupSkill({ installRoot, skill, knownFiles, dryRun }) {
     return;
   }
 
+  collectEmptyCandidates(skillRoot, directories);
   removeEmptyKnownDirectories(directories);
   if (lstatIfExists(skillRoot)) {
     writeLine(`Preserving unknown files in retired skill: ${skillRoot}`);

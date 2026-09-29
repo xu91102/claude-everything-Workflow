@@ -1,6 +1,6 @@
 ---
 name: implement
-description: Deliver one authorized scope through implementation, review, and verification.
+description: 完成已授权范围的实现、审查和验证；用于“修改”“修复后提交pr”等明确交付请求，后续动作按已有授权继续。
 ---
 
 # Implement

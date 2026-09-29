@@ -58,6 +58,12 @@
     ],
     "verification-before-completion": [
       "SKILL.md"
+    ],
+    "context-budget": [
+      "SKILL.md"
+    ],
+    "documentation-lookup": [
+      "SKILL.md"
     ]
   }
 }

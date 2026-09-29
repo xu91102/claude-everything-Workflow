@@ -32,11 +32,11 @@ description: 提交、推送和创建 Pull Request 的标准工作流
 1. 汇总本次改动范围。
 2. 按 `rules/common/pr-automation.md` 选择验证命令。
 3. 优先运行与改动范围匹配的最小验证。
-4. PR 前补齐 `rules/common/testing.md` 定义的完整相关质量门（仓库卫生 → lint/format → 相关单测 → 类型与构建 → 关键路径 E2E）。
+4. PR 前按 `rules/common/testing.md` 的唯一检查顺序补齐完整相关质量门。
 5. 修复可安全修复的失败项，并重跑相关验证。
 6. 只暂存本次任务相关文件。
 7. 使用 conventional commit 提交。
-8. 用户明确要求推送时可直接推送；创建 PR 前仍需确认外部写操作。
+8. 按 `rules/05-git-workflow.md` 执行已获授权的提交、推送及 PR 动作；带验证缺口继续时遵守其中的 Draft PR 边界。
 9. 创建 PR 后报告链接、验证结果、风险点和未运行检查。
 
 若当前工作来自 tracker ticket，在 commit/PR 描述中加入不会误触发关闭的 ticket reference
@@ -84,4 +84,4 @@ pnpm --filter <pkg> build
 - 不要跳过失败检查直接提交，除非用户明确授权。
 - 不要把无关文件混入提交。
 - 不要在受保护分支直接提交。
-- 用户明确要求推送时可直接执行；创建 PR、合并 PR 前必须再次确认。
+- 授权是否覆盖当前动作只按 `rules/05-git-workflow.md` 判断，不对已有明确授权重复确认。

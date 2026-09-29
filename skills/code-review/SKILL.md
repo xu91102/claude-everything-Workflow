@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Review a fixed diff and confirmed scope; use self-review for verifiable low-risk work and independent review as risk grows.
+description: 审查固定差异与已确认需求；用户要求“审查”“code-review”或交付前需要审查时使用，按风险选择自审或独立审查。
 ---
 
 # Code Review

@@ -6,12 +6,13 @@ description: 运行全面验证检查
 
 `/verify` 是 Superpowers 风格闭环中的 Verify Gate。提交、推送或创建 PR 前，必须有明确验证结果：已运行检查、未运行检查及原因、失败项、剩余风险，以及是否可以进入 `/pr`。
 
-对当前代码库运行全面验证。
+按改动范围和所选模式运行验证，项目已有命令优先。
 
 ## 使用方式
 
 ```
 /verify          # 完整检查
+/verify full     # 完整相关检查（默认）
 /verify quick    # 仅构建+类型
 /verify pre-pr   # PR 前全面检查
 ```
@@ -20,42 +21,13 @@ description: 运行全面验证检查
 
 `quick` 只执行项目识别和构建/类型检查；`full` 执行完整流程；`pre-pr` 在 `full` 基础上补充 PR 风险、制品和描述建议。
 
-按以下顺序执行；层级遵循 `rules/common/testing.md` 的验证分层，此处只列出具体执行动作：
+完整相关检查的范围和顺序统一以 `rules/common/testing.md` 为准，不在此复制质量门。具体执行：
 
-1. **项目识别**
-   - 读取 `package.json`、workspace 配置、CI 配置和 README
-   - 确认包管理器、monorepo package、已有脚本
-
-2. **仓库卫生**
-    - 检查临时文件、备份文件、调试残留
-    - 检查 hooks / command / agent 配置引用是否存在
-    - 对本仓库 Harness 配置运行 `node scripts/verify-harness.js`
-
-3. **Lint 检查**
-   - 运行代码检查器
-   - 报告警告和错误
-
-4. **测试套件**
-   - 优先运行相关单测
-   - PR 前运行仓库规定的 server/web/package 测试
-   - 报告通过/失败数量
-   - 报告覆盖率（如项目已配置）
-
-5. **构建与类型**
-   - 运行项目构建命令；失败则报告错误并停止
-   - 运行 TypeScript 类型检查并报告所有错误（文件:行号）
-
-6. **E2E 检查**
-   - 若项目已配置 Playwright，运行 E2E（如 `npx playwright test` 或 `package.json` 中的脚本）
-   - 失败时报告 trace、screenshot、HTML report、test-results 路径
-
-7. **Console.log 审计**
-   - 搜索源文件中的 console.log
-   - 报告位置
-
-8. **Git 状态**
-   - 显示未提交的更改
-   - 显示自上次提交后修改的文件
+- 先读取项目配置与 CI，识别现有命令；`quick` 只运行已有构建和类型检查，不能单独证明 PR 全部就绪。
+- `full` / `pre-pr` 按引用规则执行；仓库卫生包含 Hook、command、agent 引用检查，本仓库运行 `node scripts/verify-harness.js`。
+- 每项记录命令、退出码和结果；不适用或无法执行的检查说明原因，不伪装通过。
+- E2E 失败时保留项目已有的 trace、screenshot、HTML report 和 test-results 路径。
+- 结束时检查 Git 状态，确认验证对应最终改动。
 
 ## 输出格式
 
@@ -76,8 +48,7 @@ E2E:     [OK/失败/未配置]
 
 - `quick` - 仅构建 + 类型
 - `full` - 所有检查（默认）
-- `pre-commit` - 提交相关检查
-- `pre-pr` - 完整检查 + 安全扫描
+- `pre-pr` - 完整相关检查 + 下方 PR 前补充
 
 ## PR 前补充
 
