@@ -105,11 +105,24 @@ function main() {
 
   const tag = `v${version}`;
   const existingTagCommit = tagCommit(tag);
+  const exactPublished = exactVersionIsPublished(packageName, version);
   if (existingTagCommit && existingTagCommit !== githubSha) {
-    throw new Error(`${tag} already points to ${existingTagCommit}, not ${githubSha}`);
+    if (!exactPublished) {
+      throw new Error(`${tag} already points to ${existingTagCommit}, not ${githubSha}`);
+    }
+    const ancestry = run(
+      "git",
+      ["merge-base", "--is-ancestor", existingTagCommit, githubSha],
+      { allowFailure: true },
+    );
+    if (ancestry.status !== 0) {
+      const detail = `${ancestry.stdout ?? ""}${ancestry.stderr ?? ""}`.trim();
+      throw new Error(detail || `${tag} is not an ancestor of ${githubSha}`);
+    }
+    process.stdout.write(`${packageName}@${version} was already released at ${tag}; skipping release.\n`);
+    return;
   }
 
-  const exactPublished = exactVersionIsPublished(packageName, version);
   if (!exactPublished) {
     const latest = runNpm(
       ["view", packageName, "version", `--registry=${REGISTRY}`],

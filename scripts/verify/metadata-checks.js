@@ -339,7 +339,7 @@ function runCommand(command, args, { allowFailure = false, ...options } = {}) {
   return result;
 }
 
-function releaseScenario({ exactPublished = false, publishFails = false, tagAt }) {
+function releaseScenario({ exactPublished = false, publishFails = false, lookupFails = false, tagAt }) {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "cew-release-"));
   const repository = path.join(tempRoot, "repository");
   const remote = path.join(tempRoot, "remote.git");
@@ -375,9 +375,15 @@ function releaseScenario({ exactPublished = false, publishFails = false, tagAt }
     const currentCommit = git(["-C", repository, "rev-parse", "HEAD"]).stdout.trim();
     git(["-C", repository, "remote", "add", "origin", remote]);
 
+    let taggedCommit = "";
     if (tagAt) {
-      const target = tagAt === "current" ? currentCommit : firstCommit;
-      git(["-C", repository, "tag", "-a", "v0.2.2", target, "-m", "test tag"]);
+      taggedCommit = tagAt === "current" ? currentCommit : firstCommit;
+      if (tagAt === "unrelated") {
+        taggedCommit = git([
+          "-C", repository, "commit-tree", `${currentCommit}^{tree}`, "-m", "unrelated release",
+        ]).stdout.trim();
+      }
+      git(["-C", repository, "tag", "-a", "v0.2.2", taggedCommit, "-m", "test tag"]);
       git(["-C", repository, "push", "origin", "v0.2.2"]);
     }
 
@@ -388,6 +394,10 @@ function releaseScenario({ exactPublished = false, publishFails = false, tagAt }
 const args = process.argv.slice(2);
 fs.appendFileSync(process.env.NPM_CALL_LOG, JSON.stringify(args) + "\\n");
 if (args[0] === "view" && args[1].includes("@0.2.2")) {
+  if (process.env.LOOKUP_FAILS === "true") {
+    process.stderr.write("npm error code E503\\n");
+    process.exit(1);
+  }
   if (process.env.EXACT_PUBLISHED === "true") {
     process.stdout.write("0.2.2\\n");
     process.exit(0);
@@ -424,6 +434,7 @@ process.exit(2);
           GITHUB_SHA: currentCommit,
           NPM_CALL_LOG: npmLog,
           PUBLISH_FAILS: String(publishFails),
+          LOOKUP_FAILS: String(lookupFails),
         },
       },
     );
@@ -443,6 +454,7 @@ process.exit(2);
       calls,
       currentCommit,
       firstCommit,
+      taggedCommit,
       localTag: localTag.status === 0 ? localTag.stdout.trim() : "",
       remoteTag: remoteTag.status === 0 ? remoteTag.stdout.trim() : "",
       result,
@@ -494,6 +506,16 @@ function checkReleaseRecoveryBehavior() {
     fail("release script must publish when the correct tag already exists");
   }
 
+  const publishedBeforeCurrent = releaseScenario({ exactPublished: true, tagAt: "previous" });
+  if (
+    publishedBeforeCurrent.result.status !== 0 ||
+    publishedBeforeCurrent.calls.some(([command]) => command === "publish") ||
+    publishedBeforeCurrent.localTag !== publishedBeforeCurrent.firstCommit ||
+    publishedBeforeCurrent.remoteTag !== publishedBeforeCurrent.firstCommit
+  ) {
+    fail("release script must skip a published version tagged at an ancestor without moving its tag");
+  }
+
   const mismatchedTag = releaseScenario({ tagAt: "previous" });
   if (
     mismatchedTag.result.status === 0 ||
@@ -501,6 +523,37 @@ function checkReleaseRecoveryBehavior() {
     mismatchedTag.remoteTag !== mismatchedTag.firstCommit
   ) {
     fail("release script must reject a tag that points to another commit");
+  }
+
+  const alreadyReleased = releaseScenario({ exactPublished: true, tagAt: "current" });
+  if (
+    alreadyReleased.result.status !== 0 ||
+    alreadyReleased.calls.some(([command]) => command === "publish") ||
+    alreadyReleased.localTag !== alreadyReleased.currentCommit ||
+    alreadyReleased.remoteTag !== alreadyReleased.currentCommit
+  ) {
+    fail("release script must keep a completed release unchanged on retry");
+  }
+
+  const unrelatedTag = releaseScenario({ exactPublished: true, tagAt: "unrelated" });
+  if (
+    unrelatedTag.result.status === 0 ||
+    unrelatedTag.calls.some(([command]) => command === "publish") ||
+    unrelatedTag.localTag !== unrelatedTag.taggedCommit ||
+    unrelatedTag.remoteTag !== unrelatedTag.taggedCommit
+  ) {
+    fail("release script must reject a published version tagged outside the current history");
+  }
+
+  const failedLookup = releaseScenario({ exactPublished: true, lookupFails: true, tagAt: "previous" });
+  if (
+    failedLookup.result.status === 0 ||
+    !failedLookup.result.stderr.includes("E503") ||
+    failedLookup.calls.some(([command]) => command === "publish") ||
+    failedLookup.localTag !== failedLookup.firstCommit ||
+    failedLookup.remoteTag !== failedLookup.firstCommit
+  ) {
+    fail("release script must fail a registry lookup error without publishing or moving its tag");
   }
 }
 
