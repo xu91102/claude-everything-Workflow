@@ -62,27 +62,15 @@ Save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` unless the user pr
 
 ## Spec Schema
 
-Use this section order, omitting only optional numbered User Stories when they do not fit the task:
+Keep the document proportional to the decisions needed for implementation and review. Always cover the
+problem, intended behavior and scope, constraints, resolved implementation decisions, test seams and
+repeatable acceptance checks, and relevant risks or recovery. Combine related sections and omit sections
+that add no decision or evidence; do not fill a fixed set of empty headings.
 
-1. `背景` — problem statement and current cost.
-2. `目标`.
-3. `非目标` / out of scope.
-4. `需求` — behavior, compatibility, constraints, and optional User Stories.
-5. `现有上下文` — code facts, domain vocabulary, ADRs, patterns, and test precedents.
-6. `方案对比` — considered approaches and real trade-offs.
-7. `推荐方案` — selected solution and why.
-8. `Implementation Decisions` — modules, interfaces, public contracts, schemas, interactions, and migration decisions.
-9. `架构设计`.
-10. `组件与文件`.
-11. `数据流 / 接口`.
-12. `错误处理`.
-13. `测试策略` — testing decisions, highest available seam, precedents, normal and adversarial cases.
-14. `验收标准`.
-15. `风险与取舍`.
-16. `回滚`.
-17. `开放问题` — only non-blocking questions; write `无` when empty.
-
-Do not include implementation snippets that will become stale. Do not present an unresolved branch as a settled decision.
+For complex or high-risk designs, read [references/spec-template.md](references/spec-template.md).
+Public-contract, authorization or persistent-data changes must cover compatibility, failure behavior,
+migration and rollback where relevant, even when headings are combined. Keep user approval and the
+outcome contract below. Do not include stale implementation snippets or present an unresolved choice as settled.
 
 ## Self-Review
 
