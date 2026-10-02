@@ -10,7 +10,7 @@ Harness 把无状态模型变成可运行、可恢复、可验证和可治理的
 
 - 先检查工具失败、上下文污染、验证缺失和终止条件，再归因于模型。
 - 默认使用薄 Harness，只为已观察到的失败模式增加机制。
-- Agent 是否委派或并行以 `rules/common/agent-orchestration.md` 为唯一来源；Harness 只负责隔离、回传和失败恢复机制。
+- Agent 是否委派或并行以 `skills/using-superpowers/SKILL.md` 为唯一来源；Harness 只负责隔离、回传和失败恢复机制。
 - 同一判断只由一个 Rule、Skill、Hook、Agent 或验证器拥有，其他位置只引用。
 - 新增或调整机制必须说明触发、退出、验证、回滚和上下文成本。
 

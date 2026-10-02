@@ -83,6 +83,8 @@ A high-risk boundary is a costly-to-reverse architecture or service boundary, pu
 
 ### Agent-selected Delivery Topology
 
+简单、明确、低风险且上下文连贯的任务由当前 agent 直接完成。只有独立搜索、失败日志、专项审查或可安全并行的交付能减少主上下文噪音时才委派；不能证明安全并行时不人为拆分任务。委派的上下文与权限边界见 `rules/common/context-hygiene.md`。
+
 用户要求完成一个定义明确的交付范围后，router 自行选择 `implement`、`to-tickets` 或
 `subagent-driven-development`；选择依据是持续性、依赖图、写入面和验证成本，而不是用户是否记得某个
 Skill 名称。开始时用一行说明所选拓扑及理由，然后继续执行。

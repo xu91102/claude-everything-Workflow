@@ -10,7 +10,7 @@
 
 ## 委派上下文
 
-是否委派或并行以 `rules/common/agent-orchestration.md` 为唯一来源；本文件只规定进入 Subagent 的上下文边界。
+是否委派或并行以 `skills/using-superpowers/SKILL.md` 为唯一来源；本文件只规定进入 Subagent 的上下文边界。
 
 - 输入只包含目标、必要证据、相关路径、已确认决策和输出契约，不复制完整聊天、日志或目录树。
 - 默认使用 Fresh；只有缺少完整历史会实质误判时才使用 Fork。

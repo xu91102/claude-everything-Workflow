@@ -157,6 +157,10 @@ function validateManifest(manifest, { exists, skillPaths, read = () => "" }) {
       if (!isSafeRelativePath(surface)) errors.push(`unsafe ownership surface: ${entry.id} -> ${surface}`);
       else if (!exists(surface)) errors.push(`ownership surface does not exist: ${entry.id} -> ${surface}`);
     }
+    if ("claim_terms" in entry && (!Array.isArray(entry.claim_terms) || entry.claim_terms.length === 0 ||
+        entry.claim_terms.some((term) => typeof term !== "string" || !term.trim()))) {
+      errors.push(`ownership claim_terms must be non-empty strings: ${entry.id}`);
+    }
     if (!["advisory", "blocking"].includes(entry.enforcement)) errors.push(`invalid enforcement for ${entry.id}: ${entry.enforcement}`);
   }
   return errors;
