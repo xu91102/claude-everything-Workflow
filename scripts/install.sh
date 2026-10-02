@@ -7,6 +7,7 @@ HOME_DIR="${HOME:?HOME is required}"
 INSTALL_CLAUDE=1
 INSTALL_CODEX=1
 DRY_RUN=0
+SHOW_HELP=0
 
 usage() {
     cat <<'EOF'
@@ -23,10 +24,18 @@ EOF
 while [ "$#" -gt 0 ]; do
     case "$1" in
         --claude-only)
+            if [ "$INSTALL_CLAUDE" -eq 0 ]; then
+                echo "--claude-only and --codex-only cannot be used together" >&2
+                exit 1
+            fi
             INSTALL_CLAUDE=1
             INSTALL_CODEX=0
             ;;
         --codex-only)
+            if [ "$INSTALL_CODEX" -eq 0 ]; then
+                echo "--claude-only and --codex-only cannot be used together" >&2
+                exit 1
+            fi
             INSTALL_CLAUDE=0
             INSTALL_CODEX=1
             ;;
@@ -34,8 +43,7 @@ while [ "$#" -gt 0 ]; do
             DRY_RUN=1
             ;;
         -h|--help)
-            usage
-            exit 0
+            SHOW_HELP=1
             ;;
         *)
             echo "Unknown option: $1" >&2
@@ -45,6 +53,11 @@ while [ "$#" -gt 0 ]; do
     esac
     shift
 done
+
+if [ "$SHOW_HELP" -eq 1 ]; then
+    usage
+    exit 0
+fi
 
 run() {
     if [ "$DRY_RUN" -eq 1 ]; then
@@ -232,6 +245,13 @@ validate_retired_skill_manifest() {
     node "$ROOT_DIR/scripts/cleanup-retired-skills.js" --validate
 }
 
+check_install_root() {
+    if [ -L "$1" ]; then
+        echo "Refusing symlinked install root: $1" >&2
+        exit 1
+    fi
+}
+
 install_claude() {
     local dest="$HOME_DIR/.claude"
 
@@ -270,6 +290,13 @@ install_workflow_rules() {
 }
 
 validate_retired_skill_manifest
+if [ "$INSTALL_CLAUDE" -eq 1 ]; then
+    check_install_root "$HOME_DIR/.claude"
+fi
+if [ "$INSTALL_CODEX" -eq 1 ]; then
+    check_install_root "$HOME_DIR/.codex"
+fi
+
 require_rsync
 
 if [ "$INSTALL_CLAUDE" -eq 1 ]; then

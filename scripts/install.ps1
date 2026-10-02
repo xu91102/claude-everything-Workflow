@@ -6,6 +6,13 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+if ($args.Count -gt 0) {
+    throw "Unknown option: $($args[0])"
+}
+if ($ClaudeOnly -and $CodexOnly) {
+    throw "-ClaudeOnly and -CodexOnly cannot be used together"
+}
+
 $RootDir = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $HomeDir = if ($env:USERPROFILE) { $env:USERPROFILE } else { $HOME }
 
@@ -81,6 +88,9 @@ function Copy-ClaudeSettings {
 
     $mergeScript = Join-Path $RootDir "scripts\merge-claude-settings.cjs"
     & node $mergeScript $Source $Destination
+    if ($LASTEXITCODE -ne 0) {
+        throw "Claude settings merge failed with exit code $LASTEXITCODE"
+    }
 }
 
 function Convert-ClaudeSettingsHookPaths {
@@ -297,6 +307,15 @@ function Test-RetiredSkillManifest {
     }
 }
 
+function Test-InstallRoot {
+    param([string]$Destination)
+
+    $existing = Get-Item -LiteralPath $Destination -Force -ErrorAction SilentlyContinue
+    if ($null -ne $existing -and ($existing.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+        throw "Refusing symlinked install root: $Destination"
+    }
+}
+
 function Install-ClaudeWorkflow {
     $dest = Join-Path $HomeDir ".claude"
 
@@ -342,6 +361,13 @@ function Install-WorkflowRules {
     if ($LASTEXITCODE -ne 0) {
         throw "Rule installation failed with exit code $LASTEXITCODE"
     }
+}
+
+if ($InstallClaude) {
+    Test-InstallRoot -Destination (Join-Path $HomeDir ".claude")
+}
+if ($InstallCodex) {
+    Test-InstallRoot -Destination (Join-Path $HomeDir ".codex")
 }
 
 Test-RetiredSkillManifest
