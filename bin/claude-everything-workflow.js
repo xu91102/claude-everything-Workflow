@@ -30,6 +30,21 @@ function main() {
 }
 
 function runInstall(args) {
+  const supported = new Set(["--claude-only", "--codex-only", "--dry-run", "--help", "-h"]);
+  const unknown = args.find((arg) => !supported.has(arg));
+  if (unknown) {
+    process.stderr.write(`Unknown option: ${unknown}\n`);
+    process.exit(1);
+  }
+  if (args.includes("--claude-only") && args.includes("--codex-only")) {
+    process.stderr.write("--claude-only and --codex-only cannot be used together\n");
+    process.exit(1);
+  }
+  if (args.includes("--help") || args.includes("-h")) {
+    printHelp();
+    process.exit(0);
+  }
+
   if (process.platform === "win32") {
     const script = path.join(root, "scripts", "install.ps1");
     const psArgs = [

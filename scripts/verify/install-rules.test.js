@@ -44,6 +44,126 @@ function checkLegacyMigration() {
   assert.equal(read(cold + ".bak." + hash), previous);
 }
 
+function checkInstallerCliOptions() {
+  const profile = path.join(tempRoot, "invalid-cli-profile");
+  for (const [options, message] of [
+    [["--unknown-option"], /Unknown option: --unknown-option/],
+    [["--claude-only", "--codex-only"], /cannot be used together/],
+    [["--codex-only", "--claude-only"], /cannot be used together/],
+    [["--claude-only", "--codex-only", "--help"], /cannot be used together/],
+  ]) {
+    const result = spawnSync(process.execPath, [
+      path.join(sourceRoot, "bin/claude-everything-workflow.js"), "install", ...options,
+    ], {
+      cwd: sourceRoot, env: { ...process.env, USERPROFILE: profile, HOME: profile },
+      encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024,
+    });
+    assert.ifError(result.error);
+    assert.notEqual(result.status, 0, "invalid CLI options must fail before installation");
+    assert.match(result.stderr, message);
+  }
+  for (const host of [".claude", ".codex"]) {
+    assert.equal(fs.existsSync(path.join(profile, host)), false);
+  }
+  for (const help of ["--help", "-h"]) {
+    const result = spawnSync(process.execPath, [
+      path.join(sourceRoot, "bin/claude-everything-workflow.js"), "install", help,
+    ], {
+      cwd: sourceRoot, env: { ...process.env, USERPROFILE: profile, HOME: profile },
+      encoding: "utf8", timeout: 60000,
+    });
+    assert.ifError(result.error);
+    assert.equal(result.status, 0, "install help must succeed without installing");
+    assert.match(result.stdout, /Usage:/);
+    for (const host of [".claude", ".codex"]) {
+      assert.equal(fs.existsSync(path.join(profile, host)), false);
+    }
+  }
+}
+
+function checkBashHelpOptions() {
+  const executable = process.env.CEW_TEST_BASH || (process.platform === "win32" ? null : "bash");
+  if (!executable) return;
+  const profile = path.join(tempRoot, "bash options profile");
+  const invalidOptions = [
+    ["--help", "--claude-only", "--codex-only"],
+    ["--claude-only", "--help", "--codex-only"],
+    ["--claude-only", "--codex-only", "--help"],
+    ["--help", "--unknown-option"],
+    ["--unknown-option", "--help"],
+  ];
+  for (const options of [...invalidOptions, ["--help"], ["-h"]]) {
+    const result = spawnSync(executable, ["scripts/install.sh", ...options], {
+      cwd: sourceRoot, env: { ...process.env, HOME: profile },
+      encoding: "utf8", timeout: 60000,
+    });
+    assert.ifError(result.error);
+    if (options.length === 1) {
+      assert.equal(result.status, 0, result.stderr);
+      assert.match(result.stdout, /Usage:/);
+    } else {
+      assert.notEqual(result.status, 0, `Bash must reject invalid options even with help: ${options.join(" ")}`);
+      assert.match(result.stderr, /Unknown option|cannot be used together/);
+    }
+    for (const host of [".claude", ".codex"]) {
+      assert.equal(fs.existsSync(path.join(profile, host)), false);
+    }
+  }
+}
+
+function checkInstallerLinkedRoots() {
+  for (const host of [".claude", ".codex"]) {
+    const profile = path.join(tempRoot, "linked-profile" + host);
+    const outside = path.join(tempRoot, "linked-outside" + host);
+    fs.mkdirSync(profile);
+    fs.mkdirSync(outside);
+    fs.writeFileSync(path.join(outside, "AGENTS.md"), "Keep external user content\n");
+    fs.symlinkSync(outside, path.join(profile, host), process.platform === "win32" ? "junction" : "dir");
+    const result = spawnSync(process.execPath, [
+      path.join(sourceRoot, "bin/claude-everything-workflow.js"), "install",
+      host === ".claude" ? "--claude-only" : "--codex-only",
+    ], {
+      cwd: sourceRoot,
+      env: {
+        ...process.env, USERPROFILE: profile, HOME: profile,
+        ...(process.platform === "win32" ? {
+          PSModulePath: path.join(process.env.SystemRoot, "System32/WindowsPowerShell/v1.0/Modules"),
+        } : {}),
+      },
+      encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024,
+    });
+    assert.ifError(result.error);
+    assert.notEqual(result.status, 0, "linked install roots must be rejected");
+    assert.match(result.stderr, /symlink/i);
+    assert.deepEqual(fs.readdirSync(outside), ["AGENTS.md"], "reject links before any external writes");
+    assert.equal(read(path.join(outside, "AGENTS.md")), "Keep external user content\n");
+  }
+}
+
+function checkInstallerMergeFailure() {
+  if (process.platform !== "win32") return;
+  const profile = path.join(tempRoot, "merge failure profile");
+  const settingsPath = path.join(profile, ".claude/settings.json");
+  fs.mkdirSync(path.dirname(settingsPath), { recursive: true });
+  const previous = JSON.stringify({ env: { KEEP: "yes" }, hooks: { SessionStart: null } });
+  fs.writeFileSync(settingsPath, previous);
+  const result = spawnSync(process.execPath, [
+    path.join(sourceRoot, "bin/claude-everything-workflow.js"), "install", "--claude-only",
+  ], {
+    cwd: sourceRoot,
+    env: {
+      ...process.env, USERPROFILE: profile, HOME: profile,
+      PSModulePath: path.join(process.env.SystemRoot, "System32/WindowsPowerShell/v1.0/Modules"),
+    },
+    encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024,
+  });
+  assert.ifError(result.error);
+  assert.notEqual(result.status, 0, "a failed settings merge must fail the installation");
+  assert.match(result.stderr, /Claude settings merge failed/);
+  assert.doesNotMatch(result.stdout, /Install complete/);
+  assert.equal(fs.readFileSync(settingsPath, "utf8"), previous);
+}
+
 function checkInstallerEntrypoint() {
   const profile = path.join(tempRoot, "installer-profile");
   const windows = process.platform === "win32";
@@ -53,6 +173,27 @@ function checkInstallerEntrypoint() {
     : [path.join(sourceRoot, "scripts/install.sh")];
   // The child gets a disposable profile; never update this process's home or the user's installation.
   const env = { ...process.env, USERPROFILE: profile, HOME: profile };
+  const invalid = spawnSync(executable, [...args, windows ? "-UnknownOption" : "--unknown-option"], {
+    cwd: sourceRoot, env, encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024,
+  });
+  assert.ifError(invalid.error);
+  assert.notEqual(invalid.status, 0, "direct installer must reject unknown options before writing");
+  assert.equal(fs.existsSync(path.join(profile, ".claude")), false);
+  assert.equal(fs.existsSync(path.join(profile, ".codex")), false);
+  for (const only of [
+    windows ? ["-ClaudeOnly", "-CodexOnly"] : ["--claude-only", "--codex-only"],
+    windows ? ["-CodexOnly", "-ClaudeOnly"] : ["--codex-only", "--claude-only"],
+  ]) {
+    const conflict = spawnSync(executable, [...args, ...only], {
+      cwd: sourceRoot, env, encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024,
+    });
+    assert.ifError(conflict.error);
+    assert.notEqual(conflict.status, 0, "direct installer must reject conflicting host options");
+    assert.match(conflict.stderr, /cannot be used together/);
+    for (const host of [".claude", ".codex"]) {
+      assert.equal(fs.existsSync(path.join(profile, host)), false);
+    }
+  }
   const run = (extra = []) => {
     const result = spawnSync(executable, [...args, ...extra], {
       cwd: sourceRoot, env, encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024,
@@ -157,6 +298,10 @@ try {
   assert.deepEqual(fs.readdirSync(outside), []);
   assert.throws(() => install("invalid", "unknown"), /host/i);
   checkLegacyMigration();
+  checkInstallerCliOptions();
+  checkBashHelpOptions();
+  checkInstallerLinkedRoots();
+  checkInstallerMergeFailure();
   checkInstallerEntrypoint();
   console.log("Rule installation tests passed (migration, backups, custom rules, symlink safety, both hosts, installer dry-run and execution).");
 } finally {
