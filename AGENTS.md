@@ -10,13 +10,14 @@
 - 精简不改变含义或技术原文，有歧义时完整说明。
 - 工具结果优先读取相关片段，大结果只展示摘要并保留原文入口、实际退出码和关键错误，不凭截断结果判定成功。
 
-> 规则按需读取，不要默认全量加载 `rules/` 或 `rules/common/`。
+> 手动读取规则时只读取当前任务直接相关的文件；Claude Code 的常驻规则由宿主在启动时自动加载。
 
 ## 规则加载策略
 
-- 默认不全量读取 `rules/`；涉及代码修改、审查、测试、提交或 Harness 调整时，只读取与当前任务直接相关的规则文件，回退场景不改变该原则。
-- 文中的 `rules/...` 是逻辑路径：先查项目根 `rules/`；目标文件不存在时，Codex 回退 `~/.codex/rules/`，Claude Code 的普通规则回退 `~/.claude/rules/`，专项 `rules/common/...` 回退 `~/.claude/references/rules/common/...`。不能把项目规则目录缺失等同于“无规则”。
-- Claude 升级时若保留了个人修改的旧 `~/.claude/rules/common/...`，该用户规则仍生效；读取同名参考前先检查并尊重该修改，不把新版通用参考覆盖到个人约束上。
+- Claude Code 将 `01`、`02`、`05`、`07`、`08` 安装到 `~/.claude/rules/`；这些无 `paths:` 的规则在会话启动时自动加载。`09` 和 `rules/common/` 安装到参考目录，按需读取。
+- 涉及代码修改、审查、测试、提交或 Harness 调整时，仍然只读取当前任务直接相关的规则文件；不额外全量读取 `rules/` 或 `rules/common/`，回退场景不改变该原则。
+- 文中的 `rules/...` 是逻辑路径：先查项目根 `rules/`；目标文件不存在时，Codex 回退 `~/.codex/rules/`，Claude Code 的常驻规则回退 `~/.claude/rules/`，`09` 回退 `~/.claude/references/rules/09-first-principles-adversarial-testing.md`，专项 `rules/common/...` 回退 `~/.claude/references/rules/common/...`。不能把项目规则目录缺失等同于“无规则”。
+- Claude 升级时若保留了个人修改的旧 `~/.claude/rules/09-first-principles-adversarial-testing.md` 或 `~/.claude/rules/common/...`，它们仍可能自动加载；读取同名参考前先检查并尊重该修改，不把新版通用参考覆盖到个人约束上。
 - `rules/common/` 是专项参考区；仅命令、agent、skill 或当前任务明确触发时读取。
 
 ## 规则索引

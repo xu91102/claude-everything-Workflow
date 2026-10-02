@@ -44,7 +44,7 @@ function copyRule({ source, root, relative, dryRun, log }) {
   }
 }
 
-function retireCommon({ source, root, relative, knownHashes, dryRun, log }) {
+function retireRule({ source, root, relative, knownHashes, dryRun, log }) {
   const target = checkedPath(root, relative);
   if (!fs.existsSync(target)) return;
   const hash = digest(fs.readFileSync(target));
@@ -67,18 +67,20 @@ function installRules({ sourceRoot, installRoot, host, dryRun = false, log = con
   const commonFiles = fs.readdirSync(path.join(rulesRoot, "common"), { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
     .map((entry) => `common/${entry.name}`);
+  const isCold = (relative) => host === "claude-code" &&
+    (relative.startsWith("common/") || relative === "09-first-principles-adversarial-testing.md");
   // Validate all managed destinations before the first write, including upgrade cleanup paths.
   for (const relative of [...files, ...commonFiles]) {
     checkedPath(root, `rules/${relative}`);
-    if (host === "claude-code" && relative.startsWith("common/")) {
+    if (isCold(relative)) {
       checkedPath(root, `references/rules/${relative}`);
     }
   }
   for (const relative of [...files, ...commonFiles]) {
     const source = path.join(rulesRoot, relative);
-    const cold = host === "claude-code" && relative.startsWith("common/");
+    const cold = isCold(relative);
     copyRule({ source, root, relative: `${cold ? "references/rules" : "rules"}/${relative}`, dryRun, log });
-    if (cold) retireCommon({ source, root, relative: `rules/${relative}`,
+    if (cold) retireRule({ source, root, relative: `rules/${relative}`,
       knownHashes: legacy.files[relative] || [], dryRun, log });
   }
 }

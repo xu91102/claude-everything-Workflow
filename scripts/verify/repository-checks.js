@@ -343,7 +343,7 @@ function checkRuleLoadingPolicy() {
     agentsBody.includes("`rules/common/` 是专项参考区");
 
   if (!forbidsFullRulesLoad || !forbidsFullCommonLoad) {
-    fail("AGENTS.md should forbid loading all rules by default");
+    fail("AGENTS.md should forbid manually reading all rules by default");
   }
   if (!agentsBody.includes("~/.codex/rules/")) {
     fail("AGENTS.md should mention Codex user-level rules fallback");
@@ -353,6 +353,12 @@ function checkRuleLoadingPolicy() {
   }
   if (!agentsBody.includes("~/.claude/references/rules/common/")) {
     fail("AGENTS.md should resolve Claude common rules from the cold reference directory");
+  }
+  if (!agentsBody.includes("~/.claude/references/rules/09-first-principles-adversarial-testing.md")) {
+    fail("AGENTS.md should resolve Claude rule 09 from the cold reference directory");
+  }
+  if (!agentsBody.includes("会话启动时自动加载")) {
+    fail("AGENTS.md should explain Claude Code's automatic resident rule loading");
   }
   if (!agentsBody.includes("不能把项目规则目录缺失等同于") || !agentsBody.includes("无规则")) {
     fail("AGENTS.md should forbid treating a missing project rules directory as no rules");

@@ -71,6 +71,8 @@ The CLI selects the shell or PowerShell installer for your platform. The same `-
 
 Installation updates user-level files and can affect multiple projects. Changed top-level configuration files are backed up; matching files inside shared directories are synchronized from the repository. Unknown files are generally retained, while known retired files are removed by an explicit cleanup list. Back up any personal edits to shared files before upgrading. Use the installer instead of copying the entire `rules/` directory: it handles the different rule locations used by each host.
 
+Claude Code loads rules `01`, `02`, `05`, `07`, and `08` from `~/.claude/rules/` at session startup. Rule `09` and `common/` go into `~/.claude/references/rules/` for reading when needed. Upgrades remove known distributed copies from the old rules directory; personally edited copies are retained and may still load automatically. Codex keeps its existing rule locations.
+
 ## How it works
 
 Start with a normal task request. The workflow router selects relevant skills; you do not need to memorize every skill name.

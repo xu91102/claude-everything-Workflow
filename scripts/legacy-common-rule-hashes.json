@@ -1,8 +1,13 @@
 {
   "version": 1,
   "algorithm": "sha256-lf",
-  "source": "origin/main history through a4f938bc70f3f85e4dcfad4d2534f522b823ea20",
+  "source": "common/: origin/main history through a4f938bc70f3f85e4dcfad4d2534f522b823ea20; 09: origin/main history through f1709d1",
   "files": {
+    "09-first-principles-adversarial-testing.md": [
+      "182ab761713451fd9b04c290a070e0235a52833f52cbaf695f065363675faf2f",
+      "72b71a851e9349e19806ae66258843b2394d7acbadc4e6498788af6337ba8357",
+      "d912674d84c1427d24d9d716d28cc57b926a4cf49284cffd46473d02219a0a57"
+    ],
     "common/agent-orchestration.md": [
       "0518525f093f91b60dbae5259e0f228686687abdd65787b880f59e286c2e546c",
       "3b5095839ff85adefb7324518526be65c473770df9124d190137ba05721ca6bf",
