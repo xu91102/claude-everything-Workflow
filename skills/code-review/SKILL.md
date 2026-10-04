@@ -39,6 +39,11 @@ or confidence. State the selected mode and reason briefly.
 project. Self-review requires every self condition above; otherwise use independent, or dual for high
 risk. Reassess if the scope grows or verification exposes a gap. Review never replaces required tests.
 
+When replacing existing behavior, verify documented extension points and customization paths.
+For example, default rendering must preserve registered customization functions, inheritance and
+output destinations unless the approved scope changes them. Normal-output tests alone do not
+establish compatibility or justify a shallower review.
+
 For self-review, keep the result concise and use relevant existing checks or direct inspection; do not
 load the independent-review prompts, invent low-value tests, or write a long checklist just for ceremony.
 The implementing agent cannot serve as its own independent reviewer.
