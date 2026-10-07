@@ -96,6 +96,10 @@ Clear, low-risk work can take a short route. Unresolved user decisions, formal s
 
 These are repository command definitions; availability as native slash commands depends on the host. Ordinary language can also express the intended workflow.
 
+### Project-specific verification
+
+Ask CEW to create a reusable verification skill for your project. `create-verification-skill` reuses existing tools, adds a feature map, and proves one real user flow before reporting success. `maintain-verification-skill` checks the map against source and live behavior. `feature-acceptance` discovers and uses the project's verification capability for the requested flow. See the [project verification guide (Chinese)](references/project-verification.md).
+
 ## Design principles
 
 1. **Evidence before claims.** A plausible explanation is not a confirmed root cause. A passing local check is not a production release.
