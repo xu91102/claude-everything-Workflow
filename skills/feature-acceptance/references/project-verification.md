@@ -1,6 +1,6 @@
 # 项目验收能力
 
-用于明确授权的建立或维护请求。方法参考 [pstack create-verification-skill](https://github.com/backnotprop/pstack/blob/main/skills/create-verification-skill/SKILL.md)，按 CEW 的项目优先和授权边界适配；不依赖安装 pstack。
+用于明确授权的建立或维护请求。
 
 ## 1. 从项目事实确定入口
 
