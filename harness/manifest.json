@@ -39,6 +39,18 @@
       "invocation": "implicit"
     },
     {
+      "name": "create-verification-skill",
+      "path": "skills/create-verification-skill/SKILL.md",
+      "owner": "skills/create-verification-skill/SKILL.md",
+      "version": "0.1.0",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
       "name": "domain-modeling",
       "path": "skills/domain-modeling/SKILL.md",
       "owner": "skills/domain-modeling/SKILL.md",
@@ -66,7 +78,7 @@
       "name": "feature-acceptance",
       "path": "skills/feature-acceptance/SKILL.md",
       "owner": "skills/feature-acceptance/SKILL.md",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "compatibility": [
         "claude-code",
         "codex"
@@ -115,6 +127,18 @@
       "path": "skills/improve-codebase-architecture/SKILL.md",
       "owner": "skills/improve-codebase-architecture/SKILL.md",
       "version": "0.1.1",
+      "compatibility": [
+        "claude-code",
+        "codex"
+      ],
+      "allowedTools": null,
+      "invocation": "implicit"
+    },
+    {
+      "name": "maintain-verification-skill",
+      "path": "skills/maintain-verification-skill/SKILL.md",
+      "owner": "skills/maintain-verification-skill/SKILL.md",
+      "version": "0.1.0",
       "compatibility": [
         "claude-code",
         "codex"

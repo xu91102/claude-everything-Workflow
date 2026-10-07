@@ -96,6 +96,10 @@ node bin/claude-everything-workflow.js install
 
 这些是仓库提供的命令定义，是否显示为原生斜杠命令取决于宿主；也可以用自然语言提出相同需求。
 
+### 项目专用验收
+
+可以直接说：“为这个项目创建可复用的验收技能，跑通一个真实用户流程。” `create-verification-skill` 复用已有工具并建立功能地图；之后用 `maintain-verification-skill` 核对源码和真实运行。`feature-acceptance` 在验收时优先发现并使用项目能力。见[项目验收指南](references/project-verification.md)。
+
 ## 设计原则
 
 1. **先有证据，再下结论。** 合理猜测不等于根因，本地检查通过也不等于生产发布成功。

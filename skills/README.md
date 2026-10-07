@@ -34,7 +34,9 @@
 - `systematic-debugging`：区分普通明确失败与疑难故障；预期 TDD RED 留在实现循环。
 - `resolving-merge-conflicts`：按双方原始意图逐 hunk 解决 merge/rebase 冲突。
 - `e2e-testing`：Playwright E2E 模式、CI、制品和 flaky 处理。
-- `feature-acceptance`：用户明确要求真实流程验收、截图或日志证据时，输出用例矩阵与复核结论。
+- `create-verification-skill`：用户请求创建项目验收能力时，复用已有工具，生成项目技能与功能地图，并证明一个真实流程。
+- `maintain-verification-skill`：用户请求维护项目验收能力时，核对源码与全功能真实运行，修正地图/工具漂移并单独报告产品问题。
+- `feature-acceptance`：用户或项目规则要求真实流程验收、截图或日志证据时，优先调用项目已有技能，输出用例矩阵与复核结论。
 
 ## Harness / 上下文与编排
 
