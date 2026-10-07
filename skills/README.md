@@ -34,7 +34,7 @@
 - `systematic-debugging`：区分普通明确失败与疑难故障；预期 TDD RED 留在实现循环。
 - `resolving-merge-conflicts`：按双方原始意图逐 hunk 解决 merge/rebase 冲突。
 - `e2e-testing`：Playwright E2E 模式、CI、制品和 flaky 处理。
-- `feature-acceptance`：用户明确要求真实流程验收、截图或日志证据时，输出用例矩阵与复核结论。
+- `feature-acceptance`：建立/维护项目验收工具与功能地图；按用户或项目验收合同执行真实流程并复核证据。
 
 ## Harness / 上下文与编排
 

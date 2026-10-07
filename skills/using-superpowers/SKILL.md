@@ -50,6 +50,8 @@ Task arrives
                                                      -> skills/handoff/SKILL.md
   -> explicit triage request?                      -> skills/triage/SKILL.md
   -> explicit TDD request?                         -> skills/test-driven-development/SKILL.md
+  -> explicit project verification setup/maintenance or real-flow acceptance request?
+                                                     -> skills/feature-acceptance/SKILL.md
   -> explicit E2E or Playwright request?           -> skills/e2e-testing/SKILL.md + agents/e2e-runner.md
   -> explicit harness audit?                       -> agents/harness-optimizer.md
   -> explicit architecture-health audit?           -> skills/improve-codebase-architecture/SKILL.md
