@@ -1,0 +1,17 @@
+task,repo,cell,resolved,input_tokens,cached_input,uncached_input,output_tokens,reasoning_tokens,duration_s,diff_lines,src_lines,commands,new_failures,overclaim
+humanize-346,humanize,gpt-base,True,248488,226944,21544,1415,385,72.5,2,2,10,0,False
+humanize-346,humanize,gpt-cew,True,807317,753920,53397,3653,519,136.6,3,3,32,0,False
+humanize-381,humanize,gpt-base,True,251974,192640,59334,1502,328,78.0,8,8,11,0,False
+humanize-381,humanize,gpt-cew,True,412645,351104,61541,2535,478,113.4,8,8,16,0,False
+itsdangerous-sha1,itsdangerous,gpt-base,True,178568,161024,17544,1556,134,70.3,14,14,9,0,False
+itsdangerous-sha1,itsdangerous,gpt-cew,True,268048,245760,22288,2540,127,93.0,12,12,15,0,False
+more-itertools-1247,more-itertools,gpt-base,True,258449,229248,29201,4961,2969,139.4,56,56,9,0,False
+more-itertools-1247,more-itertools,gpt-base,True,296871,268160,28711,5282,2723,136.9,60,60,12,0,False
+more-itertools-1247,more-itertools,gpt-cew,True,439336,402944,36392,6276,2992,184.8,54,54,19,0,False
+more-itertools-1247,more-itertools,gpt-cew,True,349069,312704,36365,7703,5269,188.3,42,42,15,0,False
+more-itertools-1284,more-itertools,gpt-base,True,145518,126976,18542,1298,484,69.1,4,4,8,0,False
+more-itertools-1284,more-itertools,gpt-cew,True,204253,180096,24157,2080,716,73.0,4,4,15,0,False
+slugify-194,python-slugify,gpt-base,True,453968,422400,31568,2165,534,105.1,58,10,12,0,False
+slugify-194,python-slugify,gpt-cew,True,674001,631168,42833,3512,737,173.4,58,10,20,0,False
+slugify-200,python-slugify,gpt-base,True,266861,238080,28781,1778,465,80.9,16,16,11,0,False
+slugify-200,python-slugify,gpt-cew,True,372959,326656,46303,2338,445,76.2,15,15,19,0,False

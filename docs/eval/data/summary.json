@@ -1,0 +1,888 @@
+{
+  "summary": {
+    "gpt-base": {
+      "trials": 8,
+      "resolved": 8,
+      "new_failures": 0,
+      "overclaim": 0,
+      "tests_modified": 1,
+      "input_tokens": 2100697,
+      "cached_input": 1865472,
+      "uncached_input": 235225,
+      "output_tokens": 19957,
+      "reasoning_tokens": 8022,
+      "duration_s": 752.2,
+      "diff_lines": 218,
+      "commands": 82
+    },
+    "gpt-cew": {
+      "trials": 8,
+      "resolved": 8,
+      "new_failures": 0,
+      "overclaim": 0,
+      "tests_modified": 1,
+      "input_tokens": 3527628,
+      "cached_input": 3204352,
+      "uncached_input": 323276,
+      "output_tokens": 30637,
+      "reasoning_tokens": 11283,
+      "duration_s": 1038.7,
+      "diff_lines": 196,
+      "commands": 151
+    }
+  },
+  "trials": [
+    {
+      "task": "humanize-346",
+      "repo": "humanize",
+      "cell": "gpt-base",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 72.5,
+        "log": "/tmp/cew-eval/results/humanize-346/gpt-base-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 248488,
+        "cached_input_tokens": 226944,
+        "output_tokens": 1415,
+        "reasoning_output_tokens": 385
+      },
+      "final_message": "Fixed `intword()` rounding carry in [number.py](/tmp/cew-eval/runs/humanize-346/gpt-base-r1/src/humanize/number.py:285) by comparing scaled values, avoiding precision loss for very large numbers.\n\nValidation: all 249 number tests and doctests passed, including the existing rollover regression. `git diff --check` passed.\n\nNo test files changed. No commit, push, or pull request created.",
+      "target": {
+        "passed": 241,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m [ 89%]\n\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m241 passed\u001b[0m\u001b[32m in 0.07s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 850,
+        "failed": 1
+      },
+      "after_full": {
+        "passed": 851,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "src/humanize/number.py"
+        ],
+        "src_files": [
+          "src/humanize/number.py"
+        ],
+        "added": 1,
+        "deleted": 1,
+        "lines": 2
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 21544,
+      "commands": 10,
+      "file_changes": 1,
+      "src_lines": 2
+    },
+    {
+      "task": "humanize-346",
+      "repo": "humanize",
+      "cell": "gpt-cew",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 136.6,
+        "log": "/tmp/cew-eval/results/humanize-346/gpt-cew-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 807317,
+        "cached_input_tokens": 753920,
+        "output_tokens": 3653,
+        "reasoning_output_tokens": 519
+      },
+      "final_message": "已修复 `intword()` 大数舍入进位问题：改为比较单位倍率，避免浮点乘法误差导致进位失败。\n\n验证：851 项测试全部通过，包含文档示例；Ruff、Black 和差异检查均通过。\n\n仅修改 `src/humanize/number.py`，未修改测试文件，未提交、推送或创建 PR。",
+      "target": {
+        "passed": 241,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m [ 89%]\n\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m241 passed\u001b[0m\u001b[32m in 0.07s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 850,
+        "failed": 1
+      },
+      "after_full": {
+        "passed": 851,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "src/humanize/number.py"
+        ],
+        "src_files": [
+          "src/humanize/number.py"
+        ],
+        "added": 2,
+        "deleted": 1,
+        "lines": 3
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 53397,
+      "commands": 32,
+      "file_changes": 1,
+      "src_lines": 3
+    },
+    {
+      "task": "humanize-381",
+      "repo": "humanize",
+      "cell": "gpt-base",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 78.0,
+        "log": "/tmp/cew-eval/results/humanize-381/gpt-base-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 251974,
+        "cached_input_tokens": 192640,
+        "output_tokens": 1502,
+        "reasoning_output_tokens": 328
+      },
+      "final_message": "Fixed `natural_list` to accept general iterables by converting the input to a list once. Updated its type annotation and documentation.\n\nValidation: 15 focused tests/doctests passed; full suite passed with 740 passed and 110 translation-related skips.\n\nNo test files changed. No commits, pushes, or pull requests made.",
+      "target": {
+        "passed": 14,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                           [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m14 passed\u001b[0m\u001b[32m in 0.01s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 848,
+        "failed": 2
+      },
+      "after_full": {
+        "passed": 850,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "src/humanize/lists.py"
+        ],
+        "src_files": [
+          "src/humanize/lists.py"
+        ],
+        "added": 5,
+        "deleted": 3,
+        "lines": 8
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 59334,
+      "commands": 11,
+      "file_changes": 1,
+      "src_lines": 8
+    },
+    {
+      "task": "humanize-381",
+      "repo": "humanize",
+      "cell": "gpt-cew",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 113.4,
+        "log": "/tmp/cew-eval/results/humanize-381/gpt-cew-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 412645,
+        "cached_input_tokens": 351104,
+        "output_tokens": 2535,
+        "reasoning_output_tokens": 478
+      },
+      "final_message": "已修复：`natural_list` 现在支持生成器、迭代器和字典视图等一般可迭代对象，并更新了类型标注和说明，保持原有输出格式。\n\n验证结果：\n\n- 相关测试及文档示例：15 项通过。\n- 全套测试：740 项通过，110 项跳过。\n- Ruff、Black 和 mypy 检查通过。\n\n仅修改 `src/humanize/lists.py`；未修改测试文件，未提交、推送或创建 PR。",
+      "target": {
+        "passed": 14,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                           [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m14 passed\u001b[0m\u001b[32m in 0.02s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 848,
+        "failed": 2
+      },
+      "after_full": {
+        "passed": 850,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "src/humanize/lists.py"
+        ],
+        "src_files": [
+          "src/humanize/lists.py"
+        ],
+        "added": 5,
+        "deleted": 3,
+        "lines": 8
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 61541,
+      "commands": 16,
+      "file_changes": 1,
+      "src_lines": 8
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repo": "itsdangerous",
+      "cell": "gpt-base",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 70.3,
+        "log": "/tmp/cew-eval/results/itsdangerous-sha1/gpt-base-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 178568,
+        "cached_input_tokens": 161024,
+        "output_tokens": 1556,
+        "reasoning_output_tokens": 134
+      },
+      "final_message": "Fixed lazy SHA-1 access for both `Signer` and `HMACAlgorithm`, allowing imports and alternate digest configuration when SHA-1 is unavailable.\n\nValidation: all 297 tests passed, plus a manual check with SHA-1 unavailable. Test files were unchanged. No commits, pushes, or pull requests were made.",
+      "target": {
+        "passed": 41,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": ".........................................                                [100%]\n41 passed in 0.03s\n"
+      },
+      "base_full": {
+        "passed": 0,
+        "failed": 3
+      },
+      "after_full": {
+        "passed": 297,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "CHANGES.rst",
+          "src/itsdangerous/signer.py"
+        ],
+        "src_files": [
+          "CHANGES.rst",
+          "src/itsdangerous/signer.py"
+        ],
+        "added": 12,
+        "deleted": 2,
+        "lines": 14
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 17544,
+      "commands": 9,
+      "file_changes": 2,
+      "src_lines": 14
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repo": "itsdangerous",
+      "cell": "gpt-cew",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 93.0,
+        "log": "/tmp/cew-eval/results/itsdangerous-sha1/gpt-cew-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 268048,
+        "cached_input_tokens": 245760,
+        "output_tokens": 2540,
+        "reasoning_output_tokens": 127
+      },
+      "final_message": "已修复：`Signer` 和 `HMACAlgorithm` 通过 `_lazy_sha1` 延迟访问 SHA-1，避免导入时失败，并保持原有签名结果。\n\n验证通过：全部 297 项测试、代码风格检查，以及 SHA-1 不可用时的导入和 SHA-256 签名验证。\n\n仅修改 `src/itsdangerous/signer.py`；未修改测试，未提交、推送或创建 PR。",
+      "target": {
+        "passed": 41,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": ".........................................                                [100%]\n41 passed in 0.03s\n"
+      },
+      "base_full": {
+        "passed": 0,
+        "failed": 3
+      },
+      "after_full": {
+        "passed": 297,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "src/itsdangerous/signer.py"
+        ],
+        "src_files": [
+          "src/itsdangerous/signer.py"
+        ],
+        "added": 10,
+        "deleted": 2,
+        "lines": 12
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 22288,
+      "commands": 15,
+      "file_changes": 1,
+      "src_lines": 12
+    },
+    {
+      "task": "more-itertools-1247",
+      "repo": "more-itertools",
+      "cell": "gpt-base",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 139.4,
+        "log": "/tmp/cew-eval/results/more-itertools-1247/gpt-base-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 258449,
+        "cached_input_tokens": 229248,
+        "output_tokens": 4961,
+        "reasoning_output_tokens": 2969
+      },
+      "final_message": "Fixed `numeric_range` so length, membership, and indexing validate positions using the multiplication that produces its items.\n\nValidation: all 21 relevant tests pass; full suite passes with 905 tests run and 5 skipped. Also checked 9,000 float ranges.\n\nNo test files changed. No commits, pushes, or pull requests.",
+      "target": {
+        "passed": 594,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "............................................................................................... [ 53%]\n............................................................................... [ 66%]\n............................................................... [ 76%]\n........................................................................................ [ 91%]\n.............................................. [ 99%]\n...                                    [100%]\n594 passed, 11179 subtests passed in 2.44s\n"
+      },
+      "base_full": {
+        "passed": 737,
+        "failed": 2
+      },
+      "after_full": {
+        "passed": 739,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "more_itertools/more.py"
+        ],
+        "src_files": [
+          "more_itertools/more.py"
+        ],
+        "added": 27,
+        "deleted": 29,
+        "lines": 56
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 29201,
+      "commands": 9,
+      "file_changes": 2,
+      "src_lines": 56
+    },
+    {
+      "task": "more-itertools-1247",
+      "repo": "more-itertools",
+      "cell": "gpt-base",
+      "run": 2,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 136.9,
+        "log": "/tmp/cew-eval/results/more-itertools-1247/gpt-base-r2/agent.log"
+      },
+      "usage": {
+        "input_tokens": 296871,
+        "cached_input_tokens": 268160,
+        "output_tokens": 5282,
+        "reasoning_output_tokens": 2723
+      },
+      "final_message": "Fixed `numeric_range` in `more_itertools/more.py`: length now checks generated boundary values, and membership and `index()` search the exact values produced.\n\nValidation passed: 905 tests run, 5 skipped, plus 10,000 randomized float consistency checks. No test files changed; no commits made.",
+      "target": {
+        "passed": 594,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "............................................................................................... [ 53%]\n............................................................................... [ 66%]\n............................................................... [ 76%]\n........................................................................................ [ 91%]\n.............................................. [ 99%]\n...                                    [100%]\n594 passed, 11179 subtests passed in 2.49s\n"
+      },
+      "base_full": {
+        "passed": 737,
+        "failed": 2
+      },
+      "after_full": {
+        "passed": 739,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "more_itertools/more.py"
+        ],
+        "src_files": [
+          "more_itertools/more.py"
+        ],
+        "added": 39,
+        "deleted": 21,
+        "lines": 60
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 28711,
+      "commands": 12,
+      "file_changes": 2,
+      "src_lines": 60
+    },
+    {
+      "task": "more-itertools-1247",
+      "repo": "more-itertools",
+      "cell": "gpt-cew",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 184.8,
+        "log": "/tmp/cew-eval/results/more-itertools-1247/gpt-cew-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 439336,
+        "cached_input_tokens": 402944,
+        "output_tokens": 6276,
+        "reasoning_output_tokens": 2992
+      },
+      "final_message": "已修复：`len()` 按实际产值校正边界，成员判断和 `index()` 通过二分查找精确匹配产出的值。\n\n验证通过：\n\n- `numeric_range` 相关测试：21 项。\n- 全量测试：905 项，5 项跳过。\n- Ruff 静态检查及格式检查。\n- 额外验证了 3000 组浮点范围及日期边界。\n\n仅修改实现文件；未修改测试，未提交、推送或创建 PR。",
+      "target": {
+        "passed": 594,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "............................................................................................... [ 53%]\n............................................................................... [ 66%]\n............................................................... [ 76%]\n........................................................................................ [ 91%]\n.............................................. [ 99%]\n...                                    [100%]\n594 passed, 11179 subtests passed in 2.41s\n"
+      },
+      "base_full": {
+        "passed": 737,
+        "failed": 2
+      },
+      "after_full": {
+        "passed": 739,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "more_itertools/more.py"
+        ],
+        "src_files": [
+          "more_itertools/more.py"
+        ],
+        "added": 37,
+        "deleted": 17,
+        "lines": 54
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 36392,
+      "commands": 19,
+      "file_changes": 2,
+      "src_lines": 54
+    },
+    {
+      "task": "more-itertools-1247",
+      "repo": "more-itertools",
+      "cell": "gpt-cew",
+      "run": 2,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 188.3,
+        "log": "/tmp/cew-eval/results/more-itertools-1247/gpt-cew-r2/agent.log"
+      },
+      "usage": {
+        "input_tokens": 349069,
+        "cached_input_tokens": 312704,
+        "output_tokens": 7703,
+        "reasoning_output_tokens": 5269
+      },
+      "final_message": "已修复 `numeric_range`：长度、成员判断和索引查找会核对实际生成值，消除浮点运算造成的不一致。\n\n- `python -m unittest`：905 项测试通过，5 项跳过。\n- 额外检查 10,000 组浮点范围，全部通过。\n- 仅修改实现文件，未改测试、提交、推送或创建 PR。\n- Ruff 未安装，未运行其检查；`git diff --check` 通过。",
+      "target": {
+        "passed": 594,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "............................................................................................... [ 53%]\n............................................................................... [ 66%]\n............................................................... [ 76%]\n........................................................................................ [ 91%]\n.............................................. [ 99%]\n...                                    [100%]\n594 passed, 11179 subtests passed in 2.44s\n"
+      },
+      "base_full": {
+        "passed": 737,
+        "failed": 2
+      },
+      "after_full": {
+        "passed": 739,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "more_itertools/more.py"
+        ],
+        "src_files": [
+          "more_itertools/more.py"
+        ],
+        "added": 23,
+        "deleted": 19,
+        "lines": 42
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 36365,
+      "commands": 15,
+      "file_changes": 1,
+      "src_lines": 42
+    },
+    {
+      "task": "more-itertools-1284",
+      "repo": "more-itertools",
+      "cell": "gpt-base",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 69.1,
+        "log": "/tmp/cew-eval/results/more-itertools-1284/gpt-base-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 145518,
+        "cached_input_tokens": 126976,
+        "output_tokens": 1298,
+        "reasoning_output_tokens": 484
+      },
+      "final_message": "Fixed `bucket` lookups so missing keys no longer appear during iteration. Keys with matching items remain recorded after consumption.\n\nAll 924 tests passed, with 5 skipped. Test files were unchanged; no commits, pushes, or pull requests were made.",
+      "target": {
+        "passed": 613,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "............................................... [ 46%]\n..................................................................... [ 57%]\n..................................... [ 63%]\n.................................... [ 69%]\n.............................................................................. [ 82%]\n.............................................................. [ 92%]\n..............................................                           [100%]\n613 passed, 11313 subtests passed in 3.13s\n"
+      },
+      "base_full": {
+        "passed": 754,
+        "failed": 4
+      },
+      "after_full": {
+        "passed": 758,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "more_itertools/more.py"
+        ],
+        "src_files": [
+          "more_itertools/more.py"
+        ],
+        "added": 2,
+        "deleted": 2,
+        "lines": 4
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 18542,
+      "commands": 8,
+      "file_changes": 1,
+      "src_lines": 4
+    },
+    {
+      "task": "more-itertools-1284",
+      "repo": "more-itertools",
+      "cell": "gpt-cew",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 73.0,
+        "log": "/tmp/cew-eval/results/more-itertools-1284/gpt-cew-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 204253,
+        "cached_input_tokens": 180096,
+        "output_tokens": 2080,
+        "reasoning_output_tokens": 716
+      },
+      "final_message": "已修复：查询不存在的 `bucket` 键时，不再凭空创建该键；只有读到实际元素才记录键。\n\n验证结果：`bucket` 专项 9 项全部通过；完整单元测试运行 924 项，通过，跳过 5 项。\n\n仅修改实现文件，未改测试文件，未提交、推送或创建 PR。",
+      "target": {
+        "passed": 613,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "............................................... [ 46%]\n..................................................................... [ 57%]\n..................................... [ 63%]\n.................................... [ 69%]\n.............................................................................. [ 82%]\n.............................................................. [ 92%]\n..............................................                           [100%]\n613 passed, 11313 subtests passed in 3.76s\n"
+      },
+      "base_full": {
+        "passed": 754,
+        "failed": 4
+      },
+      "after_full": {
+        "passed": 758,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "more_itertools/more.py"
+        ],
+        "src_files": [
+          "more_itertools/more.py"
+        ],
+        "added": 2,
+        "deleted": 2,
+        "lines": 4
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 24157,
+      "commands": 15,
+      "file_changes": 1,
+      "src_lines": 4
+    },
+    {
+      "task": "slugify-194",
+      "repo": "python-slugify",
+      "cell": "gpt-base",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 105.1,
+        "log": "/tmp/cew-eval/results/slugify-194/gpt-base-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 453968,
+        "cached_input_tokens": 422400,
+        "output_tokens": 2165,
+        "reasoning_output_tokens": 534
+      },
+      "final_message": "Fixed `add_uppercase_char` in [slugify/special.py](/tmp/cew-eval/runs/slugify-194/gpt-base-r1/slugify/special.py:4). It now processes a copy and updates the original list only after success, leaving input unchanged on error.\n\nValidation: **114 tests and 104 subtests passed**, including the existing regression tests. Test files were unchanged; no commit, push, or PR was created.",
+      "target": {
+        "passed": 3,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                                      [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m3 passed\u001b[0m\u001b[32m in 0.01s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 111,
+        "failed": 0
+      },
+      "after_full": {
+        "passed": 111,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": true,
+      "diff": {
+        "files": [
+          "slugify/special.py",
+          "test_add_uppercase_error.py"
+        ],
+        "src_files": [
+          "slugify/special.py"
+        ],
+        "added": 54,
+        "deleted": 4,
+        "lines": 58
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 31568,
+      "commands": 12,
+      "file_changes": 1,
+      "src_lines": 10
+    },
+    {
+      "task": "slugify-194",
+      "repo": "python-slugify",
+      "cell": "gpt-cew",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 173.4,
+        "log": "/tmp/cew-eval/results/slugify-194/gpt-cew-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 674001,
+        "cached_input_tokens": 631168,
+        "output_tokens": 3512,
+        "reasoning_output_tokens": 737
+      },
+      "final_message": "已修复 [slugify/special.py](/tmp/cew-eval/runs/slugify-194/gpt-cew-r1/slugify/special.py:4)：先在副本上处理，全部成功后写回原列表；报错时输入保持不变。\n\n- 回归及项目测试：114 项测试、106 项子测试全部通过。\n- 类型检查、修改文件的风格检查通过。\n- 全库风格检查仍有 `test.py:245、254` 两处既有空行问题。\n\n未修改测试文件，未提交、推送或创建 PR。",
+      "target": {
+        "passed": 3,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                                      [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m3 passed\u001b[0m\u001b[32m in 0.02s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 111,
+        "failed": 0
+      },
+      "after_full": {
+        "passed": 111,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": true,
+      "diff": {
+        "files": [
+          "slugify/special.py",
+          "test_add_uppercase_error.py"
+        ],
+        "src_files": [
+          "slugify/special.py"
+        ],
+        "added": 54,
+        "deleted": 4,
+        "lines": 58
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 42833,
+      "commands": 20,
+      "file_changes": 1,
+      "src_lines": 10
+    },
+    {
+      "task": "slugify-200",
+      "repo": "python-slugify",
+      "cell": "gpt-base",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 80.9,
+        "log": "/tmp/cew-eval/results/slugify-200/gpt-base-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 266861,
+        "cached_input_tokens": 238080,
+        "output_tokens": 1778,
+        "reasoning_output_tokens": 465
+      },
+      "final_message": "Fixed modern hard cuts to emit post-replacement delimiters only when at least one following word character fits, preventing trailing delimiters.\n\nValidation: 125 tests and 117 subtests passed; `git diff --check` passed.\n\nOnly `slugify/slugify.py` changed. No test files modified, commits, pushes, or pull requests.",
+      "target": {
+        "passed": 40,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m [ 72%]\n\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                              [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m40 passed\u001b[0m, \u001b[32m\u001b[1m115 subtests passed\u001b[0m\u001b[32m in 0.50s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 123,
+        "failed": 2
+      },
+      "after_full": {
+        "passed": 125,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "slugify/slugify.py"
+        ],
+        "src_files": [
+          "slugify/slugify.py"
+        ],
+        "added": 12,
+        "deleted": 4,
+        "lines": 16
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 28781,
+      "commands": 11,
+      "file_changes": 1,
+      "src_lines": 16
+    },
+    {
+      "task": "slugify-200",
+      "repo": "python-slugify",
+      "cell": "gpt-cew",
+      "run": 1,
+      "agent": {
+        "exit": 0,
+        "timed_out": false,
+        "duration_s": 76.2,
+        "log": "/tmp/cew-eval/results/slugify-200/gpt-cew-r1/agent.log"
+      },
+      "usage": {
+        "input_tokens": 372959,
+        "cached_input_tokens": 326656,
+        "output_tokens": 2338,
+        "reasoning_output_tokens": 445
+      },
+      "final_message": "已修复 #200：现代模式硬截断时，只有后面能容纳正文字符才输出整组分隔符，避免留下尾部分隔符。\n\n- 全量测试通过：125 项测试、115 个子用例。\n- 代码风格与差异检查通过。\n- 仅修改 `slugify/slugify.py`，未修改测试文件，未提交、推送或创建 PR。",
+      "target": {
+        "passed": 40,
+        "failed": 0,
+        "failed_names": [],
+        "exit": 0,
+        "tail": "m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m [ 72%]\n\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                              [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m40 passed\u001b[0m, \u001b[32m\u001b[1m115 subtests passed\u001b[0m\u001b[32m in 0.50s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 123,
+        "failed": 2
+      },
+      "after_full": {
+        "passed": 125,
+        "failed": 0
+      },
+      "new_failures": [],
+      "tests_modified": false,
+      "diff": {
+        "files": [
+          "slugify/slugify.py"
+        ],
+        "src_files": [
+          "slugify/slugify.py"
+        ],
+        "added": 11,
+        "deleted": 4,
+        "lines": 15
+      },
+      "resolved": true,
+      "overclaim": false,
+      "uncached_input": 46303,
+      "commands": 19,
+      "file_changes": 1,
+      "src_lines": 15
+    }
+  ]
+}

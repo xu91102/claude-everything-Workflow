@@ -1,0 +1,188 @@
+[
+  {
+    "id": "slugify-200",
+    "repo": "python-slugify",
+    "commit": "8f9a550",
+    "issue": "Avoid trailing post-replacement delimiters in modern hard cuts (#200)",
+    "test_files": [
+      "tests/test_release.py"
+    ],
+    "base": {
+      "tag": "base",
+      "exit": 1,
+      "passed": 38,
+      "failed": 2,
+      "failed_names": [
+        "test_modern_hard_cut_does_not_end_in_post_replacement_delimiters",
+        "test_modern_word_boundary_hard_cut_keeps_delimiters_with_the_next_word"
+      ],
+      "tail": "py::\u001b[1mReleaseRegressionTests::test_modern_hard_cut_does_not_end_in_post_replacement_delimiters\u001b[0m - AssertionError: 'xx' != 'x'\n\u001b[31mFAILED\u001b[0m tests/test_release.py::\u001b[1mReleaseRegressionTests::test_modern_word_boundary_hard_cut_keeps_delimiters_with_the_next_word\u001b[0m - AssertionError: '-' != ''\n\u001b[31m\u001b[31m\u001b[1m7 failed\u001b[0m, \u001b[32m39 passed\u001b[0m, \u001b[32m109 subtests passed\u001b[0m\u001b[31m in 0.51s\u001b[0m\u001b[0m\n"
+    },
+    "fix": {
+      "tag": "fix",
+      "exit": 0,
+      "passed": 40,
+      "failed": 0,
+      "failed_names": [],
+      "tail": "m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m [ 72%]\n\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                              [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m40 passed\u001b[0m, \u001b[32m\u001b[1m115 subtests passed\u001b[0m\u001b[32m in 0.49s\u001b[0m\u001b[0m\n"
+    },
+    "valid": true
+  },
+  {
+    "id": "slugify-194",
+    "repo": "python-slugify",
+    "commit": "2f23599",
+    "issue": "Fix add_uppercase_char to leave input unchanged on error (#194)",
+    "test_files": [
+      "test_add_uppercase_error.py"
+    ],
+    "base": {
+      "tag": "base",
+      "exit": 1,
+      "passed": 2,
+      "failed": 1,
+      "failed_names": [
+        "test_list_unmodified_on_unpack_error"
+      ],
+      "tail": "                         [100%]\u001b[0m\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mFAILED\u001b[0m test_add_uppercase_error.py::\u001b[1mTestAddUppercaseCharAtomicity::test_list_unmodified_on_unpack_error\u001b[0m - AssertionError: List should remain unmodified on error, got [('A', 'B'), ('...\n\u001b[31m\u001b[31m\u001b[1m1 failed\u001b[0m, \u001b[32m2 passed\u001b[0m\u001b[31m in 0.02s\u001b[0m\u001b[0m\n"
+    },
+    "fix": {
+      "tag": "fix",
+      "exit": 0,
+      "passed": 3,
+      "failed": 0,
+      "failed_names": [],
+      "tail": "\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                                      [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m3 passed\u001b[0m\u001b[32m in 0.01s\u001b[0m\u001b[0m\n"
+    },
+    "valid": true
+  },
+  {
+    "id": "humanize-346",
+    "repo": "humanize",
+    "commit": "ca892b3",
+    "issue": "Fix intword() rounding carry for very large numbers (#346)",
+    "test_files": [
+      "tests/test_number.py"
+    ],
+    "base": {
+      "tag": "base",
+      "exit": 2,
+      "passed": 0,
+      "failed": 1,
+      "failed_names": [
+        "tests.test_number"
+      ],
+      "tail": "\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mERROR\u001b[0m tests/test_number.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.04s\u001b[0m\u001b[0m\n"
+    },
+    "fix": {
+      "tag": "fix",
+      "exit": 2,
+      "passed": 0,
+      "failed": 1,
+      "failed_names": [
+        "tests.test_number"
+      ],
+      "tail": "\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mERROR\u001b[0m tests/test_number.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.04s\u001b[0m\u001b[0m\n"
+    },
+    "valid": false
+  },
+  {
+    "id": "humanize-381",
+    "repo": "humanize",
+    "commit": "ffdf407",
+    "issue": "Support general iterables in natural_list (#381)",
+    "test_files": [
+      "tests/test_lists.py"
+    ],
+    "base": {
+      "tag": "base",
+      "exit": 2,
+      "passed": 0,
+      "failed": 1,
+      "failed_names": [
+        "tests.test_lists"
+      ],
+      "tail": "\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mERROR\u001b[0m tests/test_lists.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.04s\u001b[0m\u001b[0m\n"
+    },
+    "fix": {
+      "tag": "fix",
+      "exit": 2,
+      "passed": 0,
+      "failed": 1,
+      "failed_names": [
+        "tests.test_lists"
+      ],
+      "tail": "\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mERROR\u001b[0m tests/test_lists.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.04s\u001b[0m\u001b[0m\n"
+    },
+    "valid": false
+  },
+  {
+    "id": "more-itertools-1284",
+    "repo": "more-itertools",
+    "commit": "2b8d5cd",
+    "issue": "Issue 1284: don't let a bucket lookup invent a key",
+    "test_files": [
+      "tests/test_more.py"
+    ],
+    "base": {
+      "tag": "base",
+      "exit": 1,
+      "passed": 609,
+      "failed": 4,
+      "failed_names": [
+        "test_getitem_miss_does_not_add_key",
+        "test_in_does_not_add_key",
+        "test_in_does_not_add_key_with_validator",
+        "test_keys_are_only_those_seen"
+      ],
+      "tail": "=======================\nFAILED tests/test_more.py::BucketTests::test_getitem_miss_does_not_add_key - ...\nFAILED tests/test_more.py::BucketTests::test_in_does_not_add_key - AssertionE...\nFAILED tests/test_more.py::BucketTests::test_in_does_not_add_key_with_validator\nFAILED tests/test_more.py::BucketTests::test_keys_are_only_those_seen - Asser...\n4 failed, 609 passed, 11313 subtests passed in 2.98s\n"
+    },
+    "fix": {
+      "tag": "fix",
+      "exit": 0,
+      "passed": 613,
+      "failed": 0,
+      "failed_names": [],
+      "tail": "........................ [ 57%]\n..................................... [ 63%]\n.................................... [ 69%]\n.............................................................................. [ 82%]\n.............................................................. [ 92%]\n..............................................                           [100%]\n613 passed, 11313 subtests passed in 2.61s\n"
+    },
+    "valid": true
+  },
+  {
+    "id": "itsdangerous-sha1",
+    "repo": "itsdangerous",
+    "commit": "7f4dcf8",
+    "issue": "access sha1 lazily",
+    "test_files": [
+      "tests/test_itsdangerous/test_serializer.py"
+    ],
+    "base": {
+      "tag": "base",
+      "exit": 2,
+      "passed": 0,
+      "failed": 1,
+      "failed_names": [
+        "tests.test_itsdangerous.test_serializer"
+      ],
+      "tail": "\n=========================== short test summary info ============================\nERROR tests/test_itsdangerous/test_serializer.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.05s\n"
+    },
+    "fix": {
+      "tag": "fix",
+      "exit": 0,
+      "passed": 41,
+      "failed": 0,
+      "failed_names": [],
+      "tail": ".........................................                                [100%]\n41 passed in 0.03s\n"
+    },
+    "valid": true
+  },
+  {
+    "id": "more-itertools-1247",
+    "repo": "more-itertools",
+    "commit": "dc2664b",
+    "issue": "Issue 1247: Keep numeric_range consistent with the items it produces\n\nnumeric_range produces its items by repeated multiplication, but derived len(), __contains__ and index() from division by the step. With floats the two disagree, so a range could report a length that did not match what it yielded, and could deny membership to its own items.",
+    "test_files": [
+      "tests/test_more.py"
+    ],
+    "valid": true
+  }
+]
