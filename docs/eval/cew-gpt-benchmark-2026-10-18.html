@@ -29,6 +29,7 @@
   .callout { background:#fff8ec; border:1px solid #f0dcb8; border-left:4px solid var(--amber);
     padding:14px 16px; border-radius:8px; margin:16px 0; }
   .blocked { background:#fdf2f2; border:1px solid #efd3d3; border-left:4px solid var(--red); }
+  .good { background:#eef8f2; border:1px solid #cfe7da; border-left:4px solid var(--green); }
   table { width:100%; border-collapse:collapse; background:var(--card); font-size:13.5px;
     border:1px solid var(--line); border-radius:8px; overflow:hidden; }
   th { text-align:left; font-size:12px; color:var(--muted); font-weight:600; background:#fbfcfe;
@@ -81,6 +82,12 @@
 <strong>一句话结论：</strong>在这批“单文件、几十行、测试已给出”的真实修复任务上，CEW 没有提升 GPT 的完成率或代码正确性，但把 token 成本抬高了
 68%、耗时抬高了 38%。
 CEW 确实让代理多做了事（加载多个技能、读规则、跑 lint 与全量测试），但这些动作在当前难度下没有转化为更好的结果。
+</div>
+
+<div class="callout good">
+<strong>后续（同日已复测）：</strong>按根因做了 P0 改造——Fast Path、增量升级、验证白名单。
+同一 7 题、每格 2 次重复的 2×2 配对结果：命令数 9.6 → <strong>6.9</strong>，输入 token <strong>-24%</strong>，
+完成率 14/14 不变。详见 <code>improvement-plan-2026-10-18.html</code> 第 0 节。
 </div>
 
 <h2>1. 实验设计：能不能被复现和复核</h2>
