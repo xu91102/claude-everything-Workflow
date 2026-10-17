@@ -81,7 +81,7 @@
 <div class="callout">
 <strong>核心判断：</strong>CEW 的规则内容不是主要问题，<strong>缺少停止条件</strong>才是。
 改造前，一个 1 行修复被扩展成 32 条命令：读 5 个技能、跑 doctest、benchmark、翻译脚本、ruff、black、全量测试。
-固定上下文（技能目录 + AGENTS）只多 <strong>1,486 token</strong>，占那次 807k 输入的 <strong>0.2%</strong>。
+固定上下文（技能目录 + AGENTS）改造前只多 <strong>1,486 token</strong>，占那次 807k 输入的 <strong>0.2%</strong>。
 真正烧钱的是<strong>每多一条命令，就重发一次完整上下文</strong>。
 </div>
 
@@ -104,6 +104,8 @@
       <td class="num win">24,524</td><td class="num win">1,604</td><td class="num win">6.9</td><td class="num win">69s</td></tr>
   </tbody>
 </table>
+<p class="muted">口径：表中都是“每次运行均值”。原 CEW 有 8 次运行（1 题重复 2 次），所以这里的 +81% 与第一批报告的 +68%
+不能用同一个分母直接对比；三行都按同一口径重算，才可横向比较。</p>
 
 <div class="cards">
   <div class="card"><div class="v win">-24%</div><div class="l">输入 token（对比裸跑）</div><div class="n">原 CEW 为 +81%</div></div>
