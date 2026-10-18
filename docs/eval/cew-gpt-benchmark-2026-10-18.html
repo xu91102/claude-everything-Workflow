@@ -274,8 +274,8 @@ CEW 的增量价值主要出现在“需要判断、需要跨文件、需要防�
 # 2) 确认 claude 能跑通：
 claude -p "ok" --model claude-opus-5-5 --output-format json
 # 3) 跑 Opus 两格（每格 7 个任务）：
-python3 tools/run_trial.py --task slugify-200 --cell opus-base
-python3 tools/run_trial.py --task slugify-200 --cell opus-cew</pre>
+node docs/eval/tools/run-trial.js --task slugify-200 --cell opus-base
+node docs/eval/tools/run-trial.js --task slugify-200 --cell opus-cew</pre>
 <p>判定“追平”的口径建议提前写死：<strong>在同等 token 预算下，GPT+CEW 的完成率与 Opus 裸跑的差距 ≤ 10 个百分点</strong>；
 而不是只看单次最好成绩。</p>
 

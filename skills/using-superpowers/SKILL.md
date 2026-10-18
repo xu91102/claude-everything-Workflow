@@ -14,12 +14,10 @@ Own routing and continuation. Skills return outcomes here instead of selecting o
 
 ## Micro Task Fast Path
 
-满足微改条件（单仓库、改动 ≤2 个文件、已有可运行的测试或验收命令、不涉及公共契约/鉴权/数据迁移/
-不可逆外部副作用）时，不读任何 Skill，直接按 `AGENTS.md` 的任务分级执行：读相关源码与测试 → 修改
-→ 跑目标测试 → 跑受影响模块测试 → 报告。不要为了「走流程」调用 implement、TDD 或调试 Skill。
+用户未明确指定其他流程且满足 `AGENTS.md` 的微改条件时，只读取 [Fast Path](references/fast-path.md)，
+按其中前置检查和步骤执行。Git 隔离、安全、授权、审查和项目质量门始终生效。
 
-命中升级条件（同一失败连续 2 次、改动面超过 2 个文件、仓库没有可运行测试、高风险边界）时，回到
-Routing 选择入口；未命中就不要进来。
+命中该引用的升级条件时，回到 Routing 选择入口，只补充当前决策需要的步骤。
 
 ## Priority
 

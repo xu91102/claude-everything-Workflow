@@ -22,12 +22,16 @@
     "test:continuation": "node scripts/verify/continuation-checks.test.js",
     "test:install-rules": "node scripts/verify/install-rules.test.js",
     "test:plugins": "node --test scripts/verify/plugin-distribution.test.js",
+    "test:eval": "node --test docs/eval/tools/run-trial.test.js",
     "verify:upstream": "node scripts/verify-upstream-capability-map.js",
     "pack:dry-run": "npm pack --dry-run"
   },
   "dependencies": {
     "commonmark": "0.31.2",
     "yaml": "2.9.0"
+  },
+  "devDependencies": {
+    "fast-xml-parser": "5.11.2"
   },
   "files": [
     ".claude-plugin/",

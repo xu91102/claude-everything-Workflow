@@ -51,6 +51,16 @@ CEW 的规则与技能确实被加载并执行（8/8 读取技能 3–5 个、�
 固定上下文探针（同一句“ok”，各 2 次一致）：裸跑 14,203 → 新 CEW 16,268，**+2,065**；
 其中 AGENTS.md 从 2.8KB 增到 5.2KB（约 +582/次）。这是常驻成本，需靠 P2-1 分层回收。
 
+### 审查修正后的证据范围
+
+上述数字来自修正前的 Fast Path 试验；保留 Git 隔离、授权、相称审查和必要质量门后，尚未重新测量提速幅度。
+原始数据保留，不能把 −24% / −28% 当作最终规则版本的实测结果。
+
+评测器现在要求 Agent 正常退出且未超时、目标测试退出码为 0 且有实际通过用例、前后完整套件均正常完成，
+并且没有新增失败。已知基线失败允许退出码为 1；中断、收集错误、缺失或过期报告、全跳过均不能算完成。
+完整套件显式禁用提前终止，收集或运行错误不能作为已知断言失败接受。新结果保留完整套件的退出码、跳过数、
+错误数和报告错误；历史结果没有自动改写或重新判分。
+
 ## 任务来源
 
 | 任务 | 仓库 | 提交 | 内容 |
@@ -73,7 +83,8 @@ CEW 的规则与技能确实被加载并执行（8/8 读取技能 3–5 个、�
 - `data/summary-p0.csv` — P0 复测原始数据（36 次：3 组 × 7 题 × 2 次，含第一批）
 - `data/p0-stats.json` — 2×2 配对统计、逐题比值、基线重复噪声
 - `data/summary.json` — 含最终消息、失败用例、diff 文件列表
-- `tools/run_trial.py` — 单次运行 + 自动判分（cell 含 `gpt-fixed`）
+- `tools/run-trial.js` — Node.js 单次运行 + 自动判分（cell 含 `gpt-fixed`），结果格式兼容原始数据
+- `tools/run-trial.test.js` — Node.js 隔离回归测试，覆盖判分和凭据处理，使用本地工具夹具，不调用模型
 - `tools/validate_tasks.py` — 任务有效性检查
 - `tools/discover.py` — 从仓库历史筛选候选修复提交
 - `tools/aggregate.py` — 聚合统计
@@ -96,9 +107,9 @@ CEW 的规则与技能确实被加载并执行（8/8 读取技能 3–5 个、�
 ```sh
 cp -r docs/eval/tools /tmp/cew-eval/tools
 python3 /tmp/cew-eval/tools/validate_tasks.py        # 验证任务
-python3 /tmp/cew-eval/tools/run_trial.py --task slugify-200 --cell gpt-base
-python3 /tmp/cew-eval/tools/run_trial.py --task slugify-200 --cell gpt-cew
-python3 /tmp/cew-eval/tools/run_trial.py --task slugify-200 --cell gpt-fixed   # 需先装新 CEW 到 homes/cew-fixed
+node docs/eval/tools/run-trial.js --task slugify-200 --cell gpt-base
+node docs/eval/tools/run-trial.js --task slugify-200 --cell gpt-cew
+node docs/eval/tools/run-trial.js --task slugify-200 --cell gpt-fixed   # 需先装新 CEW 到 homes/cew-fixed
 python3 /tmp/cew-eval/tools/aggregate.py
 python3 /tmp/cew-eval/tools/p0_stats.py
 ```
@@ -109,6 +120,18 @@ python3 /tmp/cew-eval/tools/p0_stats.py
 git -C <worktree> checkout codex/fast-path-stop-conditions
 HOME=/tmp/cew-eval/homes/cew-fixed <worktree>/scripts/install.sh --codex-only
 cp ~/.codex/config.toml ~/.codex/auth.json /tmp/cew-eval/homes/cew-fixed/.codex/
+```
+
+评测脚本的本地自定义 provider 从环境变量 `CEW_EVAL_BEARER_TOKEN` 读取凭据；通过安全渠道设置该变量，
+不要把值写入脚本、配置模板或报告。此前提交过的凭据若仍有效，需要在提供方撤销或轮换；删除源码无法撤销历史泄露。
+
+运行器和判分回归使用项目已有的 Node.js 环境（Node 20+，先运行 `npm install`）；只有被测 Python 仓库自身
+的 pytest 仍需要对应 venv。可用 `CEW_EVAL_ROOT` 指定隔离目录，默认 `/tmp/cew-eval`。
+
+只运行评测器回归，不需要模型凭据或 Python 环境：
+
+```sh
+npm run test:eval
 ```
 
 ## 局限
