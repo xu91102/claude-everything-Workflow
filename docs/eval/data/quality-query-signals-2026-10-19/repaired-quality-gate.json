@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-10-18T20:58:24.085Z",
+  "producer": "Root after all six model trials and original driver had closed; exact frozen controllers after reference-venv link repair",
+  "passed": false,
+  "completed_trials": 6,
+  "candidate_passed_artifacts": 0,
+  "queries_per_artifact": 46,
+  "model_reruns": 0,
+  "artifact_edits": 0,
+  "no_measured_models_active": true,
+  "original_driver_exit": 2,
+  "original_driver_metadata_sha256": "03ce24a616affec6418b40b61443ffd0d552765e1d992406fe73fb0f0bdac1c1",
+  "original_gate_validity": "NOT RUN / probe interpreter-launch failures, not artifact scores",
+  "amendment_sha256": "cef23cfbd61955109e3888ed3f286f34503f9f71edb05305871c572e3cfcf023",
+  "reports": {
+    "quality-probes.json": "4e0d132fa0e090ba3f745665f9d2c5aae136313e78359083cda14476d15d5686",
+    "cost-probes.json": "59dfcb5c4fe5468234f5a33687c2b3cedbafb8c4935efa00c3a0faa5b0fa0581",
+    "context-probes.json": "c9ceddf0274096cd1a3db4be03d09a9a49c36b17e78bf7b82245ce39d4c9158d",
+    "promotion-probes.json": "310527fd410a1f279cccba4befde4f2b4dd71552eb33586b8e9f583dc316c5b9",
+    "compatibility-probes.json": "0c8ef99ff4df6cb3ada482bdc7b06043008790ec0c4ad952f04290d6d00fa811"
+  },
+  "controller_hashes": {
+    "quality-probes.cjs": "ae0aa64c7cd51853ba5f85a412ef2983f3086b240b3dce9fd58bfe4198b3fb11",
+    "cost-probes.cjs": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262",
+    "context-probes.cjs": "e8bb0dbd5e07ea6f80ed1dfa031c098a71ebf263494736435d3c530cfc39519b",
+    "promotion-probes.cjs": "b9c24a9d58c40e90f635ea2ca15ce9d9c82925eeb3945197c9427b3cf6481786",
+    "compatibility-probes.cjs": "f83e94c4f8e04c039e5edd7c810306c8c2cf04628e85e67c3a82a8e9e27aecb3",
+    "i18n-probes.cjs": "5b8dc2ac5ea1142c5690930a97f386c2a9bb9f34989eb4802fe213354b1cfe55"
+  }
+}

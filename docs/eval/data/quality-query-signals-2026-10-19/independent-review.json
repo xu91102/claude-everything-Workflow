@@ -1,0 +1,708 @@
+{
+  "kind": "Independent read-only review of eighth-round immutable source eb104fd and partial 6/42 actual evidence",
+  "mode": "independent",
+  "mode_reason": "Explicit independent review and repeated precision-sensitive behavioral failures.",
+  "reviewed_at": "2026-10-18T21:10:23.254220+00:00",
+  "base": "36ccc9018247bed8892948099b79132a511f0b93",
+  "measured_source": "eb104fd2a0ec8c5f1e86d92a996982f8362a84be",
+  "package": "<BENCH_ROOT>/partial-review-package.json",
+  "package_sha256": "30c63e9755152246c35a831eb69d163b4d9017e363168357a89ef75eb34987be",
+  "scope": "Only pinned eighth-round source/data/report. Later proposals and active worktree changes are excluded. Earlier reviews and seven-task prevalidation are reused only after identity/hash checks; no old full audit is repeated.",
+  "overall_status": "FAIL",
+  "critical_findings": 0,
+  "important_findings": 1,
+  "axes": {
+    "Standards": {
+      "status": "PASS",
+      "important": 0,
+      "findings": [],
+      "evidence": "The pinned policy diff replaces only testing.md line 52. Representative boundaries, baseline legality, bounded cost, independent expected outcomes, necessary review and Fast Path direction remain; no task-specific answer or AGENTS addition. Unrelated historical documentation commits between the supplied revisions are excluded as declared."
+    },
+    "ActualArtifactSpec": {
+      "status": "FAIL",
+      "important": 1,
+      "findings": [
+        {
+          "severity": "Important",
+          "kind": "required behavior regression",
+          "requirement": "partial-review-package.json requirements/review_scope; protocol/protocol.json quality_acceptance; rules/common/testing.md:48-53 require preserved baseline-legal results, exceptions and signals for compatible parameter/query types.",
+          "locations": [
+            {
+              "file": "trials/more-itertools-1247--gpt-fixed--r1/runs/more-itertools-1247/gpt-fixed-r1/more_itertools/more.py",
+              "line": 2466
+            },
+            {
+              "file": "trials/more-itertools-1247--gpt-fixed--r2/runs/more-itertools-1247/gpt-fixed-r2/more_itertools/more.py",
+              "line": 2453
+            }
+          ],
+          "title": "Both candidate artifacts introduce FloatOperation for valid Decimal nonmember queries",
+          "evidence": "With FloatOperation trapping enabled, numeric_range(1,2,0.1) queried with Decimal(0), and numeric_range(1,0,-0.1) with Decimal(2), originally return False for membership and raise ValueError for index. Both candidate artifacts instead raise FloatOperation in all four cases: each 0/4. Parent and upstream reference each pass 4/4. The artifacts promote the integer start through start + 0 * float_step before their bounds comparison, introducing an ordered float/Decimal comparison.",
+          "impact": "Original strict suites and the other 42 probes pass both candidate artifacts, but the baseline-legal caller contract and predeclared 46-query acceptance still fail. This is a task-parent regression, also present in both contemporaneous previous-candidate artifacts; it does not prove the wording change caused it.",
+          "smallest_correction": "Preserve the original legal out-of-bounds query result and signal behavior while checking generated float values; require evidence for the actual parameter/query/configuration interaction before accepting either artifact. No source or artifact was changed by this review.",
+          "raw_evidence": "compatibility-probes.json",
+          "raw_evidence_sha256": "0c8ef99ff4df6cb3ada482bdc7b06043008790ec0c4ad952f04290d6d00fa811"
+        }
+      ],
+      "strict_original_suites_pass": "6/6",
+      "candidate_original42_pass": "2/2",
+      "candidate_strict_and46_pass": "0/2",
+      "candidate_signal4_pass": [
+        "0/4",
+        "0/4"
+      ]
+    },
+    "EvidenceIntegrity": {
+      "status": "PASS",
+      "important": 0,
+      "findings": [],
+      "boundary": "PASS covers truthful, traceable partial evidence after the documented environment repair. It does not mean the original driver successfully executed its quality gate. The preparation failure remains recorded."
+    },
+    "WholePerformance": {
+      "status": "NOT RUN",
+      "important": 0,
+      "findings": [],
+      "reason": "Only the predeclared critical numeric stage completed (6/42); 36 ordinary trials are explicitly unstarted. The unchanged whole-batch gate needs complete seven-task family tokens and mean model duration below contemporaneous main. Partial stage/subgroup gains cannot satisfy it."
+    }
+  },
+  "audit_counts": {
+    "pinned_file_hashes_matched": 41,
+    "source_files_matched_measured_commit": 7,
+    "actual_patches_and_receipts": 6,
+    "junit_reports": 18,
+    "junit_original_case_identities_preserved_trials": 6,
+    "root_sessions": 6,
+    "native_descendant_sessions": 4,
+    "unique_response_ids": 170,
+    "duplicate_response_copies": 0,
+    "conflicting_response_ids": 0,
+    "per_session_cumulative_totals_matched": 10,
+    "plaintext_commands_reviewed_and_matched_public_export": 154,
+    "original_failed_probe_launches_NOT_RUN": 368,
+    "original_explicit_ENOENT": 336,
+    "original_cost_null_exit_no_timeout_without_error_string": 32,
+    "corrected_uniform_versions": 8,
+    "predeclared_queries_per_version": 46,
+    "corrected_uniform_probe_attempts": 368,
+    "candidate_composite_quality_passes": 0,
+    "candidate_artifacts": 2,
+    "unstarted_trials": 36,
+    "initial_dependency_snapshot_matches": 6,
+    "final_dependency_snapshot_matches": 6,
+    "trial_execution_fields_preserved": 6,
+    "trial_config_only_checkout_trust_appended": 6
+  },
+  "environment_deviation": {
+    "original_driver_exit": 2,
+    "all_six_model_exit_codes": 0,
+    "model_timeouts": 0,
+    "original_gate": "NOT RUN: reference interpreter missing; not artifact-quality failure",
+    "original_16_files_preserved_byte_for_byte_and_public_copy_matches": true,
+    "original_experiment_sha256": "03ce24a616affec6418b40b61443ffd0d552765e1d992406fe73fb0f0bdac1c1",
+    "repair_amendment_recorded_before_corrected_checks_at": "2026-10-18T20:56:38.270Z",
+    "repair_amendment_raw_sha256": "cef23cfbd61955109e3888ed3f286f34503f9f71edb05305871c572e3cfcf023",
+    "repair_amendment_public_sha256": "1fcee501337b115fcc62d9f19032140595d2a42b17d945e0979cf3613e722c25",
+    "repair": "Only restored /private/tmp/cew-eval/venvs symlink used in the preceding round. All six private trial environments were retained. Five numeric controllers and all inputs/oracles are byte-identical to the previous round and frozen before models; translation controller also unchanged.",
+    "actual_repaired_producer": "Root after all six model trials and original driver had closed; exact frozen controllers after reference-venv link repair",
+    "actual_repaired_checked_at": "2026-10-18T20:58:24.085Z",
+    "actual_repaired_gate_sha256": "a845742bc745703025c8073973dce7ae04cc6211dc168a0ce2dd00ac642981df",
+    "actual_repaired_report_raw_hashes": {
+      "quality-probes.json": "4e0d132fa0e090ba3f745665f9d2c5aae136313e78359083cda14476d15d5686",
+      "cost-probes.json": "59dfcb5c4fe5468234f5a33687c2b3cedbafb8c4935efa00c3a0faa5b0fa0581",
+      "context-probes.json": "c9ceddf0274096cd1a3db4be03d09a9a49c36b17e78bf7b82245ce39d4c9158d",
+      "promotion-probes.json": "310527fd410a1f279cccba4befde4f2b4dd71552eb33586b8e9f583dc316c5b9",
+      "compatibility-probes.json": "0c8ef99ff4df6cb3ada482bdc7b06043008790ec0c4ad952f04290d6d00fa811"
+    },
+    "parent_controls": "boundary 16/16; context 12/12; strict-signal 4/4",
+    "no_model_reruns_or_artifact_edits_or_new_probes": true,
+    "provenance_note": "Corrected root reports normalize only benchmark paths in public exports; all normalized copies match exactly. Their raw hashes match the repaired gate. Original critical-gate hashes continue to address only archived launch failures."
+  },
+  "frozen_inputs": {
+    "source_diff_sha256": "1a07a5868dd50e35f7ac6937127a9447a775284f0ea8468e56ba18f0c21bf3bc",
+    "testing_rule_sha256": "c44276535ef06b4af9ce030d58afcc3d2796c8f595a5cc3beaf5e2bcb389763f",
+    "protocol_sha256": "6198ace36a0fda20f7fc6252f7d8a065f07a61c670db53da6d48f5b0f95a7309",
+    "manifest_sha256": "dc08f7afa2c1274473b789e27ad5cdab473edf086268cc38cf4d26c66b08adc7",
+    "controllers_byte_identical_to_previous_round": [
+      "quality-probes.cjs",
+      "cost-probes.cjs",
+      "context-probes.cjs",
+      "promotion-probes.cjs",
+      "compatibility-probes.cjs",
+      "i18n-probes.cjs"
+    ],
+    "source_archives_and_installed_policies_verified": 3,
+    "AGENTS_same_in_three_archives_templates_and_six_homes": true,
+    "config_template_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+    "execution": "Every observed context uses gpt-6.1-sol/high, never approval and danger-full-access from the same declared runner override. Six config files retain the five template execution fields, appending only the correct isolated checkout trust section.",
+    "public_three_JS_unchanged_from_10403cf": true,
+    "fresh_source_check_logs": "8/8 exit 0; log hashes match exported source_validation. Fresh test:eval records 29 pass, 0 fail.",
+    "production_package": "Pack/install/verify recorded exit 0; tarball and production-only installed testing.md match the measured hash.",
+    "prior_prevalidation": "Same manifest bytes as the immediate previous round and original VKCUnt source; all seven exported identities and validation fields match. Source validation-controller hash verified; not rerun.",
+    "historical_replay": "43-family replay and historical RED/GREEN log bytes match the preceding round, explicitly reused. No old replay or model was rerun.",
+    "prior_seventh_review_sha256": "d55bc3fa2d30b836158eaae7d93ed3515d7a47e8f8e9be0c1f1e8d36ac880690"
+  },
+  "dependency_audit": {
+    "baseline_sha256": "a4284340a85b3a311682d023a48691c95a009a9fd59beb85d8685e34dcb0243b",
+    "all_initial_receipts_equal_reference_baseline": true,
+    "all_final_current_freeze_snapshots_match_receipts": true,
+    "main_added_each_trial": [
+      "ruff==0.17.1"
+    ],
+    "main_after_sha256": "5d1a755a4f24ba07ec48d865f67fcddae0a054b83914f4cd3b28c8bf927682f1",
+    "other_four_trial_package_snapshots_unchanged": true,
+    "raw_commands_and_install_success_checked": true,
+    "interpretation": "These are retained measured environment changes, not falsely reported as zero changes or evidence of quality/performance completion."
+  },
+  "partial_stage_summary": [
+    {
+      "cell": "gpt-cew",
+      "n": 2,
+      "strict_pass": 2,
+      "original42_pass": 0,
+      "strict_and46_pass": 0,
+      "family_tokens": 845758,
+      "raw_cli_tokens": 845758,
+      "mean_model_duration_s": 128.05,
+      "mean_runner_duration_s": 144.487,
+      "unique_responses": 24,
+      "parent_commands": 41,
+      "child_commands": 0
+    },
+    {
+      "cell": "gpt-trim",
+      "n": 2,
+      "strict_pass": 2,
+      "original42_pass": 2,
+      "strict_and46_pass": 0,
+      "family_tokens": 3020214,
+      "raw_cli_tokens": 1790282,
+      "mean_model_duration_s": 442.35,
+      "mean_runner_duration_s": 458.37249999999995,
+      "unique_responses": 74,
+      "parent_commands": 28,
+      "child_commands": 26
+    },
+    {
+      "cell": "gpt-fixed",
+      "n": 2,
+      "strict_pass": 2,
+      "original42_pass": 2,
+      "strict_and46_pass": 0,
+      "family_tokens": 2826770,
+      "raw_cli_tokens": 1469186,
+      "mean_model_duration_s": 379.25,
+      "mean_runner_duration_s": 395.4175,
+      "unique_responses": 72,
+      "parent_commands": 32,
+      "child_commands": 27
+    }
+  ],
+  "partial_stage_comparison": {
+    "candidate_vs_main_token_change_percent": 234.2291766675574,
+    "candidate_vs_main_mean_time_change_percent": 196.17336977743065,
+    "candidate_vs_previous_token_change_percent": -6.404976600995827,
+    "candidate_vs_previous_mean_time_change_percent": -14.264722504803895,
+    "whole_batch_claim": "NOT RUN; descriptive two-repeat development-task estimates only. No causal ablation or general speedup established.",
+    "safe_redundant_cost": "No additional safe quality-gate removal is established by these traces. Repeated candidate suite checks follow source edits; child-review cost alone does not justify deleting review."
+  },
+  "trials": [
+    {
+      "trial": "more-itertools-1247--gpt-cew--r1",
+      "receipt_sha256": "c6b5812f9938b4f351089c5feb3fcc709a5e223535e46e92b5db52d60c3471f2",
+      "patch_sha256": "3bd0970e2b30c660a42c705bfebbd58b5adf2d0727c76c19aa53dff6521ecfca",
+      "agent_log_sha256": "0849421dddd27e4ed69508a17cfb673a6a736ada8556d2cda295acd5937f4e2a",
+      "source_sha256": "33814de1b8409172ba72d7132b872956ea76f7fb4627d6ef860234a8a5c44855",
+      "junit": {
+        "base-full": {
+          "sha256": "64c44f5f0cfb02e8fe4edb02ed4fcc138274ab0cb9382ce326a5d2a188905e1b",
+          "testcases": 739,
+          "failed": 2,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target": {
+          "sha256": "624bd6829a414fb08a0a1775c5d87026abade61b263bf0867f93c86da62de600",
+          "testcases": 594,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "after-full": {
+          "sha256": "42ccb9b021cbb7a8ab027bff87c4789c15e7e2eaca0d6ee776f5f5592ccbdd6f",
+          "testcases": 739,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "strict_suite": "PASS",
+      "probe_passes_in_order_boundary16_cost4_context12_promotion10_signal4": [
+        0,
+        2,
+        2,
+        8,
+        0
+      ],
+      "all46_pass": false,
+      "family_tokens": 379661,
+      "raw_cli_tokens": 379661,
+      "model_duration_s": 121.7,
+      "runner_duration_s": 138.399,
+      "unique_family_responses": 11,
+      "family_commands": 16,
+      "packages_changed": true
+    },
+    {
+      "trial": "more-itertools-1247--gpt-cew--r2",
+      "receipt_sha256": "71f46914b45692b8a5a77b1eeb2e9724db6656754fee0569b4145c92d8524ab2",
+      "patch_sha256": "64e59eba42f603c9398df85bb40bb3892b8106d8b73da7b11339f28906ee588f",
+      "agent_log_sha256": "20a4a6e7cbbe904d8dff6ab98afcfc2adebf6d2e880dc7c68dd3e712f1de5d4d",
+      "source_sha256": "2d1c3c18db263a60df1ff50b463cd82c552e5429fbfbbf253d6969251bb825a2",
+      "junit": {
+        "base-full": {
+          "sha256": "3c84aca90d666af18c35894fa664336f1e53861052fc8e951b29eaf874553b47",
+          "testcases": 739,
+          "failed": 2,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target": {
+          "sha256": "f06d500e29182195dc6a5cbab4349d8431bd29a72525d88b93773f4c1f7c2f62",
+          "testcases": 594,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "after-full": {
+          "sha256": "e80d66f1ba89a59aa406971ee8081fb021a78117241af48c75923872a5c3ef92",
+          "testcases": 739,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "strict_suite": "PASS",
+      "probe_passes_in_order_boundary16_cost4_context12_promotion10_signal4": [
+        8,
+        0,
+        8,
+        4,
+        4
+      ],
+      "all46_pass": false,
+      "family_tokens": 466097,
+      "raw_cli_tokens": 466097,
+      "model_duration_s": 134.4,
+      "runner_duration_s": 150.575,
+      "unique_family_responses": 13,
+      "family_commands": 25,
+      "packages_changed": true
+    },
+    {
+      "trial": "more-itertools-1247--gpt-fixed--r1",
+      "receipt_sha256": "5831d0857cb9f33b63d2f5ea8adc695dede39d16f72e3e74ca0c1d5545d51957",
+      "patch_sha256": "4a3b39ea1e4f5a0dbeb762a8e2b8dcc13db7e53545fa2cd596db2e4398d0af2f",
+      "agent_log_sha256": "0bbcfb5131fe5c3d62249743c89f28c6faf7625d2c60e6e4b32ede1548efbf74",
+      "source_sha256": "09d164a76cb8ea56f6f41f665c9b3dfc403c256b1f4c63ac7e512a3fcb414745",
+      "junit": {
+        "base-full": {
+          "sha256": "388b14f7759f4003e1476c0b3572ad34f60301fa2a5c53376f88e4625d9ea6e8",
+          "testcases": 739,
+          "failed": 2,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target": {
+          "sha256": "b42bf44db7edb386dfbd02a4d04c4161c2145d1606110c1e88fd0c2254c0c9ef",
+          "testcases": 594,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "after-full": {
+          "sha256": "7e916933769950dbf2d2263d5943470c89a05065252078bfca32a9cc57d09c52",
+          "testcases": 739,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "strict_suite": "PASS",
+      "probe_passes_in_order_boundary16_cost4_context12_promotion10_signal4": [
+        16,
+        4,
+        12,
+        10,
+        0
+      ],
+      "all46_pass": false,
+      "family_tokens": 1364773,
+      "raw_cli_tokens": 654620,
+      "model_duration_s": 379.4,
+      "runner_duration_s": 395.438,
+      "unique_family_responses": 35,
+      "family_commands": 28,
+      "packages_changed": false
+    },
+    {
+      "trial": "more-itertools-1247--gpt-fixed--r2",
+      "receipt_sha256": "a03248bdcdac353b8fb60195e35e881aa7fdff464c7649250c2bab9f60c4851a",
+      "patch_sha256": "dfa710b9e01bb2a185545b213ff3f4e56f52a656fcd31d4bf44745b31e915a09",
+      "agent_log_sha256": "3242caa72071d74b3c0a48161c9c2a3be69e0c51707740e06edcee0154fe710c",
+      "source_sha256": "272facbd9163168e7686223568c2d66d8baf4196e22df2b4327afb9390e1529b",
+      "junit": {
+        "base-full": {
+          "sha256": "32c9d53f052ea4134cc2f8aa016a4432b7d4e57b09153f2435815831b47a32e7",
+          "testcases": 739,
+          "failed": 2,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target": {
+          "sha256": "8a2c3f64a0162da8ebcfc193b99e723a913189c58964f42b981f5506572b1f66",
+          "testcases": 594,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "after-full": {
+          "sha256": "138cf44a59f01b705670baea90cab301ac9b1be60f6a4ad912106fa630daae6f",
+          "testcases": 739,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "strict_suite": "PASS",
+      "probe_passes_in_order_boundary16_cost4_context12_promotion10_signal4": [
+        16,
+        4,
+        12,
+        10,
+        0
+      ],
+      "all46_pass": false,
+      "family_tokens": 1461997,
+      "raw_cli_tokens": 814566,
+      "model_duration_s": 379.1,
+      "runner_duration_s": 395.397,
+      "unique_family_responses": 37,
+      "family_commands": 31,
+      "packages_changed": false
+    },
+    {
+      "trial": "more-itertools-1247--gpt-trim--r1",
+      "receipt_sha256": "3f860d97df034b0cff95b258d2752469b2bb05996fe22414659ae52e023b4d48",
+      "patch_sha256": "85a435c7796bdc3ff1eddeca1eb22b30c0b170c10baf3016e3f8a51f18fb2910",
+      "agent_log_sha256": "2fb20cd83ff521fcc3fd478a93862d15ff5855a0d6f70f11cd00fba534853867",
+      "source_sha256": "3ae5903ddeedb61b6c353795ed785ca9b4dd923fe20de00ce059aa0f45cf4dbd",
+      "junit": {
+        "base-full": {
+          "sha256": "e215ae40fce98ee18a9487b5f291807caad71d4093b65735541683c699a774a9",
+          "testcases": 739,
+          "failed": 2,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target": {
+          "sha256": "3fa4405dc5d387245a2a16a27c1ad0e78197f206292e1819130b16b79587d63a",
+          "testcases": 594,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "after-full": {
+          "sha256": "9f23b426d9aa3e95b6dc539ed32663b012637eaabb242c099c603dd04521dc05",
+          "testcases": 739,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "strict_suite": "PASS",
+      "probe_passes_in_order_boundary16_cost4_context12_promotion10_signal4": [
+        16,
+        4,
+        12,
+        10,
+        0
+      ],
+      "all46_pass": false,
+      "family_tokens": 2004012,
+      "raw_cli_tokens": 1173480,
+      "model_duration_s": 535.1,
+      "runner_duration_s": 551.055,
+      "unique_family_responses": 47,
+      "family_commands": 32,
+      "packages_changed": false
+    },
+    {
+      "trial": "more-itertools-1247--gpt-trim--r2",
+      "receipt_sha256": "b0d8698c7b5aa47fc238208093ae37c5082ab4b1ee0886a6cea885fd82f79fd3",
+      "patch_sha256": "90c857cbfa817072bf4033f9b181010176e0b5da0412971abf67b6b1fdbf54ed",
+      "agent_log_sha256": "336ce5a239fc83d16b2e6ed4723e5937c4202dff7e6efe3da2f2526ce847c59a",
+      "source_sha256": "49d302fc33e52f849290ecd8ed0609a8ad55a9ad02cd1cdb3eca30207da53d61",
+      "junit": {
+        "base-full": {
+          "sha256": "321c2bd0d74240b5439e009d130c76fdaefdbf9d9b4637494f5a73ae3dd49e7a",
+          "testcases": 739,
+          "failed": 2,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target": {
+          "sha256": "f43ff02fb06706e5eff2525e3cbf070f3596ae43c1a72c0946a76f55e5e44df6",
+          "testcases": 594,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "after-full": {
+          "sha256": "dd6277a0fd593bfc562352f3bb8b4a6eeb53d3cf0fdcd3e4afb88bfa2d97323d",
+          "testcases": 739,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "strict_suite": "PASS",
+      "probe_passes_in_order_boundary16_cost4_context12_promotion10_signal4": [
+        16,
+        4,
+        12,
+        10,
+        0
+      ],
+      "all46_pass": false,
+      "family_tokens": 1016202,
+      "raw_cli_tokens": 616802,
+      "model_duration_s": 349.6,
+      "runner_duration_s": 365.69,
+      "unique_family_responses": 27,
+      "family_commands": 22,
+      "packages_changed": false
+    }
+  ],
+  "sessions": [
+    {
+      "trial": "more-itertools-1247--gpt-cew--r1",
+      "thread_id": "01a150ba-731e-7b00-8ccc-33c6a24f464a",
+      "parent_thread_id": null,
+      "file": "trials/more-itertools-1247--gpt-cew--r1/homes/cew-home/.codex/sessions/2026/10/19/rollout-2026-10-19T04-35-59-01a150ba-731e-7b00-8ccc-33c6a24f464a.jsonl",
+      "sha256": "6a828cc3ef834eb31ee6216264d91d4ab128b7f87080a9d89c4e47679be11578",
+      "unique_owned_responses": 11,
+      "usage": {
+        "input_tokens": 374377,
+        "cached_input_tokens": 337280,
+        "output_tokens": 5284,
+        "reasoning_output_tokens": 2397
+      },
+      "commands": 16,
+      "plaintext_command_digest_sha256": "5cbe86ef3f778d38278e0e5058a9c574df15027b5b7e7b67d4b016583ac22f57",
+      "last_response_at": "2026-10-18T20:37:59.257Z",
+      "cumulative_usage_match": true
+    },
+    {
+      "trial": "more-itertools-1247--gpt-cew--r2",
+      "thread_id": "01a150c6-11ae-7880-ad52-116ec51c7690",
+      "parent_thread_id": null,
+      "file": "trials/more-itertools-1247--gpt-cew--r2/homes/cew-home/.codex/sessions/2026/10/19/rollout-2026-10-19T04-48-41-01a150c6-11ae-7880-ad52-116ec51c7690.jsonl",
+      "sha256": "2b5acfcd0bee4637a3864cb69fe1d25af1ff56ed3558a8350b8108a867f355a8",
+      "unique_owned_responses": 13,
+      "usage": {
+        "input_tokens": 459937,
+        "cached_input_tokens": 414720,
+        "output_tokens": 6160,
+        "reasoning_output_tokens": 2364
+      },
+      "commands": 25,
+      "plaintext_command_digest_sha256": "946ee9082d47e0e6d865f5f49b2be5e3880903ced74d75832ed68ce7e0acd28b",
+      "last_response_at": "2026-10-18T20:50:53.229Z",
+      "cumulative_usage_match": true
+    },
+    {
+      "trial": "more-itertools-1247--gpt-fixed--r1",
+      "thread_id": "01a150c4-f82f-7aa0-8dc6-41f05892e2b2",
+      "parent_thread_id": null,
+      "file": "trials/more-itertools-1247--gpt-fixed--r1/homes/cew-fixed/.codex/sessions/2026/10/19/rollout-2026-10-19T04-47-29-01a150c4-f82f-7aa0-8dc6-41f05892e2b2.jsonl",
+      "sha256": "820d9080b33522d2c056310c96c02dbfba79f5774bc0c0fc2122957a30e1fea9",
+      "unique_owned_responses": 15,
+      "usage": {
+        "input_tokens": 640399,
+        "cached_input_tokens": 607232,
+        "output_tokens": 14221,
+        "reasoning_output_tokens": 6712
+      },
+      "commands": 16,
+      "plaintext_command_digest_sha256": "90f5bcacf1ca15ed6d0cbfc1fd81313fd7cd6a1dd9ded30595b65b8c1079be3f",
+      "last_response_at": "2026-10-18T20:53:46.424Z",
+      "cumulative_usage_match": true
+    },
+    {
+      "trial": "more-itertools-1247--gpt-fixed--r1",
+      "thread_id": "01a150c7-1776-7632-a678-bdff1652d92b",
+      "parent_thread_id": "01a150c4-f82f-7aa0-8dc6-41f05892e2b2",
+      "file": "trials/more-itertools-1247--gpt-fixed--r1/homes/cew-fixed/.codex/sessions/2026/10/19/rollout-2026-10-19T04-49-47-01a150c7-1776-7632-a678-bdff1652d92b.jsonl",
+      "sha256": "f8c2f7d50faee4aaf19bf39e05f9202699cbca05b31ca25054789d41c279d9b9",
+      "unique_owned_responses": 20,
+      "usage": {
+        "input_tokens": 702031,
+        "cached_input_tokens": 675840,
+        "output_tokens": 8122,
+        "reasoning_output_tokens": 3523
+      },
+      "commands": 12,
+      "plaintext_command_digest_sha256": "0d750699300eedf2306bff0ecab25f6fe2cdfe38852a1d3f408e7e283bdc68bd",
+      "last_response_at": "2026-10-18T20:53:23.201Z",
+      "cumulative_usage_match": true
+    },
+    {
+      "trial": "more-itertools-1247--gpt-fixed--r2",
+      "thread_id": "01a150ba-72ff-7e02-884f-d551db2bceed",
+      "parent_thread_id": null,
+      "file": "trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/sessions/2026/10/19/rollout-2026-10-19T04-35-59-01a150ba-72ff-7e02-884f-d551db2bceed.jsonl",
+      "sha256": "b929ee27a3326927e6d633bb6db87ba9a9dfdee084e27ae2f13e7f079ef5b5be",
+      "unique_owned_responses": 19,
+      "usage": {
+        "input_tokens": 798449,
+        "cached_input_tokens": 686336,
+        "output_tokens": 16117,
+        "reasoning_output_tokens": 7180
+      },
+      "commands": 16,
+      "plaintext_command_digest_sha256": "4de34dc6bef31243af3bbdbe300c0e82c954989d88ab4e9bad0069e008a3dedd",
+      "last_response_at": "2026-10-18T20:42:16.540Z",
+      "cumulative_usage_match": true
+    },
+    {
+      "trial": "more-itertools-1247--gpt-fixed--r2",
+      "thread_id": "01a150bc-b346-73f1-a948-a5544946155d",
+      "parent_thread_id": "01a150ba-72ff-7e02-884f-d551db2bceed",
+      "file": "trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/sessions/2026/10/19/rollout-2026-10-19T04-38-26-01a150bc-b346-73f1-a948-a5544946155d.jsonl",
+      "sha256": "3bb294b9b7dc55d2cba02667f689bdea8d4d9f57fcd26d523572b3bc2d5c9c7f",
+      "unique_owned_responses": 18,
+      "usage": {
+        "input_tokens": 640628,
+        "cached_input_tokens": 583936,
+        "output_tokens": 6803,
+        "reasoning_output_tokens": 2910
+      },
+      "commands": 15,
+      "plaintext_command_digest_sha256": "c5450bf2480e12c00b0410cf23e9e4fd2e7da89a045fa48f6924d1b78be2f6fc",
+      "last_response_at": "2026-10-18T20:42:02.474Z",
+      "cumulative_usage_match": true
+    },
+    {
+      "trial": "more-itertools-1247--gpt-trim--r1",
+      "thread_id": "01a150bc-8d4a-7783-9a99-796f1d6429d5",
+      "parent_thread_id": null,
+      "file": "trials/more-itertools-1247--gpt-trim--r1/homes/cew-trim/.codex/sessions/2026/10/19/rollout-2026-10-19T04-38-17-01a150bc-8d4a-7783-9a99-796f1d6429d5.jsonl",
+      "sha256": "2e2b245e6571b7bd64345863c1e7503b95ac0c2718f50ae213a7e6974cc4df40",
+      "unique_owned_responses": 24,
+      "usage": {
+        "input_tokens": 1151507,
+        "cached_input_tokens": 1100288,
+        "output_tokens": 21973,
+        "reasoning_output_tokens": 10656
+      },
+      "commands": 16,
+      "plaintext_command_digest_sha256": "7cd47674dabf2ed0534e22070ca79f74768bf135a5ef25dba95b5763aadc8858",
+      "last_response_at": "2026-10-18T20:47:10.478Z",
+      "cumulative_usage_match": true
+    },
+    {
+      "trial": "more-itertools-1247--gpt-trim--r1",
+      "thread_id": "01a150be-665c-79b0-b552-3d9d5ab3f6c9",
+      "parent_thread_id": "01a150bc-8d4a-7783-9a99-796f1d6429d5",
+      "file": "trials/more-itertools-1247--gpt-trim--r1/homes/cew-trim/.codex/sessions/2026/10/19/rollout-2026-10-19T04-40-17-01a150be-665c-79b0-b552-3d9d5ab3f6c9.jsonl",
+      "sha256": "7678fc8ca1b7170b9c024c90871597521f7affa851ae0c7785bbc11fb8743965",
+      "unique_owned_responses": 23,
+      "usage": {
+        "input_tokens": 820689,
+        "cached_input_tokens": 782336,
+        "output_tokens": 9843,
+        "reasoning_output_tokens": 5398
+      },
+      "commands": 16,
+      "plaintext_command_digest_sha256": "186d49b747da195c3dd0aed4af2e8f108ff3433957d64e105c969974d34b11c7",
+      "last_response_at": "2026-10-18T20:46:57.275Z",
+      "cumulative_usage_match": true
+    },
+    {
+      "trial": "more-itertools-1247--gpt-trim--r2",
+      "thread_id": "01a150c0-7c00-7523-bd50-11c206a86b69",
+      "parent_thread_id": null,
+      "file": "trials/more-itertools-1247--gpt-trim--r2/homes/cew-trim/.codex/sessions/2026/10/19/rollout-2026-10-19T04-42-35-01a150c0-7c00-7523-bd50-11c206a86b69.jsonl",
+      "sha256": "bf3a08fb117179b6c7fb7af044744aee0af25fd672c177816653291a5c650074",
+      "unique_owned_responses": 15,
+      "usage": {
+        "input_tokens": 604959,
+        "cached_input_tokens": 552960,
+        "output_tokens": 11843,
+        "reasoning_output_tokens": 6339
+      },
+      "commands": 12,
+      "plaintext_command_digest_sha256": "141ed2a090b8e8b63e5fb02917ce82bbd9f19f362926eece2f97dd8ee79a16cc",
+      "last_response_at": "2026-10-18T20:48:22.701Z",
+      "cumulative_usage_match": true
+    },
+    {
+      "trial": "more-itertools-1247--gpt-trim--r2",
+      "thread_id": "01a150c2-e32c-7fc1-ab83-082a73396608",
+      "parent_thread_id": "01a150c0-7c00-7523-bd50-11c206a86b69",
+      "file": "trials/more-itertools-1247--gpt-trim--r2/homes/cew-trim/.codex/sessions/2026/10/19/rollout-2026-10-19T04-45-11-01a150c2-e32c-7fc1-ab83-082a73396608.jsonl",
+      "sha256": "6cd501241b2aeb3facad8d1bd440afbf5f8987757c98766ef30a2fa3e482da20",
+      "unique_owned_responses": 12,
+      "usage": {
+        "input_tokens": 394680,
+        "cached_input_tokens": 364160,
+        "output_tokens": 4720,
+        "reasoning_output_tokens": 1310
+      },
+      "commands": 10,
+      "plaintext_command_digest_sha256": "969c594dedbd5f10588c9ed42a459986a8496415b9e63e38d39a63c60b4007dd",
+      "last_response_at": "2026-10-18T20:47:42.546Z",
+      "cumulative_usage_match": true
+    }
+  ],
+  "public_outputs_verified": {
+    "report_sha256": "168b51d74bf0c2454c5cdf1daf337b2985ee2f5a0b1f4d6d390d927ee59b625d",
+    "analysis_sha256": "2f214edc1cac481d99fa73f22194cc01a540710b99808914d0df1cbd7604767d",
+    "trials_jsonl_sha256": "c5d46bddb156bb82a86a0a2b4c44ab7173bde6073a44f4dff7e2c316642d6eec",
+    "trials_csv_sha256": "c9428f648a27117ae9525edb016a065d9aa7c1c6a3257beaacd8f765116d1347",
+    "trace_diagnosis_sha256": "288d3029f8b91d93a64c0de7d0c15a5bdec4817c0d3878208110f25109c360c1",
+    "checks": "All six exported result/receipt/raw CLI/original usage-accounting/patch values match raw files. All 170 response records and 154 visible command records match raw sessions. All 18 public JUnit hashes, testcase identities and per-trial timestamps match. Summary sums/means and published percentages independently recalculated."
+  },
+  "checks_not_run": [
+    {
+      "check": "New models, behavior probes or tests",
+      "status": "NOT RUN",
+      "reason": "Prohibited by this read-only assignment; existing raw evidence only. Six pip-freeze reads inspected dependency metadata."
+    },
+    {
+      "check": "Remaining 36 trials / complete seven-task performance",
+      "status": "NOT RUN",
+      "reason": "Original environment stop followed by verified actual critical-stage quality failure."
+    },
+    {
+      "check": "humanize translation validation",
+      "status": "NOT RUN",
+      "reason": "No ordinary-task artifacts were generated."
+    },
+    {
+      "check": "Later proposals, ninth source, CI, merge or publication",
+      "status": "NOT RUN",
+      "reason": "Excluded from this immutable eighth-round package."
+    }
+  ],
+  "writes": [
+    "<BENCH_ROOT>/partial-independent-review.json"
+  ],
+  "overall": "FAIL",
+  "status": "FAIL",
+  "provenance": {
+    "original_review_sha256": "5e1da8f7ddc68dca84b36b9f7b390c4e2abe89875e35cfa4531280555725dcab",
+    "fixed_package_sha256": "30c63e9755152246c35a831eb69d163b4d9017e363168357a89ef75eb34987be",
+    "note": "Original independent review retained privately. Only benchmark-root paths normalized and overallFAIL added. Original model/probe outputs unchanged; repaired probe results distinguished from interpreter-launch NOTRUN records."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "kind": "Post-model evaluation-environment repair, not source or artifact repair and not a new probe/oracle",
+  "recorded_before_corrected_checks_at": "2026-10-18T20:56:38.270Z",
+  "original_driver_status": "ABORTED_AT_PREDECLARED_CRITICAL_QUALITY_GATE",
+  "original_driver_exit": 2,
+  "actual_model_trials_closed": 6,
+  "measured_models_active": 0,
+  "ordinary_trials_started": 0,
+  "not_run": 36,
+  "problem": "Preparation omitted the root-level reference venvs symlink. 336 numeric cases explicitly record ENOENT; all32 cost cases record null exit and no timeout at the same absent interpreter, but the frozen cost controller omitted the error-code string. All368 are NOT RUN launch failures, not artifact-quality failures.",
+  "repair": {
+    "path": "<BENCH_ROOT>/venvs",
+    "target": "/private/tmp/cew-eval/venvs",
+    "method": "Restore identical reference interpreter symlink used by previous round; model trials already used their unchanged private environments."
+  },
+  "originals": [
+    {
+      "file": "experiment.json",
+      "sha256": "03ce24a616affec6418b40b61443ffd0d552765e1d992406fe73fb0f0bdac1c1"
+    },
+    {
+      "file": "quality-probes.json",
+      "sha256": "15df4fa207bdc5ef2da5aadf4b110a9c8b88adfbb2e5ac344929df13e1f8d946"
+    },
+    {
+      "file": "cost-probes.json",
+      "sha256": "a1bd96355ed12a5d0705648173c75256c1d675a5fea22ac9d9e8e1cfbe8524eb"
+    },
+    {
+      "file": "context-probes.json",
+      "sha256": "68a2b4c13eccf8c6264e2fc6a5c0f22cf3a0bf8c245f9af227f7a89d7f1c4a7f"
+    },
+    {
+      "file": "promotion-probes.json",
+      "sha256": "e75ba455f57f5dd53385f477d4fef7c9566009676ca46da938761089cdff24c3"
+    },
+    {
+      "file": "compatibility-probes.json",
+      "sha256": "265c2793e80d9d62c248bc8f2f34d2a8b0879eb8ade5ed232bc6c078fcb88f2c"
+    },
+    {
+      "file": "critical-quality-probes.json",
+      "sha256": "15df4fa207bdc5ef2da5aadf4b110a9c8b88adfbb2e5ac344929df13e1f8d946"
+    },
+    {
+      "file": "critical-cost-probes.json",
+      "sha256": "a1bd96355ed12a5d0705648173c75256c1d675a5fea22ac9d9e8e1cfbe8524eb"
+    },
+    {
+      "file": "critical-context-probes.json",
+      "sha256": "68a2b4c13eccf8c6264e2fc6a5c0f22cf3a0bf8c245f9af227f7a89d7f1c4a7f"
+    },
+    {
+      "file": "critical-promotion-probes.json",
+      "sha256": "e75ba455f57f5dd53385f477d4fef7c9566009676ca46da938761089cdff24c3"
+    },
+    {
+      "file": "critical-compatibility-probes.json",
+      "sha256": "265c2793e80d9d62c248bc8f2f34d2a8b0879eb8ade5ed232bc6c078fcb88f2c"
+    },
+    {
+      "file": "critical-quality-probes.cjs.log",
+      "sha256": "f8522b77a84b9fa0e98d18a2b590ed094583b683d8ad77d0407d8665b4c233b5"
+    },
+    {
+      "file": "critical-cost-probes.cjs.log",
+      "sha256": "f5f96a43b572745325cb4eab0d00464e1dd5a7ed94bbfb597f3241c50d8cc31c"
+    },
+    {
+      "file": "critical-context-probes.cjs.log",
+      "sha256": "41f014a993ac36054e09c9d5d2c3d4c691d76be0a643f418211f08564a56f511"
+    },
+    {
+      "file": "critical-promotion-probes.cjs.log",
+      "sha256": "9a5a44894a931a8c8361616b38a724fe581b3b9f3fc0305f95973dc08eaf07c7"
+    },
+    {
+      "file": "critical-compatibility-probes.cjs.log",
+      "sha256": "3b29ba063f09b6d6f7f41df009844ad87a8744e5ba3271b29ec99ebe5e1fafde"
+    }
+  ],
+  "controller_or_program_or_input_or_expected_result_changes": false,
+  "model_reruns": 0,
+  "artifact_edits": 0,
+  "corrected_checks": "Execute same five byte-identical numeric controllers uniformly for parent/reference/all six frozen artifacts with no measured model active. Keep original failed critical files and original driver metadata separately. If actual quality fails, keep36NOTRUN; do not mislabel infrastructure failures as quality scores."
+}

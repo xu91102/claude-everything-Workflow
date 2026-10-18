@@ -1,8 +1,8 @@
 # CEW × GPT 真实任务对照评测
 
-最新停止记录见 [PR #62 预声明46项质量复测](fast-path-comparison-2026-10-19.md)：同七题×2次×3组计划42次，预先冻结的质量门失败后停止在6次，其余36次未运行。
-候选两次数值产物原套件和原42项通过，但4项比较信号均失败，综合质量0/2；整批token与耗时比较未完成。AGENTS.md与main一致，PR保持Draft。
-[上一轮事后发现记录](fast-path-contract-2026-10-19.md)、[更早完整42次及独立发现](fast-path-targeted-2026-10-19.md)和下文Pilot/P0数据保留为历史，不能替代最新结果。
+最新停止记录见 [PR #62 严格数值信号复测](fast-path-query-signals-2026-10-19.md)：实际6/42，后续36次NOT RUN；整批性能NOT RUN。
+首次外部检查因遗漏解释器链接未执行，原始错误保留；修复环境后以相同46项统一复核，确认两份候选原42项通过、4项比较信号失败，综合质量0/2。AGENTS.md与main一致，PR保持Draft。
+[上一轮预声明46项记录](fast-path-comparison-2026-10-19.md)、[更早完整42次与独立发现](fast-path-targeted-2026-10-19.md)及下文Pilot/P0数据保留为历史，不能替代最新结果。
 
 2026-10-18 · 模型 `gpt-6.1-sol`（reasoning=high）· Codex 宿主
 
