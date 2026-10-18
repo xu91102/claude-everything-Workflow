@@ -1,0 +1,21 @@
+{
+  "created_at": "2026-10-18T19:46:41.421Z",
+  "kind": "Post-start protocol amendment, not predeclared before models",
+  "reason": "Closed candidateR2 now compares generated float firstitem with aDecimalquery before oldintbound shortcircuit. For otherwise-supported intstart/floatstep range, aDecimalnonmember with FloatOperation trap may newlyraise. Actual4queries NOTRUN at revisioncreation.",
+  "original_source": "55fc8ea534e01676ebd97958033374e5143edb01",
+  "unchanged": "Original sevenfixtures, modelprompts, all42frozen probes, source/driver/grader/controllers, actualmodelcalls/usage unaffected. No resampling.",
+  "action": "Pause only thisexactowned rootdriver after all6critical measuredcalls close and beforeordinarymodels; additional4uniformqueriesparent/reference/all6artifacts, no measuredmodelactive. If failure stop36NOTRUN with explicitposthocqualityabort, not callpredeclared42gatefailed. Ifno failure resumeunchangeddriver and retainamendment.",
+  "scripts": {
+    "pause-after-critical.cjs": "0569132d121585c479fefd836a15e4e5bdd59dd928350df4a374e7d8e9a08ab9",
+    "posthoc-compatibility-probes.cjs": "edb048d7546711049a13632d544b821c7abe35609df51f9918c4697a17adedcf"
+  },
+  "revision": 2,
+  "revised_at": "2026-10-18T19:47:57.032Z",
+  "query_count": 4,
+  "rejected_v1": {
+    "status": "NOT RUN",
+    "query_count": 8,
+    "reason": "Float+Decimal start/step arithmetic is not supported by documented start+step outputcontract; oldaccidentalshortcircuit behavior alone insufficient to callImportant. Replacedbeforeanybehaviorprobe with supportedrange inputs andbaselinelegalDecimalnonmembers.",
+    "original_controller_sha256": "b32919f475ca3d80dcfd69111c8d4a404dd15510a45c5b8cee9a5e582b39bea9"
+  }
+}

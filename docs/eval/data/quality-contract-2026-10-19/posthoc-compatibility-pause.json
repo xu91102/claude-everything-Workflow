@@ -1,0 +1,11 @@
+{
+  "status": "PAUSED_POSTCRITICAL_BEFORE_REMAINING",
+  "paused_at": "2026-10-18T19:52:51.543Z",
+  "pid": 10960,
+  "source": "55fc8ea534e01676ebd97958033374e5143edb01",
+  "completed": 6,
+  "ordinary_model_calls_started": 0,
+  "measured_models_active": 0,
+  "driver_source_changed": false,
+  "purpose": "Run uniform posthoc compatibility queries after all6measured calls closed; root driver pause is outside every agent process timer. Resume unchanged driver if no failure; otherwise retain6 and mark36NOTRUN with explicitposthocabort."
+}

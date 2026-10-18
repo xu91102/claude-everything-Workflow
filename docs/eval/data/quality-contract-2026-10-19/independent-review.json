@@ -1,0 +1,866 @@
+{
+  "mode": "independent",
+  "mode_reason": "Caller explicitly requested fresh read-only independent review of a fixed policy diff and six actual numerical artifacts after repeated quality failures.",
+  "reviewed_at": "2026-10-18T20:05:14.506233+00:00",
+  "package": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/partial-review-package.json",
+  "base": "775fc75a2de9c119a21bc6db89c93592d179a25e",
+  "measured_source": "55fc8ea534e01676ebd97958033374e5143edb01",
+  "current_worktree_head_observed_and_excluded": "36ccc9018247bed8892948099b79132a511f0b93",
+  "scope_source": {
+    "requirements": "User fixremainingquality keepFastPathdirection andnecessarygates,same7tasks realtokens/time/qualityPR62Draftno merge AGENTS0. Actualquality/perf separate. All6strictPASSand42knownPASScandidate; newposthoc4uniformafter6closed bothcandidate0/4 FloatOperation; evaluatelegitimacyagainstbaseline/contract, notblindcallerassertion.",
+    "review_scope": "Audit6actualpatch/receipt18JUnit/main+nativefamilyusage/visiblecommands, freeze/install/config/venv/fixture/prompt/probeidentity. Exactownedrootdriverpauseafterall6modelsclosed,beforeordinarymodels; rootstoppedafteractualnew4FAIL, zero measuredcallsinterrupted, exit137. Originaldriver/frozencontrollers unchanged; originaldrivercriticalphase unfinished, rawmetadata preserved, rootexactunchanged42 replay/snapshots producerexplicit notfabricateddrivercritical_gate. SourceStandards vsartifactSpec vsEvidenceIntegrity vsWholePerformanceNOTRUN. New4posthoc notpredeclared42; rejected8unsupportedv1NOTRUN excludedcorrectly. No wholebatchperformanceclaim. Currentworktree source7testingnewer mustnotmixwithfrozen55snapshots."
+  },
+  "scope": {
+    "source_diff": [
+      "rules/common/testing.md",
+      "skills/code-review/SKILL.md",
+      "skills/code-review/references/spec-reviewer-prompt.md"
+    ],
+    "actual_artifacts": 6,
+    "planned_trials": 42,
+    "not_run_trials": 36,
+    "probe_versions": 8,
+    "original_predeclared_queries_per_artifact": 42,
+    "additional_posthoc_queries_per_artifact": 4,
+    "rejected_v1_queries_not_run": 8
+  },
+  "summary": "Standards PASS；实际产物 Spec FAIL：候选两份原套件及原42项均通过，但合法 Decimal 非成员查询的新增 FloatOperation 回退使事后4项两份均0/4，综合质量0/2。EvidenceIntegrity PASS（所供证据的一致性与生产者边界）；WholePerformance NOT RUN，实际6/42且36次未运行。",
+  "rules_read": [
+    "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/sources/optimized/rules/01-base.md",
+    "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/sources/optimized/rules/02-implementation.md",
+    "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/sources/optimized/rules/07-forbidden.md",
+    "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/sources/optimized/rules/common/testing.md"
+  ],
+  "prompts_read": [
+    "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/sources/optimized/skills/code-review/SKILL.md",
+    "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/sources/optimized/skills/code-review/references/standards-reviewer-prompt.md",
+    "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/sources/optimized/skills/code-review/references/spec-reviewer-prompt.md"
+  ],
+  "Standards": {
+    "status": "PASS",
+    "scope": "Only fixed 55fc8ea three-policy-file source diff, not newer working-tree policy.",
+    "findings": [],
+    "smell_observations": [],
+    "reason": "准确规则路径及强制按需加载、接口既有契约、逐项信号对照与有界证据核对均在原负责文件内；保留代表性边界、复用、新审查上下文和 Fast Path。无新增 AGENTS、任务名/输入答案、审批或额外流程层。未发现具体文档硬规则违规或维护异味。",
+    "source_text_scope_status": "PASS",
+    "source_diff_matches_exact_git_base_to_measured": true,
+    "policy_lines_added": 7,
+    "policy_lines_deleted": 5,
+    "AGENTS_change_against_main": 0,
+    "verification_boundary": "Source text review and existing harness checks do not establish actual quality repair."
+  },
+  "ActualArtifactSpec": {
+    "status": "FAIL",
+    "findings": [
+      {
+        "id": "ARTIFACT-SPEC-1",
+        "severity": "Important",
+        "priority": 1,
+        "kind": "Introduced compatibility regression in both measured candidate artifacts",
+        "title": "新增浮点首项比较让原来合法的 Decimal 非成员查询抛出 FloatOperation",
+        "requirements": [
+          {
+            "path": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/sources/optimized/rules/02-implementation.md",
+            "line": 10,
+            "text": "保留公共接口和既有工作流，破坏性变更需用户批准。"
+          },
+          {
+            "path": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/sources/optimized/rules/common/testing.md",
+            "lines": [
+              48,
+              49,
+              51,
+              52,
+              53
+            ],
+            "text": "未改动的契约必须保留；逐项检查新增运算是否改变原版合法局部查询的结果、异常或信号。"
+          },
+          {
+            "path": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/protocol/protocol.json",
+            "field": "quality_acceptance",
+            "text": "Original strict suite resolved AND all applicable predeclared supplemental probes pass AND independent artifact review has no important finding."
+          }
+        ],
+        "locations": [
+          {
+            "path": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/trials/more-itertools-1247--gpt-fixed--r1/runs/more-itertools-1247/gpt-fixed-r1/more_itertools/more.py",
+            "lines": [
+              2493,
+              2494
+            ],
+            "detail": "_bisect first = start + 0 * step becomes 1.0; before(first, Decimal query) performs a new ordered float/Decimal comparison."
+          },
+          {
+            "path": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/trials/more-itertools-1247--gpt-fixed--r2/runs/more-itertools-1247/gpt-fixed-r2/more_itertools/more.py",
+            "lines": [
+              2480,
+              2482,
+              2484
+            ],
+            "detail": "index replaces original integer-start lower/upper bounds with generated float first-item bounds."
+          }
+        ],
+        "evidence": [
+          {
+            "path": "/Users/xu/project/worktrees/cew-fast-path/docs/eval/data/quality-contract-2026-10-19/posthoc-compatibility-probes.json",
+            "line": 18,
+            "detail": "Same four queries: numeric_range(1,2,0.1) with Decimal(0), and numeric_range(1,0,-0.1) with Decimal(2), each using contains and index with FloatOperation trap enabled."
+          },
+          {
+            "path": "/Users/xu/project/worktrees/cew-fast-path/docs/eval/data/quality-contract-2026-10-19/posthoc-compatibility-probes.json",
+            "line": 173,
+            "detail": "gpt-fixed-r2 fails all four with FloatOperation rather than False/ValueError."
+          },
+          {
+            "path": "/Users/xu/project/worktrees/cew-fast-path/docs/eval/data/quality-contract-2026-10-19/posthoc-compatibility-probes.json",
+            "line": 376,
+            "detail": "gpt-fixed-r1 fails the same four with FloatOperation. Parent and upstream reference each pass 4/4."
+          }
+        ],
+        "impact": "受支持的整数起点与浮点步长范围，在查询范围起点外侧的 Decimal 非成员时，从 False/ValueError 回退为新异常。原套件及原42项没有覆盖这个比较操作的信号语义，因此它们全过不能满足质量修复要求。",
+        "smallest_correction": "在下一候选中保留原合法非成员查询的边界行为，明确审查新增有序比较的操作数类型及 Decimal 信号/陷阱；以同一四项和原42项统一验证全部版本，再按冻结协议运行需要的真实模型验收。不要修改这轮产物、删除失败或把事后四项改称原预声明项。"
+      }
+    ],
+    "candidate_original_strict_suite": "2/2",
+    "candidate_original_predeclared42": "2/2",
+    "candidate_additional_posthoc4": "0/2 (each 0/4)",
+    "candidate_combined_executed_quality": "0/2",
+    "main_combined_executed_quality": "0/2",
+    "previous775_combined_executed_quality": "0/2",
+    "posthoc_input_legitimacy": {
+      "status": "VALID",
+      "supported_range_inputs": "Integer start and stop plus finite float step are compatible; start + step yields a float as documented. Parent docstring explicitly supports negative float steps (git show 2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10:more_itertools/more.py, lines 2267-2280).",
+      "legal_query_reason": "Decimal queries 0 and 2 lie outside the respective valid ranges at the start-side boundary. Original bounds compare int to Decimal, short-circuit before stop/division, and return False or raise ValueError. The new generated first item is float, and its ordered comparison with Decimal activates FloatOperation. The oracle comes from range bounds, the unchanged public query behavior, static old/new code, and uniform parent/reference evidence, rather than the changed search algorithm.",
+      "not_unsupported_mixed_arithmetic": "No range mixes Decimal start with float step or float start with Decimal step; no unsupported Decimal/float start + step arithmetic is used.",
+      "rejected_v1": "Eight unsupported mixed start/step arithmetic proposals are retained as NOT RUN and correctly excluded. Accidental old short-circuit behavior for unsupported ranges is not counted as a defect.",
+      "signal_boundary": "Observed failure is FloatOperation under the enabled trap. No new default-context flag probe was run in this review."
+    },
+    "review_transport_observation": "Both candidate native independent reviewers actually loaded the installed exact testing rule and both prompts with exit 0, then ran Decimal contexts and old-source comparisons. R1 imports FloatOperation but its signal loop tests Overflow/Inexact/Rounded, while R2 tests other contexts. This supports that rule transport happened and the remaining defect is a missed ordered-comparison signal path; it does not establish that a wording change alone will fix quality.",
+    "uniform_matrix": {
+      "parent": {
+        "quality-probes.json": {
+          "passed": 16,
+          "total": 16
+        },
+        "cost-probes.json": {
+          "passed": 0,
+          "total": 4
+        },
+        "context-probes.json": {
+          "passed": 12,
+          "total": 12
+        },
+        "promotion-probes.json": {
+          "passed": 4,
+          "total": 10
+        },
+        "posthoc-compatibility-probes.json": {
+          "passed": 4,
+          "total": 4
+        }
+      },
+      "upstream_reference": {
+        "quality-probes.json": {
+          "passed": 0,
+          "total": 16
+        },
+        "cost-probes.json": {
+          "passed": 0,
+          "total": 4
+        },
+        "context-probes.json": {
+          "passed": 2,
+          "total": 12
+        },
+        "promotion-probes.json": {
+          "passed": 4,
+          "total": 10
+        },
+        "posthoc-compatibility-probes.json": {
+          "passed": 4,
+          "total": 4
+        }
+      },
+      "gpt-cew-r1": {
+        "quality-probes.json": {
+          "passed": 0,
+          "total": 16
+        },
+        "cost-probes.json": {
+          "passed": 4,
+          "total": 4
+        },
+        "context-probes.json": {
+          "passed": 2,
+          "total": 12
+        },
+        "promotion-probes.json": {
+          "passed": 8,
+          "total": 10
+        },
+        "posthoc-compatibility-probes.json": {
+          "passed": 0,
+          "total": 4
+        }
+      },
+      "gpt-fixed-r2": {
+        "quality-probes.json": {
+          "passed": 16,
+          "total": 16
+        },
+        "cost-probes.json": {
+          "passed": 4,
+          "total": 4
+        },
+        "context-probes.json": {
+          "passed": 12,
+          "total": 12
+        },
+        "promotion-probes.json": {
+          "passed": 10,
+          "total": 10
+        },
+        "posthoc-compatibility-probes.json": {
+          "passed": 0,
+          "total": 4
+        }
+      },
+      "gpt-trim-r1": {
+        "quality-probes.json": {
+          "passed": 16,
+          "total": 16
+        },
+        "cost-probes.json": {
+          "passed": 4,
+          "total": 4
+        },
+        "context-probes.json": {
+          "passed": 12,
+          "total": 12
+        },
+        "promotion-probes.json": {
+          "passed": 10,
+          "total": 10
+        },
+        "posthoc-compatibility-probes.json": {
+          "passed": 0,
+          "total": 4
+        }
+      },
+      "gpt-trim-r2": {
+        "quality-probes.json": {
+          "passed": 16,
+          "total": 16
+        },
+        "cost-probes.json": {
+          "passed": 4,
+          "total": 4
+        },
+        "context-probes.json": {
+          "passed": 12,
+          "total": 12
+        },
+        "promotion-probes.json": {
+          "passed": 10,
+          "total": 10
+        },
+        "posthoc-compatibility-probes.json": {
+          "passed": 0,
+          "total": 4
+        }
+      },
+      "gpt-cew-r2": {
+        "quality-probes.json": {
+          "passed": 8,
+          "total": 16
+        },
+        "cost-probes.json": {
+          "passed": 0,
+          "total": 4
+        },
+        "context-probes.json": {
+          "passed": 6,
+          "total": 12
+        },
+        "promotion-probes.json": {
+          "passed": 4,
+          "total": 10
+        },
+        "posthoc-compatibility-probes.json": {
+          "passed": 4,
+          "total": 4
+        }
+      },
+      "gpt-fixed-r1": {
+        "quality-probes.json": {
+          "passed": 16,
+          "total": 16
+        },
+        "cost-probes.json": {
+          "passed": 4,
+          "total": 4
+        },
+        "context-probes.json": {
+          "passed": 12,
+          "total": 12
+        },
+        "promotion-probes.json": {
+          "passed": 10,
+          "total": 10
+        },
+        "posthoc-compatibility-probes.json": {
+          "passed": 0,
+          "total": 4
+        }
+      }
+    }
+  },
+  "EvidenceIntegrity": {
+    "status": "PASS",
+    "findings": [],
+    "meaning": "Consistency, provenance, completeness of the supplied six actual trial artifacts and honest reporting boundaries; not a fresh execution of the benchmark.",
+    "package_integrity": {
+      "manifest_objects_hashed": 32,
+      "all_manifest_hashes_match": true,
+      "exact_source_diff_git_match": true,
+      "all_three_archive_sha256_match_git_archive": true,
+      "source_snapshot_and_installed_template_policy_hashes_match": true,
+      "all_six_actual_home_policy_files_match_templates": true,
+      "AGENTS_identical_across_arms_and_unchanged_against_main": true
+    },
+    "freeze_install_and_runtime": {
+      "original_frozen_at": "2026-10-18T19:28:17.446Z",
+      "model_started_at": "2026-10-18T19:32:38.029Z",
+      "original_five_controller_hashes_match_freeze": true,
+      "original_four_numeric_controllers_match_report_embedded_source": true,
+      "all_five_uniform_probe_reports_source_hashes_match_parent_reference_actual_six_artifacts": true,
+      "tasks": 7,
+      "same_fixture_identity_and_per_trial_manifest": true,
+      "fixture_prevalidation_reuse": "Identity checked against both recorded prior manifests. Prior seven-task prevalidation is reused, not claimed rerun. Each actual trial has fresh baseline/target/full reports.",
+      "same_exact_task_prompt_in_all_six_roots": true,
+      "model": "gpt-6.1-sol",
+      "reasoning_effort": "high",
+      "approval_policy": "never",
+      "actual_effective_sandbox_policy": "danger-full-access in all observed root and child turn contexts; existing runner explicitly bypasses sandbox. Report correctly describes isolation as a process convention.",
+      "core_execution_config_identical": true,
+      "raw_config_bytes_changed": true,
+      "only_config_change": "Per-checkout projects.<checkout>.trust_level = trusted; base model/effort/approval/sandbox template prefix is unchanged for every arm.",
+      "isolated_homes_checkouts_sessions_and_venv_directories": true,
+      "dependency_receipts_before_after_equal": true,
+      "public_three_JS_unchanged_from_10403cf": true
+    },
+    "raw_artifact_audit": {
+      "patches": 6,
+      "receipts": 6,
+      "JUnit_reports": 18,
+      "all_patch_receipt_agentlog_report_hashes_and_current_actual_checkout_diffs_match": true,
+      "given_tests_preserved": true,
+      "all_six_strict_resolved": true,
+      "no_new_suite_failures_or_timeouts": true,
+      "JUnit_count_note": "739 base/after testcase nodes and 594 target testcase nodes; suite tests attributes include pytest subtests, so they are not misreported as testcase counts.",
+      "trials": [
+        {
+          "cell": "gpt-cew",
+          "run": 1,
+          "receipt": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/trials/more-itertools-1247--gpt-cew--r1/receipt.json",
+          "patch_sha256": "ef39a4151d7a6d474057b96ec0b5dc8fd8f67c8061b45f89ec5cbe4f3d4edbbb",
+          "patch_matches_current_actual_checkout": true,
+          "receipt_result_public_patch_and_agent_log_match": true,
+          "source_files_changed": [
+            "more_itertools/more.py"
+          ],
+          "original_given_test_matches_reference_commit": true,
+          "JUnit_reports": 3,
+          "JUnit_hashes_match": true,
+          "baseline_testcases": {
+            "passed": 737,
+            "failed": 2,
+            "errors": 0,
+            "skipped": 0
+          },
+          "target_testcases": {
+            "passed": 594,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "after_full_testcases": {
+            "passed": 739,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "runner_exit": 0,
+          "agent_exit": 0,
+          "timed_out": false,
+          "strict_resolved": true,
+          "tests_modified": false,
+          "new_failures": [],
+          "packages_changed": false,
+          "family_usage": {
+            "input_tokens": 343606,
+            "cached_input_tokens": 307712,
+            "output_tokens": 7363,
+            "reasoning_output_tokens": 4055
+          },
+          "raw_cli_usage": {
+            "input_tokens": 343606,
+            "cached_input_tokens": 307712,
+            "output_tokens": 7363,
+            "reasoning_output_tokens": 4055
+          },
+          "unique_responses": 10,
+          "sessions": 1,
+          "native_descendants": 0,
+          "usage_conflicts": 0,
+          "copied_history_duplicates_in_this_trial": 0,
+          "last_response_at": "2026-10-18T19:36:01.101Z",
+          "runner_finished_at": "2026-10-18T19:36:11.574Z",
+          "all_response_and_runner_completion_before_pause": true,
+          "model_duration_s": 196.6,
+          "runner_duration_s": 213.049,
+          "root_visible_commands": 16,
+          "descendant_visible_commands": 0
+        },
+        {
+          "cell": "gpt-fixed",
+          "run": 2,
+          "receipt": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/trials/more-itertools-1247--gpt-fixed--r2/receipt.json",
+          "patch_sha256": "545c7e0248c1bf7c05110cb03ff9f41e0281d3aa1129f83a5de19458a6eb37a2",
+          "patch_matches_current_actual_checkout": true,
+          "receipt_result_public_patch_and_agent_log_match": true,
+          "source_files_changed": [
+            "more_itertools/more.py"
+          ],
+          "original_given_test_matches_reference_commit": true,
+          "JUnit_reports": 3,
+          "JUnit_hashes_match": true,
+          "baseline_testcases": {
+            "passed": 737,
+            "failed": 2,
+            "errors": 0,
+            "skipped": 0
+          },
+          "target_testcases": {
+            "passed": 594,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "after_full_testcases": {
+            "passed": 739,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "runner_exit": 0,
+          "agent_exit": 0,
+          "timed_out": false,
+          "strict_resolved": true,
+          "tests_modified": false,
+          "new_failures": [],
+          "packages_changed": false,
+          "family_usage": {
+            "input_tokens": 1861777,
+            "cached_input_tokens": 1779712,
+            "output_tokens": 24858,
+            "reasoning_output_tokens": 10540
+          },
+          "raw_cli_usage": {
+            "input_tokens": 989854,
+            "cached_input_tokens": 944384,
+            "output_tokens": 15905,
+            "reasoning_output_tokens": 6513
+          },
+          "unique_responses": 47,
+          "sessions": 2,
+          "native_descendants": 1,
+          "usage_conflicts": 0,
+          "copied_history_duplicates_in_this_trial": 0,
+          "last_response_at": "2026-10-18T19:39:21.642Z",
+          "runner_finished_at": "2026-10-18T19:39:32.241Z",
+          "all_response_and_runner_completion_before_pause": true,
+          "model_duration_s": 397,
+          "runner_duration_s": 413.28,
+          "root_visible_commands": 18,
+          "descendant_visible_commands": 17
+        },
+        {
+          "cell": "gpt-trim",
+          "run": 1,
+          "receipt": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/trials/more-itertools-1247--gpt-trim--r1/receipt.json",
+          "patch_sha256": "e4a57c74c342c16acf84aefbd46655c1d211a962135d81583af144c10bc49071",
+          "patch_matches_current_actual_checkout": true,
+          "receipt_result_public_patch_and_agent_log_match": true,
+          "source_files_changed": [
+            "more_itertools/more.py"
+          ],
+          "original_given_test_matches_reference_commit": true,
+          "JUnit_reports": 3,
+          "JUnit_hashes_match": true,
+          "baseline_testcases": {
+            "passed": 737,
+            "failed": 2,
+            "errors": 0,
+            "skipped": 0
+          },
+          "target_testcases": {
+            "passed": 594,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "after_full_testcases": {
+            "passed": 739,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "runner_exit": 0,
+          "agent_exit": 0,
+          "timed_out": false,
+          "strict_resolved": true,
+          "tests_modified": false,
+          "new_failures": [],
+          "packages_changed": false,
+          "family_usage": {
+            "input_tokens": 1987543,
+            "cached_input_tokens": 1881728,
+            "output_tokens": 31362,
+            "reasoning_output_tokens": 15266
+          },
+          "raw_cli_usage": {
+            "input_tokens": 1015685,
+            "cached_input_tokens": 951168,
+            "output_tokens": 20201,
+            "reasoning_output_tokens": 10745
+          },
+          "unique_responses": 47,
+          "sessions": 2,
+          "native_descendants": 1,
+          "usage_conflicts": 0,
+          "copied_history_duplicates_in_this_trial": 0,
+          "last_response_at": "2026-10-18T19:45:56.971Z",
+          "runner_finished_at": "2026-10-18T19:46:07.561Z",
+          "all_response_and_runner_completion_before_pause": true,
+          "model_duration_s": 579.8,
+          "runner_duration_s": 595.614,
+          "root_visible_commands": 20,
+          "descendant_visible_commands": 20
+        },
+        {
+          "cell": "gpt-trim",
+          "run": 2,
+          "receipt": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/trials/more-itertools-1247--gpt-trim--r2/receipt.json",
+          "patch_sha256": "2a39bbdbfc291bebbf8a718cbc8ca6c43fa7dabd9a64fc2517bc6e4a7e97214e",
+          "patch_matches_current_actual_checkout": true,
+          "receipt_result_public_patch_and_agent_log_match": true,
+          "source_files_changed": [
+            "more_itertools/more.py"
+          ],
+          "original_given_test_matches_reference_commit": true,
+          "JUnit_reports": 3,
+          "JUnit_hashes_match": true,
+          "baseline_testcases": {
+            "passed": 737,
+            "failed": 2,
+            "errors": 0,
+            "skipped": 0
+          },
+          "target_testcases": {
+            "passed": 594,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "after_full_testcases": {
+            "passed": 739,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "runner_exit": 0,
+          "agent_exit": 0,
+          "timed_out": false,
+          "strict_resolved": true,
+          "tests_modified": false,
+          "new_failures": [],
+          "packages_changed": false,
+          "family_usage": {
+            "input_tokens": 1731392,
+            "cached_input_tokens": 1627648,
+            "output_tokens": 30452,
+            "reasoning_output_tokens": 17082
+          },
+          "raw_cli_usage": {
+            "input_tokens": 974045,
+            "cached_input_tokens": 905984,
+            "output_tokens": 19969,
+            "reasoning_output_tokens": 12006
+          },
+          "unique_responses": 43,
+          "sessions": 2,
+          "native_descendants": 1,
+          "usage_conflicts": 0,
+          "copied_history_duplicates_in_this_trial": 0,
+          "last_response_at": "2026-10-18T19:48:12.045Z",
+          "runner_finished_at": "2026-10-18T19:48:22.458Z",
+          "all_response_and_runner_completion_before_pause": true,
+          "model_duration_s": 513.7,
+          "runner_duration_s": 529.847,
+          "root_visible_commands": 18,
+          "descendant_visible_commands": 17
+        },
+        {
+          "cell": "gpt-cew",
+          "run": 2,
+          "receipt": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/trials/more-itertools-1247--gpt-cew--r2/receipt.json",
+          "patch_sha256": "992fd939098c6d697f8e1e0c027854a841a6e7fa10de75bec5ff2d94495a6595",
+          "patch_matches_current_actual_checkout": true,
+          "receipt_result_public_patch_and_agent_log_match": true,
+          "source_files_changed": [
+            "more_itertools/more.py"
+          ],
+          "original_given_test_matches_reference_commit": true,
+          "JUnit_reports": 3,
+          "JUnit_hashes_match": true,
+          "baseline_testcases": {
+            "passed": 737,
+            "failed": 2,
+            "errors": 0,
+            "skipped": 0
+          },
+          "target_testcases": {
+            "passed": 594,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "after_full_testcases": {
+            "passed": 739,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "runner_exit": 0,
+          "agent_exit": 0,
+          "timed_out": false,
+          "strict_resolved": true,
+          "tests_modified": false,
+          "new_failures": [],
+          "packages_changed": false,
+          "family_usage": {
+            "input_tokens": 482740,
+            "cached_input_tokens": 453760,
+            "output_tokens": 9586,
+            "reasoning_output_tokens": 5680
+          },
+          "raw_cli_usage": {
+            "input_tokens": 482740,
+            "cached_input_tokens": 453760,
+            "output_tokens": 9586,
+            "reasoning_output_tokens": 5680
+          },
+          "unique_responses": 13,
+          "sessions": 1,
+          "native_descendants": 0,
+          "usage_conflicts": 0,
+          "copied_history_duplicates_in_this_trial": 0,
+          "last_response_at": "2026-10-18T19:51:54.468Z",
+          "runner_finished_at": "2026-10-18T19:52:04.863Z",
+          "all_response_and_runner_completion_before_pause": true,
+          "model_duration_s": 206.2,
+          "runner_duration_s": 222.026,
+          "root_visible_commands": 19,
+          "descendant_visible_commands": 0
+        },
+        {
+          "cell": "gpt-fixed",
+          "run": 1,
+          "receipt": "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/trials/more-itertools-1247--gpt-fixed--r1/receipt.json",
+          "patch_sha256": "af3495aa95d15a17ab30c761bef2263c4557001f66640f4c125ec56421fad5eb",
+          "patch_matches_current_actual_checkout": true,
+          "receipt_result_public_patch_and_agent_log_match": true,
+          "source_files_changed": [
+            "more_itertools/more.py"
+          ],
+          "original_given_test_matches_reference_commit": true,
+          "JUnit_reports": 3,
+          "JUnit_hashes_match": true,
+          "baseline_testcases": {
+            "passed": 737,
+            "failed": 2,
+            "errors": 0,
+            "skipped": 0
+          },
+          "target_testcases": {
+            "passed": 594,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "after_full_testcases": {
+            "passed": 739,
+            "failed": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "runner_exit": 0,
+          "agent_exit": 0,
+          "timed_out": false,
+          "strict_resolved": true,
+          "tests_modified": false,
+          "new_failures": [],
+          "packages_changed": false,
+          "family_usage": {
+            "input_tokens": 1080716,
+            "cached_input_tokens": 1016704,
+            "output_tokens": 24352,
+            "reasoning_output_tokens": 12162
+          },
+          "raw_cli_usage": {
+            "input_tokens": 615142,
+            "cached_input_tokens": 586112,
+            "output_tokens": 17966,
+            "reasoning_output_tokens": 9499
+          },
+          "unique_responses": 30,
+          "sessions": 2,
+          "native_descendants": 1,
+          "usage_conflicts": 0,
+          "copied_history_duplicates_in_this_trial": 0,
+          "last_response_at": "2026-10-18T19:52:40.842Z",
+          "runner_finished_at": "2026-10-18T19:52:51.503Z",
+          "all_response_and_runner_completion_before_pause": true,
+          "model_duration_s": 387.5,
+          "runner_duration_s": 403.494,
+          "root_visible_commands": 17,
+          "descendant_visible_commands": 12
+        }
+      ]
+    },
+    "usage_and_commands": {
+      "sessions": 10,
+      "root_sessions": 6,
+      "native_child_sessions": 4,
+      "unique_response_ids": 190,
+      "provider_record_conflicts": 0,
+      "cross_trial_response_overlap": 0,
+      "copied_duplicate_response_records_found": 0,
+      "all_usage_sums_match_raw_result_receipts_and_exported_trace": true,
+      "raw_CLI_counters_match_parent_or_family_without_double_counting": true,
+      "raw_CLI_scope": "Both main trials equal family because there are no children; both previous/candidate trials have raw parent-only totals and separately included native-child usage.",
+      "root_visible_completed_commands": 108,
+      "child_visible_completed_commands": 66,
+      "all_174_command_text_exit_and_output_byte_records_match_raw_visible_events": true,
+      "nonzero_exploratory_command_exits_retained": true,
+      "no_visible_installs_commits_pushes_auth_file_reads_or_hidden_reasoning_access_in_measured_commands": true,
+      "classification_limit": "Policy/test/install categories are overlapping command-text heuristics, not causal token attribution. Only scalar usage, identity/runtime metadata and visible command events were parsed; no reasoning records or credential files were decoded."
+    },
+    "posthoc_intervention": {
+      "kind": "Post-start discovery, not an originally predeclared gate.",
+      "owned_root_driver_pid": 10960,
+      "pid_and_cwd_guard": "pause-after-critical.cjs checks exact node run-final-benchmark.cjs command and real root cwd before SIGSTOP; controller SHA256 matches amendment.",
+      "all_six_model_responses_and_runner_completions_before_pause": true,
+      "all_six_finished_at": "2026-10-18T19:52:51.503Z",
+      "paused_at": "2026-10-18T19:52:51.543Z",
+      "posthoc_four_finished_at": "2026-10-18T19:53:41.976Z",
+      "root_stopped_at": "2026-10-18T19:54:18.016Z",
+      "root_signal_recorded": "SIGKILL",
+      "root_actual_exit_recorded": 137,
+      "measured_models_interrupted": 0,
+      "ordinary_model_calls_started": 0,
+      "raw_original_metadata_sha256": "c661190247acc51b7aa372723d4cede3bc0bf065bea772dc91f7c7dfe59afe16",
+      "raw_original_metadata_hash_matches_record": true,
+      "all_original_metadata_fields_preserved": true,
+      "original_critical_gate_event_absent": true,
+      "original_benchmark_log_only_six_started_and_six_completed": true,
+      "original_driver_four_controller_phase": "Unfinished. No assertion that the original driver completed or emitted critical_gate.",
+      "root_after_stop_replay": "Exact unchanged four controllers completed the original42 and their embedded sources/hash values match the freeze; critical-* files are byte-identical deliberate root snapshots. Producer and hashes are explicit in experiment.frozen42_after_stop. These are separate root-produced results, not fabricated original-driver output.",
+      "rejected_v1_source_sha256": "b32919f475ca3d80dcfd69111c8d4a404dd15510a45c5b8cee9a5e582b39bea9",
+      "rejected_v1_status": "NOT RUN, retained source/amendment; absent from executed quality scoring.",
+      "36_not_run_exactly_partition_original_plan": true,
+      "driver_exit_limit": "Exit137 and OS signal are preserved intervention records; the old live process was not re-observed. Closed model/runner timestamps, raw CLI completion events and the absence of ordinary starts independently support zero measured-call interruption."
+    },
+    "reporting": {
+      "source_report": "fast-path-contract-2026-10-19.md",
+      "quality_fail_explicit": true,
+      "original42_and_new4_separate": true,
+      "whole_performance_not_run_explicit": true,
+      "translation_not_run_explicit": true,
+      "8_source_checks_existing_record": "All eight recorded exit 0 with source bound to 55fc8ea; log endings inspected. Not rerun by reviewer.",
+      "29_public_CLI_tests_existing_record": "29/29, recorded and log ending inspected.",
+      "43_historical_sessions": "Explicitly reused because public JS inputs are unchanged; not newly replayed or fully re-audited in this review.",
+      "package_production_dependency_install_and_verify": "Recorded pack/install/verify exits 0, matching logs; no new install by reviewer."
+    }
+  },
+  "WholePerformance": {
+    "status": "NOT RUN",
+    "reason": "Only the predeclared critical numerical task completed, two trials in each of three arms (6/42); the remaining six tasks and 36 planned combinations were not started after the posthoc compatibility failure. Candidate quality also fails.",
+    "observed_critical_subset": [
+      {
+        "cell": "gpt-cew",
+        "n": 2,
+        "total_tokens": 843295,
+        "raw_cli_total_tokens": 843295,
+        "duration_mean_s": 201.39999999999998,
+        "trial_duration_mean_s": 217.53750000000002
+      },
+      {
+        "cell": "gpt-trim",
+        "n": 2,
+        "total_tokens": 3780749,
+        "raw_cli_total_tokens": 2029900,
+        "duration_mean_s": 546.75,
+        "trial_duration_mean_s": 562.7305
+      },
+      {
+        "cell": "gpt-fixed",
+        "n": 2,
+        "total_tokens": 2991703,
+        "raw_cli_total_tokens": 1638867,
+        "duration_mean_s": 392.25,
+        "trial_duration_mean_s": 408.387
+      }
+    ],
+    "subset_candidate_vs_previous": {
+      "token_change_pct": -20.870097433074765,
+      "mean_model_time_change_pct": -28.257887517146774
+    },
+    "subset_candidate_vs_main": {
+      "token_ratio": 3.547635169187532,
+      "mean_model_time_ratio": 1.947616683217478
+    },
+    "interpretation": "Recorded subset arithmetic is correct, but the newer candidate is still more costly and slower than contemporaneous main in this subset. No full-seven-task, causal, significant, general speedup, completion-rate or billing claim is supported. The report states these limits."
+  },
+  "checks_run": [
+    "Resolved exact base and measured commit; read fixed diff, snapshots, both reviewer prompts and all supplied exact relevant rules.",
+    "Rehashed all32 package objects and matched exact three-file source diff to Git base→55fc8ea; verified all three Git archives, installed policies, AGENTS, runtime configs and task/fixture identities.",
+    "Read all six actual patches and receipts; independently hashed and parsed all18 JUnit reports; compared preserved supplied tests, current actual checkout patches and exported raw patch text.",
+    "Independently reconstructed190 unique provider usage records across10 root/native-child sessions; checked lineage, raw CLI totals, every session hash, trace totals and all174 visible completed command metadata records.",
+    "Cross-checked all8 versions and source identities in original42 plus posthoc4 reports; inspected old/new query code and the supported documented argument/query contract.",
+    "Checked frozen controller hashes/embedded sources, original raw metadata, intervention timestamps/guards, benchmark events, root replay provenance and exact6+36 plan partition; recomputed reported subset metrics."
+  ],
+  "checks_not_run": [
+    "No new model calls, probes, tests, installs or benchmarks; supplied outputs were statically audited only.",
+    "Whole42-trial performance and remaining36 trials; humanize translation validation; other hosts, Python versions and production acceptance.",
+    "No fresh public CLI regression or43-session historical replay; existing evidence is explicitly reused.",
+    "No auth files, hidden reasoning or encrypted reasoning payloads opened/decoded."
+  ],
+  "mutations": [
+    "/tmp/cew-pr62-quality-contract-20261019-PIT1KG/partial-independent-review.json"
+  ],
+  "remaining_risks": [
+    "The original critical42 cannot be described as a completed original-driver gate; retain the explicit root-after-stop provenance.",
+    "Posthoc4 diagnoses an introduced supported-input regression but is not a preregistered comparison.",
+    "Repeated development tasks and two repetitions per arm do not establish robust general benefit.",
+    "A source wording review can pass while actual model quality fails; quality repair and full performance remain unachieved."
+  ],
+  "status": "FAIL",
+  "overall": "FAIL",
+  "provenance": {
+    "original_review_sha256": "7e96235a0b76225731afbc0fc42a04384972b8da7ff533d22f2691e5bb42a7fd",
+    "fixed_package_sha256": "5de3ff00f00298d14be64b918e38e3323af3935613dc00ad08ddb7c0b3a62121",
+    "source": "Original read-only independent review; only benchmark root paths normalized for publication, with overall FAIL added. Original retained privately."
+  }
+}

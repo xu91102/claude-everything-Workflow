@@ -1,0 +1,224 @@
+{
+  "reason": "ABORTED_AT_POSTHOC_COMPATIBILITY_GATE",
+  "planned": 42,
+  "executed": 6,
+  "not_run": [
+    {
+      "task": "slugify-200",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    }
+  ],
+  "full_batch_performance": "NOT RUN / incomplete"
+}

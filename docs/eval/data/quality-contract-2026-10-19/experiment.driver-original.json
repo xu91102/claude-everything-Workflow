@@ -1,0 +1,160 @@
+{
+  "started_at": "2026-10-18T19:32:38.029Z",
+  "candidate_sha": "55fc8ea534e01676ebd97958033374e5143edb01",
+  "main_sha": "e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5",
+  "previous_candidate_sha": "775fc75a2de9c119a21bc6db89c93592d179a25e",
+  "arms": {
+    "gpt-cew": "main CEW",
+    "gpt-trim": "previous PR #62 candidate775fc75 (criticalquality0/2)",
+    "gpt-fixed": "quality-gate candidate PR #62"
+  },
+  "quality_protocol_sha256": "ae0aa64c7cd51853ba5f85a412ef2983f3086b240b3dce9fd58bfe4198b3fb11",
+  "cost_protocol_sha256": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262",
+  "context_protocol_sha256": "e8bb0dbd5e07ea6f80ed1dfa031c098a71ebf263494736435d3c530cfc39519b",
+  "promotion_protocol_sha256": "b9c24a9d58c40e90f635ea2ca15ce9d9c82925eeb3945197c9427b3cf6481786",
+  "i18n_protocol_sha256": "5b8dc2ac5ea1142c5690930a97f386c2a9bb9f34989eb4802fe213354b1cfe55",
+  "usage_accounting_sha256": "4668e9dd1a425f35eb09f32f0760aec8acb680c7198da0ab7c0d7d1cd89ab334",
+  "benchmark_driver_sha256": "68141cfcebd3bc5a880caedab0934ad451d5ba00417969ed4567e956bbfce129",
+  "runner_sha256": "99deae2fd88616645e89a03754b20594ab9e7f6e91bfccb0aff8dc62b48507cc",
+  "manifest_sha256": "dc08f7afa2c1274473b789e27ad5cdab473edf086268cc38cf4d26c66b08adc7",
+  "runner_usage_collector_sha256": "c96e966575b7d1145a04196f173855c9e282640b253552ce5bd5c9a3cc7b2033",
+  "cli": "codex-cli 0.160.1",
+  "node": "v22.23.2",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "timeout_s": 720,
+  "concurrency": 2,
+  "trials_planned": 42,
+  "plan": [
+    {
+      "task": "more-itertools-1247",
+      "repetition": 1,
+      "order": [
+        "gpt-cew",
+        "gpt-trim",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "more-itertools-1247",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-trim",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "slugify-200",
+      "repetition": 1,
+      "order": [
+        "gpt-cew",
+        "gpt-trim",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "slugify-194",
+      "repetition": 1,
+      "order": [
+        "gpt-trim",
+        "gpt-fixed",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "humanize-346",
+      "repetition": 1,
+      "order": [
+        "gpt-fixed",
+        "gpt-cew",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "humanize-381",
+      "repetition": 1,
+      "order": [
+        "gpt-cew",
+        "gpt-trim",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "more-itertools-1284",
+      "repetition": 1,
+      "order": [
+        "gpt-trim",
+        "gpt-fixed",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repetition": 1,
+      "order": [
+        "gpt-fixed",
+        "gpt-cew",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "slugify-200",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-trim",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "slugify-194",
+      "repetition": 2,
+      "order": [
+        "gpt-cew",
+        "gpt-fixed",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "humanize-346",
+      "repetition": 2,
+      "order": [
+        "gpt-trim",
+        "gpt-cew",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "humanize-381",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-trim",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "more-itertools-1284",
+      "repetition": 2,
+      "order": [
+        "gpt-cew",
+        "gpt-fixed",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repetition": 2,
+      "order": [
+        "gpt-trim",
+        "gpt-cew",
+        "gpt-fixed"
+      ]
+    }
+  ],
+  "quality_protocol_frozen_at": "2026-10-18T19:28:17.446Z",
+  "protocol_change": "Same seven tasks, two repetitions, model prompts, strict grader, two concurrent task blocks and per-task arm rotation. Main e57 unchanged; middle control explicitly changed from00c8313 topreviouscandidate775fc75 beforeallmodels. Priorcandidatecritical0/2after42knownqueries, notqualityequivalentclaim. Historiesremainseparate. Same critical-first order as f88 attempt. All42known queries (16boundary+4cost+12context+10promotion/Rounded) frozen before every model, uniform for all6critical artifacts with no model active. Both candidate outcomes must pass original suite and all42; else unstarted36 NOTRUN, incomplete. Successful gate continuesall42. Prior successful seven-task fixture validation reused unchanged with explicit provenance; per-trial baseline/target/full fresh as before.",
+  "isolation": "Fresh checkout, HOME, Codex state, and private virtualenv per trial; reference refs removed; same provisioned auth and model config in every arm.",
+  "fixture_note": "Same source fix and parent as upstream 7f4dcf8; replaces internal _lazy_sha1 import with digest behavior and adds subprocess import/sign/unsign without hashlib.sha1."
+}
