@@ -45,8 +45,9 @@ The implementing agent cannot serve as its own independent reviewer.
 
 For independent or dual review, load `references/standards-reviewer-prompt.md` and
 `references/spec-reviewer-prompt.md` only for the reviewer that needs them. Repository standards override
-smell heuristics. Each independent context receives only the frozen package, relevant rules, confirmed
-scope and verification evidence. Reviewers are read-only and must not influence each other.
+smell heuristics. Each independent context receives only the frozen package, confirmed scope, verification
+evidence and resolved paths to relevant rules, including applicable specialty checks. Load those rules;
+batch required rule/prompt reads that have no dependencies. Reviewers are read-only and must not influence each other.
 Use `fork_turns="none"` or the host's equivalent fresh context; pass the fixed package, not the full exploration history.
 
 When independent or dual review is selected, lack of agent capacity is never a reason to downgrade to
