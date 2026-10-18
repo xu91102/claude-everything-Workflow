@@ -1,0 +1,283 @@
+[
+ {
+  "commit": "fbb6f0bc4c60a0bada0e03c3480d0ccf30a3c1df",
+  "date": "2026-02-19",
+  "subject": "all teardown callbacks are called despite errors",
+  "files": [
+   "src/flask/app.py",
+   "src/flask/ctx.py",
+   "src/flask/helpers.py",
+   "tests/test_appctx.py",
+   "tests/test_basic.py",
+   "tests/test_blueprints.py",
+   "tests/test_helpers.py",
+   "tests/test_testing.py"
+  ],
+  "tests": [
+   "tests/test_appctx.py",
+   "tests/test_basic.py",
+   "tests/test_blueprints.py",
+   "tests/test_helpers.py",
+   "tests/test_testing.py"
+  ],
+  "src": [
+   "src/flask/app.py",
+   "src/flask/ctx.py",
+   "src/flask/helpers.py"
+  ],
+  "added": 194,
+  "deleted": 80,
+  "lines": 274,
+  "src_files": 3,
+  "test_files_n": 5,
+  "score": 514,
+  "repo": "flask",
+  "id": "flask-fbb6f0b",
+  "test_files": [
+   "tests/test_appctx.py",
+   "tests/test_basic.py",
+   "tests/test_blueprints.py",
+   "tests/test_helpers.py",
+   "tests/test_testing.py"
+  ],
+  "base": {
+   "exit": 1,
+   "passed": 14,
+   "failed": 257,
+   "tail": "s - ValueError: app_teardown\nERROR tests/test_testing.py::test_cli_invoke - ValueError: app_teardown\nERROR tests/test_testing.py::test_cli_custom_obj - ValueError: app_teardown\nERROR tests/test_testing.py::test_client_pop_all_preserved - ValueError: app_...\n4 failed, 263 passed, 253 errors in 0.58s\n"
+  },
+  "fix": {
+   "exit": 0,
+   "passed": 267,
+   "failed": 0,
+   "tail": "............................... [ 53%]\n........................................................................ [ 80%]\n...................................................                      [100%]\n----- generated xml file: /tmp/cew-eval/results/val2-flask-fbb6f0b-fix.xml -----\n267 passed in 0.39s\n"
+  },
+  "valid": true,
+  "why": "",
+  "issue": "all teardown callbacks are called despite errors"
+ },
+ {
+  "commit": "daf1510a4bda652ac2cfca03ec5567b03ddf8bf1",
+  "date": "2025-05-17",
+  "subject": "use template_filter without parens",
+  "files": [
+   "src/flask/sansio/app.py",
+   "src/flask/sansio/blueprints.py",
+   "tests/test_blueprints.py",
+   "tests/test_templating.py"
+  ],
+  "tests": [
+   "tests/test_blueprints.py",
+   "tests/test_templating.py"
+  ],
+  "src": [
+   "src/flask/sansio/app.py",
+   "src/flask/sansio/blueprints.py"
+  ],
+  "added": 272,
+  "deleted": 23,
+  "lines": 295,
+  "src_files": 2,
+  "test_files_n": 2,
+  "score": 385,
+  "repo": "flask",
+  "id": "flask-daf1510",
+  "test_files": [
+   "tests/test_blueprints.py",
+   "tests/test_templating.py"
+  ],
+  "base": {
+   "exit": 1,
+   "passed": 86,
+   "failed": 6,
+   "tail": " - AssertionError: asser...\nFAILED tests/test_templating.py::test_template_filter - AssertionError: asser...\nFAILED tests/test_templating.py::test_template_test - AssertionError: assert ...\nFAILED tests/test_templating.py::test_add_template_global - AssertionError: a...\n6 failed, 86 passed in 0.16s\n"
+  },
+  "fix": {
+   "exit": 0,
+   "passed": 92,
+   "failed": 0,
+   "tail": "........................................................................ [ 78%]\n....................                                                     [100%]\n----- generated xml file: /tmp/cew-eval/results/val2-flask-daf1510-fix.xml -----\n92 passed in 0.15s\n"
+  },
+  "valid": true,
+  "why": "",
+  "issue": "use template_filter without parens"
+ },
+ {
+  "commit": "ba5240aa7864eaf1d4e7ecd15818aea66ba1925c",
+  "date": "2021-10-03",
+  "subject": "Incorporate strictly_n",
+  "files": [
+   "more_itertools/more.py",
+   "more_itertools/more.pyi",
+   "tests/test_more.py"
+  ],
+  "tests": [
+   "tests/test_more.py"
+  ],
+  "src": [
+   "more_itertools/more.py",
+   "more_itertools/more.pyi"
+  ],
+  "added": 97,
+  "deleted": 22,
+  "lines": 119,
+  "src_files": 2,
+  "test_files_n": 1,
+  "new_defs": 7,
+  "new_tests": 5,
+  "score": 179,
+  "repo": "more-itertools",
+  "id": "more-itertools-ba5240a",
+  "test_files": [
+   "tests/test_more.py"
+  ],
+  "base": {
+   "exit": 1,
+   "passed": 417,
+   "failed": 5,
+   "tail": "ests/test_more.py::StrictlyNTests::test_too_long_default - AttributeE...\nFAILED tests/test_more.py::StrictlyNTests::test_too_short_custom - AttributeE...\nFAILED tests/test_more.py::StrictlyNTests::test_too_short_default - Attribute...\n5 failed, 417 passed, 10 warnings, 2056 subtests passed in 1.11s\n"
+  },
+  "fix": {
+   "exit": 0,
+   "passed": 422,
+   "failed": 0,
+   "tail": "ore.py:1683: DeprecationWarning: zip_equal will be removed in a future version of more-itertools. Use the builtin zip function with strict=True instead.\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n422 passed, 10 warnings, 2056 subtests passed in 1.12s\n"
+  },
+  "valid": true,
+  "why": "",
+  "issue": "Incorporate strictly_n"
+ },
+ {
+  "commit": "6946f78b09cf33c49733b035e941bf1725092399",
+  "date": "2023-01-17",
+  "subject": "add partial_product",
+  "files": [
+   "more_itertools/more.py",
+   "more_itertools/more.pyi",
+   "tests/test_more.py"
+  ],
+  "tests": [
+   "tests/test_more.py"
+  ],
+  "src": [
+   "more_itertools/more.py",
+   "more_itertools/more.pyi"
+  ],
+  "added": 109,
+  "deleted": 0,
+  "lines": 109,
+  "src_files": 2,
+  "test_files_n": 1,
+  "new_defs": 7,
+  "new_tests": 5,
+  "score": 169,
+  "repo": "more-itertools",
+  "id": "more-itertools-6946f78",
+  "test_files": [
+   "tests/test_more.py"
+  ],
+  "base": {
+   "exit": 1,
+   "passed": 460,
+   "failed": 5,
+   "tail": "tests/test_more.py::PartialProductTests::test_one_iterator - Attribute...\nFAILED tests/test_more.py::PartialProductTests::test_two_iterators - Attribut...\nFAILED tests/test_more.py::PartialProductTests::test_uneven_length_lists - At...\n5 failed, 460 passed, 5 warnings, 2135 subtests passed in 1.15s\n"
+  },
+  "fix": {
+   "exit": 0,
+   "passed": 465,
+   "failed": 0,
+   "tail": "more.py:1639: DeprecationWarning: zip_equal will be removed in a future version of more-itertools. Use the builtin zip function with strict=True instead.\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n465 passed, 5 warnings, 2135 subtests passed in 1.10s\n"
+  },
+  "valid": true,
+  "why": "",
+  "issue": "add partial_product"
+ },
+ {
+  "commit": "3082c063b51b22b26f1b599274d78ac00abd333e",
+  "date": "2023-02-19",
+  "subject": "Sync with itertool recipes by adding transpose(), matmul(), and factor()~",
+  "files": [
+   "more_itertools/more.py",
+   "more_itertools/recipes.py",
+   "more_itertools/recipes.pyi",
+   "tests/test_recipes.py"
+  ],
+  "tests": [
+   "tests/test_recipes.py"
+  ],
+  "src": [
+   "more_itertools/more.py",
+   "more_itertools/recipes.py",
+   "more_itertools/recipes.pyi"
+  ],
+  "added": 125,
+  "deleted": 3,
+  "lines": 128,
+  "src_files": 3,
+  "test_files_n": 1,
+  "new_defs": 13,
+  "new_tests": 7,
+  "score": 248,
+  "repo": "more-itertools",
+  "id": "more-itertools-3082c06",
+  "test_files": [
+   "tests/test_recipes.py"
+  ],
+  "base": {
+   "exit": 1,
+   "passed": 105,
+   "failed": 7,
+   "tail": "LED(n=999936000799) tests/test_recipes.py::FactorTests::test_basic - At...\nSUBFAILED(n=909909090909) tests/test_recipes.py::FactorTests::test_basic - At...\nFAILED tests/test_recipes.py::FactorTests::test_cross_check - AttributeError:...\n16 failed, 106 passed, 7 warnings, 71 subtests passed in 0.51s\n"
+  },
+  "fix": {
+   "exit": 0,
+   "passed": 112,
+   "failed": 0,
+   "tail": "ipes.py:873: DeprecationWarning: batched will be removed in a future version of more-itertools. Use the standard library itertools.batched function instead\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n112 passed, 9 warnings, 81 subtests passed in 0.56s\n"
+  },
+  "valid": true,
+  "why": "",
+  "issue": "Sync with itertool recipes by adding transpose(), matmul(), and factor()~"
+ },
+ {
+  "commit": "19726a0fefa5beb3c4024cc6ce64d6df7b93dfc2",
+  "subject": "Add humanize.metric() for converting big/small numbers to SI units.",
+  "files": [
+   "src/humanize/__init__.py",
+   "src/humanize/number.py",
+   "tests/test_number.py"
+  ],
+  "tests": [
+   "tests/test_number.py"
+  ],
+  "src": [
+   "src/humanize/__init__.py",
+   "src/humanize/number.py"
+  ],
+  "added": 95,
+  "deleted": 0,
+  "lines": 95,
+  "src_files": 2,
+  "score": 135,
+  "repo": "humanize",
+  "id": "humanize-19726a0",
+  "test_files": [
+   "tests/test_number.py"
+  ],
+  "base": {
+   "exit": 1,
+   "passed": 105,
+   "failed": 27,
+   "tail": "y::\u001b[1mtest_metric[[100]-100]\u001b[0m - AttributeError: module 'humanize' has no attribute 'metric'\n\u001b[31mFAILED\u001b[0m tests/test_number.py::\u001b[1mtest_metric[[0.1]-100 m]\u001b[0m - AttributeError: module 'humanize' has no attribute 'metric'\n\u001b[31m\u001b[31m\u001b[1m27 failed\u001b[0m, \u001b[32m105 passed\u001b[0m\u001b[31m in 0.09s\u001b[0m\u001b[0m\n"
+  },
+  "fix": {
+   "exit": 0,
+   "passed": 132,
+   "failed": 0,
+   "tail": "\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m             [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m132 passed\u001b[0m\u001b[32m in 0.07s\u001b[0m\u001b[0m\n"
+  },
+  "valid": true,
+  "issue": "Add humanize.metric() for converting big/small numbers to SI units.",
+  "origin": "mined"
+ }
+]

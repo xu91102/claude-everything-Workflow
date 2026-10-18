@@ -114,6 +114,8 @@ Fast Path 改为按需加载并恢复 Git 隔离与相称审查，尚未重测�
 - `data/summary.json` — 含最终消息、失败用例、diff 文件列表
 - `data/final-2026-10-18/` — 最终 42 次对照的逐次、汇总、任务夹具与补充质量证据
 - `data/final-2026-10-18/paired-stats.json` — 配对检验：符号检验、符号翻转置换检验、任务聚类自助区间
+- `hard3-2026-10-18.md` — 第三批难题挖掘：大仓验证、隐藏测试与 A/B 地板效应
+- `data/hard3-2026-10-18/` — 6 个对比任务定义与逐次结果
 - `tools/run-trial.js` — Node.js 单次运行 + 自动判分（cell 含 `gpt-fixed`），结果格式兼容原始数据
 - `tools/run-trial.test.js` — Node.js 隔离回归测试，覆盖判分和凭据处理，使用本地工具夹具，不调用模型
 - `tools/validate_tasks.py` — 任务有效性检查

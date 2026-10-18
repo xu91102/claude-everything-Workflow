@@ -14,6 +14,7 @@ CELLS = {
     "gpt-lite": {"kind": "codex", "home": f"{ROOT}/homes/cew-lite", "codex_home": f"{ROOT}/homes/cew-lite/.codex"},
     "gpt-trim": {"kind": "codex", "home": f"{ROOT}/homes/cew-trim", "codex_home": f"{ROOT}/homes/cew-trim/.codex"},
     "gpt-fixed": {"kind": "codex", "home": f"{ROOT}/homes/cew-fixed", "codex_home": f"{ROOT}/homes/cew-fixed/.codex"},
+    "gpt-fixed3": {"kind": "codex", "home": f"{ROOT}/homes/cew-fixed3", "codex_home": f"{ROOT}/homes/cew-fixed3/.codex"},
     "opus-base": {"kind": "claude", "home": HOME_CLAUDE_BASE},
     "opus-cew": {"kind": "claude", "home": HOME_CEW},
 }
