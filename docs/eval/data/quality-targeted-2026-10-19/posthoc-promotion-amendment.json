@@ -1,0 +1,9 @@
+{
+  "kind": "Posthoc independent review discovery after all42timedmodels; original32andallmodeloutcomesunchanged",
+  "declared_at": "2026-10-18T18:49:18.055Z",
+  "cases": 10,
+  "mixed": 8,
+  "rounded": 2,
+  "original_model_runs_and_artifacts_changed": false,
+  "independent_manual_checks": "Reviewer performed2unplanned read-only manualchecks; originalcommands/outputs and missing exactexecutiontime will be retained in revieweroutput. This uniform actual validation uses the same provisioned Python/moduleenvironment for all8versions."
+}

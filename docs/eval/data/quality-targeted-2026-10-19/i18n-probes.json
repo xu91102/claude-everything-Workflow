@@ -1,0 +1,303 @@
+{
+  "kind": "Uniform translation coverage check frozen before all model trials; exact procedure retained from the previous round",
+  "predeclared_numeric_protocol_unchanged": true,
+  "amendment": {
+    "kind": "Predeclared before every model trial; same uniform translation procedure from previous round",
+    "frozen_at": "2026-10-18T17:54:21.499Z",
+    "controller_sha256": "5b8dc2ac5ea1142c5690930a97f386c2a9bb9f34989eb4802fe213354b1cfe55",
+    "artifact_count": 12,
+    "run_only_after_timed_models": true
+  },
+  "methodology": "After all timed trials, copy every humanize artifact, compile translation resources, run the same existing tests/test_i18n.py with the unchanged baseline venv; no model rerun, no change to measured artifacts or original grading",
+  "source": "\"use strict\";\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst cp = require(\"node:child_process\");\nconst crypto = require(\"node:crypto\");\nconst root = __dirname;\nconst progress = JSON.parse(fs.readFileSync(path.join(root, \"progress.json\")));\nif (progress.count !== 42) throw new Error(\"Run after every measured model trial; no benchmark contention\");\nconst trials = progress.completed.filter((r) => r.task.startsWith(\"humanize-\"));\nif (trials.length !== 12) throw new Error(\"Expect all twelve humanize artifacts\");\nconst hash = (bytes) => crypto.createHash(\"sha256\").update(bytes).digest(\"hex\");\nconst python = path.join(root, \"venvs/humanize/bin/python\");\nconst { parseReport } = require(path.join(root, \"sources/optimized/docs/eval/tools/run-trial.js\"));\nconst results = [];\nfor (const receipt of trials) {\n  const id = `${receipt.task}--${receipt.cell}--r${receipt.repetition}`;\n  const trial = path.join(root, \"trials\", id);\n  const original = path.join(trial, \"runs\", receipt.task, `${receipt.cell}-r${receipt.repetition}`);\n  const dest = path.join(root, \"i18n-quality\", id);\n  if (fs.existsSync(dest)) throw new Error(\"Refusing to overwrite an earlier check: \" + id);\n  fs.cpSync(original, dest, { recursive: true, filter: (file) => ![\".git\", \".pytest_cache\", \"__pycache__\"].includes(path.basename(file)) });\n  const env = { ...process.env, PYTHONDONTWRITEBYTECODE: \"1\", PYTHONPATH: path.join(dest, \"src\") };\n  const compile = cp.spawnSync(\"bash\", [\"scripts/generate-translation-binaries.sh\"], { cwd: dest, env, encoding: \"utf8\", timeout: 30000 });\n  fs.writeFileSync(path.join(dest, \"translation-build.log\"), (compile.stdout || \"\") + (compile.stderr || \"\"));\n  const junit = path.join(dest, \"i18n.xml\");\n  const test = compile.status === 0 && !compile.error\n    ? cp.spawnSync(python, [\"-m\", \"pytest\", \"-q\", \"--tb=short\", \"--maxfail=0\", \"-p\", \"no:cacheprovider\", `--junitxml=${junit}`, \"tests/test_i18n.py\"], { cwd: dest, env, encoding: \"utf8\", timeout: 30000 })\n    : { status: null, stdout: \"\", stderr: \"Translation compilation failed; tests not run\" };\n  fs.writeFileSync(path.join(dest, \"i18n-test.log\"), (test.stdout || \"\") + (test.stderr || \"\"));\n  const report = parseReport(junit);\n  const passed = compile.status === 0 && !compile.error && test.status === 0 && !test.error\n    && !report.report_error && report.passed > 0 && report.failed === 0 && report.errors === 0 && report.skipped === 0;\n  const sourceFiles = JSON.parse(fs.readFileSync(receipt.result_file)).diff.src_files;\n  const sources = sourceFiles.map((file) => ({ file, sha256: hash(fs.readFileSync(path.join(dest, file))),\n    original_matches: fs.readFileSync(path.join(dest, file)).equals(fs.readFileSync(path.join(original, file))) }));\n  const row = { task: receipt.task, cell: receipt.cell, run: receipt.repetition, passed, compile_exit: compile.status,\n    test_exit: test.status, report, sources, junit_sha256: fs.existsSync(junit) ? hash(fs.readFileSync(junit)) : null };\n  results.push(row);\n  console.log(JSON.stringify({ task: row.task, cell: row.cell, run: row.run, passed, tests: report.passed, skipped: report.skipped }));\n}\nfs.writeFileSync(path.join(root, \"i18n-probes.json\"), JSON.stringify({\n  kind: \"Uniform translation coverage check frozen before all model trials; exact procedure retained from the previous round\",\n  predeclared_numeric_protocol_unchanged: true,\n  amendment: JSON.parse(fs.readFileSync(path.join(root, \"protocol/i18n-amendment.json\"))),\n  methodology: \"After all timed trials, copy every humanize artifact, compile translation resources, run the same existing tests/test_i18n.py with the unchanged baseline venv; no model rerun, no change to measured artifacts or original grading\",\n  source: fs.readFileSync(__filename, \"utf8\"), results,\n}, null, 2));\n",
+  "results": [
+    {
+      "task": "humanize-346",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/number.py",
+          "sha256": "a50f82bad3c1ebc69a2ee65b3f537eaae4ca47bec111849368bc9d7231a41543",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "d77e28d849a4696cbac4e0b60b48399abcafbf0aa6dfdefeb5b88e2a87f7085f"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-cew",
+      "run": 1,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/lists.py",
+          "sha256": "30701a1ee6b5923e257fae22098dfffe12b52f593c9883a9ac7f51c46ab5787f",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "fbb35d38a59a34f70aeb9df7c89ef811345d00494dfa076142e63cdc429e948a"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-cew",
+      "run": 1,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/number.py",
+          "sha256": "3550ca617497d0e907a3ba5cb5edb0692f4179633fe26c05f303a1e3ca836535",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "17fafda9e28caa01ccf9392bf8b27c2e8d2d03207bea0a563d91c0915e84cedc"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-trim",
+      "run": 1,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/lists.py",
+          "sha256": "30701a1ee6b5923e257fae22098dfffe12b52f593c9883a9ac7f51c46ab5787f",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "9ad4f0da06839115e3d22ce94e827348c10fa20275d19cbb908b3f58fb5c90ce"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/lists.py",
+          "sha256": "30701a1ee6b5923e257fae22098dfffe12b52f593c9883a9ac7f51c46ab5787f",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "87cc997425cd62f5a9a5e1e654f7d76f6eac43a1d60d99c5d83d0f4ac1da9364"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-trim",
+      "run": 1,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/number.py",
+          "sha256": "5467401ed074a33cc0f7130aba228421f6f63af05fba7fb5dcded31f4507c860",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "2b48cfae9a06543de78285c4d033149553019baad14296effaf5442225741581"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-trim",
+      "run": 2,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/number.py",
+          "sha256": "a50f82bad3c1ebc69a2ee65b3f537eaae4ca47bec111849368bc9d7231a41543",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "886f83f6dc5e042ca10230f2a090e849edbb8128d54fad14a39e2c3a0a0c54b7"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/lists.py",
+          "sha256": "30701a1ee6b5923e257fae22098dfffe12b52f593c9883a9ac7f51c46ab5787f",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "5be5ba33bdb60dc3b94f88347a8c54f1b9e5f5ccb87fb7ddd9107bc7ac569a93"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-cew",
+      "run": 2,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/number.py",
+          "sha256": "a50f82bad3c1ebc69a2ee65b3f537eaae4ca47bec111849368bc9d7231a41543",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "cd53915371d7643d913ae7aed7eab9d0049a742fc10248f3ee15f4e181163444"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-trim",
+      "run": 2,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/lists.py",
+          "sha256": "30701a1ee6b5923e257fae22098dfffe12b52f593c9883a9ac7f51c46ab5787f",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "28e078d7f66b896693c200b39ed3e2c7a841f543080a128758dd162b6aee9cc3"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/number.py",
+          "sha256": "a50f82bad3c1ebc69a2ee65b3f537eaae4ca47bec111849368bc9d7231a41543",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "6d4b337a34a8893cdac048e5abc1fce243f7de2b0421fd9ef73762087d60af86"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-cew",
+      "run": 2,
+      "passed": true,
+      "compile_exit": 0,
+      "test_exit": 0,
+      "report": {
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": ""
+      },
+      "sources": [
+        {
+          "file": "src/humanize/lists.py",
+          "sha256": "30701a1ee6b5923e257fae22098dfffe12b52f593c9883a9ac7f51c46ab5787f",
+          "original_matches": true
+        }
+      ],
+      "junit_sha256": "278be035db7afa7a19f46e36511c32a96113fd967710d40eba97df6b8c40dc4d"
+    }
+  ]
+}
