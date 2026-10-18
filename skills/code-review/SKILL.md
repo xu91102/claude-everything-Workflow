@@ -32,7 +32,7 @@ or confidence. State the selected mode and reason briefly.
 | Mode | Trigger | Execution |
 | --- | --- | --- |
 | self | Clear requirements, local and reversible low-risk changes, with direct checks or relevant tests covering the result; no unresolved risk or repeated unexpected failures | The implementing agent checks the diff against requirements and relevant rules, then provides verification evidence; no review subagent |
-| independent | Cross-module behavior, complex dependencies, hidden constraints, numeric search/correction rewrites across supported arithmetic types or configurable arithmetic contexts, insufficient verification, repeated unexpected failures, or an explicit request for independent review | One fresh read-only subagent checks Standards and Spec against the same package |
+| independent | Cross-module behavior, complex dependencies, hidden constraints, numeric search/correction algorithm rewrites (including precision-sensitive boundaries and arithmetic contexts), insufficient verification, repeated unexpected failures, or an explicit request for independent review | One fresh read-only subagent checks Standards and Spec against the same package |
 | dual | High-risk changes such as authorization, persistent data, destructive operations or public contracts, or an explicit request for two isolated axes | Spawn two parallel subagents: separate Standards and Spec reviewers |
 
 `--mode self|independent|dual` may request a mode, but cannot weaken the review required by the scope or
