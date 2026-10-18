@@ -1,0 +1,10 @@
+{
+  "checked_at": "2026-10-18T21:59:38.841Z",
+  "actual_auth_copies_removed": 45,
+  "scope": "Only ninth attempt three templates and42 trials; original user authentication and other attempts untouched",
+  "public_files_credential_match": false,
+  "review_source_sha256": "c44274cefeed11fca125e6ffd5451659f7cd7a5b5454fd785817e7e8a1fcb308",
+  "original_model_and_probe_outputs_changed": false,
+  "report_change": "Independent-review marker, README latest pointer and reviewed minor wording resource hashes to source/JUnit hashes; measurements unchanged",
+  "quality_gate": "Full42 collected once after critical qualityFAIL as predeclared; strict/all46/independent gates retained; no acceptance from collection completion"
+}

@@ -1,8 +1,8 @@
 # CEW × GPT 真实任务对照评测
 
-最新停止记录见 [PR #62 严格数值信号复测](fast-path-query-signals-2026-10-19.md)：实际6/42，后续36次NOT RUN；整批性能NOT RUN。
-首次外部检查因遗漏解释器链接未执行，原始错误保留；修复环境后以相同46项统一复核，确认两份候选原42项通过、4项比较信号失败，综合质量0/2。AGENTS.md与main一致，PR保持Draft。
-[上一轮预声明46项记录](fast-path-comparison-2026-10-19.md)、[更早完整42次与独立发现](fast-path-targeted-2026-10-19.md)及下文Pilot/P0数据保留为历史，不能替代最新结果。
+最新完整对照见 [PR #62 变更路径证据复测](fast-path-operation-evidence-2026-10-19.md)：同7题×2次×3组，共42次；候选原测试14/14，全部适用冻结检查12/14，独立产物审查FAIL。
+候选6,699,162 token、模型平均112.2秒，相对同期main增加74.8%和60.9%，整批性能FAIL；AGENTS.md与main一致，PR保持Draft。
+[上一轮环境修复后的质量记录](fast-path-query-signals-2026-10-19.md)、更早各轮失败及下文Pilot/P0保留为独立历史，不能替代最新结果。
 
 2026-10-18 · 模型 `gpt-6.1-sol`（reasoning=high）· Codex 宿主
 

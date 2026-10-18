@@ -1,0 +1,864 @@
+{
+  "kind": "Read-only context-budget audit of closed critical6, separate from whole-batch performance",
+  "at": "2026-10-18T21:36:30.993Z",
+  "rows": [
+    {
+      "cell": "gpt-cew",
+      "repeat": 1,
+      "duration_s": 221,
+      "family_usage": {
+        "input_tokens": 479930,
+        "cached_input_tokens": 440576,
+        "output_tokens": 10028,
+        "reasoning_output_tokens": 4869
+      },
+      "parent_usage": {
+        "input_tokens": 479930,
+        "cached_input_tokens": 440576,
+        "output_tokens": 10028,
+        "reasoning_output_tokens": 4869
+      },
+      "child_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "requests": 13,
+      "sessions": [
+        {
+          "thread": "01a150da-d906-78f0-a1f2-c5b1abcf44d7",
+          "metadata": {
+            "forked_from_id": null,
+            "parent_thread": null
+          },
+          "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/homes/cew-home/.codex/sessions/2026/10/19/rollout-2026-10-19T05-11-22-01a150da-d906-78f0-a1f2-c5b1abcf44d7.jsonl",
+          "sha256": "7d5fad21c24937069bda8485d828e4a63f3e7106f7b255ae54743721f51f0278",
+          "requests": 13,
+          "first_response_input_tokens": 15943,
+          "first_response_cached_input_tokens": 12288,
+          "input_tokens_total": 479930,
+          "max_response_input_tokens": 49535,
+          "function_calls": {
+            "exec": 12
+          },
+          "waits": [],
+          "spawns": [],
+          "command_count": 20,
+          "command_output_bytes": 80352,
+          "largest_command_outputs": [
+            {
+              "command_sha256": "889bd45d9fe1c11f5baaca56477fcd3ef4893d5a3f439b47901686fed67aee9b",
+              "command_first_line": "/bin/zsh -lc sed -n '2248,2505p' more_itertools/more.py; sed -n '2635,2805p' tests/test_more.py; sed -n '2880,3035p' tests/test_more.py; sed -n '3070,3225p' tes",
+              "output_bytes": 25332,
+              "exit": 0
+            },
+            {
+              "command_sha256": "3d8c715eb83d64130d5e961a97292239d0ad202406f7142119046b916628c3ca",
+              "command_first_line": "/bin/zsh -lc git status --short; rg -n 'class numeric_range|numeric_range' more_itertools/more.py tests/test_more.py; ls -a; for f in 01-base.md 02-implementati",
+              "output_bytes": 13388,
+              "exit": 0
+            },
+            {
+              "command_sha256": "d7dc69e27116392ab4c34d6f582dc6ff48003d206f2b4b1f66d4582f32a3ffa5",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/homes/cew-home/.codex/skills/using-sup",
+              "output_bytes": 7191,
+              "exit": 0
+            },
+            {
+              "command_sha256": "dc0d2fd13bf9d6b7157dbf2fc05eb365e5c920ce415f4543c20d2cbe5afdf5e3",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/homes/cew-home/.codex/skills/implement",
+              "output_bytes": 7106,
+              "exit": 0
+            },
+            {
+              "command_sha256": "55c3b7a01c2197dd34eb185262cf714aa75941219e28c5b0c98626616e9c9706",
+              "command_first_line": "/bin/zsh -lc git branch --show-current; git rev-parse HEAD; git diff --stat; sed -n '1,65p' more_itertools/more.py; cat Makefile; ls requirements; cat /private/",
+              "output_bytes": 6673,
+              "exit": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "cell": "gpt-fixed",
+      "repeat": 2,
+      "duration_s": 394.4,
+      "family_usage": {
+        "input_tokens": 1336265,
+        "cached_input_tokens": 1239552,
+        "output_tokens": 22230,
+        "reasoning_output_tokens": 10318
+      },
+      "parent_usage": {
+        "input_tokens": 754876,
+        "cached_input_tokens": 709504,
+        "output_tokens": 15037,
+        "reasoning_output_tokens": 6872
+      },
+      "child_usage": {
+        "input_tokens": 581389,
+        "cached_input_tokens": 530048,
+        "output_tokens": 7193,
+        "reasoning_output_tokens": 3446
+      },
+      "requests": 35,
+      "sessions": [
+        {
+          "thread": "01a150da-d906-7ee2-bb22-6febe13e8f41",
+          "metadata": {
+            "forked_from_id": null,
+            "parent_thread": null
+          },
+          "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/sessions/2026/10/19/rollout-2026-10-19T05-11-22-01a150da-d906-7ee2-bb22-6febe13e8f41.jsonl",
+          "sha256": "47d226a0260b0b8581f7b0f4da52172bd1e0f86a40d305b44c977f63be3f91dd",
+          "requests": 17,
+          "first_response_input_tokens": 15937,
+          "first_response_cached_input_tokens": 12288,
+          "input_tokens_total": 754876,
+          "max_response_input_tokens": 61862,
+          "function_calls": {
+            "exec": 13,
+            "spawn_agent": 1,
+            "send_message": 2
+          },
+          "waits": [],
+          "spawns": [
+            {
+              "fork_turns": "none",
+              "fork_context": null
+            }
+          ],
+          "command_count": 19,
+          "command_output_bytes": 88765,
+          "largest_command_outputs": [
+            {
+              "command_sha256": "436e168738eb43a6fde0b163a7288dc80267fa8d179a566ef3383988ef020efc",
+              "command_first_line": "/bin/zsh -lc git branch --show-current; git rev-parse HEAD; sed -n '2240,2475p' more_itertools/more.py; sed -n '2610,3225p' tests/test_more.py",
+              "output_bytes": 29706,
+              "exit": 0
+            },
+            {
+              "command_sha256": "735c85e1de2f94866d972a7d684fc6c8b4690fc71b9fdb170b46604438c971f7",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/skills/using-",
+              "output_bytes": 16491,
+              "exit": 0
+            },
+            {
+              "command_sha256": "343e91a52ad540d191859ace7e9a964a0905ddffa47a2a49c24acbe7ef782831",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/skills/using-",
+              "output_bytes": 7804,
+              "exit": 0
+            },
+            {
+              "command_sha256": "fe0e0447396a7a036edf724952697445cd99806630d0124972b364d943cce388",
+              "command_first_line": "/bin/zsh -lc git status --short; rg -n 'class numeric_range|numeric_range' more_itertools/more.py tests/test_more.py; cat pyproject.toml setup.cfg tox.ini",
+              "output_bytes": 7192,
+              "exit": 0
+            },
+            {
+              "command_sha256": "becbe3513bacf6502549c5ca190b0344607d8367f973cc4567a584ce221bca96",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/skills/code-r",
+              "output_bytes": 6204,
+              "exit": 0
+            }
+          ]
+        },
+        {
+          "thread": "01a150dd-4def-7123-bfaf-6ca52e1f2a22",
+          "metadata": {
+            "forked_from_id": null,
+            "parent_thread": "01a150da-d906-7ee2-bb22-6febe13e8f41"
+          },
+          "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/sessions/2026/10/19/rollout-2026-10-19T05-14-03-01a150dd-4def-7123-bfaf-6ca52e1f2a22.jsonl",
+          "sha256": "cdfecd96b53e84817b5cfafa77bce5ac06056946f9760d60065116d4854373da",
+          "requests": 18,
+          "first_response_input_tokens": 19319,
+          "first_response_cached_input_tokens": 12032,
+          "input_tokens_total": 581389,
+          "max_response_input_tokens": 39552,
+          "function_calls": {
+            "exec": 10,
+            "send_message": 6,
+            "wait_agent": 1
+          },
+          "waits": [
+            {
+              "timeout_ms": 60000
+            }
+          ],
+          "spawns": [],
+          "command_count": 12,
+          "command_output_bytes": 42417,
+          "largest_command_outputs": [
+            {
+              "command_sha256": "94c5b7a7aba6997281d79094838efcabc973545afdc4639f3a124026ae452b3b",
+              "command_first_line": "/bin/zsh -lc cat '<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/skills/code-",
+              "output_bytes": 12255,
+              "exit": 0
+            },
+            {
+              "command_sha256": "52b9934eae209dba97072ed849ccfa21bc5d85d879dd8a93ea985ace94c4437b",
+              "command_first_line": "/bin/zsh -lc sed -n '2240,2505p' more_itertools/more.py; rg -n 'class NumericRangeTests|numeric_range' tests/test_more.py | head -15; rg -n 'numeric_range|pytho",
+              "output_bytes": 9778,
+              "exit": 0
+            },
+            {
+              "command_sha256": "585bc88469cc2a71d028e694b682977f776874653d33a32ce6f1c7de0fda81ea",
+              "command_first_line": "/bin/zsh -lc git diff addbc6cf773d3acc8acdac012ba600d950b59e0e -- more_itertools/more.py; sed -n '1,75p' more_itertools/more.py",
+              "output_bytes": 5439,
+              "exit": 0
+            },
+            {
+              "command_sha256": "5ec397451958a9ebfca8ad50948862fb793059f72d4d7568cc9a4bb45cbb01c6",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/skills/code-r",
+              "output_bytes": 4898,
+              "exit": 0
+            },
+            {
+              "command_sha256": "8798f195f33c29fc90f8c7cd00b3fe50e6ff2bef573d4974bc70f983b151330d",
+              "command_first_line": "/bin/zsh -lc git diff addbc6cf773d3acc8acdac012ba600d950b59e0e -- more_itertools/more.py; python - <<'PY'",
+              "output_bytes": 3539,
+              "exit": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "cell": "gpt-trim",
+      "repeat": 1,
+      "duration_s": 381.2,
+      "family_usage": {
+        "input_tokens": 998864,
+        "cached_input_tokens": 933376,
+        "output_tokens": 18443,
+        "reasoning_output_tokens": 9542
+      },
+      "parent_usage": {
+        "input_tokens": 557668,
+        "cached_input_tokens": 520192,
+        "output_tokens": 12421,
+        "reasoning_output_tokens": 7380
+      },
+      "child_usage": {
+        "input_tokens": 441196,
+        "cached_input_tokens": 413184,
+        "output_tokens": 6022,
+        "reasoning_output_tokens": 2162
+      },
+      "requests": 29,
+      "sessions": [
+        {
+          "thread": "01a150de-78d8-76d0-9e61-2cf37ba1ce82",
+          "metadata": {
+            "forked_from_id": null,
+            "parent_thread": null
+          },
+          "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/homes/cew-trim/.codex/sessions/2026/10/19/rollout-2026-10-19T05-15-20-01a150de-78d8-76d0-9e61-2cf37ba1ce82.jsonl",
+          "sha256": "f527e3277e81564506557045acc58ec02fc380e582e905b825640a7838fb1415",
+          "requests": 15,
+          "first_response_input_tokens": 15945,
+          "first_response_cached_input_tokens": 12288,
+          "input_tokens_total": 557668,
+          "max_response_input_tokens": 50612,
+          "function_calls": {
+            "exec": 11,
+            "spawn_agent": 1,
+            "send_message": 2
+          },
+          "waits": [],
+          "spawns": [
+            {
+              "fork_turns": "none",
+              "fork_context": null
+            }
+          ],
+          "command_count": 15,
+          "command_output_bytes": 69019,
+          "largest_command_outputs": [
+            {
+              "command_sha256": "fcfb01f5659a744e36010815990b82dc14578fe393f62124fc50eb8753f851bd",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/homes/cew-trim/.codex/skills/using-su",
+              "output_bytes": 19113,
+              "exit": 0
+            },
+            {
+              "command_sha256": "c81e3354c2c95d1f5dd04c4de2db2280f206f13e6dba9d2369ff4dc74537d0d4",
+              "command_first_line": "/bin/zsh -lc git branch --show-current; git status --porcelain=v1; git rev-parse HEAD; sed -n '2975,3035p' tests/test_more.py; sed -n '3090,3230p' tests/test_mo",
+              "output_bytes": 17394,
+              "exit": 0
+            },
+            {
+              "command_sha256": "fe3d50b23a8492c4c82e265e4e7576750b03740633bc2288e6794ecc8f1853f9",
+              "command_first_line": "/bin/zsh -lc git status --short; rg -n 'class numeric_range|numeric_range' more_itertools tests | head -65; for f in 01-base.md 02-implementation.md 05-git-work",
+              "output_bytes": 11602,
+              "exit": 0
+            },
+            {
+              "command_sha256": "9361c059f16ef5956f194ee63ce401014f99454ecda87334e25126e5ae141e33",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/homes/cew-trim/.codex/skills/using-su",
+              "output_bytes": 7804,
+              "exit": 0
+            },
+            {
+              "command_sha256": "fb5647f2f41a3f452d2705811ee88055770ca3ef49111b2cd9ebb14916eaec0d",
+              "command_first_line": "/bin/zsh -lc sed -n '1,95p' more_itertools/more.py; cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r",
+              "output_bytes": 4678,
+              "exit": 0
+            }
+          ]
+        },
+        {
+          "thread": "01a150e1-1c0f-7c50-9d30-8b63dbfb7ce0",
+          "metadata": {
+            "forked_from_id": null,
+            "parent_thread": "01a150de-78d8-76d0-9e61-2cf37ba1ce82"
+          },
+          "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/homes/cew-trim/.codex/sessions/2026/10/19/rollout-2026-10-19T05-18-12-01a150e1-1c0f-7c50-9d30-8b63dbfb7ce0.jsonl",
+          "sha256": "c9e346d463503f05c82eb6945bfe30cdffbcdc7a83ad591321c20a3b9d6124e4",
+          "requests": 14,
+          "first_response_input_tokens": 19374,
+          "first_response_cached_input_tokens": 12032,
+          "input_tokens_total": 441196,
+          "max_response_input_tokens": 37883,
+          "function_calls": {
+            "exec": 10,
+            "send_message": 3
+          },
+          "waits": [],
+          "spawns": [],
+          "command_count": 18,
+          "command_output_bytes": 41833,
+          "largest_command_outputs": [
+            {
+              "command_sha256": "67ab561b659dbe3281174595ff8d86f337303f58cd0ac63678b37cc64bb6fe72",
+              "command_first_line": "/bin/zsh -lc sed -n '2230,2540p' more_itertools/more.py",
+              "output_bytes": 10322,
+              "exit": 0
+            },
+            {
+              "command_sha256": "e910777b33bc3b0758175592d792e960c38eeeded6f3a157c057a260b65e1f64",
+              "command_first_line": "/bin/zsh -lc python - <<'PY'",
+              "output_bytes": 9926,
+              "exit": 0
+            },
+            {
+              "command_sha256": "6f71380a74f78334648167c2d561421348f92323fa3247539843f4dee42dc34c",
+              "command_first_line": "/bin/zsh -lc cat '<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/homes/cew-trim/.codex/skills/code-re",
+              "output_bytes": 4898,
+              "exit": 0
+            },
+            {
+              "command_sha256": "bcb968490f21ebbfcfa82f74c3ae511e656a1926dbe29c219f2d5a0721992a17",
+              "command_first_line": "/bin/zsh -lc git diff 1c2c2f08c9e5eb01e50ef9d38bdbf124a9882666 -- more_itertools/more.py",
+              "output_bytes": 3103,
+              "exit": 0
+            },
+            {
+              "command_sha256": "bcb968490f21ebbfcfa82f74c3ae511e656a1926dbe29c219f2d5a0721992a17",
+              "command_first_line": "/bin/zsh -lc git diff 1c2c2f08c9e5eb01e50ef9d38bdbf124a9882666 -- more_itertools/more.py",
+              "output_bytes": 2963,
+              "exit": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "cell": "gpt-trim",
+      "repeat": 2,
+      "duration_s": 442.9,
+      "family_usage": {
+        "input_tokens": 1519660,
+        "cached_input_tokens": 1436672,
+        "output_tokens": 22843,
+        "reasoning_output_tokens": 11155
+      },
+      "parent_usage": {
+        "input_tokens": 952036,
+        "cached_input_tokens": 900992,
+        "output_tokens": 15007,
+        "reasoning_output_tokens": 8165
+      },
+      "child_usage": {
+        "input_tokens": 567624,
+        "cached_input_tokens": 535680,
+        "output_tokens": 7836,
+        "reasoning_output_tokens": 2990
+      },
+      "requests": 39,
+      "sessions": [
+        {
+          "thread": "01a150e1-1d78-7573-baf1-4f97594e05e1",
+          "metadata": {
+            "forked_from_id": null,
+            "parent_thread": null
+          },
+          "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/homes/cew-trim/.codex/sessions/2026/10/19/rollout-2026-10-19T05-18-13-01a150e1-1d78-7573-baf1-4f97594e05e1.jsonl",
+          "sha256": "2eeb964eeb8b1c1e15185f838aac5d79287b347d4236217b98515e883d5718db",
+          "requests": 22,
+          "first_response_input_tokens": 15945,
+          "first_response_cached_input_tokens": 12288,
+          "input_tokens_total": 952036,
+          "max_response_input_tokens": 54942,
+          "function_calls": {
+            "exec": 15,
+            "spawn_agent": 1,
+            "send_message": 2,
+            "followup_task": 2,
+            "wait_agent": 1
+          },
+          "waits": [
+            {
+              "timeout_ms": 10000
+            }
+          ],
+          "spawns": [
+            {
+              "fork_turns": "none",
+              "fork_context": null
+            }
+          ],
+          "command_count": 15,
+          "command_output_bytes": 74232,
+          "largest_command_outputs": [
+            {
+              "command_sha256": "c963e2c6dd3d8792c15565d956ea11d26b23bfb6c20d2c4c4c6592f0eee6d748",
+              "command_first_line": "/bin/zsh -lc git branch --show-current; git log -1 --oneline; sed -n '2248,2475p' more_itertools/more.py; sed -n '2625,2805p' tests/test_more.py; sed -n '2880,3",
+              "output_bytes": 27279,
+              "exit": 0
+            },
+            {
+              "command_sha256": "b6baa8144a6850378a0d36ea000d7b7f8b7ef948e809a8aadb79aab98bf01c6d",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/homes/cew-trim/.codex/skills/using-su",
+              "output_bytes": 21580,
+              "exit": 0
+            },
+            {
+              "command_sha256": "c948e08056063296204b7289eb4469c4de0bad1d6a97a36c301d8f4a8f17bcb3",
+              "command_first_line": "/bin/zsh -lc python -m unittest tests.test_more.NumericRangeTests; sed -n '1,110p' more_itertools/more.py; cat /private/tmp/cew-pr62-quality-operation-evidence-",
+              "output_bytes": 8358,
+              "exit": 0
+            },
+            {
+              "command_sha256": "5e4a23bb1cdcb93e0ce25a5bac453cc20915e4363986f4af285b62b40714252b",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/homes/cew-trim/.codex/skills/using-su",
+              "output_bytes": 7804,
+              "exit": 0
+            },
+            {
+              "command_sha256": "001d7cecf05329dec0c75227819436b6c643a771f39314948b82b334e633270c",
+              "command_first_line": "/bin/zsh -lc git diff --check; git status --short; git diff -- more_itertools/more.py",
+              "output_bytes": 3201,
+              "exit": 0
+            }
+          ]
+        },
+        {
+          "thread": "01a150e3-6fb7-7de3-936a-d19888e633dc",
+          "metadata": {
+            "forked_from_id": null,
+            "parent_thread": "01a150e1-1d78-7573-baf1-4f97594e05e1"
+          },
+          "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/homes/cew-trim/.codex/sessions/2026/10/19/rollout-2026-10-19T05-20-45-01a150e3-6fb7-7de3-936a-d19888e633dc.jsonl",
+          "sha256": "6d14fbeba44b78b69466ea19b0c256cd628b4df19d12871e6fc95ab748884fe2",
+          "requests": 17,
+          "first_response_input_tokens": 19348,
+          "first_response_cached_input_tokens": 12032,
+          "input_tokens_total": 567624,
+          "max_response_input_tokens": 42065,
+          "function_calls": {
+            "exec": 13,
+            "send_message": 1
+          },
+          "waits": [],
+          "spawns": [],
+          "command_count": 14,
+          "command_output_bytes": 47498,
+          "largest_command_outputs": [
+            {
+              "command_sha256": "1d2cc9338531e5a907e9864d5c38e4858b0b6be034432c4d55fa30ca98e06691",
+              "command_first_line": "/bin/zsh -lc sed -n '2200,2535p' more_itertools/more.py; rg -n 'class NumericRange|numeric_range|Decimal' tests/test_more.py | tail -65",
+              "output_bytes": 15350,
+              "exit": 0
+            },
+            {
+              "command_sha256": "a4a0327f7b460c85c56bbc90c70d4ef26dfafd95f26068c59d0201c9dadf1d2b",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/homes/cew-trim/.codex/skills/code-rev",
+              "output_bytes": 12041,
+              "exit": 0
+            },
+            {
+              "command_sha256": "5b0e0e06dcd90d7c5f0e6e30e00ae1f116b495a7344b584a23f3524d1dc394c1",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/homes/cew-trim/.codex/skills/code-rev",
+              "output_bytes": 4898,
+              "exit": 0
+            },
+            {
+              "command_sha256": "224286456c969ce835a3daa290ff606bc3bb5a623cd79bd48db5aee06eb5d143",
+              "command_first_line": "/bin/zsh -lc git diff 69505f69a0c46e2cb4414daa57def63cdec8a911 -- more_itertools/more.py",
+              "output_bytes": 3326,
+              "exit": 0
+            },
+            {
+              "command_sha256": "224286456c969ce835a3daa290ff606bc3bb5a623cd79bd48db5aee06eb5d143",
+              "command_first_line": "/bin/zsh -lc git diff 69505f69a0c46e2cb4414daa57def63cdec8a911 -- more_itertools/more.py",
+              "output_bytes": 3175,
+              "exit": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "cell": "gpt-cew",
+      "repeat": 2,
+      "duration_s": 133.6,
+      "family_usage": {
+        "input_tokens": 335102,
+        "cached_input_tokens": 301312,
+        "output_tokens": 7400,
+        "reasoning_output_tokens": 3521
+      },
+      "parent_usage": {
+        "input_tokens": 335102,
+        "cached_input_tokens": 301312,
+        "output_tokens": 7400,
+        "reasoning_output_tokens": 3521
+      },
+      "child_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "requests": 10,
+      "sessions": [
+        {
+          "thread": "01a150e8-206a-75e3-a73e-bc37034a9748",
+          "metadata": {
+            "forked_from_id": null,
+            "parent_thread": null
+          },
+          "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/homes/cew-home/.codex/sessions/2026/10/19/rollout-2026-10-19T05-25-53-01a150e8-206a-75e3-a73e-bc37034a9748.jsonl",
+          "sha256": "2709b2fbe4411ce17fba4edf674216cf7c8c8a60deeffc6fe21bdcfbff2aee08",
+          "requests": 10,
+          "first_response_input_tokens": 15943,
+          "first_response_cached_input_tokens": 12288,
+          "input_tokens_total": 335102,
+          "max_response_input_tokens": 44490,
+          "function_calls": {
+            "exec": 9
+          },
+          "waits": [],
+          "spawns": [],
+          "command_count": 18,
+          "command_output_bytes": 74157,
+          "largest_command_outputs": [
+            {
+              "command_sha256": "16065a6eaff32c12c96cd7c681c223cbed0785d460be44b5074e468bf71a13d9",
+              "command_first_line": "/bin/zsh -lc sed -n '2248,2490p' more_itertools/more.py; sed -n '2620,2805p' tests/test_more.py; sed -n '2980,3035p' tests/test_more.py; sed -n '3100,3225p' tes",
+              "output_bytes": 20835,
+              "exit": 0
+            },
+            {
+              "command_sha256": "4c13a2fcbc158d003017d80b3d3fd3adc0aa128fce0f4def66dc83a713785e18",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/homes/cew-home/.codex/skills/test-driv",
+              "output_bytes": 8447,
+              "exit": 0
+            },
+            {
+              "command_sha256": "5799909c814dd5777ec536ce96a442bda4807a35a00ed1fede0ae05b4c5698ff",
+              "command_first_line": "/bin/zsh -lc for f in 01-base.md 02-implementation.md 05-git-workflow.md 07-forbidden.md 08-specialty-rules-index.md; do if [ -f \"rules/$f\" ]; then cat \"rules/$",
+              "output_bytes": 8221,
+              "exit": 0
+            },
+            {
+              "command_sha256": "dfb8bd5193b0424f36fab1880a1f35b8a27a9ff853d6663b5ddd3abe2811a0bc",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/homes/cew-home/.codex/skills/using-sup",
+              "output_bytes": 7191,
+              "exit": 0
+            },
+            {
+              "command_sha256": "e3a7b98c63391f857c5a76b46007ba34e2b7efada5b7767505acc7c8cc985298",
+              "command_first_line": "/bin/zsh -lc rg -n 'class numeric_range|numeric_range' more_itertools/more.py tests/test_more.py pyproject.toml tox.ini; rg --files -g 'AGENTS.md' -g 'CLAUDE.md",
+              "output_bytes": 6591,
+              "exit": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "cell": "gpt-fixed",
+      "repeat": 1,
+      "duration_s": 521.3,
+      "family_usage": {
+        "input_tokens": 2639181,
+        "cached_input_tokens": 2514048,
+        "output_tokens": 28043,
+        "reasoning_output_tokens": 11670
+      },
+      "parent_usage": {
+        "input_tokens": 1656686,
+        "cached_input_tokens": 1601408,
+        "output_tokens": 18953,
+        "reasoning_output_tokens": 8598
+      },
+      "child_usage": {
+        "input_tokens": 982495,
+        "cached_input_tokens": 912640,
+        "output_tokens": 9090,
+        "reasoning_output_tokens": 3072
+      },
+      "requests": 59,
+      "sessions": [
+        {
+          "thread": "01a150e4-893a-73e3-a4c1-fb404f4e4e39",
+          "metadata": {
+            "forked_from_id": null,
+            "parent_thread": null
+          },
+          "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/homes/cew-fixed/.codex/sessions/2026/10/19/rollout-2026-10-19T05-21-57-01a150e4-893a-73e3-a4c1-fb404f4e4e39.jsonl",
+          "sha256": "de783aa2835728dc53ef4baa72adc572573ced81be1dedfce0607df9cf332b3d",
+          "requests": 33,
+          "first_response_input_tokens": 15937,
+          "first_response_cached_input_tokens": 12288,
+          "input_tokens_total": 1656686,
+          "max_response_input_tokens": 65579,
+          "function_calls": {
+            "exec": 19,
+            "spawn_agent": 1,
+            "send_message": 6,
+            "list_agents": 2,
+            "followup_task": 3,
+            "wait_agent": 1
+          },
+          "waits": [
+            {
+              "timeout_ms": 10000
+            }
+          ],
+          "spawns": [
+            {
+              "fork_turns": "none",
+              "fork_context": null
+            }
+          ],
+          "command_count": 21,
+          "command_output_bytes": 87080,
+          "largest_command_outputs": [
+            {
+              "command_sha256": "e8891171dfeca36271e9fd1c4107c2ea7b99fbb9f0f6dcfae3505c2f76130471",
+              "command_first_line": "/bin/zsh -lc git branch --show-current; git log -1 --oneline; sed -n '2248,2515p' more_itertools/more.py; sed -n '2650,2805p' tests/test_more.py; sed -n '2880,3",
+              "output_bytes": 27294,
+              "exit": 0
+            },
+            {
+              "command_sha256": "e37968280074219b191c228fd4d2bec97ef3efed2acd3517c9193b679a5ea669",
+              "command_first_line": "/bin/zsh -lc if [ -f rules/common/testing.md ]; then cat rules/common/testing.md; elif [ -f ~/.codex/rules/common/testing.md ]; then cat ~/.codex/rules/common/t",
+              "output_bytes": 10635,
+              "exit": 0
+            },
+            {
+              "command_sha256": "217ead17f7c7f1539e049ae528f1e26c8d2f6952d08571f21fefedb83b06cafe",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/homes/cew-fixed/.codex/skills/using-",
+              "output_bytes": 7804,
+              "exit": 0
+            },
+            {
+              "command_sha256": "bbc9ad7ab23d2b3665115ffff864e8cf70476bea90ff9e6fb9bf3caa401a6443",
+              "command_first_line": "/bin/zsh -lc git status --short; rg -n 'class numeric_range|numeric_range' more_itertools/more.py tests/test_more.py; cat /private/tmp/cew-pr62-quality-operatio",
+              "output_bytes": 7431,
+              "exit": 0
+            },
+            {
+              "command_sha256": "a098ae59e0084aeaa8c43e02cda089f35858cfbc150eb2372ce944ad55b3e119",
+              "command_first_line": "/bin/zsh -lc for f in 01-base.md 02-implementation.md 05-git-workflow.md 07-forbidden.md; do if [ -f rules/$f ]; then cat rules/$f; else cat ~/.codex/rules/$f; ",
+              "output_bytes": 6433,
+              "exit": 0
+            }
+          ]
+        },
+        {
+          "thread": "01a150e6-abf5-74d2-91ec-618e28164555",
+          "metadata": {
+            "forked_from_id": null,
+            "parent_thread": "01a150e4-893a-73e3-a4c1-fb404f4e4e39"
+          },
+          "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/homes/cew-fixed/.codex/sessions/2026/10/19/rollout-2026-10-19T05-24-17-01a150e6-abf5-74d2-91ec-618e28164555.jsonl",
+          "sha256": "8038d64e5a2e0de47ac8fcf8f9c5d4528f0cccc91e3144f06f01f6ea242a5452",
+          "requests": 26,
+          "first_response_input_tokens": 19362,
+          "first_response_cached_input_tokens": 12032,
+          "input_tokens_total": 982495,
+          "max_response_input_tokens": 47411,
+          "function_calls": {
+            "exec": 15,
+            "send_message": 7
+          },
+          "waits": [],
+          "spawns": [],
+          "command_count": 15,
+          "command_output_bytes": 55274,
+          "largest_command_outputs": [
+            {
+              "command_sha256": "5057525b7980ad6bf9358762d84a2f5d4bd528074a601e0ffb1db5f3fae38267",
+              "command_first_line": "/bin/zsh -lc cat ~/.codex/rules/common/testing.md; git rev-parse f12b07638744fc38c3541c06cfbe5c317cae67e4; rg -n 'class NumericRangeTests|numeric_range' tests/t",
+              "output_bytes": 14667,
+              "exit": 0
+            },
+            {
+              "command_sha256": "0c409a7a23975e74e2879d60233b75b13c208f70990918a56f3558f122cce63e",
+              "command_first_line": "/bin/zsh -lc sed -n '2180,2555p' more_itertools/more.py; rg --files -g '*testing.md' -g 'test_more.py' -g 'AGENTS.md' -g '*numeric*'; ls ~/.codex/rules/common",
+              "output_bytes": 12808,
+              "exit": 0
+            },
+            {
+              "command_sha256": "348c01f9ff686c5dc6702a05fe1a531b0d9ccafce7f98d65a05ad26593fac92c",
+              "command_first_line": "/bin/zsh -lc cat <BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/homes/cew-fixed/.codex/skills/code-r",
+              "output_bytes": 11614,
+              "exit": 1
+            },
+            {
+              "command_sha256": "5ae506e63be378ca72f387c4a53c70a84580ce3142d5bac225893890bc05cca3",
+              "command_first_line": "/bin/zsh -lc git diff f12b07638744fc38c3541c06cfbe5c317cae67e4 -- more_itertools/more.py; git status --short",
+              "output_bytes": 4172,
+              "exit": 0
+            },
+            {
+              "command_sha256": "3ddd36d78ce9f8cbc2d46e12a698ad5d5a789ec11cdf1c37298727384cb8af1c",
+              "command_first_line": "/bin/zsh -lc git diff f12b07638744fc38c3541c06cfbe5c317cae67e4 -- more_itertools/more.py",
+              "output_bytes": 3908,
+              "exit": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "home": "cew-home",
+      "files": [
+        {
+          "file": "AGENTS.md",
+          "bytes": 2817,
+          "sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd"
+        },
+        {
+          "file": "rules/common/testing.md",
+          "bytes": 2749,
+          "sha256": "e349934f4e97c2576a68ce3d123a52471d877612e2e7967c841c0c4164560b4f"
+        },
+        {
+          "file": "skills/using-superpowers/SKILL.md",
+          "bytes": 7191,
+          "sha256": "294cf51d32aabd143bbae2b401d5b7f48d883336d1076ef2ba00af922c3e2faf"
+        },
+        {
+          "file": "skills/code-review/SKILL.md",
+          "bytes": 4528,
+          "sha256": "0086962bdfba5f3d2ca94897dfb3be8d2b2fea366eb268bae50fb3b3f1e4fbb0"
+        },
+        {
+          "file": "skills/code-review/references/spec-reviewer-prompt.md",
+          "bytes": 765,
+          "sha256": "6afb8f49fce33ba1a18ceea28f40bd0f2f33c2f1f50938d4db508f3fc820a33d"
+        }
+      ],
+      "config_has_explicit_mcp_servers": false
+    },
+    {
+      "home": "cew-trim",
+      "files": [
+        {
+          "file": "AGENTS.md",
+          "bytes": 2817,
+          "sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd"
+        },
+        {
+          "file": "rules/common/testing.md",
+          "bytes": 5737,
+          "sha256": "c44276535ef06b4af9ce030d58afcc3d2796c8f595a5cc3beaf5e2bcb389763f"
+        },
+        {
+          "file": "skills/using-superpowers/SKILL.md",
+          "bytes": 7804,
+          "sha256": "27d1fffd1f6f21aac2f95fc092cf2b3598c1ffcaef5ae1f858614487bbcf9929"
+        },
+        {
+          "file": "skills/using-superpowers/references/fast-path.md",
+          "bytes": 2533,
+          "sha256": "873589a03e8cb99d5412764201fcf05ced5d7c2760f5ee61d6a60b5f73cd0eb3"
+        },
+        {
+          "file": "skills/code-review/SKILL.md",
+          "bytes": 4898,
+          "sha256": "ce8f298cc3b8bedadea506692bc191f8e2787a6b5d65bee8332e8b1ec9f871ab"
+        },
+        {
+          "file": "skills/code-review/references/spec-reviewer-prompt.md",
+          "bytes": 901,
+          "sha256": "f9a3bbf8ccff053ce9006a8e432c455b3492185ea0e1d5763373cc98cdde3be0"
+        }
+      ],
+      "config_has_explicit_mcp_servers": false
+    },
+    {
+      "home": "cew-fixed",
+      "files": [
+        {
+          "file": "AGENTS.md",
+          "bytes": 2817,
+          "sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd"
+        },
+        {
+          "file": "rules/common/testing.md",
+          "bytes": 5737,
+          "sha256": "c44276535ef06b4af9ce030d58afcc3d2796c8f595a5cc3beaf5e2bcb389763f"
+        },
+        {
+          "file": "skills/using-superpowers/SKILL.md",
+          "bytes": 7804,
+          "sha256": "27d1fffd1f6f21aac2f95fc092cf2b3598c1ffcaef5ae1f858614487bbcf9929"
+        },
+        {
+          "file": "skills/using-superpowers/references/fast-path.md",
+          "bytes": 2533,
+          "sha256": "873589a03e8cb99d5412764201fcf05ced5d7c2760f5ee61d6a60b5f73cd0eb3"
+        },
+        {
+          "file": "skills/code-review/SKILL.md",
+          "bytes": 4898,
+          "sha256": "ce8f298cc3b8bedadea506692bc191f8e2787a6b5d65bee8332e8b1ec9f871ab"
+        },
+        {
+          "file": "skills/code-review/references/spec-reviewer-prompt.md",
+          "bytes": 1115,
+          "sha256": "3c3b8ecaee0077045a5b671dfed753e97bc91d5d5ac1fcd3a49cf53051e064fc"
+        }
+      ],
+      "config_has_explicit_mcp_servers": false
+    }
+  ],
+  "all_AGENTS_bytes_equal": true,
+  "quality": "Candidate original42bothPASS but Float4bothFAIL, actual critical quality0/2",
+  "inferences": "Equal AGENTS hashes rule out AGENTS additions as this treatment cost. Response counts, family split and tool-output sizes describe where context is repeated; neither counts nor byte estimates establish causal savings or justify removing required quality checks. Freshforks checked from explicit spawn arguments; do not blame inherited exploration without evidence.",
+  "recommendations": [
+    {
+      "action": "Keep supported query types and actually changed operand types together when selecting compatibility samples",
+      "basis": "Both ninth artifacts retain the4query failure despite observed Spec text delivery and fresh review forks; exactknown46 actualresults preserved",
+      "saving": "NOT MEASURED",
+      "risk": "Required quality coverage must be retained; next source proposal is unapplied and unmeasured"
+    },
+    {
+      "action": "Use current Fast Path batching and relevant excerpts; reuse verified unchanged checks",
+      "basis": "Existing policy permits this. Large source/test reads and repeated requests are measurable, but safe deletion of a particular required check is not established by this audit",
+      "saving": "NOT MEASURED",
+      "risk": "Do not drop supported-type inventory or numeric compatibility verification merely to reduce context"
+    }
+  ]
+}
