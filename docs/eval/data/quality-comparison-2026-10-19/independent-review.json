@@ -1,0 +1,3679 @@
+{
+  "mode": "independent",
+  "mode_reason": "调用方要求独立审查；独立只读上下文针对同一固定包顺序检查两个 reviewer prompts，并将证据完整性和整批性能单列。",
+  "reviewed_at_utc": "2026-10-18T20:34:34.560Z",
+  "package": "<BENCH_ROOT>/partial-review-package.json",
+  "base": "55fc8ea534e01676ebd97958033374e5143edb01",
+  "measured_source": "36ccc9018247bed8892948099b79132a511f0b93",
+  "scope_source": "调用方直接范围合同，以及固定包 requirements、review_scope、constraints 和模型前冻结的 protocol/protocol.json。",
+  "scope": {
+    "source_change": "固定源文件白名单内仅 rules/common/testing.md:52 一行替换；额外历史文档、当前 next-proposal 和未来工作树改动不在审查范围。",
+    "source_diff_sha256": "a5d0b36e480ddfb972eecbfe8d429cd553285da7e56801a7c0bce0359cb26fda",
+    "source_file_sha256": "486be40c8f40875fd6c9a786304956dd16206830de9ef6cd4edb7c477ab343be",
+    "actual_artifacts": 6,
+    "current_trial_junit": 18,
+    "reused_fixture_junit_checked_for_provenance": 28,
+    "raw_main_sessions": 6,
+    "raw_native_child_sessions": 4,
+    "unique_provider_responses": 160,
+    "visible_completed_commands": 155,
+    "planned_trials": 42,
+    "executed_trials": 6,
+    "not_run_trials": 36,
+    "reviewed_prior_round_outcomes": false,
+    "prior_evidence_access": "仅比较复用夹具、预检 JUnit 和程序/输入/预期的字节与来源一致性；未重新审查、合并或重算前六轮结果。"
+  },
+  "axis_status": {
+    "Standards": "PASS",
+    "ActualArtifactSpec": "FAIL",
+    "EvidenceIntegrity": "PASS",
+    "WholePerformance": "NOT RUN"
+  },
+  "standards": {
+    "status": "PASS",
+    "critical_findings": 0,
+    "important_findings": 0,
+    "findings": [],
+    "hard_rule_violations": [],
+    "smell_observations": [],
+    "source_only_spec_status": "PASS",
+    "assessment": "固定第52行以通用语言补足命中、未命中及新增算术/比较/转换的兼容验证要求；仍保留代表性边界、独立预期、有界成本、未影响路径复用、必要独立审查和 Fast Path。未嵌入题目、参数、答案或具体异常名，未增加 AGENTS 内容。七份白名单源文件与冻结快照相符；三份公开 JS 与10403cf逐字相同。源码及报告标准符合性不能替代下述实际产物验收。",
+    "rules_read": [
+      "<BENCH_ROOT>/sources/optimized/rules/01-base.md",
+      "<BENCH_ROOT>/sources/optimized/rules/02-implementation.md",
+      "<BENCH_ROOT>/sources/optimized/rules/07-forbidden.md",
+      "<BENCH_ROOT>/sources/optimized/rules/common/testing.md",
+      "<BENCH_ROOT>/sources/optimized/rules/09-first-principles-adversarial-testing.md"
+    ],
+    "reviewer_prompts": [
+      "<BENCH_ROOT>/sources/optimized/skills/code-review/references/standards-reviewer-prompt.md",
+      "<BENCH_ROOT>/sources/optimized/skills/code-review/references/spec-reviewer-prompt.md"
+    ],
+    "verification_evidence": "读取模型前8项本地检查的退出记录和实际日志、当轮29项公开CLI回归日志及生产依赖安装后的verify日志，均记录通过。43份会话重放及既往RED/GREEN明确为复用证据；本审查未重新执行这些检查。",
+    "checks_not_run": [
+      "本审查未运行 lint、format、测试、构建、模型或行为探针；仅审计已供证据。"
+    ]
+  },
+  "spec": {
+    "axis": "ActualArtifactSpec",
+    "status": "FAIL",
+    "critical_findings": 0,
+    "important_findings": 1,
+    "findings": [
+      {
+        "id": "SPEC-1",
+        "severity": "Important",
+        "title": "原版合法的 Decimal 非成员查询仍被新增浮点比较变成异常",
+        "requirement": "固定包要求继续修复剩余质量回归，并保留必要质量门；protocol/protocol.json 的 quality_acceptance 要求原严格套件及全部适用的预声明检查通过。testing.md:48-53 还要求保留原有合法局部查询的结果、异常与信号，包括未命中路径和新增比较。",
+        "requirement_locations": [
+          {
+            "file": "<BENCH_ROOT>/partial-review-package.json",
+            "field": "requirements"
+          },
+          {
+            "file": "<BENCH_ROOT>/protocol/protocol.json",
+            "field": "quality_acceptance"
+          },
+          {
+            "file": "<BENCH_ROOT>/sources/optimized/rules/common/testing.md",
+            "line": 52
+          }
+        ],
+        "implementation_locations": [
+          {
+            "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/runs/more-itertools-1247/gpt-fixed-r1/more_itertools/more.py",
+            "line": 2454,
+            "end_line": 2455
+          },
+          {
+            "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/runs/more-itertools-1247/gpt-fixed-r2/more_itertools/more.py",
+            "line": 2466
+          },
+          {
+            "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/runs/more-itertools-1247/gpt-fixed-r2/more_itertools/more.py",
+            "line": 2497,
+            "end_line": 2498
+          }
+        ],
+        "trigger": {
+          "ascending": {
+            "range_arguments": [
+              "1",
+              "2",
+              "0.1"
+            ],
+            "query": "Decimal(0)"
+          },
+          "descending": {
+            "range_arguments": [
+              "1",
+              "0",
+              "-0.1"
+            ],
+            "query": "Decimal(2)"
+          },
+          "context": "先按原环境构造 range，再在 localcontext 中启用 traps[FloatOperation]=True，分别执行 contains 和 index。",
+          "expected": {
+            "contains": "False",
+            "index": "ValueError"
+          },
+          "observed_both_final_candidate_artifacts": "四项均抛 FloatOperation；两份候选分别0/4。",
+          "controls": "同一程序/输入/预期在父版、上游参考以及同期 main 两份产物全部4/4通过；同期上一候选两份同样0/4。"
+        },
+        "evidence": [
+          "<BENCH_ROOT>/compatibility-probes.cjs",
+          "<BENCH_ROOT>/protocol/compatibility-amendment.json",
+          "<BENCH_ROOT>/critical-compatibility-probes.json",
+          "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/change.patch",
+          "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/change.patch"
+        ],
+        "explanation": "R1先用 start + 0*step 把原整数起点变为浮点，再与 Decimal 查询比较；R2将浮点范围的查询交给搜索辅助函数，在其 first 与 Decimal 查询的顺序比较处触发信号。原版先以原起点和查询作可合法短路的比较，非成员无需进入这些浮点比较。contains 仅捕获 ValueError，新增信号会直接外泄。",
+        "impact": "两份本轮产物虽通过原严格套件和原42项，仍改变已支持合法查询的异常/信号契约，综合质量为0/2，用户要求的剩余质量修复未达成。",
+        "attribution": "这是实际产物相对库父版的兼容性回归，且本轮未解决。同期55fc8ea产物也有此失败；没有把它说成36规则相对55新引入的缺陷，也没有从本实验推断规则修改的因果效果。",
+        "smallest_correction": "保持浮点一致性修复及所有已有质量门，同时保留这些原版合法查询的短路、结果与信号契约；验证需分别选择查询值类型和可配置信号上下文的代表性边界。任何后续修订应在新冻结产物上验证，不得改动本轮补丁或评分。"
+      }
+    ],
+    "original_strict_suite_candidate": {
+      "passed": 2,
+      "total": 2
+    },
+    "original_42_checks_candidate": {
+      "passed_artifacts": 2,
+      "total_artifacts": 2
+    },
+    "all_46_plus_original_suite_candidate": {
+      "passed_artifacts": 0,
+      "total_artifacts": 2
+    },
+    "measured_stage_matrix": [
+      {
+        "version": "parent",
+        "quality": {
+          "passed": 16,
+          "total": 16
+        },
+        "cost": {
+          "passed": 0,
+          "total": 4
+        },
+        "context": {
+          "passed": 12,
+          "total": 12
+        },
+        "promotion": {
+          "passed": 4,
+          "total": 10
+        },
+        "compatibility": {
+          "passed": 4,
+          "total": 4
+        }
+      },
+      {
+        "version": "upstream_reference",
+        "quality": {
+          "passed": 0,
+          "total": 16
+        },
+        "cost": {
+          "passed": 0,
+          "total": 4
+        },
+        "context": {
+          "passed": 2,
+          "total": 12
+        },
+        "promotion": {
+          "passed": 4,
+          "total": 10
+        },
+        "compatibility": {
+          "passed": 4,
+          "total": 4
+        }
+      },
+      {
+        "version": "gpt-cew-r1",
+        "quality": {
+          "passed": 8,
+          "total": 16
+        },
+        "cost": {
+          "passed": 0,
+          "total": 4
+        },
+        "context": {
+          "passed": 6,
+          "total": 12
+        },
+        "promotion": {
+          "passed": 4,
+          "total": 10
+        },
+        "compatibility": {
+          "passed": 4,
+          "total": 4
+        }
+      },
+      {
+        "version": "gpt-fixed-r2",
+        "quality": {
+          "passed": 16,
+          "total": 16
+        },
+        "cost": {
+          "passed": 4,
+          "total": 4
+        },
+        "context": {
+          "passed": 12,
+          "total": 12
+        },
+        "promotion": {
+          "passed": 10,
+          "total": 10
+        },
+        "compatibility": {
+          "passed": 0,
+          "total": 4
+        }
+      },
+      {
+        "version": "gpt-trim-r1",
+        "quality": {
+          "passed": 16,
+          "total": 16
+        },
+        "cost": {
+          "passed": 4,
+          "total": 4
+        },
+        "context": {
+          "passed": 12,
+          "total": 12
+        },
+        "promotion": {
+          "passed": 10,
+          "total": 10
+        },
+        "compatibility": {
+          "passed": 0,
+          "total": 4
+        }
+      },
+      {
+        "version": "gpt-trim-r2",
+        "quality": {
+          "passed": 16,
+          "total": 16
+        },
+        "cost": {
+          "passed": 4,
+          "total": 4
+        },
+        "context": {
+          "passed": 12,
+          "total": 12
+        },
+        "promotion": {
+          "passed": 10,
+          "total": 10
+        },
+        "compatibility": {
+          "passed": 0,
+          "total": 4
+        }
+      },
+      {
+        "version": "gpt-cew-r2",
+        "quality": {
+          "passed": 8,
+          "total": 16
+        },
+        "cost": {
+          "passed": 0,
+          "total": 4
+        },
+        "context": {
+          "passed": 6,
+          "total": 12
+        },
+        "promotion": {
+          "passed": 4,
+          "total": 10
+        },
+        "compatibility": {
+          "passed": 4,
+          "total": 4
+        }
+      },
+      {
+        "version": "gpt-fixed-r1",
+        "quality": {
+          "passed": 16,
+          "total": 16
+        },
+        "cost": {
+          "passed": 4,
+          "total": 4
+        },
+        "context": {
+          "passed": 12,
+          "total": 12
+        },
+        "promotion": {
+          "passed": 10,
+          "total": 10
+        },
+        "compatibility": {
+          "passed": 0,
+          "total": 4
+        }
+      }
+    ],
+    "required_other_tasks": "其余六题36次均NOT RUN；翻译检查没有产物，NOT RUN。该缺口是预声明质量停止的结果，不作为第二条重复 Important。",
+    "checks_not_run": [
+      "未产生或执行任何额外行为用例、模型复跑、测试复跑；结论来自已保存的四项真实结果、统一对照及源代码静态核对。"
+    ]
+  },
+  "evidence_integrity": {
+    "status": "PASS",
+    "critical_findings": 0,
+    "important_findings": 0,
+    "findings": [],
+    "assessment": "公开汇总可追溯到六份原始补丁/receipt、18份本轮JUnit、10份原始会话及368条统一探针结果。当前所有哈希和计量一致，失败与36次未运行保留，未将源码审查通过冒充实际质量通过。",
+    "immutable_package": {
+      "checked_files": 28,
+      "all_hashes_match": true,
+      "policy_diff_matches_fixed_git_diff": true,
+      "agents_net_additions": 0
+    },
+    "frozen_protocol": {
+      "frozen_at": "2026-10-18T20:01:16.560Z",
+      "first_trial_started_at": "2026-10-18T20:05:57.365Z",
+      "latest_trial_receipt_finished_at": "2026-10-18T20:21:25.723Z",
+      "critical_gate_at": "2026-10-18T20:21:52.116Z",
+      "controller_checks": [
+        {
+          "path": "quality-probes.cjs",
+          "sha256": "ae0aa64c7cd51853ba5f85a412ef2983f3086b240b3dce9fd58bfe4198b3fb11",
+          "matches_frozen": true
+        },
+        {
+          "path": "cost-probes.cjs",
+          "sha256": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262",
+          "matches_frozen": true
+        },
+        {
+          "path": "context-probes.cjs",
+          "sha256": "e8bb0dbd5e07ea6f80ed1dfa031c098a71ebf263494736435d3c530cfc39519b",
+          "matches_frozen": true
+        },
+        {
+          "path": "promotion-probes.cjs",
+          "sha256": "b9c24a9d58c40e90f635ea2ca15ce9d9c82925eeb3945197c9427b3cf6481786",
+          "matches_frozen": true
+        },
+        {
+          "path": "compatibility-probes.cjs",
+          "sha256": "f83e94c4f8e04c039e5edd7c810306c8c2cf04628e85e67c3a82a8e9e27aecb3",
+          "matches_frozen": true
+        },
+        {
+          "path": "i18n-probes.cjs",
+          "sha256": "5b8dc2ac5ea1142c5690930a97f386c2a9bb9f34989eb4802fe213354b1cfe55",
+          "matches_frozen": true
+        },
+        {
+          "path": "run-final-benchmark.cjs",
+          "sha256": "b478e95fadce140a2e0164f104c9acc09e08600e9a58df72338661af270565bb",
+          "matches_frozen": true
+        },
+        {
+          "path": "account-usage.cjs",
+          "sha256": "4668e9dd1a425f35eb09f32f0760aec8acb680c7198da0ab7c0d7d1cd89ab334",
+          "matches_frozen": true
+        },
+        {
+          "path": "sources/optimized/docs/eval/tools/run-trial.js",
+          "sha256": "99deae2fd88616645e89a03754b20594ab9e7f6e91bfccb0aff8dc62b48507cc",
+          "matches_frozen": true
+        },
+        {
+          "path": "sources/optimized/docs/eval/tools/codex-usage.js",
+          "sha256": "c96e966575b7d1145a04196f173855c9e282640b253552ce5bd5c9a3cc7b2033",
+          "matches_frozen": true
+        },
+        {
+          "path": "tasks.validated.json",
+          "sha256": "dc08f7afa2c1274473b789e27ad5cdab473edf086268cc38cf4d26c66b08adc7",
+          "matches_frozen": true
+        }
+      ],
+      "all_original_42_programs_inputs_and_oracles_byte_identical_to_prior": true,
+      "four_new_program_inputs_and_oracles_identical_to_actual_supported_sixth_checks": true,
+      "prior_four_evidence_sha256": "5604dd40dff90c0c2e09cf37b72bbc48d7d367461f9c3dc6273d43a5d891f84f",
+      "quality_gate": {
+        "original_driver": "<BENCH_ROOT>/run-final-benchmark.cjs",
+        "locations": "124-162：等待两组关键任务块结束，运行全部五个冻结控制器，严格要求两份候选原套件和16+4+12+10+4检查通过；失败写36次NOT RUN并设置exitCode=2。",
+        "result": "FAIL",
+        "original_driver_exit_code_supplied_by_caller": 2,
+        "source_declared_failure_exit_code": 2,
+        "persisted_evidence": [
+          "<BENCH_ROOT>/benchmark.log",
+          "<BENCH_ROOT>/experiment.json",
+          "<BENCH_ROOT>/progress.json"
+        ],
+        "all_six_agent_exits": 0,
+        "agent_timeouts": 0,
+        "intervention": "所供证据与原调度器预先冻结失败分支相符；本轮不是第六轮的事后追加检查、人为停驱动器或杀模型。审查没有重新运行进程来取得退出码。"
+      }
+    },
+    "fixture_provenance": {
+      "tasks": 7,
+      "manifest_sha256": "dc08f7afa2c1274473b789e27ad5cdab473edf086268cc38cf4d26c66b08adc7",
+      "byte_identical_to_declared_reuse_source": true,
+      "reuse_source": "/private/tmp/cew-pr62-quality-final-20261018-VKCUnt",
+      "validation_controller_sha256": "cac9dd2e698ed79aa7f18901ec2e8784a31af12ea8323e413c1f211af32f4136",
+      "reused_junit_checked": 28,
+      "all_reused_report_bytes_match_source": true,
+      "all_report_counts_and_fixture_patches_match_public": true,
+      "repeated_current_trial_baseline_target_full_are_fresh": true,
+      "note": "预检复用不冒充本轮重新运行；本轮数值任务各次均有新鲜基线、目标和完整报告。"
+    },
+    "actual_patch_receipt_and_junit_audit": [
+      {
+        "trial": "more-itertools-1247--gpt-cew--r1",
+        "patch_sha256": "d4176d833301995eceacb79155348f78343331d82a339b61c2e5a8a1b4498d0a",
+        "patch_matches_receipt": true,
+        "patch_matches_checkout": true,
+        "patch_matches_public": true,
+        "agent_log_sha256": "e8a83962709eee6cc467941a4eeca73475376814167e63c0f3e04ada55635b23",
+        "agent_log_matches_receipt": true,
+        "receipt_matches_public_after_path_normalization": true,
+        "result_matches_public_after_path_normalization_except_enriched_accounting": true,
+        "runner_usage_accounting_matches_public": true,
+        "agent_exit": 0,
+        "timed_out": false,
+        "duration_s": 112.4,
+        "runner_total_s": 128.828,
+        "packages_before_hash_equals_after": true,
+        "resolved": true,
+        "tests_modified": false,
+        "new_failures": [],
+        "reports": [
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/results/more-itertools-1247/gpt-cew-r1/base-full.xml",
+            "sha256": "29ceaa08ba97f90921567b2c7912be839de0b70211c0c69f4f78f3cae3640ad4",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 737,
+              "failed": 2,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 1,
+            "report_error": "",
+            "failed_names": [
+              "tests.test_more.NumericRangeTests::test_contains_items_with_inexact_step",
+              "tests.test_more.NumericRangeTests::test_len_matches_iteration"
+            ],
+            "suite_timestamp": "2026-10-19T04:05:58.148937+08:00",
+            "case_count": 739
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/results/more-itertools-1247/gpt-cew-r1/target.xml",
+            "sha256": "a4a88fb304cd133fc9e9d0f1d7fa5afac4242da08477b3a77625fd1833af9302",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 594,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:07:57.289797+08:00",
+            "case_count": 594
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/results/more-itertools-1247/gpt-cew-r1/after-full.xml",
+            "sha256": "beb408c665a04cca103ab8e0cc63594b4f16fd12cd0f50ae3f2c51aebe7eac9c",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 739,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:07:59.822941+08:00",
+            "case_count": 739
+          }
+        ]
+      },
+      {
+        "trial": "more-itertools-1247--gpt-fixed--r2",
+        "patch_sha256": "6f4a9b7ecbb138f943ab0967bdb1293ad5a343d33ff82512f9d9bcd0026032a6",
+        "patch_matches_receipt": true,
+        "patch_matches_checkout": true,
+        "patch_matches_public": true,
+        "agent_log_sha256": "0e9dab71767360cc11b9cd58dc3e089d9f3bf1123d4d0f50c25fc63e20274096",
+        "agent_log_matches_receipt": true,
+        "receipt_matches_public_after_path_normalization": true,
+        "result_matches_public_after_path_normalization_except_enriched_accounting": true,
+        "runner_usage_accounting_matches_public": true,
+        "agent_exit": 0,
+        "timed_out": false,
+        "duration_s": 393.4,
+        "runner_total_s": 409.416,
+        "packages_before_hash_equals_after": true,
+        "resolved": true,
+        "tests_modified": false,
+        "new_failures": [],
+        "reports": [
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/results/more-itertools-1247/gpt-fixed-r2/base-full.xml",
+            "sha256": "b36996ec55bc28b4c62d31e6a39dba12b9b294abc2186e7ae8deb27abd6b1d7a",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 737,
+              "failed": 2,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 1,
+            "report_error": "",
+            "failed_names": [
+              "tests.test_more.NumericRangeTests::test_contains_items_with_inexact_step",
+              "tests.test_more.NumericRangeTests::test_len_matches_iteration"
+            ],
+            "suite_timestamp": "2026-10-19T04:05:58.539251+08:00",
+            "case_count": 739
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/results/more-itertools-1247/gpt-fixed-r2/target.xml",
+            "sha256": "bd1b5ff829ee58c98f78c4216b1775282a1619dbe3e5be60d34cad0ebdb3872d",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 594,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:12:38.324294+08:00",
+            "case_count": 594
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/results/more-itertools-1247/gpt-fixed-r2/after-full.xml",
+            "sha256": "1036a1ed444c94d0b6ef16a9abfc1d28fec39358a3f96b30467991463d16ca11",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 739,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:12:40.909603+08:00",
+            "case_count": 739
+          }
+        ]
+      },
+      {
+        "trial": "more-itertools-1247--gpt-trim--r1",
+        "patch_sha256": "78794faba76f7d09a539bad1933f4ca2cd59811fd4b7860404fe5e758637e79b",
+        "patch_matches_receipt": true,
+        "patch_matches_checkout": true,
+        "patch_matches_public": true,
+        "agent_log_sha256": "e7029a966af27b247fc9dae4c89f06c6d732d59f541d68cd31d1566a91ac945b",
+        "agent_log_matches_receipt": true,
+        "receipt_matches_public_after_path_normalization": true,
+        "result_matches_public_after_path_normalization_except_enriched_accounting": true,
+        "runner_usage_accounting_matches_public": true,
+        "agent_exit": 0,
+        "timed_out": false,
+        "duration_s": 424.7,
+        "runner_total_s": 441.037,
+        "packages_before_hash_equals_after": true,
+        "resolved": true,
+        "tests_modified": false,
+        "new_failures": [],
+        "reports": [
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/results/more-itertools-1247/gpt-trim-r1/base-full.xml",
+            "sha256": "3588f63b662961c1407c87889fa6023d91f4cb48f8fec0796f1aa3964cbe8bf3",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 737,
+              "failed": 2,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 1,
+            "report_error": "",
+            "failed_names": [
+              "tests.test_more.NumericRangeTests::test_contains_items_with_inexact_step",
+              "tests.test_more.NumericRangeTests::test_len_matches_iteration"
+            ],
+            "suite_timestamp": "2026-10-19T04:08:07.327126+08:00",
+            "case_count": 739
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/results/more-itertools-1247/gpt-trim-r1/target.xml",
+            "sha256": "2fb5cdf711328da125c1941a51652959533f5432d75c2e8702381013df001315",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 594,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:15:18.773233+08:00",
+            "case_count": 594
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/results/more-itertools-1247/gpt-trim-r1/after-full.xml",
+            "sha256": "9f93e5aee089a4433c2d47191637c0134aa852f4d94b41ffd93982bdc8602cc9",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 739,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:15:21.347462+08:00",
+            "case_count": 739
+          }
+        ]
+      },
+      {
+        "trial": "more-itertools-1247--gpt-trim--r2",
+        "patch_sha256": "9605a8727e187c87be56e7f21c2a5aa58e1f8dbf9de39ac5f2fe92c7df508f75",
+        "patch_matches_receipt": true,
+        "patch_matches_checkout": true,
+        "patch_matches_public": true,
+        "agent_log_sha256": "bc7d0dcc96c77fcabed5530b6f4ccdf45783a90e464845e4d1c23b299440fe72",
+        "agent_log_matches_receipt": true,
+        "receipt_matches_public_after_path_normalization": true,
+        "result_matches_public_after_path_normalization_except_enriched_accounting": true,
+        "runner_usage_accounting_matches_public": true,
+        "agent_exit": 0,
+        "timed_out": false,
+        "duration_s": 281.9,
+        "runner_total_s": 297.919,
+        "packages_before_hash_equals_after": true,
+        "resolved": true,
+        "tests_modified": false,
+        "new_failures": [],
+        "reports": [
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/base-full.xml",
+            "sha256": "9861c3230d229c0ad2144d098848ceb21e97beb8ad6e64fb1d51943a9f9c8cd6",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 737,
+              "failed": 2,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 1,
+            "report_error": "",
+            "failed_names": [
+              "tests.test_more.NumericRangeTests::test_contains_items_with_inexact_step",
+              "tests.test_more.NumericRangeTests::test_len_matches_iteration"
+            ],
+            "suite_timestamp": "2026-10-19T04:12:48.236433+08:00",
+            "case_count": 739
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/target.xml",
+            "sha256": "93b839a6a5d12c583e4ac34efed9667db6f0406631b8cff6b7e9d3ba2cee2833",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 594,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:17:36.746838+08:00",
+            "case_count": 594
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/after-full.xml",
+            "sha256": "9ba01378bb1d7011177fe1a6ab9ba8abfee79b3618f003f3b9b1e7aa2c7ef5f0",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 739,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:17:39.309213+08:00",
+            "case_count": 739
+          }
+        ]
+      },
+      {
+        "trial": "more-itertools-1247--gpt-cew--r2",
+        "patch_sha256": "291c65547cf08bd968be0547fd9a7659379924043ae6516c86d0d3c3be8ee00a",
+        "patch_matches_receipt": true,
+        "patch_matches_checkout": true,
+        "patch_matches_public": true,
+        "agent_log_sha256": "2b556c6873d1f1b6ad86b47c19cbbe361e8d7a1026960f67f63df235329bd7a4",
+        "agent_log_matches_receipt": true,
+        "receipt_matches_public_after_path_normalization": true,
+        "result_matches_public_after_path_normalization_except_enriched_accounting": true,
+        "runner_usage_accounting_matches_public": true,
+        "agent_exit": 0,
+        "timed_out": false,
+        "duration_s": 130.4,
+        "runner_total_s": 146.208,
+        "packages_before_hash_equals_after": true,
+        "resolved": true,
+        "tests_modified": false,
+        "new_failures": [],
+        "reports": [
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/results/more-itertools-1247/gpt-cew-r2/base-full.xml",
+            "sha256": "8ed6d8332667e4e68166954bca8de849faf294772f8d242956f5018f1be2a837",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 737,
+              "failed": 2,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 1,
+            "report_error": "",
+            "failed_names": [
+              "tests.test_more.NumericRangeTests::test_contains_items_with_inexact_step",
+              "tests.test_more.NumericRangeTests::test_len_matches_iteration"
+            ],
+            "suite_timestamp": "2026-10-19T04:17:46.523521+08:00",
+            "case_count": 739
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/results/more-itertools-1247/gpt-cew-r2/target.xml",
+            "sha256": "8558a04a9d38b0f77e29d7f9f1d60eb84f8efa06746051cccf5efc3a9a50e03f",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 594,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:20:03.249071+08:00",
+            "case_count": 594
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/results/more-itertools-1247/gpt-cew-r2/after-full.xml",
+            "sha256": "2edf6adbe70f1d10afa8e0e3bbed2b7314b3a4b912e561299541ec32330e876d",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 739,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:20:05.799378+08:00",
+            "case_count": 739
+          }
+        ]
+      },
+      {
+        "trial": "more-itertools-1247--gpt-fixed--r1",
+        "patch_sha256": "9dda5d9092bc7f5777ff353e6b16db62f29f84a249550a1272f5e2459749304e",
+        "patch_matches_receipt": true,
+        "patch_matches_checkout": true,
+        "patch_matches_public": true,
+        "agent_log_sha256": "38f46414165e475a5656bef87935130107c775621cb363a8253602c1242ca474",
+        "agent_log_matches_receipt": true,
+        "receipt_matches_public_after_path_normalization": true,
+        "result_matches_public_after_path_normalization_except_enriched_accounting": true,
+        "runner_usage_accounting_matches_public": true,
+        "agent_exit": 0,
+        "timed_out": false,
+        "duration_s": 341.9,
+        "runner_total_s": 357.736,
+        "packages_before_hash_equals_after": true,
+        "resolved": true,
+        "tests_modified": false,
+        "new_failures": [],
+        "reports": [
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/results/more-itertools-1247/gpt-fixed-r1/base-full.xml",
+            "sha256": "541ac7e259cb24acff544657dc50c533649e6912aa45c549de7455b3cf00afa6",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 737,
+              "failed": 2,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 1,
+            "report_error": "",
+            "failed_names": [
+              "tests.test_more.NumericRangeTests::test_contains_items_with_inexact_step",
+              "tests.test_more.NumericRangeTests::test_len_matches_iteration"
+            ],
+            "suite_timestamp": "2026-10-19T04:15:28.668309+08:00",
+            "case_count": 739
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/results/more-itertools-1247/gpt-fixed-r1/target.xml",
+            "sha256": "feb8e4915b8a660cbe88e1a4e66949e21865982b795c9c11ab558b4a00e1b35e",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 594,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:21:16.963228+08:00",
+            "case_count": 594
+          },
+          {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/results/more-itertools-1247/gpt-fixed-r1/after-full.xml",
+            "sha256": "6860e49588f0f512b4eb1e23e571395677515ba20a5ff288271192a229c4a63c",
+            "hash_matches_public": true,
+            "counts": {
+              "passed": 739,
+              "failed": 0,
+              "errors": 0,
+              "skipped": 0
+            },
+            "counts_match_result": true,
+            "exit": 0,
+            "report_error": "",
+            "failed_names": [],
+            "suite_timestamp": "2026-10-19T04:21:19.560240+08:00",
+            "case_count": 739
+          }
+        ]
+      }
+    ],
+    "junit_assessment": "逐testcase解析，不采信异常累加的suite tests属性。六次均为基线737通过/2失败、目标594通过/0失败、修后完整739通过/0失败；错误和跳过均0。报告哈希均与公开证据一致，六次给定测试逐字等于指定参考测试，实际改动仅more_itertools/more.py。",
+    "source_and_installation_audit": {
+      "sources": [
+        {
+          "cell": "gpt-cew",
+          "sha": "e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5",
+          "archive_hash_match": true,
+          "tracked_files": 144,
+          "mismatches": [],
+          "policies": [
+            {
+              "path": "rules/common/testing.md",
+              "sha256": "e349934f4e97c2576a68ce3d123a52471d877612e2e7967c841c0c4164560b4f",
+              "all_match": true
+            },
+            {
+              "path": "skills/using-superpowers/SKILL.md",
+              "sha256": "294cf51d32aabd143bbae2b401d5b7f48d883336d1076ef2ba00af922c3e2faf",
+              "all_match": true
+            },
+            {
+              "path": "skills/code-review/SKILL.md",
+              "sha256": "0086962bdfba5f3d2ca94897dfb3be8d2b2fea366eb268bae50fb3b3f1e4fbb0",
+              "all_match": true
+            },
+            {
+              "path": "skills/code-review/references/spec-reviewer-prompt.md",
+              "sha256": "6afb8f49fce33ba1a18ceea28f40bd0f2f33c2f1f50938d4db508f3fc820a33d",
+              "all_match": true
+            }
+          ],
+          "agents_hash_match": true,
+          "config_hash_match": true
+        },
+        {
+          "cell": "gpt-trim",
+          "sha": "55fc8ea534e01676ebd97958033374e5143edb01",
+          "archive_hash_match": true,
+          "tracked_files": 264,
+          "mismatches": [],
+          "policies": [
+            {
+              "path": "rules/common/testing.md",
+              "sha256": "8432441995abcbe1a340932a4fcb02c307892b5f52c082a9dcec329564934982",
+              "all_match": true
+            },
+            {
+              "path": "skills/using-superpowers/SKILL.md",
+              "sha256": "27d1fffd1f6f21aac2f95fc092cf2b3598c1ffcaef5ae1f858614487bbcf9929",
+              "all_match": true
+            },
+            {
+              "path": "skills/using-superpowers/references/fast-path.md",
+              "sha256": "873589a03e8cb99d5412764201fcf05ced5d7c2760f5ee61d6a60b5f73cd0eb3",
+              "all_match": true
+            },
+            {
+              "path": "skills/code-review/SKILL.md",
+              "sha256": "ce8f298cc3b8bedadea506692bc191f8e2787a6b5d65bee8332e8b1ec9f871ab",
+              "all_match": true
+            },
+            {
+              "path": "skills/code-review/references/spec-reviewer-prompt.md",
+              "sha256": "f9a3bbf8ccff053ce9006a8e432c455b3492185ea0e1d5763373cc98cdde3be0",
+              "all_match": true
+            }
+          ],
+          "agents_hash_match": true,
+          "config_hash_match": true
+        },
+        {
+          "cell": "gpt-fixed",
+          "sha": "36ccc9018247bed8892948099b79132a511f0b93",
+          "archive_hash_match": true,
+          "tracked_files": 284,
+          "mismatches": [],
+          "policies": [
+            {
+              "path": "rules/common/testing.md",
+              "sha256": "486be40c8f40875fd6c9a786304956dd16206830de9ef6cd4edb7c477ab343be",
+              "all_match": true
+            },
+            {
+              "path": "skills/using-superpowers/SKILL.md",
+              "sha256": "27d1fffd1f6f21aac2f95fc092cf2b3598c1ffcaef5ae1f858614487bbcf9929",
+              "all_match": true
+            },
+            {
+              "path": "skills/using-superpowers/references/fast-path.md",
+              "sha256": "873589a03e8cb99d5412764201fcf05ced5d7c2760f5ee61d6a60b5f73cd0eb3",
+              "all_match": true
+            },
+            {
+              "path": "skills/code-review/SKILL.md",
+              "sha256": "ce8f298cc3b8bedadea506692bc191f8e2787a6b5d65bee8332e8b1ec9f871ab",
+              "all_match": true
+            },
+            {
+              "path": "skills/code-review/references/spec-reviewer-prompt.md",
+              "sha256": "f9a3bbf8ccff053ce9006a8e432c455b3492185ea0e1d5763373cc98cdde3be0",
+              "all_match": true
+            }
+          ],
+          "agents_hash_match": true,
+          "config_hash_match": true
+        }
+      ],
+      "trials": [
+        {
+          "trial": "more-itertools-1247--gpt-cew--r1",
+          "all_installed_policies_match": true,
+          "agents_unchanged": true,
+          "execution_config_equal": true,
+          "only_added_projects": true,
+          "unchanged_test_bytes_match_reference": true,
+          "source_baseline_matches_parent": true,
+          "changed_files": [
+            "more_itertools/more.py"
+          ],
+          "refs": [
+            "refs/heads/work"
+          ]
+        },
+        {
+          "trial": "more-itertools-1247--gpt-cew--r2",
+          "all_installed_policies_match": true,
+          "agents_unchanged": true,
+          "execution_config_equal": true,
+          "only_added_projects": true,
+          "unchanged_test_bytes_match_reference": true,
+          "source_baseline_matches_parent": true,
+          "changed_files": [
+            "more_itertools/more.py"
+          ],
+          "refs": [
+            "refs/heads/work"
+          ]
+        },
+        {
+          "trial": "more-itertools-1247--gpt-trim--r1",
+          "all_installed_policies_match": true,
+          "agents_unchanged": true,
+          "execution_config_equal": true,
+          "only_added_projects": true,
+          "unchanged_test_bytes_match_reference": true,
+          "source_baseline_matches_parent": true,
+          "changed_files": [
+            "more_itertools/more.py"
+          ],
+          "refs": [
+            "refs/heads/work"
+          ]
+        },
+        {
+          "trial": "more-itertools-1247--gpt-trim--r2",
+          "all_installed_policies_match": true,
+          "agents_unchanged": true,
+          "execution_config_equal": true,
+          "only_added_projects": true,
+          "unchanged_test_bytes_match_reference": true,
+          "source_baseline_matches_parent": true,
+          "changed_files": [
+            "more_itertools/more.py"
+          ],
+          "refs": [
+            "refs/heads/work"
+          ]
+        },
+        {
+          "trial": "more-itertools-1247--gpt-fixed--r1",
+          "all_installed_policies_match": true,
+          "agents_unchanged": true,
+          "execution_config_equal": true,
+          "only_added_projects": true,
+          "unchanged_test_bytes_match_reference": true,
+          "source_baseline_matches_parent": true,
+          "changed_files": [
+            "more_itertools/more.py"
+          ],
+          "refs": [
+            "refs/heads/work"
+          ]
+        },
+        {
+          "trial": "more-itertools-1247--gpt-fixed--r2",
+          "all_installed_policies_match": true,
+          "agents_unchanged": true,
+          "execution_config_equal": true,
+          "only_added_projects": true,
+          "unchanged_test_bytes_match_reference": true,
+          "source_baseline_matches_parent": true,
+          "changed_files": [
+            "more_itertools/more.py"
+          ],
+          "refs": [
+            "refs/heads/work"
+          ]
+        }
+      ],
+      "dependencies": [
+        {
+          "path": "<BENCH_ROOT>/venvs/more-itertools",
+          "packages": [
+            [
+              "hypothesis",
+              "6.170.1"
+            ],
+            [
+              "iniconfig",
+              "2.3.1"
+            ],
+            [
+              "more-itertools",
+              "11.2.1"
+            ],
+            [
+              "packaging",
+              "26.3"
+            ],
+            [
+              "pip",
+              "26.2.1"
+            ],
+            [
+              "pluggy",
+              "1.7.0"
+            ],
+            [
+              "Pygments",
+              "2.21.0"
+            ],
+            [
+              "pytest",
+              "9.1.1"
+            ],
+            [
+              "sortedcontainers",
+              "2.4.0"
+            ]
+          ],
+          "editable": [
+            {
+              "path": "more_itertools.pth",
+              "content": "/private/tmp/cew-eval/repos/more-itertools"
+            }
+          ],
+          "pyvenv_cfg": [
+            "home = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin",
+            "include-system-site-packages = false",
+            "version = 3.13.12",
+            "executable = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+            "command = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3 -m venv /tmp/cew-eval/venvs/more-itertools"
+          ],
+          "python_link": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13"
+        },
+        {
+          "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/venvs/more-itertools",
+          "packages": [
+            [
+              "hypothesis",
+              "6.170.1"
+            ],
+            [
+              "iniconfig",
+              "2.3.1"
+            ],
+            [
+              "more-itertools",
+              "11.2.1"
+            ],
+            [
+              "packaging",
+              "26.3"
+            ],
+            [
+              "pip",
+              "26.2.1"
+            ],
+            [
+              "pluggy",
+              "1.7.0"
+            ],
+            [
+              "Pygments",
+              "2.21.0"
+            ],
+            [
+              "pytest",
+              "9.1.1"
+            ],
+            [
+              "sortedcontainers",
+              "2.4.0"
+            ]
+          ],
+          "editable": [
+            {
+              "path": "more_itertools.pth",
+              "content": "/private/tmp/cew-eval/repos/more-itertools"
+            }
+          ],
+          "pyvenv_cfg": [
+            "home = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin",
+            "include-system-site-packages = false",
+            "version = 3.13.12",
+            "executable = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+            "command = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3 -m venv /tmp/cew-eval/venvs/more-itertools"
+          ],
+          "python_link": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13"
+        },
+        {
+          "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/venvs/more-itertools",
+          "packages": [
+            [
+              "hypothesis",
+              "6.170.1"
+            ],
+            [
+              "iniconfig",
+              "2.3.1"
+            ],
+            [
+              "more-itertools",
+              "11.2.1"
+            ],
+            [
+              "packaging",
+              "26.3"
+            ],
+            [
+              "pip",
+              "26.2.1"
+            ],
+            [
+              "pluggy",
+              "1.7.0"
+            ],
+            [
+              "Pygments",
+              "2.21.0"
+            ],
+            [
+              "pytest",
+              "9.1.1"
+            ],
+            [
+              "sortedcontainers",
+              "2.4.0"
+            ]
+          ],
+          "editable": [
+            {
+              "path": "more_itertools.pth",
+              "content": "/private/tmp/cew-eval/repos/more-itertools"
+            }
+          ],
+          "pyvenv_cfg": [
+            "home = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin",
+            "include-system-site-packages = false",
+            "version = 3.13.12",
+            "executable = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+            "command = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3 -m venv /tmp/cew-eval/venvs/more-itertools"
+          ],
+          "python_link": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13"
+        },
+        {
+          "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/venvs/more-itertools",
+          "packages": [
+            [
+              "hypothesis",
+              "6.170.1"
+            ],
+            [
+              "iniconfig",
+              "2.3.1"
+            ],
+            [
+              "more-itertools",
+              "11.2.1"
+            ],
+            [
+              "packaging",
+              "26.3"
+            ],
+            [
+              "pip",
+              "26.2.1"
+            ],
+            [
+              "pluggy",
+              "1.7.0"
+            ],
+            [
+              "Pygments",
+              "2.21.0"
+            ],
+            [
+              "pytest",
+              "9.1.1"
+            ],
+            [
+              "sortedcontainers",
+              "2.4.0"
+            ]
+          ],
+          "editable": [
+            {
+              "path": "more_itertools.pth",
+              "content": "/private/tmp/cew-eval/repos/more-itertools"
+            }
+          ],
+          "pyvenv_cfg": [
+            "home = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin",
+            "include-system-site-packages = false",
+            "version = 3.13.12",
+            "executable = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+            "command = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3 -m venv /tmp/cew-eval/venvs/more-itertools"
+          ],
+          "python_link": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13"
+        },
+        {
+          "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/venvs/more-itertools",
+          "packages": [
+            [
+              "hypothesis",
+              "6.170.1"
+            ],
+            [
+              "iniconfig",
+              "2.3.1"
+            ],
+            [
+              "more-itertools",
+              "11.2.1"
+            ],
+            [
+              "packaging",
+              "26.3"
+            ],
+            [
+              "pip",
+              "26.2.1"
+            ],
+            [
+              "pluggy",
+              "1.7.0"
+            ],
+            [
+              "Pygments",
+              "2.21.0"
+            ],
+            [
+              "pytest",
+              "9.1.1"
+            ],
+            [
+              "sortedcontainers",
+              "2.4.0"
+            ]
+          ],
+          "editable": [
+            {
+              "path": "more_itertools.pth",
+              "content": "/private/tmp/cew-eval/repos/more-itertools"
+            }
+          ],
+          "pyvenv_cfg": [
+            "home = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin",
+            "include-system-site-packages = false",
+            "version = 3.13.12",
+            "executable = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+            "command = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3 -m venv /tmp/cew-eval/venvs/more-itertools"
+          ],
+          "python_link": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13"
+        },
+        {
+          "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/venvs/more-itertools",
+          "packages": [
+            [
+              "hypothesis",
+              "6.170.1"
+            ],
+            [
+              "iniconfig",
+              "2.3.1"
+            ],
+            [
+              "more-itertools",
+              "11.2.1"
+            ],
+            [
+              "packaging",
+              "26.3"
+            ],
+            [
+              "pip",
+              "26.2.1"
+            ],
+            [
+              "pluggy",
+              "1.7.0"
+            ],
+            [
+              "Pygments",
+              "2.21.0"
+            ],
+            [
+              "pytest",
+              "9.1.1"
+            ],
+            [
+              "sortedcontainers",
+              "2.4.0"
+            ]
+          ],
+          "editable": [
+            {
+              "path": "more_itertools.pth",
+              "content": "/private/tmp/cew-eval/repos/more-itertools"
+            }
+          ],
+          "pyvenv_cfg": [
+            "home = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin",
+            "include-system-site-packages = false",
+            "version = 3.13.12",
+            "executable = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+            "command = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3 -m venv /tmp/cew-eval/venvs/more-itertools"
+          ],
+          "python_link": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13"
+        },
+        {
+          "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/venvs/more-itertools",
+          "packages": [
+            [
+              "hypothesis",
+              "6.170.1"
+            ],
+            [
+              "iniconfig",
+              "2.3.1"
+            ],
+            [
+              "more-itertools",
+              "11.2.1"
+            ],
+            [
+              "packaging",
+              "26.3"
+            ],
+            [
+              "pip",
+              "26.2.1"
+            ],
+            [
+              "pluggy",
+              "1.7.0"
+            ],
+            [
+              "Pygments",
+              "2.21.0"
+            ],
+            [
+              "pytest",
+              "9.1.1"
+            ],
+            [
+              "sortedcontainers",
+              "2.4.0"
+            ]
+          ],
+          "editable": [
+            {
+              "path": "more_itertools.pth",
+              "content": "/private/tmp/cew-eval/repos/more-itertools"
+            }
+          ],
+          "pyvenv_cfg": [
+            "home = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin",
+            "include-system-site-packages = false",
+            "version = 3.13.12",
+            "executable = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+            "command = /Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3 -m venv /tmp/cew-eval/venvs/more-itertools"
+          ],
+          "python_link": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13"
+        }
+      ]
+    },
+    "dependency_assessment": "只读比对root与六个独立venv的dist-info元数据、pyvenv.cfg、Python链接和editable路径：版本与包集合一致，Python3.13.12，pytest9.1.1；receipt前后依赖哈希相同。运行器以本轮checkout置于PYTHONPATH首位；探针显式compile各已哈希源码。三组临时HOME执行字段相同，配置变化仅CLI增加当前checkout的trust_level。认证文件未读取。源码检查使用共享现存node_modules；fast-xml-parser5.11.2可定位，生产打包中的规则字节也匹配。",
+    "usage_audit": {
+      "method": "独立解析每份原始会话的session_meta、turn_context、token_usage_record和可见CommandExecution；构建父子闭包，按唯一response_id核对全部计数、会话累计量与原CLI。只导出允许的元数据和命令，不解密或检查隐藏推理。",
+      "sessions": 10,
+      "native_children": 4,
+      "unique_responses": 160,
+      "copied_response_records": 0,
+      "conflicting_response_records": 0,
+      "completed_visible_commands": 155,
+      "all_raw_session_hashes_match_public": true,
+      "all_raw_commands_match_public_after_root_path_normalization": true,
+      "all_usage_matches_raw_runner_receipt_and_public": true,
+      "all_cli_root_ids_match": true,
+      "all_sessions_model": "gpt-6.1-sol",
+      "all_sessions_effort": "high",
+      "all_sessions_cli_version": "0.160.1",
+      "rows": [
+        {
+          "trial": "more-itertools-1247--gpt-cew--r1",
+          "cell": "gpt-cew",
+          "run": 1,
+          "root_id": "01a1509f-135f-7e80-abab-c75146c9a28e",
+          "root_matches_cli": true,
+          "normal_cli_completions": 1,
+          "unique_responses": 10,
+          "copied_response_records": 0,
+          "usage": {
+            "input_tokens": 318280,
+            "cached_input_tokens": 286720,
+            "output_tokens": 4787,
+            "reasoning_output_tokens": 2103
+          },
+          "parent": {
+            "input_tokens": 318280,
+            "cached_input_tokens": 286720,
+            "output_tokens": 4787,
+            "reasoning_output_tokens": 2103
+          },
+          "child": {
+            "input_tokens": 0,
+            "cached_input_tokens": 0,
+            "output_tokens": 0,
+            "reasoning_output_tokens": 0
+          },
+          "usage_all_matches": true,
+          "raw_cli_all_matches": true,
+          "raw_cli_scope": "whole_family",
+          "public_response_ids_match": true,
+          "public_response_counters_match": true,
+          "sessions": [
+            {
+              "id": "01a1509f-135f-7e80-abab-c75146c9a28e",
+              "parent": null,
+              "file": "2026/10/19/rollout-2026-10-19T04-06-05-01a1509f-135f-7e80-abab-c75146c9a28e.jsonl",
+              "sha256": "09c4f024b16f5b4c3acb454e07fe2e37fa3f1c44530a9e0af1bf27760f0b9edc",
+              "sha256_matches_public": true,
+              "commands": 15,
+              "commands_match_public": true,
+              "models": [
+                "gpt-6.1-sol"
+              ],
+              "efforts": [
+                "high"
+              ],
+              "last_completion": [
+                "task_complete",
+                "2026-10-18T20:07:55.651Z"
+              ],
+              "own_usage": {
+                "input_tokens": 318280,
+                "cached_input_tokens": 286720,
+                "output_tokens": 4787,
+                "reasoning_output_tokens": 2103
+              },
+              "requests": 10,
+              "cumulative_matches": true
+            }
+          ],
+          "errors": []
+        },
+        {
+          "trial": "more-itertools-1247--gpt-fixed--r2",
+          "cell": "gpt-fixed",
+          "run": 2,
+          "root_id": "01a1509f-135f-72d2-8566-f7c5927e709e",
+          "root_matches_cli": true,
+          "normal_cli_completions": 1,
+          "unique_responses": 39,
+          "copied_response_records": 0,
+          "usage": {
+            "input_tokens": 1532859,
+            "cached_input_tokens": 1461504,
+            "output_tokens": 21583,
+            "reasoning_output_tokens": 10221
+          },
+          "parent": {
+            "input_tokens": 735024,
+            "cached_input_tokens": 699136,
+            "output_tokens": 14375,
+            "reasoning_output_tokens": 7182
+          },
+          "child": {
+            "input_tokens": 797835,
+            "cached_input_tokens": 762368,
+            "output_tokens": 7208,
+            "reasoning_output_tokens": 3039
+          },
+          "usage_all_matches": true,
+          "raw_cli_all_matches": true,
+          "raw_cli_scope": "parent_only",
+          "public_response_ids_match": true,
+          "public_response_counters_match": true,
+          "sessions": [
+            {
+              "id": "01a1509f-135f-72d2-8566-f7c5927e709e",
+              "parent": null,
+              "file": "2026/10/19/rollout-2026-10-19T04-06-05-01a1509f-135f-72d2-8566-f7c5927e709e.jsonl",
+              "sha256": "195b1ee63580d24737f3cbff31b46d5a7bbeb0d14f33e17e91cd1294ec4a9739",
+              "sha256_matches_public": true,
+              "commands": 19,
+              "commands_match_public": true,
+              "models": [
+                "gpt-6.1-sol"
+              ],
+              "efforts": [
+                "high"
+              ],
+              "last_completion": [
+                "task_complete",
+                "2026-10-18T20:12:36.178Z"
+              ],
+              "own_usage": {
+                "input_tokens": 735024,
+                "cached_input_tokens": 699136,
+                "output_tokens": 14375,
+                "reasoning_output_tokens": 7182
+              },
+              "requests": 17,
+              "cumulative_matches": true
+            },
+            {
+              "id": "01a150a1-25a5-7501-b26e-13b6fc43d790",
+              "parent": "01a1509f-135f-72d2-8566-f7c5927e709e",
+              "file": "2026/10/19/rollout-2026-10-19T04-08-20-01a150a1-25a5-7501-b26e-13b6fc43d790.jsonl",
+              "sha256": "8947d3d4e94893d9d5d45347773a123e86f3d5a959f1b1500a5346f4f7c7fd6a",
+              "sha256_matches_public": true,
+              "commands": 13,
+              "commands_match_public": true,
+              "models": [
+                "gpt-6.1-sol"
+              ],
+              "efforts": [
+                "high"
+              ],
+              "last_completion": [
+                "task_complete",
+                "2026-10-18T20:11:46.816Z"
+              ],
+              "own_usage": {
+                "input_tokens": 797835,
+                "cached_input_tokens": 762368,
+                "output_tokens": 7208,
+                "reasoning_output_tokens": 3039
+              },
+              "requests": 22,
+              "cumulative_matches": true
+            }
+          ],
+          "errors": []
+        },
+        {
+          "trial": "more-itertools-1247--gpt-trim--r1",
+          "cell": "gpt-trim",
+          "run": 1,
+          "root_id": "01a150a1-0b9d-7721-9577-3fccacef473a",
+          "root_matches_cli": true,
+          "normal_cli_completions": 1,
+          "unique_responses": 44,
+          "copied_response_records": 0,
+          "usage": {
+            "input_tokens": 1737330,
+            "cached_input_tokens": 1646464,
+            "output_tokens": 25168,
+            "reasoning_output_tokens": 13243
+          },
+          "parent": {
+            "input_tokens": 777748,
+            "cached_input_tokens": 734208,
+            "output_tokens": 15720,
+            "reasoning_output_tokens": 8268
+          },
+          "child": {
+            "input_tokens": 959582,
+            "cached_input_tokens": 912256,
+            "output_tokens": 9448,
+            "reasoning_output_tokens": 4975
+          },
+          "usage_all_matches": true,
+          "raw_cli_all_matches": true,
+          "raw_cli_scope": "parent_only",
+          "public_response_ids_match": true,
+          "public_response_counters_match": true,
+          "sessions": [
+            {
+              "id": "01a150a1-0b9d-7721-9577-3fccacef473a",
+              "parent": null,
+              "file": "2026/10/19/rollout-2026-10-19T04-08-14-01a150a1-0b9d-7721-9577-3fccacef473a.jsonl",
+              "sha256": "fff96382d461584204709fc401b799ac0453037e71515c81c87b5347542e5261",
+              "sha256_matches_public": true,
+              "commands": 14,
+              "commands_match_public": true,
+              "models": [
+                "gpt-6.1-sol"
+              ],
+              "efforts": [
+                "high"
+              ],
+              "last_completion": [
+                "task_complete",
+                "2026-10-18T20:15:17.260Z"
+              ],
+              "own_usage": {
+                "input_tokens": 777748,
+                "cached_input_tokens": 734208,
+                "output_tokens": 15720,
+                "reasoning_output_tokens": 8268
+              },
+              "requests": 18,
+              "cumulative_matches": true
+            },
+            {
+              "id": "01a150a3-0569-7c52-a8cd-c9a6d912459a",
+              "parent": "01a150a1-0b9d-7721-9577-3fccacef473a",
+              "file": "2026/10/19/rollout-2026-10-19T04-10-23-01a150a3-0569-7c52-a8cd-c9a6d912459a.jsonl",
+              "sha256": "d13e5164446d52dab6c2a9544b4e411d05fad6edc4982329a8a4e5fcb24ce94b",
+              "sha256_matches_public": true,
+              "commands": 20,
+              "commands_match_public": true,
+              "models": [
+                "gpt-6.1-sol"
+              ],
+              "efforts": [
+                "high"
+              ],
+              "last_completion": [
+                "task_complete",
+                "2026-10-18T20:14:52.034Z"
+              ],
+              "own_usage": {
+                "input_tokens": 959582,
+                "cached_input_tokens": 912256,
+                "output_tokens": 9448,
+                "reasoning_output_tokens": 4975
+              },
+              "requests": 26,
+              "cumulative_matches": true
+            }
+          ],
+          "errors": []
+        },
+        {
+          "trial": "more-itertools-1247--gpt-trim--r2",
+          "cell": "gpt-trim",
+          "run": 2,
+          "root_id": "01a150a5-546d-77c0-be00-41a28b9856fd",
+          "root_matches_cli": true,
+          "normal_cli_completions": 1,
+          "unique_responses": 34,
+          "copied_response_records": 0,
+          "usage": {
+            "input_tokens": 1288099,
+            "cached_input_tokens": 1200256,
+            "output_tokens": 18087,
+            "reasoning_output_tokens": 7941
+          },
+          "parent": {
+            "input_tokens": 746892,
+            "cached_input_tokens": 716032,
+            "output_tokens": 13235,
+            "reasoning_output_tokens": 6245
+          },
+          "child": {
+            "input_tokens": 541207,
+            "cached_input_tokens": 484224,
+            "output_tokens": 4852,
+            "reasoning_output_tokens": 1696
+          },
+          "usage_all_matches": true,
+          "raw_cli_all_matches": true,
+          "raw_cli_scope": "parent_only",
+          "public_response_ids_match": true,
+          "public_response_counters_match": true,
+          "sessions": [
+            {
+              "id": "01a150a5-546d-77c0-be00-41a28b9856fd",
+              "parent": null,
+              "file": "2026/10/19/rollout-2026-10-19T04-12-55-01a150a5-546d-77c0-be00-41a28b9856fd.jsonl",
+              "sha256": "197d8a3fcba9a90cb4c7ca5d9cccbd28026d1fb1ed994cb92a46291159597ed7",
+              "sha256_matches_public": true,
+              "commands": 17,
+              "commands_match_public": true,
+              "models": [
+                "gpt-6.1-sol"
+              ],
+              "efforts": [
+                "high"
+              ],
+              "last_completion": [
+                "task_complete",
+                "2026-10-18T20:17:35.101Z"
+              ],
+              "own_usage": {
+                "input_tokens": 746892,
+                "cached_input_tokens": 716032,
+                "output_tokens": 13235,
+                "reasoning_output_tokens": 6245
+              },
+              "requests": 18,
+              "cumulative_matches": true
+            },
+            {
+              "id": "01a150a7-4b6b-7152-8248-d97bd634fc45",
+              "parent": "01a150a5-546d-77c0-be00-41a28b9856fd",
+              "file": "2026/10/19/rollout-2026-10-19T04-15-03-01a150a7-4b6b-7152-8248-d97bd634fc45.jsonl",
+              "sha256": "6c7593329fc69556da3e69de4901396684c4606816b82cb97234fdab235883a9",
+              "sha256_matches_public": true,
+              "commands": 14,
+              "commands_match_public": true,
+              "models": [
+                "gpt-6.1-sol"
+              ],
+              "efforts": [
+                "high"
+              ],
+              "last_completion": [
+                "task_complete",
+                "2026-10-18T20:17:26.445Z"
+              ],
+              "own_usage": {
+                "input_tokens": 541207,
+                "cached_input_tokens": 484224,
+                "output_tokens": 4852,
+                "reasoning_output_tokens": 1696
+              },
+              "requests": 16,
+              "cumulative_matches": true
+            }
+          ],
+          "errors": []
+        },
+        {
+          "trial": "more-itertools-1247--gpt-cew--r2",
+          "cell": "gpt-cew",
+          "run": 2,
+          "root_id": "01a150a9-e096-7732-98d3-3835ef5c634b",
+          "root_matches_cli": true,
+          "normal_cli_completions": 1,
+          "unique_responses": 11,
+          "copied_response_records": 0,
+          "usage": {
+            "input_tokens": 379042,
+            "cached_input_tokens": 345088,
+            "output_tokens": 5474,
+            "reasoning_output_tokens": 2722
+          },
+          "parent": {
+            "input_tokens": 379042,
+            "cached_input_tokens": 345088,
+            "output_tokens": 5474,
+            "reasoning_output_tokens": 2722
+          },
+          "child": {
+            "input_tokens": 0,
+            "cached_input_tokens": 0,
+            "output_tokens": 0,
+            "reasoning_output_tokens": 0
+          },
+          "usage_all_matches": true,
+          "raw_cli_all_matches": true,
+          "raw_cli_scope": "whole_family",
+          "public_response_ids_match": true,
+          "public_response_counters_match": true,
+          "sessions": [
+            {
+              "id": "01a150a9-e096-7732-98d3-3835ef5c634b",
+              "parent": null,
+              "file": "2026/10/19/rollout-2026-10-19T04-17-53-01a150a9-e096-7732-98d3-3835ef5c634b.jsonl",
+              "sha256": "c31afc093d74cb822d9a7177461d7805644624297bc703f692834ff6c7a33966",
+              "sha256_matches_public": true,
+              "commands": 14,
+              "commands_match_public": true,
+              "models": [
+                "gpt-6.1-sol"
+              ],
+              "efforts": [
+                "high"
+              ],
+              "last_completion": [
+                "task_complete",
+                "2026-10-18T20:20:01.658Z"
+              ],
+              "own_usage": {
+                "input_tokens": 379042,
+                "cached_input_tokens": 345088,
+                "output_tokens": 5474,
+                "reasoning_output_tokens": 2722
+              },
+              "requests": 11,
+              "cumulative_matches": true
+            }
+          ],
+          "errors": []
+        },
+        {
+          "trial": "more-itertools-1247--gpt-fixed--r1",
+          "cell": "gpt-fixed",
+          "run": 1,
+          "root_id": "01a150a7-c5f5-7ed2-9a93-b1c7faab8d44",
+          "root_matches_cli": true,
+          "normal_cli_completions": 1,
+          "unique_responses": 22,
+          "copied_response_records": 0,
+          "usage": {
+            "input_tokens": 783888,
+            "cached_input_tokens": 735232,
+            "output_tokens": 17919,
+            "reasoning_output_tokens": 10358
+          },
+          "parent": {
+            "input_tokens": 504239,
+            "cached_input_tokens": 478720,
+            "output_tokens": 14607,
+            "reasoning_output_tokens": 9136
+          },
+          "child": {
+            "input_tokens": 279649,
+            "cached_input_tokens": 256512,
+            "output_tokens": 3312,
+            "reasoning_output_tokens": 1222
+          },
+          "usage_all_matches": true,
+          "raw_cli_all_matches": true,
+          "raw_cli_scope": "parent_only",
+          "public_response_ids_match": true,
+          "public_response_counters_match": true,
+          "sessions": [
+            {
+              "id": "01a150a7-c5f5-7ed2-9a93-b1c7faab8d44",
+              "parent": null,
+              "file": "2026/10/19/rollout-2026-10-19T04-15-36-01a150a7-c5f5-7ed2-9a93-b1c7faab8d44.jsonl",
+              "sha256": "e9a6c4bf709a6854911a1bd11f5a1c5041ec630c5428f70e5210e43e6c989d5a",
+              "sha256_matches_public": true,
+              "commands": 15,
+              "commands_match_public": true,
+              "models": [
+                "gpt-6.1-sol"
+              ],
+              "efforts": [
+                "high"
+              ],
+              "last_completion": [
+                "task_complete",
+                "2026-10-18T20:21:15.370Z"
+              ],
+              "own_usage": {
+                "input_tokens": 504239,
+                "cached_input_tokens": 478720,
+                "output_tokens": 14607,
+                "reasoning_output_tokens": 9136
+              },
+              "requests": 13,
+              "cumulative_matches": true
+            },
+            {
+              "id": "01a150aa-3c42-7450-98f0-9ff6969084b5",
+              "parent": "01a150a7-c5f5-7ed2-9a93-b1c7faab8d44",
+              "file": "2026/10/19/rollout-2026-10-19T04-18-16-01a150aa-3c42-7450-98f0-9ff6969084b5.jsonl",
+              "sha256": "dacf4c25dc8931f2bdd3c77d7c43a34c0d773fa041490a38f7a3f6a878f55a2a",
+              "sha256_matches_public": true,
+              "commands": 14,
+              "commands_match_public": true,
+              "models": [
+                "gpt-6.1-sol"
+              ],
+              "efforts": [
+                "high"
+              ],
+              "last_completion": [
+                "task_complete",
+                "2026-10-18T20:20:15.928Z"
+              ],
+              "own_usage": {
+                "input_tokens": 279649,
+                "cached_input_tokens": 256512,
+                "output_tokens": 3312,
+                "reasoning_output_tokens": 1222
+              },
+              "requests": 9,
+              "cumulative_matches": true
+            }
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "public_numeric_audit": {
+      "completed": true,
+      "summary_fields": [
+        {
+          "cell": "gpt-cew",
+          "all": true
+        },
+        {
+          "cell": "gpt-trim",
+          "all": true
+        },
+        {
+          "cell": "gpt-fixed",
+          "all": true
+        }
+      ],
+      "pairs": [
+        {
+          "run": 2,
+          "all": true
+        },
+        {
+          "run": 1,
+          "all": true
+        }
+      ],
+      "noise": [
+        {
+          "cell": "gpt-cew",
+          "all": true
+        },
+        {
+          "cell": "gpt-trim",
+          "all": true
+        },
+        {
+          "cell": "gpt-fixed",
+          "all": true
+        }
+      ],
+      "diagnostic_groups": [
+        {
+          "name": "more-itertools-1247",
+          "all": true
+        },
+        {
+          "name": "remaining-six-tasks",
+          "all": true
+        }
+      ],
+      "quality": [
+        {
+          "cell": "gpt-cew",
+          "all": true
+        },
+        {
+          "cell": "gpt-trim",
+          "all": true
+        },
+        {
+          "cell": "gpt-fixed",
+          "all": true
+        }
+      ],
+      "task_table": true
+    },
+    "plan_accounting": {
+      "planned": 42,
+      "completed": 6,
+      "not_run": 36,
+      "disjoint": true,
+      "all_plan_accounted_for": true,
+      "frozen_at": "2026-10-18T20:01:16.560Z",
+      "first_model_started": "2026-10-18T20:05:57.365Z",
+      "last_receipt_finished": "2026-10-18T20:21:25.723Z",
+      "gate_at": "2026-10-18T20:21:52.116Z",
+      "gate_passed": false,
+      "finished_at": "2026-10-18T20:21:52.117Z",
+      "status": "ABORTED_AT_PREDECLARED_CRITICAL_QUALITY_GATE"
+    },
+    "probe_evidence_audit": [
+      {
+        "group": "quality",
+        "expected_checks": 16,
+        "controller_matches_stored_source": true,
+        "public_matches_raw_after_path_normalization": true,
+        "critical_matches_raw": true,
+        "critical_file_hash_matches_gate": true,
+        "python_program_sha256": "904323afe80315f8517fd7ce254ff3632866656ae4893478dcb1cf005c3293d0",
+        "executed_at": null,
+        "started_at": null,
+        "finished_at": null,
+        "versions": [
+          {
+            "version": "parent",
+            "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+            "source_matches_actual": true,
+            "checks": 16,
+            "unique_checks": 16,
+            "passed": 16,
+            "failures": []
+          },
+          {
+            "version": "upstream_reference",
+            "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+            "source_matches_actual": true,
+            "checks": 16,
+            "unique_checks": 16,
+            "passed": 0,
+            "failures": [
+              {
+                "case": "finite_float_huge_range",
+                "operation": "contains",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "cannot convert float infinity to integer"
+              },
+              {
+                "case": "finite_float_huge_range",
+                "operation": "index",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "cannot convert float infinity to integer"
+              },
+              {
+                "case": "decimal_precision_2",
+                "operation": "contains",
+                "passed": false,
+                "exception": "InvalidOperation",
+                "message": "[<class 'decimal.DivisionImpossible'>]"
+              },
+              {
+                "case": "decimal_precision_2",
+                "operation": "index",
+                "passed": false,
+                "exception": "InvalidOperation",
+                "message": "[<class 'decimal.DivisionImpossible'>]"
+              },
+              {
+                "case": "finite_float_nonstart",
+                "operation": "contains",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "cannot convert float infinity to integer"
+              },
+              {
+                "case": "finite_float_nonstart",
+                "operation": "index",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "cannot convert float infinity to integer"
+              },
+              {
+                "case": "decimal_nonstart",
+                "operation": "contains",
+                "passed": false,
+                "exception": "InvalidOperation",
+                "message": "[<class 'decimal.DivisionImpossible'>]"
+              },
+              {
+                "case": "decimal_nonstart",
+                "operation": "index",
+                "passed": false,
+                "exception": "InvalidOperation",
+                "message": "[<class 'decimal.DivisionImpossible'>]"
+              },
+              {
+                "case": "datetime_upper_bound",
+                "operation": "len",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_upper_bound",
+                "operation": "first",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_bound",
+                "operation": "len",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_bound",
+                "operation": "first",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_upper_nonmember",
+                "operation": "contains",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_upper_nonmember",
+                "operation": "index",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_nonmember",
+                "operation": "contains",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_nonmember",
+                "operation": "index",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              }
+            ]
+          },
+          {
+            "version": "gpt-cew-r1",
+            "source_sha256": "a0ecb837ca16a9615a8b18be86397d7c8a4118b5db15450b76976ad2182d8b4a",
+            "source_matches_actual": true,
+            "checks": 16,
+            "unique_checks": 16,
+            "passed": 8,
+            "failures": [
+              {
+                "case": "datetime_upper_bound",
+                "operation": "len",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_upper_bound",
+                "operation": "first",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_bound",
+                "operation": "len",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_bound",
+                "operation": "first",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_upper_nonmember",
+                "operation": "contains",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_upper_nonmember",
+                "operation": "index",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_nonmember",
+                "operation": "contains",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_nonmember",
+                "operation": "index",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              }
+            ]
+          },
+          {
+            "version": "gpt-fixed-r2",
+            "source_sha256": "0946d7c24fd0f37f6eb6c62d2e744f7604419c77fba45cd185339ed0294f17ae",
+            "source_matches_actual": true,
+            "checks": 16,
+            "unique_checks": 16,
+            "passed": 16,
+            "failures": []
+          },
+          {
+            "version": "gpt-trim-r1",
+            "source_sha256": "234b26ac7705f2429edb585bbde4f121d8e489680defb52e1d13f2855c670eb1",
+            "source_matches_actual": true,
+            "checks": 16,
+            "unique_checks": 16,
+            "passed": 16,
+            "failures": []
+          },
+          {
+            "version": "gpt-trim-r2",
+            "source_sha256": "113ed53e7bbd2e9fb6958aefc33121de46c0c0ec5fef629cc393521d41e49287",
+            "source_matches_actual": true,
+            "checks": 16,
+            "unique_checks": 16,
+            "passed": 16,
+            "failures": []
+          },
+          {
+            "version": "gpt-cew-r2",
+            "source_sha256": "1ff7c3ad0084dbc7d84bbb7edf03550bfb6d8bfb17ed8dd813be1357882ea077",
+            "source_matches_actual": true,
+            "checks": 16,
+            "unique_checks": 16,
+            "passed": 8,
+            "failures": [
+              {
+                "case": "datetime_upper_bound",
+                "operation": "len",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_upper_bound",
+                "operation": "first",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_bound",
+                "operation": "len",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_bound",
+                "operation": "first",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_upper_nonmember",
+                "operation": "contains",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_upper_nonmember",
+                "operation": "index",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_nonmember",
+                "operation": "contains",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              },
+              {
+                "case": "datetime_lower_nonmember",
+                "operation": "index",
+                "passed": false,
+                "exception": "OverflowError",
+                "message": "date value out of range"
+              }
+            ]
+          },
+          {
+            "version": "gpt-fixed-r1",
+            "source_sha256": "0e4409e8426a0665dd7003d1a530720bc00651da57b3b87eef9d727ce2d1c4f1",
+            "source_matches_actual": true,
+            "checks": 16,
+            "unique_checks": 16,
+            "passed": 16,
+            "failures": []
+          }
+        ]
+      },
+      {
+        "group": "cost",
+        "expected_checks": 4,
+        "controller_matches_stored_source": true,
+        "public_matches_raw_after_path_normalization": true,
+        "critical_matches_raw": true,
+        "critical_file_hash_matches_gate": true,
+        "python_program_sha256": "6d2a8be75b93fd25a2f2e5630ea0027fc3c726d5672fdf476d8a6766b9cfc3be",
+        "executed_at": null,
+        "started_at": null,
+        "finished_at": null,
+        "versions": [
+          {
+            "version": "parent",
+            "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 0,
+            "failures": [
+              {
+                "operation": "large_length",
+                "passed": false,
+                "length": 4000000000001,
+                "boundary_matches_iteration_formula": false,
+                "timed_out": false,
+                "exit": 0,
+                "duration_ms": 39
+              },
+              {
+                "operation": "first_repeated_index",
+                "passed": false,
+                "exception_tail": "Traceback (most recent call last):\n  File \"<string>\", line 19, in <module>\n    actual = r.index(query)\n  File \"<frozen-source>\", line 2458, in index\nValueError: 1.0000000000000002e+16 is not in numeric range\n",
+                "timed_out": false,
+                "exit": 1,
+                "duration_ms": 39
+              },
+              {
+                "operation": "large_length_descending",
+                "passed": false,
+                "length": 4000000000001,
+                "boundary_matches_iteration_formula": false,
+                "timed_out": false,
+                "exit": 0,
+                "duration_ms": 38
+              },
+              {
+                "operation": "first_repeated_index_descending",
+                "passed": false,
+                "exception_tail": "Traceback (most recent call last):\n  File \"<string>\", line 19, in <module>\n    actual = r.index(query)\n  File \"<frozen-source>\", line 2458, in index\nValueError: -1.0000000000000002e+16 is not in numeric range\n",
+                "timed_out": false,
+                "exit": 1,
+                "duration_ms": 39
+              }
+            ]
+          },
+          {
+            "version": "upstream_reference",
+            "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 0,
+            "failures": [
+              {
+                "operation": "large_length",
+                "passed": false,
+                "exception_tail": "",
+                "timed_out": true,
+                "exit": null,
+                "duration_ms": 2003
+              },
+              {
+                "operation": "first_repeated_index",
+                "passed": false,
+                "index": 19,
+                "expected_first_index": 11,
+                "bounded_iteration_count": 30,
+                "timed_out": false,
+                "exit": 0,
+                "duration_ms": 38
+              },
+              {
+                "operation": "large_length_descending",
+                "passed": false,
+                "exception_tail": "",
+                "timed_out": true,
+                "exit": null,
+                "duration_ms": 2003
+              },
+              {
+                "operation": "first_repeated_index_descending",
+                "passed": false,
+                "index": 19,
+                "expected_first_index": 11,
+                "bounded_iteration_count": 30,
+                "timed_out": false,
+                "exit": 0,
+                "duration_ms": 39
+              }
+            ]
+          },
+          {
+            "version": "gpt-cew-r1",
+            "source_sha256": "a0ecb837ca16a9615a8b18be86397d7c8a4118b5db15450b76976ad2182d8b4a",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 0,
+            "failures": [
+              {
+                "operation": "large_length",
+                "passed": false,
+                "exception_tail": "",
+                "timed_out": true,
+                "exit": null,
+                "duration_ms": 2003
+              },
+              {
+                "operation": "first_repeated_index",
+                "passed": false,
+                "index": 18,
+                "expected_first_index": 11,
+                "bounded_iteration_count": 30,
+                "timed_out": false,
+                "exit": 0,
+                "duration_ms": 38
+              },
+              {
+                "operation": "large_length_descending",
+                "passed": false,
+                "exception_tail": "",
+                "timed_out": true,
+                "exit": null,
+                "duration_ms": 2003
+              },
+              {
+                "operation": "first_repeated_index_descending",
+                "passed": false,
+                "index": 18,
+                "expected_first_index": 11,
+                "bounded_iteration_count": 30,
+                "timed_out": false,
+                "exit": 0,
+                "duration_ms": 40
+              }
+            ]
+          },
+          {
+            "version": "gpt-fixed-r2",
+            "source_sha256": "0946d7c24fd0f37f6eb6c62d2e744f7604419c77fba45cd185339ed0294f17ae",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 4,
+            "failures": []
+          },
+          {
+            "version": "gpt-trim-r1",
+            "source_sha256": "234b26ac7705f2429edb585bbde4f121d8e489680defb52e1d13f2855c670eb1",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 4,
+            "failures": []
+          },
+          {
+            "version": "gpt-trim-r2",
+            "source_sha256": "113ed53e7bbd2e9fb6958aefc33121de46c0c0ec5fef629cc393521d41e49287",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 4,
+            "failures": []
+          },
+          {
+            "version": "gpt-cew-r2",
+            "source_sha256": "1ff7c3ad0084dbc7d84bbb7edf03550bfb6d8bfb17ed8dd813be1357882ea077",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 0,
+            "failures": [
+              {
+                "operation": "large_length",
+                "passed": false,
+                "exception_tail": "",
+                "timed_out": true,
+                "exit": null,
+                "duration_ms": 2001
+              },
+              {
+                "operation": "first_repeated_index",
+                "passed": false,
+                "index": 19,
+                "expected_first_index": 11,
+                "bounded_iteration_count": 30,
+                "timed_out": false,
+                "exit": 0,
+                "duration_ms": 39
+              },
+              {
+                "operation": "large_length_descending",
+                "passed": false,
+                "exception_tail": "",
+                "timed_out": true,
+                "exit": null,
+                "duration_ms": 2004
+              },
+              {
+                "operation": "first_repeated_index_descending",
+                "passed": false,
+                "index": 19,
+                "expected_first_index": 11,
+                "bounded_iteration_count": 30,
+                "timed_out": false,
+                "exit": 0,
+                "duration_ms": 38
+              }
+            ]
+          },
+          {
+            "version": "gpt-fixed-r1",
+            "source_sha256": "0e4409e8426a0665dd7003d1a530720bc00651da57b3b87eef9d727ce2d1c4f1",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 4,
+            "failures": []
+          }
+        ]
+      },
+      {
+        "group": "context",
+        "expected_checks": 12,
+        "controller_matches_stored_source": true,
+        "public_matches_raw_after_path_normalization": true,
+        "critical_matches_raw": true,
+        "critical_file_hash_matches_gate": true,
+        "python_program_sha256": "d9631c856f48a2ed9792bdae7d7dcc4516c7fa3b5afa0e75097f6aafbee3a348",
+        "executed_at": "2026-10-18T20:21:47.639Z",
+        "started_at": null,
+        "finished_at": null,
+        "versions": [
+          {
+            "version": "parent",
+            "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+            "source_matches_actual": true,
+            "checks": 12,
+            "unique_checks": 12,
+            "passed": 12,
+            "failures": []
+          },
+          {
+            "version": "upstream_reference",
+            "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+            "source_matches_actual": true,
+            "checks": 12,
+            "unique_checks": 12,
+            "passed": 2,
+            "failures": [
+              {
+                "case": "bounded_exponent_positive",
+                "operation": "len",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 40
+              },
+              {
+                "case": "bounded_exponent_positive",
+                "operation": "contains",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "bounded_exponent_positive",
+                "operation": "index",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "bounded_exponent_negative",
+                "operation": "len",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 40
+              },
+              {
+                "case": "bounded_exponent_negative",
+                "operation": "contains",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "bounded_exponent_negative",
+                "operation": "index",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 38
+              },
+              {
+                "case": "inexact_trap_positive",
+                "operation": "contains",
+                "passed": false,
+                "exception": "InvalidOperation",
+                "message": "[<class 'decimal.DivisionImpossible'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 40
+              },
+              {
+                "case": "inexact_trap_positive",
+                "operation": "index",
+                "passed": false,
+                "exception": "InvalidOperation",
+                "message": "[<class 'decimal.DivisionImpossible'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "inexact_trap_negative",
+                "operation": "contains",
+                "passed": false,
+                "exception": "InvalidOperation",
+                "message": "[<class 'decimal.DivisionImpossible'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "inexact_trap_negative",
+                "operation": "index",
+                "passed": false,
+                "exception": "InvalidOperation",
+                "message": "[<class 'decimal.DivisionImpossible'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              }
+            ]
+          },
+          {
+            "version": "gpt-cew-r1",
+            "source_sha256": "a0ecb837ca16a9615a8b18be86397d7c8a4118b5db15450b76976ad2182d8b4a",
+            "source_matches_actual": true,
+            "checks": 12,
+            "unique_checks": 12,
+            "passed": 6,
+            "failures": [
+              {
+                "case": "bounded_exponent_positive",
+                "operation": "len",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 40
+              },
+              {
+                "case": "bounded_exponent_positive",
+                "operation": "contains",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 38
+              },
+              {
+                "case": "bounded_exponent_positive",
+                "operation": "index",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 40
+              },
+              {
+                "case": "bounded_exponent_negative",
+                "operation": "len",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 38
+              },
+              {
+                "case": "bounded_exponent_negative",
+                "operation": "contains",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "bounded_exponent_negative",
+                "operation": "index",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 38
+              }
+            ]
+          },
+          {
+            "version": "gpt-fixed-r2",
+            "source_sha256": "0946d7c24fd0f37f6eb6c62d2e744f7604419c77fba45cd185339ed0294f17ae",
+            "source_matches_actual": true,
+            "checks": 12,
+            "unique_checks": 12,
+            "passed": 12,
+            "failures": []
+          },
+          {
+            "version": "gpt-trim-r1",
+            "source_sha256": "234b26ac7705f2429edb585bbde4f121d8e489680defb52e1d13f2855c670eb1",
+            "source_matches_actual": true,
+            "checks": 12,
+            "unique_checks": 12,
+            "passed": 12,
+            "failures": []
+          },
+          {
+            "version": "gpt-trim-r2",
+            "source_sha256": "113ed53e7bbd2e9fb6958aefc33121de46c0c0ec5fef629cc393521d41e49287",
+            "source_matches_actual": true,
+            "checks": 12,
+            "unique_checks": 12,
+            "passed": 12,
+            "failures": []
+          },
+          {
+            "version": "gpt-cew-r2",
+            "source_sha256": "1ff7c3ad0084dbc7d84bbb7edf03550bfb6d8bfb17ed8dd813be1357882ea077",
+            "source_matches_actual": true,
+            "checks": 12,
+            "unique_checks": 12,
+            "passed": 6,
+            "failures": [
+              {
+                "case": "bounded_exponent_positive",
+                "operation": "len",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 40
+              },
+              {
+                "case": "bounded_exponent_positive",
+                "operation": "contains",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 38
+              },
+              {
+                "case": "bounded_exponent_positive",
+                "operation": "index",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "bounded_exponent_negative",
+                "operation": "len",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "bounded_exponent_negative",
+                "operation": "contains",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "bounded_exponent_negative",
+                "operation": "index",
+                "passed": false,
+                "exception": "Overflow",
+                "message": "[<class 'decimal.Overflow'>]",
+                "constructor_failed": false,
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              }
+            ]
+          },
+          {
+            "version": "gpt-fixed-r1",
+            "source_sha256": "0e4409e8426a0665dd7003d1a530720bc00651da57b3b87eef9d727ce2d1c4f1",
+            "source_matches_actual": true,
+            "checks": 12,
+            "unique_checks": 12,
+            "passed": 12,
+            "failures": []
+          }
+        ]
+      },
+      {
+        "group": "promotion",
+        "expected_checks": 10,
+        "controller_matches_stored_source": true,
+        "public_matches_raw_after_path_normalization": true,
+        "critical_matches_raw": true,
+        "critical_file_hash_matches_gate": true,
+        "python_program_sha256": "6c7e8c50fc7f84217395a404493d784d15eadd848a200fc1a0e9824a75ebc081",
+        "executed_at": "2026-10-18T20:21:50.815Z",
+        "started_at": null,
+        "finished_at": null,
+        "versions": [
+          {
+            "version": "parent",
+            "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+            "source_matches_actual": true,
+            "checks": 10,
+            "unique_checks": 10,
+            "passed": 4,
+            "failures": [
+              {
+                "case": "mixed_promotion_positive",
+                "operation": "len",
+                "passed": false,
+                "value": "5",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "mixed_promotion_positive",
+                "operation": "contains",
+                "passed": false,
+                "value": "False",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 40
+              },
+              {
+                "case": "mixed_promotion_positive",
+                "operation": "index",
+                "passed": false,
+                "exception": "ValueError",
+                "message": "9007199254740992.0 is not in numeric range",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "mixed_promotion_negative",
+                "operation": "len",
+                "passed": false,
+                "value": "5",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "mixed_promotion_negative",
+                "operation": "contains",
+                "passed": false,
+                "value": "False",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "mixed_promotion_negative",
+                "operation": "index",
+                "passed": false,
+                "exception": "ValueError",
+                "message": "-9007199254740992.0 is not in numeric range",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              }
+            ]
+          },
+          {
+            "version": "upstream_reference",
+            "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+            "source_matches_actual": true,
+            "checks": 10,
+            "unique_checks": 10,
+            "passed": 4,
+            "failures": [
+              {
+                "case": "mixed_promotion_positive",
+                "operation": "contains",
+                "passed": false,
+                "value": "False",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "mixed_promotion_positive",
+                "operation": "index",
+                "passed": false,
+                "exception": "ValueError",
+                "message": "9007199254740992.0 is not in numeric range",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 40
+              },
+              {
+                "case": "mixed_promotion_negative",
+                "operation": "contains",
+                "passed": false,
+                "value": "False",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "mixed_promotion_negative",
+                "operation": "index",
+                "passed": false,
+                "exception": "ValueError",
+                "message": "-9007199254740992.0 is not in numeric range",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "rounded_trap_positive",
+                "operation": "contains",
+                "passed": false,
+                "exception": "InvalidOperation",
+                "message": "[<class 'decimal.DivisionImpossible'>]",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "rounded_trap_positive",
+                "operation": "index",
+                "passed": false,
+                "exception": "InvalidOperation",
+                "message": "[<class 'decimal.DivisionImpossible'>]",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              }
+            ]
+          },
+          {
+            "version": "gpt-cew-r1",
+            "source_sha256": "a0ecb837ca16a9615a8b18be86397d7c8a4118b5db15450b76976ad2182d8b4a",
+            "source_matches_actual": true,
+            "checks": 10,
+            "unique_checks": 10,
+            "passed": 4,
+            "failures": [
+              {
+                "case": "mixed_promotion_positive",
+                "operation": "contains",
+                "passed": false,
+                "value": "False",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 38
+              },
+              {
+                "case": "mixed_promotion_positive",
+                "operation": "index",
+                "passed": false,
+                "exception": "ValueError",
+                "message": "9007199254740992.0 is not in numeric range",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "mixed_promotion_negative",
+                "operation": "contains",
+                "passed": false,
+                "value": "False",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "mixed_promotion_negative",
+                "operation": "index",
+                "passed": false,
+                "exception": "ValueError",
+                "message": "-9007199254740992.0 is not in numeric range",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "rounded_trap_positive",
+                "operation": "contains",
+                "passed": false,
+                "exception": "Rounded",
+                "message": "[<class 'decimal.Rounded'>]",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 40
+              },
+              {
+                "case": "rounded_trap_positive",
+                "operation": "index",
+                "passed": false,
+                "exception": "Rounded",
+                "message": "[<class 'decimal.Rounded'>]",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              }
+            ]
+          },
+          {
+            "version": "gpt-fixed-r2",
+            "source_sha256": "0946d7c24fd0f37f6eb6c62d2e744f7604419c77fba45cd185339ed0294f17ae",
+            "source_matches_actual": true,
+            "checks": 10,
+            "unique_checks": 10,
+            "passed": 10,
+            "failures": []
+          },
+          {
+            "version": "gpt-trim-r1",
+            "source_sha256": "234b26ac7705f2429edb585bbde4f121d8e489680defb52e1d13f2855c670eb1",
+            "source_matches_actual": true,
+            "checks": 10,
+            "unique_checks": 10,
+            "passed": 10,
+            "failures": []
+          },
+          {
+            "version": "gpt-trim-r2",
+            "source_sha256": "113ed53e7bbd2e9fb6958aefc33121de46c0c0ec5fef629cc393521d41e49287",
+            "source_matches_actual": true,
+            "checks": 10,
+            "unique_checks": 10,
+            "passed": 10,
+            "failures": []
+          },
+          {
+            "version": "gpt-cew-r2",
+            "source_sha256": "1ff7c3ad0084dbc7d84bbb7edf03550bfb6d8bfb17ed8dd813be1357882ea077",
+            "source_matches_actual": true,
+            "checks": 10,
+            "unique_checks": 10,
+            "passed": 4,
+            "failures": [
+              {
+                "case": "mixed_promotion_positive",
+                "operation": "contains",
+                "passed": false,
+                "value": "False",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "mixed_promotion_positive",
+                "operation": "index",
+                "passed": false,
+                "exception": "ValueError",
+                "message": "9007199254740992.0 is not in numeric range",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "mixed_promotion_negative",
+                "operation": "contains",
+                "passed": false,
+                "value": "False",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 38
+              },
+              {
+                "case": "mixed_promotion_negative",
+                "operation": "index",
+                "passed": false,
+                "exception": "ValueError",
+                "message": "-9007199254740992.0 is not in numeric range",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "rounded_trap_positive",
+                "operation": "contains",
+                "passed": false,
+                "exception": "Rounded",
+                "message": "[<class 'decimal.Rounded'>]",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              },
+              {
+                "case": "rounded_trap_positive",
+                "operation": "index",
+                "passed": false,
+                "exception": "Rounded",
+                "message": "[<class 'decimal.Rounded'>]",
+                "exit": 0,
+                "timed_out": false,
+                "duration_ms": 39
+              }
+            ]
+          },
+          {
+            "version": "gpt-fixed-r1",
+            "source_sha256": "0e4409e8426a0665dd7003d1a530720bc00651da57b3b87eef9d727ce2d1c4f1",
+            "source_matches_actual": true,
+            "checks": 10,
+            "unique_checks": 10,
+            "passed": 10,
+            "failures": []
+          }
+        ]
+      },
+      {
+        "group": "compatibility",
+        "expected_checks": 4,
+        "controller_matches_stored_source": true,
+        "public_matches_raw_after_path_normalization": true,
+        "critical_matches_raw": true,
+        "critical_file_hash_matches_gate": true,
+        "python_program_sha256": "ce9305ce9dd026d781ca9e28f7f1faa3abae809a50c9e3e9b21961649a06b4ac",
+        "executed_at": null,
+        "started_at": "2026-10-18T20:21:50.857Z",
+        "finished_at": "2026-10-18T20:21:52.110Z",
+        "versions": [
+          {
+            "version": "parent",
+            "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 4,
+            "failures": []
+          },
+          {
+            "version": "upstream_reference",
+            "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 4,
+            "failures": []
+          },
+          {
+            "version": "gpt-cew-r1",
+            "source_sha256": "a0ecb837ca16a9615a8b18be86397d7c8a4118b5db15450b76976ad2182d8b4a",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 4,
+            "failures": []
+          },
+          {
+            "version": "gpt-fixed-r2",
+            "source_sha256": "0946d7c24fd0f37f6eb6c62d2e744f7604419c77fba45cd185339ed0294f17ae",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 0,
+            "failures": [
+              {
+                "case": "float_operation_nonmember_ascending",
+                "operation": "contains",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "False",
+                "started_at": "2026-10-18T20:21:51.328Z",
+                "finished_at": "2026-10-18T20:21:51.367Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_ascending",
+                "operation": "index",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "ValueError",
+                "started_at": "2026-10-18T20:21:51.367Z",
+                "finished_at": "2026-10-18T20:21:51.407Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_descending",
+                "operation": "contains",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "False",
+                "started_at": "2026-10-18T20:21:51.407Z",
+                "finished_at": "2026-10-18T20:21:51.446Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_descending",
+                "operation": "index",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "ValueError",
+                "started_at": "2026-10-18T20:21:51.446Z",
+                "finished_at": "2026-10-18T20:21:51.485Z",
+                "exit": 0
+              }
+            ]
+          },
+          {
+            "version": "gpt-trim-r1",
+            "source_sha256": "234b26ac7705f2429edb585bbde4f121d8e489680defb52e1d13f2855c670eb1",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 0,
+            "failures": [
+              {
+                "case": "float_operation_nonmember_ascending",
+                "operation": "contains",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "False",
+                "started_at": "2026-10-18T20:21:51.485Z",
+                "finished_at": "2026-10-18T20:21:51.524Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_ascending",
+                "operation": "index",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "ValueError",
+                "started_at": "2026-10-18T20:21:51.524Z",
+                "finished_at": "2026-10-18T20:21:51.563Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_descending",
+                "operation": "contains",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "False",
+                "started_at": "2026-10-18T20:21:51.563Z",
+                "finished_at": "2026-10-18T20:21:51.602Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_descending",
+                "operation": "index",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "ValueError",
+                "started_at": "2026-10-18T20:21:51.602Z",
+                "finished_at": "2026-10-18T20:21:51.641Z",
+                "exit": 0
+              }
+            ]
+          },
+          {
+            "version": "gpt-trim-r2",
+            "source_sha256": "113ed53e7bbd2e9fb6958aefc33121de46c0c0ec5fef629cc393521d41e49287",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 0,
+            "failures": [
+              {
+                "case": "float_operation_nonmember_ascending",
+                "operation": "contains",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "False",
+                "started_at": "2026-10-18T20:21:51.641Z",
+                "finished_at": "2026-10-18T20:21:51.680Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_ascending",
+                "operation": "index",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "ValueError",
+                "started_at": "2026-10-18T20:21:51.680Z",
+                "finished_at": "2026-10-18T20:21:51.719Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_descending",
+                "operation": "contains",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "False",
+                "started_at": "2026-10-18T20:21:51.719Z",
+                "finished_at": "2026-10-18T20:21:51.758Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_descending",
+                "operation": "index",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "ValueError",
+                "started_at": "2026-10-18T20:21:51.758Z",
+                "finished_at": "2026-10-18T20:21:51.797Z",
+                "exit": 0
+              }
+            ]
+          },
+          {
+            "version": "gpt-cew-r2",
+            "source_sha256": "1ff7c3ad0084dbc7d84bbb7edf03550bfb6d8bfb17ed8dd813be1357882ea077",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 4,
+            "failures": []
+          },
+          {
+            "version": "gpt-fixed-r1",
+            "source_sha256": "0e4409e8426a0665dd7003d1a530720bc00651da57b3b87eef9d727ce2d1c4f1",
+            "source_matches_actual": true,
+            "checks": 4,
+            "unique_checks": 4,
+            "passed": 0,
+            "failures": [
+              {
+                "case": "float_operation_nonmember_ascending",
+                "operation": "contains",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "False",
+                "started_at": "2026-10-18T20:21:51.954Z",
+                "finished_at": "2026-10-18T20:21:51.993Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_ascending",
+                "operation": "index",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "ValueError",
+                "started_at": "2026-10-18T20:21:51.993Z",
+                "finished_at": "2026-10-18T20:21:52.032Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_descending",
+                "operation": "contains",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "False",
+                "started_at": "2026-10-18T20:21:52.032Z",
+                "finished_at": "2026-10-18T20:21:52.071Z",
+                "exit": 0
+              },
+              {
+                "case": "float_operation_nonmember_descending",
+                "operation": "index",
+                "passed": false,
+                "exception": "FloatOperation",
+                "message": "[<class 'decimal.FloatOperation'>]",
+                "expected": "ValueError",
+                "started_at": "2026-10-18T20:21:52.071Z",
+                "finished_at": "2026-10-18T20:21:52.110Z",
+                "exit": 0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "visible_cost_observations": {
+      "candidate_native_review_children": 2,
+      "candidate_native_review_child_tokens": 1088004,
+      "previous_native_review_child_tokens": 1515089,
+      "main_native_review_children": 0,
+      "interpretation": "仅为有计量依据的成本组成观察，独立审查属于必要质量门，没有被认定可删除或据此声称因果节省。",
+      "explicit_float_operation_mentions_in_all_visible_commands": 0,
+      "interpretation_of_coverage": "候选主/子会话确实读取testing规则并运行多种Decimal精度/舍入/信号检查，但可见命令未显式覆盖这四项查询值类型与FloatOperation场景；这支持存在有限覆盖缺口，不说明所有验证无用。",
+      "redundant_work_finding": "未建立可安全删除的重复验证事实；正常改动后的重跑未称为冗余。"
+    },
+    "checks_not_run": [
+      "本审查未复跑任何模型、测试、行为探针或打包/安装命令。",
+      "未读取认证文件、解密或检查隐藏推理，未读取当前next-proposal或未来活跃工作树源码。",
+      "没有单独刷新远端PR/CI/合并/发布状态；本结论只覆盖所供固定包。"
+    ]
+  },
+  "performance": {
+    "axis": "WholePerformance",
+    "status": "NOT RUN",
+    "critical_findings": 0,
+    "important_findings": 0,
+    "findings": [],
+    "requirement": "模型前冻结协议要求完整七题中，本轮主子会话总token及模型平均耗时均低于同期main，并同时报告上一候选对照。",
+    "reason": "只执行同一数值任务两次×三组的6/42，剩余36次未运行；数值任务或剩余六题分组不能替代未运行的整批门。",
+    "whole_batch_planned": 42,
+    "whole_batch_executed": 6,
+    "whole_batch_unstarted": 36,
+    "partial_numeric_diagnostic": {
+      "status": "OBSERVED_ONLY_NOT_WHOLE_BATCH_GATE",
+      "summaries": [
+        {
+          "cell": "gpt-cew",
+          "n": 2,
+          "input_tokens": 697322,
+          "cached_input_tokens": 631808,
+          "output_tokens": 10261,
+          "requests": 21,
+          "descendant_sessions": 0,
+          "descendant_tokens": 0,
+          "duration_total_s": 242.8,
+          "trial_duration_total_s": 275.036,
+          "total_tokens": 707583,
+          "raw_cli_total_tokens": 707583,
+          "duration_mean_s": 121.4,
+          "trial_duration_mean_s": 137.518,
+          "public_summary_matches": true,
+          "original_suite_passed": 2,
+          "old42_passed": 0,
+          "all46_passed": 0
+        },
+        {
+          "cell": "gpt-trim",
+          "n": 2,
+          "input_tokens": 3025429,
+          "cached_input_tokens": 2846720,
+          "output_tokens": 43255,
+          "requests": 78,
+          "descendant_sessions": 2,
+          "descendant_tokens": 1515089,
+          "duration_total_s": 706.5999999999999,
+          "trial_duration_total_s": 738.9559999999999,
+          "total_tokens": 3068684,
+          "raw_cli_total_tokens": 1553595,
+          "duration_mean_s": 353.29999999999995,
+          "trial_duration_mean_s": 369.47799999999995,
+          "public_summary_matches": true,
+          "original_suite_passed": 2,
+          "old42_passed": 2,
+          "all46_passed": 0
+        },
+        {
+          "cell": "gpt-fixed",
+          "n": 2,
+          "input_tokens": 2316747,
+          "cached_input_tokens": 2196736,
+          "output_tokens": 39502,
+          "requests": 61,
+          "descendant_sessions": 2,
+          "descendant_tokens": 1088004,
+          "duration_total_s": 735.3,
+          "trial_duration_total_s": 767.152,
+          "total_tokens": 2356249,
+          "raw_cli_total_tokens": 1268245,
+          "duration_mean_s": 367.65,
+          "trial_duration_mean_s": 383.576,
+          "public_summary_matches": true,
+          "original_suite_passed": 2,
+          "old42_passed": 2,
+          "all46_passed": 0
+        }
+      ],
+      "ratios": {
+        "candidate_to_main_tokens": 3.32999662230438,
+        "candidate_to_main_time": 3.028418451400329,
+        "candidate_to_previous_tokens": 0.7678369620332364,
+        "candidate_to_previous_time": 1.0406170393433343
+      },
+      "report_rounded_changes": {
+        "versus_main": {
+          "tokens_percent": "+233.0%",
+          "mean_model_duration_percent": "+202.8%"
+        },
+        "versus_previous55": {
+          "tokens_percent": "-23.2%",
+          "mean_model_duration_percent": "+4.1%"
+        }
+      },
+      "candidate_quality_failed": true,
+      "whole_batch_advantage_supported": false,
+      "no_causal_or_general_speedup_claim": true
+    },
+    "metric_boundaries": "总token=input+output，缓存已含input、推理已含output；不是账单。原CLI单列，在有子会话的四次中仅覆盖主会话。模型计时包含自身工具和审查等待，运行器含checkout/严格判分另列，外部准备与质量复核不混入。",
+    "limitations": [
+      "每格仅两次，七题反复用于开发，不是留出集。",
+      "负载、缓存、其他Python版本和宿主未控制或未运行。",
+      "失败质量门之后的36次、humanize翻译检查、完整七题性能均NOT RUN。"
+    ],
+    "checks_not_run": [
+      "完整42次模型比较以及其他平台/生产验收。"
+    ]
+  },
+  "critical_findings": 0,
+  "important_findings": 1,
+  "source_review_status": "PASS",
+  "actual_candidate_quality": "FAIL",
+  "actual_candidate_performance": "NOT RUN",
+  "full_task_acceptance": "FAIL",
+  "acceptance_decision": "不能把本轮候选判为质量修复完成或满足Fast Path整批性能目标；保留Draft/未合并状态的要求未由本审查变更。",
+  "mutations": [
+    "/tmp/cew-pr62-quality-comparison-20261019-c8L41e/partial-independent-review.json"
+  ],
+  "models_or_behavior_probes_or_tests_run_by_this_reviewer": 0,
+  "retained_failures_and_not_run": "六份实际产物、所有46项逐结果、此前独立保存的历史与本轮36次NOT RUN均未修改。",
+  "memory_usage": "未将历史记忆用于结论；审查依据为当前固定包和所供原始证据。",
+  "status": "FAIL",
+  "overall": "FAIL",
+  "provenance": {
+    "original_review_sha256": "d55bc3fa2d30b836158eaae7d93ed3515d7a47e8f8e9be0c1f1e8d36ac880690",
+    "fixed_package_sha256": "0222d21e180b5085fe2107361626a92f0c49b58876403447740565a92f44bcb0",
+    "note": "Original independent review retained privately; only benchmark-root paths normalized and overall FAIL added for publication."
+  }
+}
