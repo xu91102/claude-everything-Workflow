@@ -111,6 +111,8 @@ Fast Path 改为按需加载并恢复 Git 隔离与相称审查，尚未重测�
 - `data/hard2-runs.csv` — 4 题 × 2 组 × 2 次的配对原始数据
 - `data/tasks.hard.json` — 困难集任务定义
 - `data/summary.json` — 含最终消息、失败用例、diff 文件列表
+- `data/final-2026-10-18/` — 最终 42 次对照的逐次、汇总、任务夹具与补充质量证据
+- `data/final-2026-10-18/paired-stats.json` — 配对检验：符号检验、符号翻转置换检验、任务聚类自助区间
 - `tools/run-trial.js` — Node.js 单次运行 + 自动判分（cell 含 `gpt-fixed`），结果格式兼容原始数据
 - `tools/run-trial.test.js` — Node.js 隔离回归测试，覆盖判分和凭据处理，使用本地工具夹具，不调用模型
 - `tools/validate_tasks.py` — 任务有效性检查
@@ -118,6 +120,7 @@ Fast Path 改为按需加载并恢复 Git 隔离与相称审查，尚未重测�
 - `tools/aggregate.py` — 聚合统计
 - `tools/compare.py` — 三组逐题对照
 - `tools/p0_stats.py` — P0 配对统计
+- `tools/stats_paired.py` — 最终 42 次的配对显著性检验与成本归因（纯标准库）
 - `tools/pilot02/` — Pilot 02 专用：困难候选挖掘、批量验证、隐藏测试预筛（Python 判分器版本）
 - `tools/tasks.validated.json` — 任务清单
 
@@ -166,8 +169,9 @@ npm run test:eval
 ## 局限
 
 - 7 个任务偏简单，测试对代理可见，存在天花板效应，无法区分模型能力上限。
-- 每组每格 2 次重复（第一批为 1 次）；基线自身重复波动中位数 1.36x，效应量小于噪声时只能作方向性结论。
-- 未做显著性检验，也未做盲评代码质量。
+- 每题每格 2 次重复（第一批为 1 次）；基线自身重复波动中位数 1.36x，效应量小于噪声时只能作方向性结论。
+- 已补配对显著性检验，但 7 个任务的分辨率约 10%；5% 以内的差异在这套噪声下测不出来。
+- 未做盲评代码质量。
 - 只覆盖 Codex 宿主；Claude Code 未覆盖。
 - Opus 5.5 臂仍缺失，端到端“追平 Opus”问题未回答。
 - Codex 内层沙箱与 WorkBuddy 沙箱冲突，两侧统一改为直接执行。
