@@ -1,7 +1,8 @@
 # CEW × GPT 真实任务对照评测
 
-最新最终版结果见 [PR #62 最终规则复测](final-benchmark-2026-10-18.md)：三组 × 7 题 × 2 次，共 42 次实际运行。
-AGENTS.md 已恢复为主分支原样。下文 Pilot/P0 数字保留作历史记录，不能当作最终版证据。
+最新结果见 [PR #62 原因定位与优化复测](fast-path-optimization-2026-10-18.md)：同批 7 题各 2 次，对照 main、上一版 PR 和优化版，共 42 次实际运行。
+优化版相对上一版 token −16.7%、平均耗时 −6.1%，但补充质量检查仅 13/14，仍有大输入回退。AGENTS.md 与 main 一致，PR 保持 Draft。
+[上一轮最终规则复测](final-benchmark-2026-10-18.md)及下文 Pilot/P0 数据保留作历史记录，不能替代本轮证据。
 
 2026-10-18 · 模型 `gpt-6.1-sol`（reasoning=high）· Codex 宿主
 
