@@ -1,0 +1,158 @@
+{
+  "measured_source": "6238192c244f7c719934c266ef8e3991a397ae78",
+  "hypothesis": "The rule was loaded, but selecting representative types did not require a separate sequence oracle or a correction-loop work bound. Normal samples did not exercise repeated rounded values or large correction distances.",
+  "alternative_explanation_checked": "Both failing and passing artifacts loaded testing.md and the review skill; original supplied tests and previously frozen boundary queries passed for the failing artifact. This is not an omitted rule load or an original-suite failure.",
+  "python_program": "import json, sys\ndata = json.load(sys.stdin)\nsys.path.insert(0, data[\"support\"])\nnamespace = {\"__name__\": \"more_itertools.more\", \"__package__\": \"more_itertools\", \"__file__\": \"<frozen-source>\"}\nexec(compile(data[\"source\"], \"<frozen-source>\", \"exec\"), namespace)\ncls = namespace[\"numeric_range\"]\nif data[\"operation\"] == \"large_length\":\n    r = cls(1e16, 1e16 + 4, 1e-12)\n    n = len(r)\n    correct = n > 0 and 1e16 + (n - 1) * 1e-12 < 1e16 + 4 <= 1e16 + n * 1e-12\n    print(json.dumps({\"passed\": correct, \"length\": n, \"boundary_matches_iteration_formula\": correct}))\nelse:\n    r = cls(1e16, 1e16 + 4, 0.1)\n    items = list(iter(r))\n    expected = items.index(1e16 + 2)\n    actual = r.index(1e16 + 2)\n    print(json.dumps({\"passed\": actual == expected, \"index\": actual, \"expected_first_index\": expected, \"bounded_iteration_count\": len(items)}))\n",
+  "controller_source": "\"use strict\";\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst cp = require(\"node:child_process\");\nconst crypto = require(\"node:crypto\");\nconst root = __dirname;\nconst previous = \"/tmp/cew-pr62-optimized-20261018-4Wo7oE\";\nconst probes = JSON.parse(fs.readFileSync(path.join(previous, \"cost-probes.json\")));\nconst rows = [1, 2].map((run) => {\n  const trial = path.join(previous, \"trials\", `more-itertools-1247--gpt-fixed--r${run}`);\n  const source = fs.readFileSync(path.join(trial, \"runs/more-itertools-1247\", `gpt-fixed-r${run}`, \"more_itertools/more.py\"), \"utf8\");\n  const rawLog = fs.readFileSync(path.join(trial, \"results/more-itertools-1247\", `gpt-fixed-r${run}`, \"agent.log\"), \"utf8\");\n  const events = rawLog.split(\"\\n\").flatMap((line) => { try { return [JSON.parse(line)]; } catch { return []; } });\n  const commands = events.filter((e) => e.type === \"item.completed\" && e.item?.type === \"command_execution\")\n    .map((e) => ({ command: e.item.command, exit_code: e.item.exit_code }));\n  const cases = [\"large_length\", \"first_repeated_index\"].map((operation) => {\n    const start = Date.now();\n    const result = cp.spawnSync(path.join(previous, \"venvs/more-itertools/bin/python\"), [\"-B\", \"-c\", probes.python_program], {\n      input: JSON.stringify({ source, operation, support: path.join(previous, \"validation/more-itertools-1247/checkout\") }),\n      encoding: \"utf8\", timeout: 2000, env: { ...process.env, PYTHONDONTWRITEBYTECODE: \"1\" }\n    });\n    let value;\n    try { value = JSON.parse(result.stdout); } catch { value = { passed: false, stderr: result.stderr?.slice(-800) }; }\n    return { operation, ...value, passed: result.status === 0 && value.passed === true,\n      timed_out: result.error?.code === \"ETIMEDOUT\", duration_ms: Date.now() - start, exit: result.status };\n  });\n  return { run, source_sha256: crypto.createHash(\"sha256\").update(source).digest(\"hex\"), cases,\n    loaded_testing_rule: commands.some((c) => c.command.includes(\"common/testing.md\")),\n    loaded_review_skill: commands.some((c) => c.command.includes(\"skills/code-review/SKILL.md\")), commands };\n});\nfs.writeFileSync(path.join(root, \"diagnosis.json\"), JSON.stringify({ measured_source: \"6238192c244f7c719934c266ef8e3991a397ae78\",\n  hypothesis: \"The rule was loaded, but selecting representative types did not require a separate sequence oracle or a correction-loop work bound. Normal samples did not exercise repeated rounded values or large correction distances.\",\n  alternative_explanation_checked: \"Both failing and passing artifacts loaded testing.md and the review skill; original supplied tests and previously frozen boundary queries passed for the failing artifact. This is not an omitted rule load or an original-suite failure.\",\n  python_program: probes.python_program, controller_source: fs.readFileSync(__filename, \"utf8\"), rows }, null, 2) + \"\\n\");\nconsole.log(JSON.stringify(rows.map(({ run, cases, loaded_testing_rule, loaded_review_skill }) => ({ run, cases, loaded_testing_rule, loaded_review_skill })), null, 2));\n",
+  "rows": [
+    {
+      "run": 1,
+      "source_sha256": "8814289000481a88306657c10745bff1cdcc51d27ca258efa5428bd758288cc6",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "duration_ms": 43,
+          "exit": 0
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "duration_ms": 38,
+          "exit": 0
+        }
+      ],
+      "loaded_testing_rule": true,
+      "loaded_review_skill": true,
+      "commands": [
+        {
+          "command": "/bin/zsh -lc \"pwd; rg --files -g 'AGENTS.md' -g '*numeric*' -g 'pyproject.toml' -g 'tox.ini' -g 'setup.cfg' -g 'rules/**' -g 'test_more.py' -g 'more.py'\"",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc 'cat /private/tmp/cew-pr62-optimized-20261018-4Wo7oE/trials/more-itertools-1247--gpt-fixed--r1/homes/cew-fixed/.codex/skills/using-superpowers/SKILL.md'",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc \"git status --short; rg -n 'class numeric_range|numeric_range' more_itertools/more.py tests/test_more.py; cat /private/tmp/cew-pr62-optimized-20261018-4Wo7oE/trials/more-itertools-1247--gpt-fixed--r1/homes/cew-fixed/.codex/skills/using-superpowers/references/fast-path.md; for file in 01-base.md 02-implementation.md 05-git-workflow.md 07-forbidden.md 08-specialty-rules-index.md; do if test -f \\\"rules/\"'$file\"; then cat \"rules/$file\"; else cat \"$HOME/.codex/rules/$file\"; fi; done'",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc \"sed -n '2248,2500p' more_itertools/more.py; sed -n '2640,3220p' tests/test_more.py\"",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc 'git branch --show-current; git log -1 --oneline; cat pyproject.toml setup.cfg tox.ini; if test -f rules/common/testing.md; then cat rules/common/testing.md; else cat \"$HOME/.codex/rules/common/testing.md\"; fi; cat /private/tmp/cew-pr62-optimized-20261018-4Wo7oE/trials/more-itertools-1247--gpt-fixed--r1/homes/cew-fixed/.codex/skills/code-review/SKILL.md'",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc \"sed -n '1,75p' more_itertools/more.py; sed -n '2585,2655p' tests/test_more.py; sed -n '2980,3035p' tests/test_more.py; rg -n 'ruff|unittest|doctest' .github/workflows tests/__init__.py; python -m unittest tests.test_more.NumericRangeTests\"",
+          "exit_code": 1
+        },
+        {
+          "command": "/bin/zsh -lc 'python -m unittest tests.test_more.NumericRangeTests'",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc 'python -m unittest tests.test_more'",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc 'git rev-parse HEAD; git diff --stat; git diff -- more_itertools/more.py; command -v ruff'",
+          "exit_code": 1
+        },
+        {
+          "command": "/bin/zsh -lc \"python - <<'PY'\nfrom datetime import datetime, timedelta\nfrom decimal import Decimal, localcontext\nfrom fractions import Fraction\nfrom math import inf, nextafter\nfrom more_itertools import numeric_range\n\ncases = [\n    (-8.732, -13.532, -2.4),\n    (4.51, 10.375, 0.255),\n    (-69.37276490678778, -29.8339073344664, 4.942357196540172),\n    (32.50227965239458, 9.003418351482358, -1.9582384417426848),\n    (0.0, 1.0, 0.1),\n    (1.0, 0.0, -0.1),\n    (1e16, 1e16 + 10, 0.1),\n    (1e16 + 10, 1e16, -0.1),\n    (Decimal('0.0'), Decimal('1.0'), Decimal('0.1')),\n    (Fraction(1, 3), Fraction(7, 3), Fraction(1, 7)),\n    (datetime(2020, 1, 1), datetime(2020, 1, 2), timedelta(hours=7)),\n]\nfor args in cases:\n    r = numeric_range(*args)\n    items = list(r)\n    assert len(r) == len(items), args\n    for i, value in enumerate(items):\n        assert r[i] == value, (args, i)\n        assert value in r, (args, value)\n        assert r.index(value) == items.index(value), (args, value)\n        if isinstance(value, float):\n            for direction in (-inf, inf):\n                neighbor = nextafter(value, direction)\n                assert (neighbor in r) == (neighbor in items), (args, neighbor)\n    try:\n        r[len(items)]\n    except IndexError:\n        pass\n    else:\n        raise AssertionError(args)\n\nfor step in (1e-16, -1e-16):\n    start, stop = (1e16, 1e16 + 2) if step > 0 else (1e16 + 2, 1e16)\n    r = numeric_range(start, stop, step)\n    n = len(r)\n    before = (lambda x: x < stop) if step > 0 else (lambda x: x > stop)\n    assert before(r[-1])\n    assert not before(start + n * step)\n    assert r.index(start) == 0\n\nr = numeric_range(0, 10**100, 3)\nassert r.index(3 * 10**90) == 10**90\nassert 3 * 10**90 in r\nr = numeric_range(0.0, inf, 0.1)\nassert r.index(3 * 0.1) == 3\nassert 3 * 0.1 in r\nassert r.index(0.0) == 0\n\nfor start, stop, step, missing in [\n    (datetime.max - timedelta(days=1), datetime.max, timedelta(days=2), datetime.max - timedelta(hours=12)),\n    (datetime.min + timedelta(days=1), datetime.min, -timedelta(days=2), datetime.min + timedelta(hours=12)),\n]:\n    r = numeric_range(start, stop, step)\n    assert len(r) == 1\n    assert r.index(start) == 0\n    assert missing not in r\n    try:\n        r.index(missing)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError(missing)\n\nwith localcontext() as context:\n    context.prec = 3\n    r = numeric_range(Decimal('1000'), Decimal('1001'), Decimal('0.001'))\n    items = list(r)\n    assert len(r) == len(items)\n    assert r.index(items[-1]) == 0\n\nprint('Boundary checks passed: exact membership, duplicate values, tiny steps, large integers, infinite stop, Decimal, Fraction, and datetime limits.')\nPY\n\"",
+          "exit_code": 1
+        },
+        {
+          "command": "/bin/zsh -lc 'git diff --check; git status --short'",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc \"python - <<'PY'\nimport ast\nimport subprocess\nfrom decimal import Decimal, InvalidOperation, localcontext\nimport more_itertools.more as module\n\nsource = subprocess.run(['git', 'show', 'HEAD:more_itertools/more.py'], check=True, capture_output=True, text=True).stdout\nbaseline_class = next(node for node in ast.parse(source).body if isinstance(node, ast.ClassDef) and node.name == 'numeric_range')\nnamespace = vars(module).copy()\nexec(compile(ast.Module(body=[baseline_class], type_ignores=[]), '<baseline numeric_range>', 'exec'), namespace)\nbaseline = namespace['numeric_range']\n\nwith localcontext() as context:\n    context.prec = 3\n    for implementation in (baseline, module.numeric_range):\n        try:\n            len(implementation(Decimal('1000'), Decimal('1001'), Decimal('0.001')))\n        except InvalidOperation:\n            pass\n        else:\n            raise AssertionError('Expected the existing Decimal precision limit')\n    r = module.numeric_range(Decimal('1000'), Decimal('1001'), Decimal('0.01'))\n    items = list(r)\n    assert len(r) == len(items) == 501\n    assert r.index(items[-1]) == 0\n    assert items[-1] in r\n    assert Decimal('1000.1') not in r\n\nprint('Decimal boundary checks passed; precision overflow was confirmed to occur on the baseline too.')\nprint('All earlier boundary assertions before the Decimal precision check passed; no source changes were needed.')\nPY\"",
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "source_sha256": "89b3e8201d861c564afe9323fc5769185a11c5fedb14d8ab4116d5de4a85b24a",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": false,
+          "stderr": "",
+          "timed_out": true,
+          "duration_ms": 2002,
+          "exit": null
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": false,
+          "index": 18,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "duration_ms": 39,
+          "exit": 0
+        }
+      ],
+      "loaded_testing_rule": true,
+      "loaded_review_skill": true,
+      "commands": [
+        {
+          "command": "/bin/zsh -lc \"pwd; rg --files -g AGENTS.md -g '*numeric*' -g 'pyproject.toml' -g 'setup.cfg' -g '01-base.md' -g 'SKILL.md'\"",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc 'cat /private/tmp/cew-pr62-optimized-20261018-4Wo7oE/trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/skills/using-superpowers/SKILL.md'",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc \"cat /private/tmp/cew-pr62-optimized-20261018-4Wo7oE/trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/skills/using-superpowers/references/fast-path.md; git status --short; rg -n 'class numeric_range|numeric_range' more_itertools tests/test_more.py; rg --files -g AGENTS.md -g 'rules/**' /private/tmp/cew-pr62-optimized-20261018-4Wo7oE/trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex\"",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc 'for f in 01-base.md 02-implementation.md 05-git-workflow.md 07-forbidden.md 08-specialty-rules-index.md common/testing.md; do if test -f \"rules/$f\"; then cat \"rules/$f\"; elif test -f \"$HOME/.codex/rules/$f\"; then cat \"$HOME/.codex/rules/$f\"; fi; done'",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc \"sed -n '2248,2490p' more_itertools/more.py\nsed -n '2650,2805p' tests/test_more.py\nsed -n '2890,3035p' tests/test_more.py\nsed -n '3090,3220p' tests/test_more.py\ncat pyproject.toml\ncat setup.cfg\ngit status --porcelain=v1\ngit branch --show-current\"",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc \"rg -n '\"'^class Numeric|unittest|pytest|ruff'\"' tests/test_more.py tox.ini .github/workflows\ncat /private/tmp/cew-pr62-optimized-20261018-4Wo7oE/trials/more-itertools-1247--gpt-fixed--r2/homes/cew-fixed/.codex/skills/code-review/SKILL.md\npython -m unittest tests.test_more.NumericRangeTests\"",
+          "exit_code": 1
+        },
+        {
+          "command": "/bin/zsh -lc 'python -m unittest tests.test_more.NumericRangeTests\n git rev-parse HEAD'",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc 'git diff --check\ngit diff --stat\ngit diff -- more_itertools/more.py\ncat tox.ini\nrg --files .github/workflows\ncommand -v ruff'",
+          "exit_code": 1
+        },
+        {
+          "command": "/bin/zsh -lc \"python - <<'PY'\nfrom datetime import datetime, timedelta\nfrom more_itertools import numeric_range\n\nr = numeric_range(datetime(9999, 1, 1), datetime.max, timedelta(days=1000))\nfor name, operation in [('len', lambda: len(r)), ('nonmember', lambda: r.index(datetime(9999, 6, 1)))]:\n    try:\n        print(name, operation())\n    except Exception as exc:\n        print(name, type(exc).__name__, str(exc))\nPY\"",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc 'python -m unittest'",
+          "exit_code": 0
+        },
+        {
+          "command": "/bin/zsh -lc \"git diff --check\n git diff --stat\n git status --short\npython - <<'PY'\nfrom datetime import datetime, timedelta\nfrom decimal import Decimal\nfrom fractions import Fraction\nfrom more_itertools import numeric_range\n\ncases = [(0., 1., .1), (1., 0., -.1), (-8.732, -13.532, -2.4), (4.51, 10.375, .255), (0, 10, 3), (10, 0, -3), (Decimal('.1'), Decimal('1'), Decimal('.2')), (Fraction(1, 10), Fraction(1), Fraction(1, 5)), (datetime(2026, 1, 1), datetime(2026, 1, 2), timedelta(hours=5))]\nfor args in cases:\n    r = numeric_range(*args)\n    items = list(iter(r))\n    assert len(r) == len(items), args\n    for i, item in enumerate(items):\n        assert item in r and r.index(item) == i and r[i] == item, (args, i)\n    if items:\n        assert r[-1] == items[-1], args\n    try:\n        r[len(r)]\n    except IndexError:\n        pass\n    else:\n        raise AssertionError(args)\n\nfor start, stop, step, nonmember in [\n    (datetime(9999, 1, 1), datetime.max, timedelta(days=1000), datetime(9999, 6, 1)),\n    (datetime(1, 12, 31), datetime.min, -timedelta(days=1000), datetime(1, 6, 1)),\n]:\n    r = numeric_range(start, stop, step)\n    assert len(r) == 1\n    assert r.index(start) == 0\n    assert nonmember not in r\n    try:\n        r.index(nonmember)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError(nonmember)\n\nr = numeric_range(0, 10**100, 3)\ni = 10**90\nassert r.index(r[i]) == i and r[i] in r\nprint('Compatibility checks passed: floats, integer, Decimal, Fraction, datetime boundaries, large integer indexing.')\nPY\"",
+          "exit_code": 0
+        }
+      ]
+    }
+  ]
+}

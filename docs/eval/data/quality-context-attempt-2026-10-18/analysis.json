@@ -1,0 +1,595 @@
+{
+  "completed": 42,
+  "summary": [
+    {
+      "cell": "gpt-cew",
+      "n": 14,
+      "resolved": 14,
+      "tests_preserved_accepted": 14,
+      "duration_total_s": 1496.5,
+      "duration_mean_s": 106.89285714285714,
+      "duration_median_s": 94.1,
+      "trial_duration_total_s": 1643.8199999999997,
+      "trial_duration_mean_s": 117.41571428571426,
+      "input_tokens": 3784821,
+      "cached_input_tokens": 3326720,
+      "uncached_input_tokens": 458101,
+      "output_tokens": 40883,
+      "total_tokens": 3825704,
+      "total_tokens_mean": 273264.5714285714,
+      "raw_cli_total_tokens": 3825704,
+      "descendant_sessions": 0,
+      "new_failures": 0,
+      "tests_modified": 0,
+      "packages_changed": 0,
+      "overclaims": 0,
+      "timeouts": 0
+    },
+    {
+      "cell": "gpt-trim",
+      "n": 14,
+      "resolved": 14,
+      "tests_preserved_accepted": 14,
+      "duration_total_s": 1555.2,
+      "duration_mean_s": 111.08571428571429,
+      "duration_median_s": 81,
+      "trial_duration_total_s": 1699.0760000000002,
+      "trial_duration_mean_s": 121.36257142857144,
+      "input_tokens": 3270949,
+      "cached_input_tokens": 2811136,
+      "uncached_input_tokens": 459813,
+      "output_tokens": 43004,
+      "total_tokens": 3313953,
+      "total_tokens_mean": 236710.92857142858,
+      "raw_cli_total_tokens": 3313953,
+      "descendant_sessions": 0,
+      "new_failures": 0,
+      "tests_modified": 0,
+      "packages_changed": 0,
+      "overclaims": 0,
+      "timeouts": 0
+    },
+    {
+      "cell": "gpt-fixed",
+      "n": 14,
+      "resolved": 14,
+      "tests_preserved_accepted": 14,
+      "duration_total_s": 1674.9999999999995,
+      "duration_mean_s": 119.64285714285711,
+      "duration_median_s": 90.85,
+      "trial_duration_total_s": 1821.4839999999997,
+      "trial_duration_mean_s": 130.10599999999997,
+      "input_tokens": 3120937,
+      "cached_input_tokens": 2579840,
+      "uncached_input_tokens": 541097,
+      "output_tokens": 46350,
+      "total_tokens": 3167287,
+      "total_tokens_mean": 226234.7857142857,
+      "raw_cli_total_tokens": 3167287,
+      "descendant_sessions": 0,
+      "new_failures": 0,
+      "tests_modified": 0,
+      "packages_changed": 0,
+      "overclaims": 0,
+      "timeouts": 0
+    }
+  ],
+  "tasks": [
+    {
+      "task": "more-itertools-1247",
+      "arms": {
+        "gpt-cew": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 381351,
+          "total_tokens_mean": 387750,
+          "duration_mean_s": 199.79999999999998,
+          "durations": [
+            256.4,
+            143.2
+          ],
+          "tokens": [
+            524577,
+            250923
+          ]
+        },
+        "gpt-trim": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 386494,
+          "total_tokens_mean": 396211.5,
+          "duration_mean_s": 291.25,
+          "durations": [
+            182.4,
+            400.1
+          ],
+          "tokens": [
+            292724,
+            499699
+          ]
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 349825.5,
+          "total_tokens_mean": 359661,
+          "duration_mean_s": 314.25,
+          "durations": [
+            286.5,
+            342
+          ],
+          "tokens": [
+            304675,
+            414647
+          ]
+        }
+      }
+    },
+    {
+      "task": "slugify-194",
+      "arms": {
+        "gpt-cew": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 235604.5,
+          "total_tokens_mean": 237378.5,
+          "duration_mean_s": 79.65,
+          "durations": [
+            81.1,
+            78.2
+          ],
+          "tokens": [
+            189422,
+            285335
+          ]
+        },
+        "gpt-trim": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 189553,
+          "total_tokens_mean": 191107.5,
+          "duration_mean_s": 67.75,
+          "durations": [
+            63.1,
+            72.4
+          ],
+          "tokens": [
+            135629,
+            246586
+          ]
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 202732.5,
+          "total_tokens_mean": 204886,
+          "duration_mean_s": 90,
+          "durations": [
+            107,
+            73
+          ],
+          "tokens": [
+            186303,
+            223469
+          ]
+        }
+      }
+    },
+    {
+      "task": "slugify-200",
+      "arms": {
+        "gpt-cew": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 305457,
+          "total_tokens_mean": 308131,
+          "duration_mean_s": 105.35,
+          "durations": [
+            106.2,
+            104.5
+          ],
+          "tokens": [
+            334402,
+            281860
+          ]
+        },
+        "gpt-trim": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 216027,
+          "total_tokens_mean": 218112.5,
+          "duration_mean_s": 81.9,
+          "durations": [
+            75.6,
+            88.2
+          ],
+          "tokens": [
+            205347,
+            230878
+          ]
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 241005,
+          "total_tokens_mean": 243664.5,
+          "duration_mean_s": 96.9,
+          "durations": [
+            86.7,
+            107.1
+          ],
+          "tokens": [
+            242069,
+            245260
+          ]
+        }
+      }
+    },
+    {
+      "task": "humanize-346",
+      "arms": {
+        "gpt-cew": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 293652.5,
+          "total_tokens_mean": 296707,
+          "duration_mean_s": 102.15,
+          "durations": [
+            105.1,
+            99.2
+          ],
+          "tokens": [
+            291883,
+            301531
+          ]
+        },
+        "gpt-trim": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 230500.5,
+          "total_tokens_mean": 233371,
+          "duration_mean_s": 109,
+          "durations": [
+            88.3,
+            129.7
+          ],
+          "tokens": [
+            198221,
+            268521
+          ]
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 258857,
+          "total_tokens_mean": 261918,
+          "duration_mean_s": 100.5,
+          "durations": [
+            106,
+            95
+          ],
+          "tokens": [
+            280408,
+            243428
+          ]
+        }
+      }
+    },
+    {
+      "task": "humanize-381",
+      "arms": {
+        "gpt-cew": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 269633,
+          "total_tokens_mean": 271956,
+          "duration_mean_s": 93.15,
+          "durations": [
+            90.8,
+            95.5
+          ],
+          "tokens": [
+            303764,
+            240148
+          ]
+        },
+        "gpt-trim": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 209454.5,
+          "total_tokens_mean": 211171,
+          "duration_mean_s": 73.95,
+          "durations": [
+            77.9,
+            70
+          ],
+          "tokens": [
+            232687,
+            189655
+          ]
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 174750.5,
+          "total_tokens_mean": 176559,
+          "duration_mean_s": 75.55,
+          "durations": [
+            86,
+            65.1
+          ],
+          "tokens": [
+            196219,
+            156899
+          ]
+        }
+      }
+    },
+    {
+      "task": "more-itertools-1284",
+      "arms": {
+        "gpt-cew": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 217462.5,
+          "total_tokens_mean": 219504.5,
+          "duration_mean_s": 83.85,
+          "durations": [
+            90.4,
+            77.3
+          ],
+          "tokens": [
+            204614,
+            234395
+          ]
+        },
+        "gpt-trim": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 201162,
+          "total_tokens_mean": 203109.5,
+          "duration_mean_s": 84.9,
+          "durations": [
+            85.7,
+            84.1
+          ],
+          "tokens": [
+            202766,
+            203453
+          ]
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 185758,
+          "total_tokens_mean": 187856,
+          "duration_mean_s": 86.19999999999999,
+          "durations": [
+            99.1,
+            73.3
+          ],
+          "tokens": [
+            171179,
+            204533
+          ]
+        }
+      }
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "arms": {
+        "gpt-cew": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 189250,
+          "total_tokens_mean": 191425,
+          "duration_mean_s": 84.30000000000001,
+          "durations": [
+            92.7,
+            75.9
+          ],
+          "tokens": [
+            192977,
+            189873
+          ]
+        },
+        "gpt-trim": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 202283.5,
+          "total_tokens_mean": 203893.5,
+          "duration_mean_s": 68.85,
+          "durations": [
+            75.4,
+            62.3
+          ],
+          "tokens": [
+            212880,
+            194907
+          ]
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 147540,
+          "total_tokens_mean": 149099,
+          "duration_mean_s": 74.1,
+          "durations": [
+            78.1,
+            70.1
+          ],
+          "tokens": [
+            177223,
+            120975
+          ]
+        }
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "task": "more-itertools-1247",
+      "run": 2,
+      "token_ratio_to_main": 1.2142171104282988,
+      "duration_ratio_to_main": 2.0006983240223466,
+      "token_ratio_to_previous": 1.0408268539648269,
+      "duration_ratio_to_previous": 1.5707236842105263
+    },
+    {
+      "task": "more-itertools-1247",
+      "run": 1,
+      "token_ratio_to_main": 0.7904406788707854,
+      "duration_ratio_to_main": 1.3338533541341655,
+      "token_ratio_to_previous": 0.8297935357084966,
+      "duration_ratio_to_previous": 0.854786303424144
+    },
+    {
+      "task": "slugify-194",
+      "run": 1,
+      "token_ratio_to_main": 0.9835341195848423,
+      "duration_ratio_to_main": 1.3193588162762022,
+      "token_ratio_to_previous": 1.3736221604524106,
+      "duration_ratio_to_previous": 1.6957210776545166
+    },
+    {
+      "task": "slugify-200",
+      "run": 1,
+      "token_ratio_to_main": 0.7238862207761916,
+      "duration_ratio_to_main": 0.8163841807909604,
+      "token_ratio_to_previous": 1.1788290065109304,
+      "duration_ratio_to_previous": 1.146825396825397
+    },
+    {
+      "task": "humanize-346",
+      "run": 1,
+      "token_ratio_to_main": 0.9606863023882857,
+      "duration_ratio_to_main": 1.0085632730732637,
+      "token_ratio_to_previous": 1.4146230722274633,
+      "duration_ratio_to_previous": 1.200453001132503
+    },
+    {
+      "task": "humanize-381",
+      "run": 1,
+      "token_ratio_to_main": 0.645958704783977,
+      "duration_ratio_to_main": 0.947136563876652,
+      "token_ratio_to_previous": 0.8432744416318918,
+      "duration_ratio_to_previous": 1.10397946084724
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "run": 1,
+      "token_ratio_to_main": 0.9183633282722812,
+      "duration_ratio_to_main": 0.8425026968716288,
+      "token_ratio_to_previous": 0.8325018789928599,
+      "duration_ratio_to_previous": 1.0358090185676392
+    },
+    {
+      "task": "more-itertools-1284",
+      "run": 1,
+      "token_ratio_to_main": 0.8365947589119024,
+      "duration_ratio_to_main": 1.0962389380530972,
+      "token_ratio_to_previous": 0.844219445074618,
+      "duration_ratio_to_previous": 1.1563593932322052
+    },
+    {
+      "task": "slugify-200",
+      "run": 2,
+      "token_ratio_to_main": 0.8701483005747535,
+      "duration_ratio_to_main": 1.0248803827751196,
+      "token_ratio_to_previous": 1.0622926394026282,
+      "duration_ratio_to_previous": 1.2142857142857142
+    },
+    {
+      "task": "slugify-194",
+      "run": 2,
+      "token_ratio_to_main": 0.783181173007167,
+      "duration_ratio_to_main": 0.9335038363171355,
+      "token_ratio_to_previous": 0.9062517742288695,
+      "duration_ratio_to_previous": 1.0082872928176794
+    },
+    {
+      "task": "humanize-381",
+      "run": 2,
+      "token_ratio_to_main": 0.6533429385212453,
+      "duration_ratio_to_main": 0.681675392670157,
+      "token_ratio_to_previous": 0.8272863884421713,
+      "duration_ratio_to_previous": 0.9299999999999999
+    },
+    {
+      "task": "humanize-346",
+      "run": 2,
+      "token_ratio_to_main": 0.8073067114160734,
+      "duration_ratio_to_main": 0.9576612903225806,
+      "token_ratio_to_previous": 0.9065510704935554,
+      "duration_ratio_to_previous": 0.7324595219737857
+    },
+    {
+      "task": "more-itertools-1284",
+      "run": 2,
+      "token_ratio_to_main": 0.8725996714946991,
+      "duration_ratio_to_main": 0.9482535575679172,
+      "token_ratio_to_previous": 1.0053083513145542,
+      "duration_ratio_to_previous": 0.8715814506539834
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "run": 2,
+      "token_ratio_to_main": 0.6371364017000838,
+      "duration_ratio_to_main": 0.9235836627140973,
+      "token_ratio_to_previous": 0.6206806323015592,
+      "duration_ratio_to_previous": 1.1252006420545746
+    }
+  ],
+  "noise": [
+    {
+      "cell": "gpt-cew",
+      "task_pairs": 7,
+      "token_repeat_ratio_median": 1.1864116937486695,
+      "duration_repeat_ratio_median": 1.0594758064516128
+    },
+    {
+      "cell": "gpt-trim",
+      "task_pairs": 7,
+      "token_repeat_ratio_median": 1.2268962062692785,
+      "duration_repeat_ratio_median": 1.1666666666666667
+    },
+    {
+      "cell": "gpt-fixed",
+      "task_pairs": 7,
+      "token_repeat_ratio_median": 1.1994922250312663,
+      "duration_repeat_ratio_median": 1.2352941176470587
+    }
+  ],
+  "supplemental_quality_summary": [
+    {
+      "cell": "gpt-cew",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 12,
+      "predeclared_boundary_failures": 2,
+      "additional_numeric_failures": 1,
+      "additional_context_failures": 2,
+      "translation_checks": 4,
+      "translation_checks_passed": 4
+    },
+    {
+      "cell": "gpt-trim",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 12,
+      "predeclared_boundary_failures": 1,
+      "additional_numeric_failures": 1,
+      "additional_context_failures": 2,
+      "translation_checks": 4,
+      "translation_checks_passed": 4
+    },
+    {
+      "cell": "gpt-fixed",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 12,
+      "predeclared_boundary_failures": 0,
+      "additional_numeric_failures": 0,
+      "additional_context_failures": 2,
+      "translation_checks": 4,
+      "translation_checks_passed": 4
+    }
+  ]
+}

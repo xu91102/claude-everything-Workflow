@@ -1,0 +1,225 @@
+{
+  "kind": "Uniform large-input and sequence-contract checks frozen before all model trials; exact cases retained from the previous round",
+  "amendment": {
+    "kind": "Predeclared before every model trial; two checks copied from previous round",
+    "frozen_at": "2026-10-18T14:53:26.318Z",
+    "controller_sha256": "562e90aa9b993c34a563639ece261ac3e90aee2573507bb3651c62d8e2bee019",
+    "timeout_ms": 2000,
+    "per_arm_artifacts": 2,
+    "parent_and_upstream_reference": true
+  },
+  "timeout_ms_per_case": 2000,
+  "methodology": "Same two checks for parent, upstream reference and all six numeric_range artifacts after all measured trials; frozen source evaluated in a new child process, no measured checkout changes or model reruns",
+  "python_program": "import json, sys\ndata = json.load(sys.stdin)\nsys.path.insert(0, data[\"support\"])\nnamespace = {\"__name__\": \"more_itertools.more\", \"__package__\": \"more_itertools\", \"__file__\": \"<frozen-source>\"}\nexec(compile(data[\"source\"], \"<frozen-source>\", \"exec\"), namespace)\ncls = namespace[\"numeric_range\"]\nif data[\"operation\"] == \"large_length\":\n    r = cls(1e16, 1e16 + 4, 1e-12)\n    n = len(r)\n    correct = n > 0 and 1e16 + (n - 1) * 1e-12 < 1e16 + 4 <= 1e16 + n * 1e-12\n    print(json.dumps({\"passed\": correct, \"length\": n, \"boundary_matches_iteration_formula\": correct}))\nelse:\n    r = cls(1e16, 1e16 + 4, 0.1)\n    items = list(iter(r))\n    expected = items.index(1e16 + 2)\n    actual = r.index(1e16 + 2)\n    print(json.dumps({\"passed\": actual == expected, \"index\": actual, \"expected_first_index\": expected, \"bounded_iteration_count\": len(items)}))\n",
+  "controller_source": "\"use strict\";\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst cp = require(\"node:child_process\");\nconst crypto = require(\"node:crypto\");\nconst root = __dirname;\nconst progress = JSON.parse(fs.readFileSync(path.join(root, \"progress.json\")));\nif (progress.count !== 42) throw new Error(\"Wait for measured trials to finish\");\nconst hash = (bytes) => crypto.createHash(\"sha256\").update(bytes).digest(\"hex\");\nconst gitSource = (ref) => cp.execFileSync(\"git\", [\"show\", `${ref}:more_itertools/more.py`], { cwd: path.join(root, \"repos/more-itertools\"), encoding: \"utf8\" });\nconst versions = [\n  { version: \"parent\", source: gitSource(\"2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10\") },\n  { version: \"upstream_reference\", source: gitSource(\"dc2664b4a7c66209485c9f5e359137bf4b365eb3\") },\n  ...progress.completed.filter((r) => r.task === \"more-itertools-1247\").map((r) => ({ version: `${r.cell}-r${r.repetition}`, cell: r.cell, run: r.repetition,\n    source: fs.readFileSync(path.join(root, \"trials\", `${r.task}--${r.cell}--r${r.repetition}`, \"runs\", r.task, `${r.cell}-r${r.repetition}`, \"more_itertools/more.py\"), \"utf8\") })),\n];\nconst program = `import json, sys\ndata = json.load(sys.stdin)\nsys.path.insert(0, data[\"support\"])\nnamespace = {\"__name__\": \"more_itertools.more\", \"__package__\": \"more_itertools\", \"__file__\": \"<frozen-source>\"}\nexec(compile(data[\"source\"], \"<frozen-source>\", \"exec\"), namespace)\ncls = namespace[\"numeric_range\"]\nif data[\"operation\"] == \"large_length\":\n    r = cls(1e16, 1e16 + 4, 1e-12)\n    n = len(r)\n    correct = n > 0 and 1e16 + (n - 1) * 1e-12 < 1e16 + 4 <= 1e16 + n * 1e-12\n    print(json.dumps({\"passed\": correct, \"length\": n, \"boundary_matches_iteration_formula\": correct}))\nelse:\n    r = cls(1e16, 1e16 + 4, 0.1)\n    items = list(iter(r))\n    expected = items.index(1e16 + 2)\n    actual = r.index(1e16 + 2)\n    print(json.dumps({\"passed\": actual == expected, \"index\": actual, \"expected_first_index\": expected, \"bounded_iteration_count\": len(items)}))\n`;\nconst results = versions.map(({ source, ...meta }) => {\n  const cases = [\"large_length\", \"first_repeated_index\"].map((operation) => {\n    const start = Date.now();\n    const result = cp.spawnSync(path.join(root, \"venvs/more-itertools/bin/python\"), [\"-B\", \"-c\", program], {\n      input: JSON.stringify({ source, operation, support: path.join(root, \"validation/more-itertools-1247/checkout\") }),\n      encoding: \"utf8\", timeout: 2000, env: { ...process.env, PYTHONDONTWRITEBYTECODE: \"1\" },\n    });\n    const timedOut = result.error?.code === \"ETIMEDOUT\";\n    let value;\n    try { value = JSON.parse(result.stdout); } catch { value = { passed: false, exception_tail: result.stderr?.slice(-1000) }; }\n    return { operation, ...value, passed: !timedOut && result.status === 0 && value.passed === true,\n      timed_out: timedOut, exit: result.status, duration_ms: Date.now() - start };\n  });\n  return { ...meta, source_sha256: hash(source), cases };\n});\nconst report = { kind: \"Uniform large-input and sequence-contract checks frozen before all model trials; exact cases retained from the previous round\",\n  amendment: JSON.parse(fs.readFileSync(path.join(root, \"protocol/cost-amendment.json\"))), timeout_ms_per_case: 2000,\n  methodology: \"Same two checks for parent, upstream reference and all six numeric_range artifacts after all measured trials; frozen source evaluated in a new child process, no measured checkout changes or model reruns\",\n  python_program: program, controller_source: fs.readFileSync(__filename, \"utf8\"), results };\nfs.writeFileSync(path.join(root, \"cost-probes.json\"), JSON.stringify(report, null, 2));\nconsole.log(JSON.stringify(results.map((r) => ({ version: r.version, cases: r.cases.map((c) => ({ operation: c.operation, passed: c.passed, timeout: c.timed_out, actual: c.index ?? c.length, expected: c.expected_first_index })) }))));\n",
+  "results": [
+    {
+      "version": "parent",
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": false,
+          "length": 4000000000001,
+          "boundary_matches_iteration_formula": false,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 38
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": false,
+          "exception_tail": "Traceback (most recent call last):\n  File \"<string>\", line 16, in <module>\n    actual = r.index(1e16 + 2)\n  File \"<frozen-source>\", line 2458, in index\nValueError: 1.0000000000000002e+16 is not in numeric range\n",
+          "timed_out": false,
+          "exit": 1,
+          "duration_ms": 38
+        }
+      ]
+    },
+    {
+      "version": "upstream_reference",
+      "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": false,
+          "exception_tail": "",
+          "timed_out": true,
+          "exit": null,
+          "duration_ms": 2003
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": false,
+          "index": 19,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 41
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r1",
+      "cell": "gpt-cew",
+      "run": 1,
+      "source_sha256": "f743c026cacedd0d84784becc996969f157678db240abdc6942bafc41d81141d",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 41
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 41
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r1",
+      "cell": "gpt-trim",
+      "run": 1,
+      "source_sha256": "bf7a252554d133b8317e13c311ac3ed933479d8bac2565b6aabba33898d80bca",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 41
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 42
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "source_sha256": "b51035e957b4289a8fe5eb36c7058e2c0083e6eae878730993e9ff7de117a0ce",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 40
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 42
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "source_sha256": "83506f5ea74cfac1fea73e0fcfffb36dd408e7c840181864353787ae7dac0c9a",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 41
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 41
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r2",
+      "cell": "gpt-trim",
+      "run": 2,
+      "source_sha256": "2895a9f013ccb75483eb4af85fbf8856b324c5cd43529074441a2f478674327f",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 41
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": false,
+          "index": 18,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 44
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r2",
+      "cell": "gpt-cew",
+      "run": 2,
+      "source_sha256": "297b78b0d8eaed1a35e40406ce84eb5a170593f8f3794f6de994e80fff6413be",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": false,
+          "exception_tail": "",
+          "timed_out": true,
+          "exit": null,
+          "duration_ms": 2004
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": false,
+          "index": 19,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 39
+        }
+      ]
+    }
+  ]
+}

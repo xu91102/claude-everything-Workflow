@@ -1,0 +1,1095 @@
+{
+  "kind": "Post-hoc uniform Decimal context compatibility checks; separate from twenty predeclared checks",
+  "discovery": {
+    "prepared_at": "2026-10-18T16:19:27.449Z",
+    "discovered_by": "pr62_final_quality_evidence_review independent static inspection",
+    "timing": "Prepared during measured models; original20 unchanged. Actual execution only after42finish. Posthoc12 not predeclared20.",
+    "hypothesis": "Static findings: Emax overflow r1; Inexact trap invalidates original legitimate first-element member/index in both candidates. Uniform12queries total for parent/reference/all6 artifacts. NOTRUN until42finish.",
+    "controller_sha256": "94a2eb20c325bd1c8365bfcf8c7dbedfc8cca37708070a4a7a3638a0acd25e11",
+    "refined_before_any_execution_at": "2026-10-18T16:21:51.285Z",
+    "constructor_guard": "Constructor failures cannot count as expected index ValueError"
+  },
+  "executed_at": "2026-10-18T16:42:24.049Z",
+  "original_model_runs_and_artifacts_changed": false,
+  "no_measured_model_active": true,
+  "python_program": "import json,sys\nfrom decimal import Decimal,localcontext,Overflow,Inexact\nd=json.load(sys.stdin)\nsys.path.insert(0,d[\"support\"])\nns={\"__name__\":\"more_itertools.more\",\"__package__\":\"more_itertools\",\"__file__\":\"<frozen-source>\"}\nexec(compile(d[\"source\"],\"<frozen-source>\",\"exec\"),ns)\nwith localcontext() as ctx:\n    ctx.prec=2\n    sign=d[\"direction\"]\n    bounded=d[\"context\"]==\"bounded_exponent\"\n    if bounded:\n        ctx.Emax=1\n        ctx.traps[Overflow]=True\n        args=(Decimal(0),Decimal(99*sign),Decimal(50*sign))\n        query=Decimal(75*sign)\n    else:\n        ctx.traps[Inexact]=True\n        args=(Decimal(sign),Decimal(2*sign),Decimal(\"0.001\")*sign)\n        query=args[0]\n    constructed=False\n    try:\n        r=ns[\"numeric_range\"](*args)\n        constructed=True\n        if d[\"operation\"]==\"len\":\n            v=len(r)\n            ok=type(v) is int and v==2\n        elif d[\"operation\"]==\"contains\":\n            v=query in r\n            ok=v is (False if bounded else True)\n        elif d[\"operation\"]==\"first\":\n            v=r[0]\n            ok=v==args[0]\n        else:\n            v=r.index(query)\n            ok=not bounded and type(v) is int and v==0\n        row={\"passed\":ok,\"value\":repr(v)}\n    except Exception as e:\n        row={\"passed\":constructed and bounded and d[\"operation\"]==\"index\" and type(e) is ValueError,\"exception\":type(e).__name__,\"message\":str(e),\"constructor_failed\":not constructed}\nprint(json.dumps(row))\n",
+  "controller_source": "\"use strict\";\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst cp = require(\"node:child_process\");\nconst crypto = require(\"node:crypto\");\nconst root = __dirname;\nconst progress = JSON.parse(fs.readFileSync(path.join(root, \"progress.json\")));\nif (progress.count !== 42) throw new Error(\"Post-hoc context probes require all measured models to finish first\");\nconst hash = (bytes) => crypto.createHash(\"sha256\").update(bytes).digest(\"hex\");\nconst gitSource = (ref) => cp.execFileSync(\"git\", [\"show\", `${ref}:more_itertools/more.py`], {cwd:path.join(root,\"repos/more-itertools\"),encoding:\"utf8\"});\nconst program = `import json,sys\nfrom decimal import Decimal,localcontext,Overflow,Inexact\nd=json.load(sys.stdin)\nsys.path.insert(0,d[\"support\"])\nns={\"__name__\":\"more_itertools.more\",\"__package__\":\"more_itertools\",\"__file__\":\"<frozen-source>\"}\nexec(compile(d[\"source\"],\"<frozen-source>\",\"exec\"),ns)\nwith localcontext() as ctx:\n    ctx.prec=2\n    sign=d[\"direction\"]\n    bounded=d[\"context\"]==\"bounded_exponent\"\n    if bounded:\n        ctx.Emax=1\n        ctx.traps[Overflow]=True\n        args=(Decimal(0),Decimal(99*sign),Decimal(50*sign))\n        query=Decimal(75*sign)\n    else:\n        ctx.traps[Inexact]=True\n        args=(Decimal(sign),Decimal(2*sign),Decimal(\"0.001\")*sign)\n        query=args[0]\n    constructed=False\n    try:\n        r=ns[\"numeric_range\"](*args)\n        constructed=True\n        if d[\"operation\"]==\"len\":\n            v=len(r)\n            ok=type(v) is int and v==2\n        elif d[\"operation\"]==\"contains\":\n            v=query in r\n            ok=v is (False if bounded else True)\n        elif d[\"operation\"]==\"first\":\n            v=r[0]\n            ok=v==args[0]\n        else:\n            v=r.index(query)\n            ok=not bounded and type(v) is int and v==0\n        row={\"passed\":ok,\"value\":repr(v)}\n    except Exception as e:\n        row={\"passed\":constructed and bounded and d[\"operation\"]==\"index\" and type(e) is ValueError,\"exception\":type(e).__name__,\"message\":str(e),\"constructor_failed\":not constructed}\nprint(json.dumps(row))\n`;\nconst versions=[{version:\"parent\",source:gitSource(\"2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10\")},{version:\"upstream_reference\",source:gitSource(\"dc2664b4a7c66209485c9f5e359137bf4b365eb3\")},...progress.completed.filter(r=>r.task===\"more-itertools-1247\").map(r=>({version:`${r.cell}-r${r.repetition}`,cell:r.cell,run:r.repetition,source:fs.readFileSync(path.join(root,\"trials\",`${r.task}--${r.cell}--r${r.repetition}`,\"runs\",r.task,`${r.cell}-r${r.repetition}`,\"more_itertools/more.py\"),\"utf8\")}))];\nconst checks=[\"bounded_exponent\",\"inexact_trap\"].flatMap(context=>[1,-1].flatMap(direction=>(context===\"bounded_exponent\"?[\"len\",\"contains\",\"index\"]:[\"contains\",\"index\",\"first\"]).map(operation=>({context,direction,operation}))));\nconst results=versions.map(({source,...meta})=>({...meta,source_sha256:hash(source),cases:checks.map(({context,direction,operation})=>{\n const started=Date.now();\n const r=cp.spawnSync(path.join(root,\"venvs/more-itertools/bin/python\"),[\"-B\",\"-c\",program],{input:JSON.stringify({source,support:path.join(root,\"validation/more-itertools-1247/checkout\"),context,direction,operation}),encoding:\"utf8\",timeout:10000,env:{...process.env,PYTHONDONTWRITEBYTECODE:\"1\"}});\n let row;\n try{row=JSON.parse(r.stdout);}catch{row={passed:false,execution_error:(r.stderr||String(r.error||\"missing JSON\")).slice(-800)};}\n return {case:`${context}_${direction===1?\"positive\":\"negative\"}`,operation,...row,passed:!r.error&&r.status===0&&row.passed===true,exit:r.status,timed_out:r.error?.code===\"ETIMEDOUT\",duration_ms:Date.now()-started};\n})}));\nconst evidence={kind:\"Post-hoc uniform Decimal context compatibility checks; separate from twenty predeclared checks\",discovery:JSON.parse(fs.readFileSync(path.join(root,\"protocol/context-amendment.json\"))),executed_at:new Date().toISOString(),original_model_runs_and_artifacts_changed:false,no_measured_model_active:true,python_program:program,controller_source:fs.readFileSync(__filename,\"utf8\"),results};\nfs.writeFileSync(path.join(root,\"context-probes.json\"),JSON.stringify(evidence,null,2));\nconsole.log(JSON.stringify(results.map(r=>({version:r.version,passed:r.cases.filter(c=>c.passed).length,total:r.cases.length}))));\n",
+  "results": [
+    {
+      "version": "parent",
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "len",
+          "passed": true,
+          "value": "2",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 40
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "75 is not in numeric range",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "len",
+          "passed": true,
+          "value": "2",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "-75 is not in numeric range",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        }
+      ]
+    },
+    {
+      "version": "upstream_reference",
+      "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+      "cases": [
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 40
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 42
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 42
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 43
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 43
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 41
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 41
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 42
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 42
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 41
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 41
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 41
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r1",
+      "cell": "gpt-cew",
+      "run": 1,
+      "source_sha256": "8002637617d1806d28b571593c8672dbc3c6ed06be14ba6359e1f627ee39c03e",
+      "cases": [
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 41
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 42
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 40
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 41
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 40
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 43
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 40
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 40
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 40
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "source_sha256": "02a742a0e0cf0c9d38c2ecc1fff724692d1ff5796cbadd99316c84c0e188635a",
+      "cases": [
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "len",
+          "passed": true,
+          "value": "2",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "75 is not in numeric range",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "len",
+          "passed": true,
+          "value": "2",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "-75 is not in numeric range",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Inexact",
+          "message": "[<class 'decimal.Inexact'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "index",
+          "passed": false,
+          "exception": "Inexact",
+          "message": "[<class 'decimal.Inexact'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "first",
+          "passed": false,
+          "exception": "Inexact",
+          "message": "[<class 'decimal.Inexact'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Inexact",
+          "message": "[<class 'decimal.Inexact'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "index",
+          "passed": false,
+          "exception": "Inexact",
+          "message": "[<class 'decimal.Inexact'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "first",
+          "passed": false,
+          "exception": "Inexact",
+          "message": "[<class 'decimal.Inexact'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r2",
+      "cell": "gpt-trim",
+      "run": 2,
+      "source_sha256": "06bd91cc1268c5e47f78b05de42acf691ea15fe8e877820d14490f8746f5ec3e",
+      "cases": [
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r2",
+      "cell": "gpt-cew",
+      "run": 2,
+      "source_sha256": "5e5df3bb414b5e64a47e3e4435e0fee237d94f8eecb278c4e057ace5c828921a",
+      "cases": [
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r1",
+      "cell": "gpt-trim",
+      "run": 1,
+      "source_sha256": "2e60f3019d187b40e29a60d3df9647b3b393ac2f82cf99b84a67d09cc513eecb",
+      "cases": [
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 43
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 40
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "source_sha256": "2fc6655901ca706899194d2ddecf3f32baf6783cb345e39ffa8c8283c422261e",
+      "cases": [
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_positive",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "len",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "bounded_exponent_negative",
+          "operation": "index",
+          "passed": false,
+          "exception": "Overflow",
+          "message": "[<class 'decimal.Overflow'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Inexact",
+          "message": "[<class 'decimal.Inexact'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "index",
+          "passed": false,
+          "exception": "Inexact",
+          "message": "[<class 'decimal.Inexact'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_positive",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "contains",
+          "passed": false,
+          "exception": "Inexact",
+          "message": "[<class 'decimal.Inexact'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 38
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "index",
+          "passed": false,
+          "exception": "Inexact",
+          "message": "[<class 'decimal.Inexact'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        },
+        {
+          "case": "inexact_trap_negative",
+          "operation": "first",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]",
+          "constructor_failed": false,
+          "exit": 0,
+          "timed_out": false,
+          "duration_ms": 39
+        }
+      ]
+    }
+  ]
+}
