@@ -1,0 +1,157 @@
+{
+  "kind": "POSTHOC two stop-only-float target-length checks; original46 unchanged and previous4posthoc preserved",
+  "amended_at": "2026-10-18T22:47:55.052Z",
+  "hypothesis_proposed_at": "2026-10-18T22:41:55.723Z",
+  "models_finished_at": "2026-10-18T22:43:48.763Z",
+  "actual_probes_started_at": "2026-10-18T22:46:01.866Z",
+  "actual_probes_finished_at": "2026-10-18T22:46:02.616Z",
+  "actual_queries": 16,
+  "per_numeric_artifact": 2,
+  "total_executed_numeric_checks_per_artifact": 52,
+  "reference_control": "2/2",
+  "parent_role": "Exposes original target length bug with valid constructor/len; not a positivecorrectnesscontrol",
+  "controller_sha256": "256fcc74b6dfc3f256793fb36f9abc4153826caa56c45307cb92fa9a1eb91320",
+  "previous_all_executed_summary": [
+    {
+      "cell": "gpt-cew",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 12,
+      "predeclared_boundary_failures": 2,
+      "additional_numeric_failures": 2,
+      "additional_context_failures": 2,
+      "compatibility_failures": 0,
+      "promotion_failures": 2,
+      "translation_checks": 4,
+      "translation_checks_passed": 4,
+      "predeclared_all_executed_checks_passed": 12,
+      "posthoc_shortcircuit_failures": 0
+    },
+    {
+      "cell": "gpt-trim",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 14,
+      "predeclared_boundary_failures": 0,
+      "additional_numeric_failures": 0,
+      "additional_context_failures": 0,
+      "compatibility_failures": 0,
+      "promotion_failures": 0,
+      "translation_checks": 4,
+      "translation_checks_passed": 4,
+      "predeclared_all_executed_checks_passed": 14,
+      "posthoc_shortcircuit_failures": 0
+    },
+    {
+      "cell": "gpt-fixed",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 13,
+      "predeclared_boundary_failures": 0,
+      "additional_numeric_failures": 0,
+      "additional_context_failures": 0,
+      "compatibility_failures": 0,
+      "promotion_failures": 0,
+      "translation_checks": 4,
+      "translation_checks_passed": 4,
+      "predeclared_all_executed_checks_passed": 14,
+      "posthoc_shortcircuit_failures": 1
+    }
+  ],
+  "all_executed_summary": [
+    {
+      "cell": "gpt-cew",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 12,
+      "predeclared_boundary_failures": 2,
+      "additional_numeric_failures": 2,
+      "additional_context_failures": 2,
+      "compatibility_failures": 0,
+      "promotion_failures": 2,
+      "translation_checks": 4,
+      "translation_checks_passed": 4,
+      "predeclared_all_executed_checks_passed": 12,
+      "posthoc_shortcircuit_failures": 0,
+      "posthoc_floatstop_failures": 0
+    },
+    {
+      "cell": "gpt-trim",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 14,
+      "predeclared_boundary_failures": 0,
+      "additional_numeric_failures": 0,
+      "additional_context_failures": 0,
+      "compatibility_failures": 0,
+      "promotion_failures": 0,
+      "translation_checks": 4,
+      "translation_checks_passed": 4,
+      "predeclared_all_executed_checks_passed": 14,
+      "posthoc_shortcircuit_failures": 0,
+      "posthoc_floatstop_failures": 0
+    },
+    {
+      "cell": "gpt-fixed",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 13,
+      "predeclared_boundary_failures": 0,
+      "additional_numeric_failures": 0,
+      "additional_context_failures": 0,
+      "compatibility_failures": 0,
+      "promotion_failures": 0,
+      "translation_checks": 4,
+      "translation_checks_passed": 4,
+      "predeclared_all_executed_checks_passed": 14,
+      "posthoc_shortcircuit_failures": 1,
+      "posthoc_floatstop_failures": 1
+    }
+  ],
+  "version_results": [
+    {
+      "version": "parent",
+      "passed": 0,
+      "total": 2
+    },
+    {
+      "version": "upstream_reference",
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "version": "gpt-cew-r1",
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "version": "gpt-trim-r1",
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "passed": 0,
+      "total": 2
+    },
+    {
+      "version": "gpt-trim-r2",
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "version": "gpt-cew-r2",
+      "passed": 2,
+      "total": 2
+    }
+  ],
+  "models_or_original_artifacts_changed": false,
+  "metrics_changed": false,
+  "previous_hashes": {
+    "analysis.json": "0cf59df8b696c6840f27d49cdfa853b49ef43f4a2391637f2a909663a7640fa7",
+    "experiment.json": "3871c3230728f33967cfa1364d099cc5c8a3d64873aded27f360534eb7b94cdb",
+    "trials.jsonl": "0a6ffda8986a8771c58233c2ddda3fff4f3d91063ca9a629ce9ae5e8c12589b3",
+    "trials.csv": "9ebb3cc93f63f1c3af53d2c148ebba0447ee942de5f59bd4e92487a51535c329",
+    "report.md": "279a41a0fdce0f7b330e726eabe8af2f000fc41034ec7fdb987a467aea35db5f"
+  },
+  "procedure_source": "'use strict';\nconst fs=require('node:fs'),p=require('node:path'),c=require('node:crypto');const root=fs.realpathSync(__dirname),repo='<CEW_SOURCE>',dir=p.join(repo,'docs/eval/data/quality-type-interactions-2026-10-19');\nconst hash=b=>c.createHash('sha256').update(b).digest('hex'),read=f=>JSON.parse(fs.readFileSync(p.join(root,f)));\nif(fs.existsSync(p.join(root,'posthoc-floatstop-amendment.json'))||!fs.existsSync(p.join(root,'posthoc-amendment.json')))throw Error('Apply once after shortcircuit amendment');\nconst e=read('experiment.json'),h=read('floatstop-hypothesis.json'),probe=read('posthoc-floatstop-probes.json');\nif(e.status!=='COMPLETED_ALL_42'||Date.parse(probe.started_at)<=Date.parse(e.finished_at)||hash(fs.readFileSync(p.join(root,'floatstop-probes.cjs')))!==h.controller_sha256)throw Error('Must use unchanged proposed controller afterall42close');\nif(probe.results.length!==8||probe.results.some(r=>r.cases.length!==2||new Set(r.cases.map(c=>c.case+'/'+c.operation)).size!==2||r.cases.some(c=>c.exit!==0||c.timed_out||c.constructor_exception)))throw Error('Require16 actual valid launches');\nconst ref=probe.results.find(r=>r.version==='upstream_reference'),parent=probe.results.find(r=>r.version==='parent');if(!ref?.cases.every(c=>c.passed)||!parent?.cases.every(c=>typeof c.value==='number'&&typeof c.expected==='number'))throw Error('Require reference2/2 plus valid parent length results; parent is expected to expose originaltargetbug');\nconst oldProbe=read('compatibility-probes.json');for(const r of probe.results)if(oldProbe.results.find(x=>x.version===r.version)?.source_sha256!==r.source_sha256)throw Error('Frozen source drift');\nconst backup=p.join(root,'before-posthoc-floatstop');fs.mkdirSync(backup);for(const f of ['analysis.json','experiment.json','trials.jsonl','trials.csv'])fs.copyFileSync(p.join(dir,f),p.join(backup,f));const report=p.join(repo,'docs/eval/fast-path-type-interactions-2026-10-19.md');fs.copyFileSync(report,p.join(backup,'report.md'));\nconst a=JSON.parse(fs.readFileSync(p.join(dir,'analysis.json'))),metricHash=hash(JSON.stringify(a.summary)),before=JSON.parse(JSON.stringify(a.supplemental_quality_summary)),arms=['gpt-cew','gpt-trim','gpt-fixed'];\nconst rows=fs.readFileSync(p.join(dir,'trials.jsonl'),'utf8').trim().split('\\n').map(s=>JSON.parse(s));for(const r of rows){if(!('predeclared_checks_passed'in r)||'posthoc_floatstop_quality'in r)throw Error('Unexpected score state');r.pre_floatstop_checks_passed=r.all_executed_checks_passed;const x=r.task==='more-itertools-1247'?probe.results.find(x=>x.cell===r.cell&&x.run===r.run):null;if(r.task==='more-itertools-1247'&&!x)throw Error('Missing uniform floatstop result');r.posthoc_floatstop_quality=x;r.all_executed_checks_passed=r.pre_floatstop_checks_passed&&(!x||x.cases.every(c=>c.passed));}\na.supplemental_quality_summary=a.supplemental_quality_summary.map(r=>({...r,all_executed_checks_passed:rows.filter(x=>x.cell===r.cell&&x.all_executed_checks_passed).length,posthoc_floatstop_failures:rows.filter(x=>x.cell===r.cell&&x.posthoc_floatstop_quality?.cases.some(c=>!c.passed)).length}));\nconst counts=probe.results.map(r=>({version:r.version,passed:r.cases.filter(c=>c.passed).length,total:2}));\nconst am={kind:'POSTHOC two stop-only-float target-length checks; original46 unchanged and previous4posthoc preserved',amended_at:new Date().toISOString(),hypothesis_proposed_at:h.proposed_at,models_finished_at:e.finished_at,actual_probes_started_at:probe.started_at,actual_probes_finished_at:probe.finished_at,actual_queries:16,per_numeric_artifact:2,total_executed_numeric_checks_per_artifact:52,reference_control:'2/2',parent_role:'Exposes original target length bug with valid constructor/len; not a positivecorrectnesscontrol',controller_sha256:h.controller_sha256,previous_all_executed_summary:before,all_executed_summary:a.supplemental_quality_summary,version_results:counts,models_or_original_artifacts_changed:false,metrics_changed:false,previous_hashes:Object.fromEntries(['analysis.json','experiment.json','trials.jsonl','trials.csv','report.md'].map(f=>[f,hash(fs.readFileSync(p.join(backup,f)))])),procedure_source:fs.readFileSync(__filename,'utf8')};\na.posthoc_floatstop_amendment={kind:am.kind,actual_queries:16,total_numeric_checks:52,controller_sha256:h.controller_sha256,previous4posthoc_preserved:true};if(hash(JSON.stringify(a.summary))!==metricHash)throw Error('Metrics changed');\nconst normalize=v=>JSON.parse(JSON.stringify(v).replaceAll(root,'<BENCH_ROOT>').replaceAll('<BENCH_ROOT>','<BENCH_ROOT>').replaceAll(repo,'<CEW_SOURCE>')),save=(f,v)=>fs.writeFileSync(p.join(dir,f),JSON.stringify(normalize(v),null,2)+'\\n');\nsave('analysis.json',a);save('posthoc-floatstop-probes.json',probe);save('posthoc-floatstop-hypothesis.json',h);save('posthoc-floatstop-amendment.json',am);const exp=JSON.parse(fs.readFileSync(p.join(dir,'experiment.json')));exp.posthoc_floatstop_amendment={...a.posthoc_floatstop_amendment,hypothesis_proposed_at:h.proposed_at,actual_probes_started_at:probe.started_at};save('experiment.json',exp);fs.writeFileSync(p.join(dir,'trials.jsonl'),rows.map(r=>JSON.stringify(normalize(r))).join('\\n')+'\\n');\nconst csv=fs.readFileSync(p.join(backup,'trials.csv'),'utf8').trimEnd().split('\\n').map(s=>s.split(',')),head=csv[0],i=head.indexOf('all_executed_checks_passed');if(i<0||head.includes('posthoc_floatstop_passed'))throw Error('Unexpected CSV');head.push('posthoc_floatstop_passed');for(const values of csv.slice(1)){const r=rows.find(r=>r.task===values[0]&&r.cell===values[1]&&String(r.run)===values[2]);if(!r)throw Error('CSV identity');values[i]=String(r.all_executed_checks_passed);values.push(r.posthoc_floatstop_quality?String(r.posthoc_floatstop_quality.cases.every(c=>c.passed)):'');}fs.writeFileSync(p.join(dir,'trials.csv'),csv.map(r=>r.join(',')).join('\\n')+'\\n');\nlet text=fs.readFileSync(report,'utf8');if(text.split('INDEPENDENT_REVIEW_PENDING').length!==2)throw Error('Review marker state');const by=Object.fromEntries(a.supplemental_quality_summary.map(r=>[r.cell,r])),anchor='该发现不属于模型前冻结46项，原分数保留，不能以原46项通过宣称全部质量修复。';if(text.split(anchor).length!==2)throw Error('Firstamendment report anchor');text=text.replace(anchor,anchor+'\\n另有2项仅终点为浮点数的原目标长度检查；加全部事后6项后，候选综合为 **'+by['gpt-fixed'].all_executed_checks_passed+'/14**。');const line=text.split('\\n').find(s=>s.startsWith('| 加事后4项后的综合检查 |'));if(!line)throw Error('Firstamendment table missing');text=text.replace(line,line+'\\n| 加全部事后6项后的综合检查 | '+arms.map(c=>by[c].all_executed_checks_passed+'/14').join(' | ')+' |');\nconst section=['## 事后发现：浮点终点的长度路径仍需覆盖','',`此假设在UTC ${h.proposed_at} 根据实际Issue1247范围和已结束R1源码提出；全部42次模型结束后，于 ${probe.started_at} 至 ${probe.finished_at} 对8个原版本执行相同2项。只有终点为精确可表示的大浮点整数，起点和步长均为整数；生成项均为精确整数，故同一整数端点的内置range长度是独立预期，无需枚举长序列。64位长度范围已实际检查。parent暴露原目标错误，上游参考2/2通过。`,'',\n'| numeric_range版本 | 事后2项浮点终点长度 |','| --- | ---: |',...counts.map(r=>'| '+r.version+' | '+r.passed+'/'+r.total+' |'),'',\n'原始检查见[事后2项](data/quality-type-interactions-2026-10-19/posthoc-floatstop-probes.json)和[分数修订](data/quality-type-interactions-2026-10-19/posthoc-floatstop-amendment.json)。原46项、先前事后4项、给定测试、原补丁/receipt和所有token/时间均保留；52项中只有46项是本轮模型前冻结项。',''];text=text.replace('INDEPENDENT_REVIEW_PENDING',section.join('\\n')+'\\nINDEPENDENT_REVIEW_PENDING');fs.writeFileSync(report,text);fs.writeFileSync(p.join(root,'posthoc-floatstop-amendment.json'),JSON.stringify(am,null,2)+'\\n');console.log(JSON.stringify({status:'ADDED_ACTUAL_POSTHOC_FLOATSTOP_EVIDENCE',reference:'2/2',all_executed:a.supplemental_quality_summary.map(r=>({cell:r.cell,n:r.all_executed_checks_passed})),version_results:counts,metrics_changed:false}));\n"
+}

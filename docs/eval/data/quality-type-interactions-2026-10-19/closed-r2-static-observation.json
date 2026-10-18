@@ -1,0 +1,39 @@
+{
+  "observed_at": "2026-10-18T22:11:36.482Z",
+  "kind": "Read-only static observation of already-closed candidateR2 while other measuredmodels are active. No quality or behavioral probes executed.",
+  "source": "5ae9d13344fb7d96a69461d3616c220e29b3d796",
+  "receipt_closed": "2026-10-18T22:10:58.215Z",
+  "strict_original_suite": true,
+  "model_duration_s": 657.7,
+  "complete_family_tokens": 3023937,
+  "patch_sha256": "aebdd22c6663c0ce36d0169c090e73c7d3bfb6e29404305ed7a0cbd47354c156",
+  "source_file_sha256": "628e158c1257fb0e6116d0050ceb6dbb457e16d6e7c3e0cf2bb0f4963148f4b9",
+  "static_locations": [
+    {
+      "text": "self._float = isinstance",
+      "line": 2327
+    },
+    {
+      "text": "if self._float or isinstance",
+      "line": 2418
+    },
+    {
+      "text": "def index(self, value):",
+      "line": 2467
+    },
+    {
+      "text": "if first != start",
+      "line": 2477
+    },
+    {
+      "text": "start = Fraction(first)",
+      "line": 2480
+    },
+    {
+      "text": "def _find_index(self, value, first):",
+      "line": 2505
+    }
+  ],
+  "observation": "New search is guarded by float argument checks; index retains original start for exact promoted equality and uses rational comparison when changed. Decimal-only paths remain outside this float guard. Static structure alone does not establish signal/compatibility or all46 acceptance.",
+  "actual_supplemental_quality": "NOT RUN until all6 numeric models close; unchanged46 then uniform"
+}

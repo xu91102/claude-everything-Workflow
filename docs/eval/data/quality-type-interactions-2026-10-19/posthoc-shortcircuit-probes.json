@@ -1,0 +1,426 @@
+{
+  "kind": "Four POSTHOC arithmetic-free empty-range queries after static inspection of alreadyclosed candidateR1. Not part of frozen46 or modelprompt. All42 models must close first; exact same inputs/oracles checked on parent/reference/all6numericartifacts, no modelreruns/artifactedits.",
+  "started_at": "2026-10-18T22:46:01.866Z",
+  "finished_at": "2026-10-18T22:46:03.241Z",
+  "declaration": {
+    "proposed_at": "2026-10-18T22:22:13.809Z",
+    "status": "NOT RUN",
+    "kind": "Posthoc static hypothesis proposed after reviewing completed candidateR1 while remaining frozen benchmark models are active; do not run untilall42close",
+    "source": "5ae9d13344fb7d96a69461d3616c220e29b3d796",
+    "location": "more-itertools-1247--gpt-fixed--r1 more_itertools/more.py:2464-2466",
+    "hypothesis": "Promoting a finite largeinteger start to float before original bounds may raise OverflowError in old arithmetic-free legal empty-range nonmember contains/index. Mixedint/float types are already supported; constructor and actual baseline query legality must be confirmed, not assumed. No iteration legality claim.",
+    "cases": 4,
+    "versions": 8,
+    "expected_contains": false,
+    "expected_index": "ValueError",
+    "controller_sha256": "3526e5366993e2e21deb1d051a83365eed6f75d6c699e2f6c541423b4829932d",
+    "model_or_original46_changes": false,
+    "initial_controller_sha256": "44351f8b7fc5a8fe924a071630cda96584e9381daa95fae53cf3d33c3ec59607",
+    "pre_execution_revision_at": "2026-10-18T22:31:00.141Z",
+    "pre_execution_revision": "Added never-overwrite guard only; actual Python program, inputs and oracle unchanged; bothversions NOTRUN"
+  },
+  "timeout_ms_per_case": 10000,
+  "task": "more-itertools-1247",
+  "python_program": "import json,sys\npayload=json.load(sys.stdin)\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('empty_large_integer_ascending',(10**400,0,1.0),0),('empty_large_integer_descending',(-10**400,0,-1.0),0)]\nfor name,args,query in cases:\n for operation in ('contains','index'):\n  if payload['case_filter']!=[name,operation]:continue\n  try:\n   instance=cls(*args)\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':False,'constructor_exception':type(error).__name__}));continue\n  try:\n   actual=(query in instance) if operation=='contains' else instance.index(query)\n   print(json.dumps({'case':name,'operation':operation,'passed':actual is False if operation=='contains' else False,'value':repr(actual),'expected':'False' if operation=='contains' else 'ValueError'}))\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':operation=='index' and isinstance(error,ValueError),'exception':type(error).__name__,'message':str(error),'expected':'False' if operation=='contains' else 'ValueError'}))\n",
+  "controller_source": "'use strict';\nconst fs=require('node:fs'),p=require('node:path'),cp=require('node:child_process'),crypto=require('node:crypto');\nconst root=__dirname,progress=JSON.parse(fs.readFileSync(p.join(root,'progress.json')));\nif(progress.count!==42||JSON.parse(fs.readFileSync(p.join(root,'experiment.json'))).status!=='COMPLETED_ALL_42')throw Error('All42 models mustclose before new posthoc behavior checks');for(const r of progress.completed)if(JSON.parse(fs.readFileSync(r.result_file)).agent.timed_out)throw Error('Timeout requires manual live-process audit before new probes');\nif(fs.existsSync(p.join(root,'posthoc-shortcircuit-probes.json')))throw Error('Never overwrite completed new-probe evidence');\nconst program=\"import json,sys\\npayload=json.load(sys.stdin)\\nsys.path.insert(0,payload['support'])\\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\\ncls=namespace['numeric_range']\\ncases=[('empty_large_integer_ascending',(10**400,0,1.0),0),('empty_large_integer_descending',(-10**400,0,-1.0),0)]\\nfor name,args,query in cases:\\n for operation in ('contains','index'):\\n  if payload['case_filter']!=[name,operation]:continue\\n  try:\\n   instance=cls(*args)\\n  except Exception as error:\\n   print(json.dumps({'case':name,'operation':operation,'passed':False,'constructor_exception':type(error).__name__}));continue\\n  try:\\n   actual=(query in instance) if operation=='contains' else instance.index(query)\\n   print(json.dumps({'case':name,'operation':operation,'passed':actual is False if operation=='contains' else False,'value':repr(actual),'expected':'False' if operation=='contains' else 'ValueError'}))\\n  except Exception as error:\\n   print(json.dumps({'case':name,'operation':operation,'passed':operation=='index' and isinstance(error,ValueError),'exception':type(error).__name__,'message':str(error),'expected':'False' if operation=='contains' else 'ValueError'}))\\n\";\nconst names=['empty_large_integer_ascending','empty_large_integer_descending'];\nconst queries=names.flatMap(n=>['contains','index'].map(op=>[n,op]));\nconst gitSource=ref=>cp.execFileSync('git',['show',ref+':more_itertools/more.py'],{cwd:p.join(root,'repos/more-itertools'),encoding:'utf8'});\nconst versions=[{version:'parent',source:gitSource('2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10')},{version:'upstream_reference',source:gitSource('dc2664b4a7c66209485c9f5e359137bf4b365eb3')},...progress.completed.filter(r=>r.task==='more-itertools-1247').map(r=>{const trial=p.dirname(r.result_file).replace(/\\/results\\/.+$/,'');return{version:r.cell+'-r'+r.repetition,cell:r.cell,run:r.repetition,source:fs.readFileSync(p.join(trial,'runs',r.task,r.cell+'-r'+r.repetition,'more_itertools/more.py'),'utf8')};})];\nconst start=new Date().toISOString(),results=versions.map(({source,...meta})=>({...meta,source_sha256:crypto.createHash('sha256').update(source).digest('hex'),cases:queries.map(case_filter=>{const started_at=new Date().toISOString();const r=cp.spawnSync(p.join(root,'venvs/more-itertools/bin/python'),['-B','-c',program],{input:JSON.stringify({source,support:p.join(root,'validation/more-itertools-1247/checkout'),case_filter}),encoding:'utf8',timeout:10000,env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});if(r.error||r.status!==0)return{case:case_filter[0],operation:case_filter[1],passed:false,started_at,finished_at:new Date().toISOString(),exit:r.status,timed_out:r.error?.code==='ETIMEDOUT',error:String(r.error?.code||r.stderr).slice(-800)};return{...JSON.parse(r.stdout),started_at,finished_at:new Date().toISOString(),exit:r.status};})}));\nconst data={kind:'Four POSTHOC arithmetic-free empty-range queries after static inspection of alreadyclosed candidateR1. Not part of frozen46 or modelprompt. All42 models must close first; exact same inputs/oracles checked on parent/reference/all6numericartifacts, no modelreruns/artifactedits.',started_at:start,finished_at:new Date().toISOString(),declaration:JSON.parse(fs.readFileSync(p.join(root,'shortcircuit-hypothesis.json'))),timeout_ms_per_case:10000,task:'more-itertools-1247',python_program:program,controller_source:fs.readFileSync(__filename,'utf8'),results};\nfs.writeFileSync(p.join(root,'posthoc-shortcircuit-probes.json'),JSON.stringify(data,null,2)+'\\n');\nconsole.log(JSON.stringify(results.map(r=>({version:r.version,passed:r.cases.filter(c=>c.passed).length,total:r.cases.length}))));\n",
+  "results": [
+    {
+      "version": "parent",
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:01.867Z",
+          "finished_at": "2026-10-18T22:46:01.909Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:01.909Z",
+          "finished_at": "2026-10-18T22:46:02.001Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.001Z",
+          "finished_at": "2026-10-18T22:46:02.066Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.066Z",
+          "finished_at": "2026-10-18T22:46:02.129Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "upstream_reference",
+      "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+      "cases": [
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.129Z",
+          "finished_at": "2026-10-18T22:46:02.172Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.172Z",
+          "finished_at": "2026-10-18T22:46:02.214Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.214Z",
+          "finished_at": "2026-10-18T22:46:02.254Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.254Z",
+          "finished_at": "2026-10-18T22:46:02.293Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r1",
+      "cell": "gpt-cew",
+      "run": 1,
+      "source_sha256": "cbfa2765c20fde0eb3ce034c67f623f00c67e38cb062a4ce3ed2b63f42a30801",
+      "cases": [
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.293Z",
+          "finished_at": "2026-10-18T22:46:02.332Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.332Z",
+          "finished_at": "2026-10-18T22:46:02.371Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.371Z",
+          "finished_at": "2026-10-18T22:46:02.411Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.411Z",
+          "finished_at": "2026-10-18T22:46:02.450Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "source_sha256": "628e158c1257fb0e6116d0050ceb6dbb457e16d6e7c3e0cf2bb0f4963148f4b9",
+      "cases": [
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.450Z",
+          "finished_at": "2026-10-18T22:46:02.491Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.491Z",
+          "finished_at": "2026-10-18T22:46:02.531Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.531Z",
+          "finished_at": "2026-10-18T22:46:02.572Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.572Z",
+          "finished_at": "2026-10-18T22:46:02.612Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r1",
+      "cell": "gpt-trim",
+      "run": 1,
+      "source_sha256": "4fc31b321152e7be54f52451b37b85eef54add52fa136f7454a5fe3ba6501f65",
+      "cases": [
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.612Z",
+          "finished_at": "2026-10-18T22:46:02.654Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.654Z",
+          "finished_at": "2026-10-18T22:46:02.693Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.693Z",
+          "finished_at": "2026-10-18T22:46:02.732Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.732Z",
+          "finished_at": "2026-10-18T22:46:02.771Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "source_sha256": "cb81831d3017b809afb0bd5cf33dc2a74d808a0ecac491b27566c786253eafe4",
+      "cases": [
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "int too large to convert to float",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.771Z",
+          "finished_at": "2026-10-18T22:46:02.811Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "int too large to convert to float",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.811Z",
+          "finished_at": "2026-10-18T22:46:02.849Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "int too large to convert to float",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.849Z",
+          "finished_at": "2026-10-18T22:46:02.888Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "int too large to convert to float",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.888Z",
+          "finished_at": "2026-10-18T22:46:02.927Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r2",
+      "cell": "gpt-trim",
+      "run": 2,
+      "source_sha256": "aad45cc623859c6afed06dfb5855ceb81e6601b315aa6e9ac8c6e792fc36527c",
+      "cases": [
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:02.927Z",
+          "finished_at": "2026-10-18T22:46:02.968Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:02.968Z",
+          "finished_at": "2026-10-18T22:46:03.008Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:03.008Z",
+          "finished_at": "2026-10-18T22:46:03.048Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:03.048Z",
+          "finished_at": "2026-10-18T22:46:03.088Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r2",
+      "cell": "gpt-cew",
+      "run": 2,
+      "source_sha256": "370725287f6fbb80ef27b9fdba7e257efdb2e3bd33c4f7b09f6bb2254c4560d9",
+      "cases": [
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:03.088Z",
+          "finished_at": "2026-10-18T22:46:03.126Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_ascending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:03.126Z",
+          "finished_at": "2026-10-18T22:46:03.164Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T22:46:03.164Z",
+          "finished_at": "2026-10-18T22:46:03.203Z",
+          "exit": 0
+        },
+        {
+          "case": "empty_large_integer_descending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T22:46:03.203Z",
+          "finished_at": "2026-10-18T22:46:03.241Z",
+          "exit": 0
+        }
+      ]
+    }
+  ]
+}

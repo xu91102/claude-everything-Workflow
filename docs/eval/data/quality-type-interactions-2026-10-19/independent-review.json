@@ -1,0 +1,407 @@
+{
+  "kind": "Independent read-only full42 evidence and actual-artifact review",
+  "mode": "independent",
+  "mode_reason": "Explicit fresh independent review of numeric algorithms and repeated quality failures.",
+  "reviewed_at_utc": "2026-10-18T23:02:05.948Z",
+  "base": "1770cc0d0588a37b31a753965752b476abb0bc49",
+  "measured_source": "5ae9d13344fb7d96a69461d3616c220e29b3d796",
+  "scope": "仅固定第十版包的两处运行规则差异、42份真实产物及全部现有54项证据；未读取本轮next-proposal、其他本轮审查结果或之后workspace源码。历史审计仅用于明确允许的7题预验证与43-family复用来源核对。",
+  "scope_source": "package.requirements/review_scope/constraints、冻结protocol、固定Issue1247及包内已解析relevant_rules",
+  "package": {
+    "path": "<BENCH_ROOT>/full-review-package.json",
+    "sha256": "8fe33a572ae51addeefd106305fe3771eaba6933ddcb2425b4ac7c27c5bc4896"
+  },
+  "overall_status": "FAIL",
+  "review_completion": "COMPLETE",
+  "axes": {
+    "Standards": {
+      "status": "PASS",
+      "findings": [],
+      "basis": [
+        "运行规则差异仅rules/common/testing.md:52与skills/code-review/references/spec-reviewer-prompt.md:11-12；具体操作/类型交互由单一测试规则拥有，通用Spec证据门仍保留。",
+        "未新增任务答案、agent、审批或绕过必需验证；三组及42份实际HOME的AGENTS与main字节相同。",
+        "冻结main/previous/candidate安装内容逐文件核对；42份实际安装共4564份文件一致。"
+      ]
+    },
+    "ActualArtifactSpec": {
+      "status": "FAIL",
+      "findings": [
+        {
+          "id": "A1",
+          "severity": "Important",
+          "known_posthoc": true,
+          "new_outside54": false,
+          "kind": "introduced compatibility regression",
+          "trigger": "r=numeric_range(10**400,0,1.0) 或 numeric_range(-10**400,0,-1.0)；执行 0 in r 与 r.index(0)。",
+          "requirement": "保留原版合法局部短路；rules/common/testing.md:49-53；固定Issue1247不能以修复浮点查询为由改变合法非成员查询的异常。",
+          "location": {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/runs/more-itertools-1247/gpt-fixed-r1/more_itertools/more.py",
+            "line": 2465,
+            "end_line": 2466
+          },
+          "evidence": {
+            "path": "<BENCH_ROOT>/posthoc-shortcircuit-probes.json",
+            "controller": "<BENCH_ROOT>/shortcircuit-probes.cjs",
+            "uniform_versions": 8,
+            "actual_queries": 32,
+            "parent": "4/4；构造与局部查询合法，contains=False，index=ValueError",
+            "reference": "4/4",
+            "candidate_r1": "0/4；四次均OverflowError: int too large to convert to float",
+            "other_five_artifacts": "4/4 each"
+          },
+          "cause": "新增 start += 0 * self._step 在原边界判断之前，把有限大整数提升为float；查询整数0属于Real，故先溢出。这里未调用或假定合法迭代。",
+          "smallest_correction": "保留原版可提前拒绝的合法查询，并为新增提升的可表示值域提供边界处理。"
+        },
+        {
+          "id": "A2",
+          "severity": "Important",
+          "known_posthoc": true,
+          "new_outside54": false,
+          "kind": "original target only partially fixed",
+          "trigger": "len(numeric_range(1,float(2**54),1)) 及 len(numeric_range(-1,-float(2**54),-1))。",
+          "requirement": "固定task-fixtures.json中Issue1247明确要求len与实际生成项一致；该要求包括只有stop为float、start/step为整数的情况。",
+          "location": {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/runs/more-itertools-1247/gpt-fixed-r1/more_itertools/more.py",
+            "line": 2327,
+            "end_line": 2329
+          },
+          "related_location": {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/runs/more-itertools-1247/gpt-fixed-r1/more_itertools/more.py",
+            "line": 2426,
+            "end_line": 2437
+          },
+          "evidence": {
+            "path": "<BENCH_ROOT>/posthoc-floatstop-probes.json",
+            "controller": "<BENCH_ROOT>/floatstop-probes.cjs",
+            "uniform_versions": 8,
+            "actual_queries": 16,
+            "parent": "0/2，原目标缺陷",
+            "reference": "2/2",
+            "candidate_r1": "0/2",
+            "oracle": "独立builtin range；整数生成值及精确可表示终点相同；程序先断言64位长度，不枚举。精确预期由输入静态复算为18014398509481983。",
+            "other_five_artifacts": "2/2 each"
+          },
+          "cause": "_is_float只检查start/step，stop参与distance的浮点舍入仍绕过新修正路径。保留的Python比较布尔值直接证明失败；JSON中的大整数数值已损失精度，不能拿其显示值比较，见E1。",
+          "smallest_correction": "使修正覆盖实际参与算术的浮点终点，并同时验证有限性与终止界限。"
+        },
+        {
+          "id": "A3",
+          "severity": "Important",
+          "known_posthoc": true,
+          "new_outside54": false,
+          "kind": "introduced nontermination",
+          "trigger": "len(numeric_range(0,float(\"inf\"),1)) 与 len(numeric_range(0,-float(\"inf\"),-1))。",
+          "requirement": "保留已支持类型的原异常和有界工作量；rules/common/testing.md:49-53明确要求新增搜索的终止条件和最坏工作量。",
+          "location": {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/runs/more-itertools-1247/gpt-fixed-r2/more_itertools/more.py",
+            "line": 2418,
+            "end_line": 2426
+          },
+          "related_location": {
+            "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/runs/more-itertools-1247/gpt-fixed-r2/more_itertools/more.py",
+            "line": 2521,
+            "end_line": 2533
+          },
+          "evidence": {
+            "path": "<BENCH_ROOT>/posthoc-infinite-stop-probes.json",
+            "oracle_validation": "<BENCH_ROOT>/infinite-stop-oracle-validation.json",
+            "controller": "<BENCH_ROOT>/infinite-stop-probes.cjs",
+            "uniform_versions": 8,
+            "scored_queries": 16,
+            "parent_oracle_validation_calls": 2,
+            "total_python_processes": 18,
+            "parent": "构造实际成功，len两次快速抛ValueError: cannot convert float NaN to integer；不是OverflowError",
+            "reference": "2/2",
+            "candidate_r2": "0/2，两次明确ETIMEDOUT，SIGTERM，约2003/2004ms，stdout均有constructed记录",
+            "other_five_artifacts": "2/2 each"
+          },
+          "cause": "新增stop为float的分支进入指数扩张；整数start/step令所有生成项始终小于+inf或大于-inf，Python整数乘法不会触发捕获的OverflowError，high持续倍增。超时结论有error与构造输出支持，不由exit=null推断。",
+          "smallest_correction": "搜索前处理非有限终点，保持原版已实际验证的异常，并给上界扩张可证明的终止条件。"
+        }
+      ],
+      "score_definition": "每组14份原套件、全部适用已执行检查及独立产物审查；无新模型或补跑择优。",
+      "scores": {
+        "gpt-cew": {
+          "original_strict": 14,
+          "predeclared46": 12,
+          "combined50": 12,
+          "combined52": 12,
+          "combined54": 12,
+          "denominator": 14
+        },
+        "gpt-trim": {
+          "original_strict": 14,
+          "predeclared46": 14,
+          "combined50": 14,
+          "combined52": 14,
+          "combined54": 14,
+          "denominator": 14
+        },
+        "gpt-fixed": {
+          "original_strict": 14,
+          "predeclared46": 14,
+          "combined50": 13,
+          "combined52": 13,
+          "combined54": 12,
+          "denominator": 14
+        }
+      },
+      "numeric_matrix": [
+        {
+          "version": "parent",
+          "predeclared46": 36,
+          "shortcircuit4": 4,
+          "floatstop2": 0,
+          "infinite_stop2": 2
+        },
+        {
+          "version": "upstream_reference",
+          "predeclared46": 10,
+          "shortcircuit4": 4,
+          "floatstop2": 2,
+          "infinite_stop2": 2
+        },
+        {
+          "version": "gpt-cew-r1",
+          "predeclared46": 10,
+          "shortcircuit4": 4,
+          "floatstop2": 2,
+          "infinite_stop2": 2
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "predeclared46": 46,
+          "shortcircuit4": 4,
+          "floatstop2": 2,
+          "infinite_stop2": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "predeclared46": 46,
+          "shortcircuit4": 4,
+          "floatstop2": 2,
+          "infinite_stop2": 2
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "predeclared46": 46,
+          "shortcircuit4": 0,
+          "floatstop2": 0,
+          "infinite_stop2": 2
+        },
+        {
+          "version": "gpt-trim-r2",
+          "predeclared46": 46,
+          "shortcircuit4": 4,
+          "floatstop2": 2,
+          "infinite_stop2": 2
+        },
+        {
+          "version": "gpt-cew-r2",
+          "predeclared46": 22,
+          "shortcircuit4": 4,
+          "floatstop2": 2,
+          "infinite_stop2": 2
+        }
+      ],
+      "i18n": {
+        "passed": 12,
+        "total": 12,
+        "junit_cases": 1416,
+        "skipped": 0
+      },
+      "basis": "两份候选原46项均46/46，原严格套件三组均14/14。现有8项事后检查暴露三个Important问题；组合54后本轮候选12/14，上一候选同期14/14，main12/14。历史第九轮上一候选12/14独立保留，不混作本轮对照。"
+    },
+    "EvidenceIntegrity": {
+      "status": "PASS",
+      "status_scope": "计量、计分、来源和时间链通过；存在一项不影响布尔计分的Minor精度表示限制。",
+      "findings": [
+        {
+          "id": "E1",
+          "severity": "Minor",
+          "kind": "lossy integer representation",
+          "location": {
+            "path": "<BENCH_ROOT>/floatstop-probes.cjs",
+            "line": 11
+          },
+          "evidence": {
+            "path": "<BENCH_ROOT>/posthoc-floatstop-probes.json",
+            "trigger": "JSON.parse(r.stdout)后再JSON.stringify；16条记录的expected均成为18014398509481984。独立整数输入要求2**54-1，即18014398509481983。",
+            "reproduction": "Node JSON.stringify(JSON.parse('{\"expected\":18014398509481983}')) => {\"expected\":18014398509481984}"
+          },
+          "impact": "存档value/expected不是精确保留的Python整数输出，不能用相同显示值否定Python端失败布尔值，也不能声称成功stdout逐字保留。Python端先计算passed，布尔值未被转换；原计分、R1静态错误与整批性能结论不变。",
+          "smallest_correction": "后续证据将大整数序列化为十进制字符串并保存原stdout；对当前冻结包另列表示限制，勿覆盖原始文件或重跑已知检查。"
+        }
+      ],
+      "verification": {
+        "package_pins_matched": 70,
+        "patch_receipt_hashes": "42/42",
+        "public_patch_receipt_copies": "42/42",
+        "source_reconstruction": "42/42单文件补丁逐hunk反向重建并正向复原；每题父源码一致，共7份；数字parent与reference哈希与8组探针逐一相同。",
+        "fresh_junit": "126/126合法XML、实际testcase计数及失败身份与结果相符；时间位于本次receipt窗口，42次测试身份相同，无新增跳过。pytest子测试聚合属性与testcase数不同，未以属性误判。",
+        "session_usage": "47/47会话哈希、元数据、父子关系、会话累积总量和512个唯一response_id一致；无冲突或缺失计量。53个实际上下文均gpt-6.1-sol/high、never及相同直接执行设置。",
+        "commands": "599条唯一明文CommandExecution；主517、子82；42份主CLI日志命令数逐一与会话对应。未读取隐藏推理或认证值。",
+        "configuration": "三份模板相同配置；42份实际配置只增各checkout trust，无执行字段差异。",
+        "dependencies": "7题初始依赖哈希各组相同，42份私有环境均Python3.13.12；仅main数值R1加Ruff、main slugify200 R1加检查工具，均有receipt及明文安装命令。",
+        "source_checks": "本轮8项源检查日志exit=0；当前test:eval日志29/29，早于模型。",
+        "production": "当前0.2.5生产包141项逐字匹配冻结源码及实际安装，pack/install/verify exit=0；仅生产依赖，未在本审查重跑。",
+        "historical_reuse": "预验证manifest dc08f7a、controller cac9dd2、固定夹具1c7a58c与来源字节一致；43-family replay哈希95adf349及runner/collector/test源码与已审计前轮相同。未重扫旧28JUnit。",
+        "score_amendments": "三份before-posthoc快照的summary及42行patch/receipt/usage/reports/commands均与最终不变；仅新增事后字段和组合分数。表格列对齐有单独report-format-amendment记录，报告最终哈希与固定包一致。"
+      },
+      "chronology": {
+        "freeze": "2026-10-18T21:59:38.931Z",
+        "first_trial": "2026-10-18T21:59:44.159Z",
+        "six_closed": "2026-10-18T22:23:40.267Z",
+        "critical46_gate": "2026-10-18T22:24:06.720Z",
+        "remaining36_start": "2026-10-18T22:24:07.083Z",
+        "all42_closed": "2026-10-18T22:43:48.763Z",
+        "latest_raw_session_complete": "2026-10-18T22:43:37.744Z",
+        "posthoc": [
+          {
+            "group": "shortcircuit",
+            "hypothesis_proposed": "2026-10-18T22:22:13.809Z",
+            "started": "2026-10-18T22:46:01.866Z",
+            "finished": "2026-10-18T22:46:03.241Z",
+            "scored_queries": 32
+          },
+          {
+            "group": "floatstop",
+            "hypothesis_proposed": "2026-10-18T22:41:55.723Z",
+            "started": "2026-10-18T22:46:01.866Z",
+            "finished": "2026-10-18T22:46:02.616Z",
+            "scored_queries": 16
+          },
+          {
+            "group": "infinite-stop",
+            "hypothesis_proposed": "2026-10-18T22:46:57.902Z",
+            "started": "2026-10-18T22:46:57.989Z",
+            "finished": "2026-10-18T22:47:02.724Z",
+            "scored_queries": 16
+          }
+        ],
+        "meaning": "前6项假设是在模型已启动、部分仍运行时提出，实际行为检查均等全部42结束；后2项假设及执行均在全部模型结束后。全部8项是POSTHOC，只有46项是模型前冻结。"
+      },
+      "stage_consistency": "关键阶段与最终46项的程序、控制器、源哈希、输入/预期及全部布尔分数一致。两条已失败负控制的具体失败形式在最终变为ETIMEDOUT，原记录保留，未声称错误类型逐字不变。"
+    },
+    "WholePerformance": {
+      "status": "FAIL",
+      "findings": [
+        {
+          "id": "P1",
+          "severity": "Important",
+          "requirement": "冻结protocol.performance_acceptance及固定包requirements：全部14次完整主子输入+输出总token和模型平均耗时必须同时低于同期main。",
+          "location": "<BENCH_ROOT>/protocol/protocol.json",
+          "evidence": "本轮候选7,572,704 token、123.9秒；main4,044,986 token、63.05秒，分别+87.2121%与+96.5107%。两项均未满足。",
+          "smallest_correction": "保留整批FAIL结论，不能以分组、中位数、未缓存输入或对上一候选的比较替代。"
+        }
+      ],
+      "recalculated_metrics": {
+        "main": {
+          "n": 14,
+          "input_tokens": 4006844,
+          "output_tokens": 38142,
+          "total_tokens": 4044986,
+          "model_duration_total_s": 882.7,
+          "model_duration_mean_s": 63.05,
+          "raw_cli_total_tokens": 4044986,
+          "native_children": 0
+        },
+        "previous_1770cc0": {
+          "n": 14,
+          "input_tokens": 7333571,
+          "output_tokens": 99574,
+          "total_tokens": 7433145,
+          "model_duration_total_s": 1918,
+          "model_duration_mean_s": 137,
+          "raw_cli_total_tokens": 5540079,
+          "native_children": 3
+        },
+        "candidate_5ae9d13": {
+          "n": 14,
+          "input_tokens": 7485263,
+          "output_tokens": 87441,
+          "total_tokens": 7572704,
+          "model_duration_total_s": 1734.6,
+          "model_duration_mean_s": 123.9,
+          "raw_cli_total_tokens": 5108660,
+          "native_children": 2
+        }
+      },
+      "method": "逐个唯一provider response_id累加主会话和原生子会话的input+output；缓存已在input、推理已在output，不重复加减。duration来自原始模型进程记录并与receipt一致，含自身工具/原生审查等待，不混入外部判分。",
+      "comparison_to_previous": {
+        "total_tokens_change_percent": 1.8775229058494158,
+        "mean_time_change_percent": -9.562043795620434
+      },
+      "limits": [
+        "同一7题开发集、2次重复、非留出集；未控制所有服务负载/缓存，顺序不完全平衡。",
+        "分组、缓存输入及中位数仅描述分布；没有每条规则的因果消融，不能归因单一措辞或外推一般提速。"
+      ]
+    }
+  },
+  "audit_counts": {
+    "trials": 42,
+    "patches": 42,
+    "receipts": 42,
+    "junit": 126,
+    "junit_testcase_elements": 54066,
+    "sessions": 47,
+    "raw_response_records": 512,
+    "unique_responses": 512,
+    "duplicate_response_copies": 0,
+    "plaintext_commands": 599,
+    "root_plaintext_commands": 517,
+    "child_plaintext_commands": 82,
+    "session_cumulative_totals": 47,
+    "actual_turn_contexts": 53,
+    "source_snapshots": 3,
+    "installed_trial_files": 4564,
+    "private_dependency_states": 42,
+    "source_checks": 8,
+    "current_cli_regressions": 29,
+    "production_files": 141,
+    "numeric_queries_critical_stage": 368,
+    "numeric_queries_final_predeclared_stage": 368,
+    "posthoc_scored_queries": 64,
+    "infinite_stop_oracle_validation_calls": 2,
+    "infinite_stop_total_processes": 18,
+    "i18n_artifacts": 12,
+    "i18n_junit": 12,
+    "i18n_testcases": 1416,
+    "reused_prevalidation_tasks": 7,
+    "reused_historical_families": 43,
+    "old_prevalidation_junit_reparsed": 0,
+    "package_hash_references": 70
+  },
+  "critical_findings": 0,
+  "actual_artifact_important_findings": 3,
+  "new_important_findings_outside_predeclared46": 3,
+  "new_important_findings_outside_all_executed50": 2,
+  "new_important_findings_outside_all_executed52": 1,
+  "new_important_findings_outside_all_executed54": 0,
+  "coverage_count_note": "outside46/50/52为固定包中既有事后发现相对该覆盖基准的数量；三项均已包含在现有54项中。本审查没有额外新Important行为发现。E1为Minor证据表示问题，不增加行为发现数。",
+  "checks_not_run": [
+    "本审查未启动新模型、重跑现有54项或新增行为探针；只运行Node.js只读审计。",
+    "未重跑7题历史预验证或43-family replay，未重扫旧28JUnit。",
+    "未检查实时GitHub/CI、其他宿主/Python版本或生产使用；这些不由本固定包建立。"
+  ],
+  "writes": [
+    "<BENCH_ROOT>/full-independent-review.json"
+  ],
+  "prohibited_actions_performed": {
+    "models": false,
+    "behavior_probe_reruns": false,
+    "source_or_artifact_or_history_edits": false,
+    "hidden_reasoning_inspection": false,
+    "auth_value_inspection": false,
+    "external_messages": false,
+    "delegation": false,
+    "next_proposal_read": false
+  },
+  "memory_used": false,
+  "overall": "FAIL",
+  "provenance": {
+    "original_review_sha256": "4dbc9479909ba6422890d8c01b59c0d9aca95cc6449160aa4d7f68bfe69fd2b3",
+    "fixed_package_sha256": "8fe33a572ae51addeefd106305fe3771eaba6933ddcb2425b4ac7c27c5bc4896",
+    "note": "Only benchmark-root paths normalized and calculated overall status added; original measurements and artifacts unchanged."
+  }
+}
