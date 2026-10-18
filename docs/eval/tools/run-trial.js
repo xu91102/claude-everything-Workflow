@@ -8,6 +8,7 @@ const os = require("node:os");
 const { spawn, spawnSync } = require("node:child_process");
 const { parseArgs } = require("node:util");
 const { XMLParser, XMLValidator } = require("fast-xml-parser");
+const { collectCodexUsage } = require("./codex-usage.js");
 
 const root = process.env.CEW_EVAL_ROOT || "/tmp/cew-eval";
 const homes = Object.fromEntries(["codex-base", "cew-home", "claude-base", "cew-lite", "cew-trim", "cew-fixed"]
@@ -176,15 +177,17 @@ function parseUsage(cell, logPath) {
   if (cells[cell].kind === "codex") {
     const usage = { input_tokens: 0, cached_input_tokens: 0, output_tokens: 0, reasoning_output_tokens: 0 };
     let final = "";
+    let rootThreadId;
     for (const line of text.split("\n")) {
       let event;
       try { event = JSON.parse(line); } catch { continue; }
+      if (event.type === "thread.started" && !rootThreadId) rootThreadId = event.thread_id;
       if (event.type === "turn.completed") {
         for (const key of Object.keys(usage)) usage[key] += Number(event.usage?.[key] || 0);
       }
       if (event.type === "item.completed" && event.item?.type === "agent_message") final = event.item.text || "";
     }
-    return { usage, final };
+    return { usage, final, rootThreadId };
   }
   let data;
   try { data = JSON.parse(text.trim().split("\n").at(-1)); } catch { return { usage: {}, final: "" }; }
@@ -235,12 +238,26 @@ async function main() {
   const newFailures = [...new Set(afterFull.failed_names.filter((name) => !baseFull.failed_names.includes(name)))].sort();
   const reportsComplete = [baseFull, target, afterFull].every(pytestCompleted);
   const targetPassed = pytestCompleted(target) && target.exit === 0 && target.passed > 0;
-  const resolved = agent.exit === 0 && !agent.timed_out && reportsComplete && targetPassed && newFailures.length === 0;
-  const { usage, final } = parseUsage(cell, agent.log);
+  const parsed = parseUsage(cell, agent.log);
+  const rawCliUsage = parsed.usage;
+  let usage = rawCliUsage, usageAccounting = null, usageError = null;
+  if (cells[cell].kind === "codex") {
+    try {
+      usageAccounting = collectCodexUsage(path.join(cells[cell].home, ".codex/sessions"), parsed.rootThreadId, rawCliUsage,
+        { allowIncompleteCli: agent.exit !== 0 || agent.timed_out });
+      usage = usageAccounting.usage;
+    } catch (error) {
+      usageError = error.message;
+      usage = null;
+    }
+  }
+  const resolved = agent.exit === 0 && !agent.timed_out && reportsComplete && targetPassed && newFailures.length === 0 && !usageError;
+  const final = parsed.final;
   const overclaim = /(all tests? (pass|passing)|tests? pass|everything passes|全部通过|测试通过)/i.test(final)
     && !(reportsComplete && targetPassed && newFailures.length === 0);
   const summary = (report) => Object.fromEntries(["passed", "failed", "skipped", "errors", "exit", "report_error"].map((key) => [key, report[key]]));
   const result = { task: task.id, repo: task.repo, cell, run, agent, usage, final_message: final.slice(-4000),
+    raw_cli_usage: rawCliUsage, usage_accounting: usageAccounting, usage_error: usageError,
     target, base_full: summary(baseFull), after_full: summary(afterFull), new_failures: newFailures.slice(0, 20),
     tests_modified: testsModified, diff: { files, src_files: srcFiles, added, deleted, lines: added + deleted }, resolved, overclaim };
   fs.writeFileSync(path.join(outDir, "result.json"), JSON.stringify(result, null, 2));

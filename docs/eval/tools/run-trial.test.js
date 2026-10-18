@@ -42,9 +42,39 @@ function fixture(t) {
     fs.chmodSync(file, 0o755);
   }
   const modelTool = `
+const fs = require("node:fs");
+const path = require("node:path");
+const sessionDir = path.join(process.env.CODEX_HOME, "sessions");
+fs.mkdirSync(sessionDir, { recursive: true });
+const thread = "fixture-root-" + process.pid;
+console.log(JSON.stringify({ type: "thread.started", thread_id: thread }));
 setTimeout(() => {
+  const usage = { input_tokens: 10, cached_input_tokens: 2, output_tokens: 3, reasoning_output_tokens: 0 };
+  const record = (id, owner, tokens) => ({ type: "token_usage_record", timestamp: new Date().toISOString(),
+    payload: { response_id: id, thread_id: owner, usage: tokens } });
+  const rootRecord = record(thread + "-response", thread, usage);
+  const childId = thread + "-child";
+  const childRecord = record(thread + "-child-response", childId,
+    { input_tokens: 20, cached_input_tokens: 4, output_tokens: 5, reasoning_output_tokens: 0 });
+  const write = (id, parent, records) => fs.writeFileSync(path.join(sessionDir, id + ".jsonl"),
+    [{ type: "session_meta", payload: { id, source: parent ? { subagent: { thread_spawn: { parent_thread_id: parent } } } : "exec" } }, ...records]
+      .map(row => JSON.stringify(row)).join("\\n") + "\\n");
+  const total = (tokens) => ({ type: "event_msg", payload: { type: "token_count", info: { total_token_usage: tokens } } });
+  write(thread, null, [rootRecord, total(usage)]);
+  if (process.env.CEW_TEST_MISSING_CHILD_COUNTER === "1") delete childRecord.payload.usage.output_tokens;
+  const inherited = JSON.parse(JSON.stringify(rootRecord));
+  if (process.env.CEW_TEST_CONFLICTING_RESPONSE === "1") inherited.payload.usage.input_tokens++;
+  if (process.env.CEW_TEST_CHILD_USAGE === "1") write(childId, thread,
+    process.env.CEW_TEST_CHILD_HISTORY_ONLY === "1" ? [inherited] : [inherited, childRecord,
+      total({ ...childRecord.payload.usage, input_tokens: process.env.CEW_TEST_PARTIAL_CHILD_USAGE === "1" ? 21 : 20 })]);
+  if (process.env.CEW_TEST_GRANDCHILD_USAGE === "1") write(childId + "-child", childId,
+    [rootRecord, childRecord, record(thread + "-grandchild-response", childId + "-child",
+      { input_tokens: 7, cached_input_tokens: 1, output_tokens: 2, reasoning_output_tokens: 0 })]);
   console.log(JSON.stringify({ type: "item.completed", item: { type: "agent_message", text: "All tests pass" } }));
-  console.log(JSON.stringify({ type: "turn.completed", usage: { input_tokens: 10, cached_input_tokens: 2, output_tokens: 3 } }));
+  const cliUsage = process.env.CEW_TEST_CLI_FAMILY_USAGE === "1"
+    ? { input_tokens: 30, cached_input_tokens: 6, output_tokens: 8 } : { input_tokens: 10, cached_input_tokens: 2, output_tokens: 3 };
+  if (process.env.CEW_TEST_BAD_CLI_COUNTER === "1") cliUsage.input_tokens++;
+  console.log(JSON.stringify({ type: "turn.completed", usage: cliUsage }));
   process.exit(Number(process.env.CEW_TEST_AGENT_EXIT || 0));
 }, Number(process.env.CEW_TEST_AGENT_DELAY || 0));
 `;
@@ -75,6 +105,45 @@ process.exit(outcome.exit);
   }
   return { root, outcomes, run };
 }
+
+test("native review child usage is included while raw CLI counters remain available", (t) => {
+  const f = fixture(t);
+  f.run(); // A previous trial remains in the same HOME and must not enter this trial's counters.
+  const result = f.run({ env: { CEW_TEST_CHILD_USAGE: "1" } });
+  assert.equal(result.resolved, true);
+  assert.deepEqual(result.usage, { input_tokens: 30, cached_input_tokens: 6, output_tokens: 8, reasoning_output_tokens: 0 });
+  assert.deepEqual(result.raw_cli_usage, { input_tokens: 10, cached_input_tokens: 2, output_tokens: 3, reasoning_output_tokens: 0 });
+});
+
+test("CLI totals that already include a review child are not counted twice", (t) => {
+  const result = fixture(t).run({ env: { CEW_TEST_CHILD_USAGE: "1", CEW_TEST_CLI_FAMILY_USAGE: "1" } });
+  assert.equal(result.resolved, true);
+  assert.equal(result.usage.input_tokens, 30);
+  assert.equal(result.raw_cli_usage.input_tokens, 30);
+  assert.equal(result.usage_accounting.raw_cli_scope, "whole_session_family");
+});
+
+test("native descendants are counted transitively with copied fork records deduplicated", (t) => {
+  const result = fixture(t).run({ env: { CEW_TEST_CHILD_USAGE: "1", CEW_TEST_GRANDCHILD_USAGE: "1" } });
+  assert.equal(result.resolved, true);
+  assert.deepEqual(result.usage, { input_tokens: 37, cached_input_tokens: 7, output_tokens: 10, reasoning_output_tokens: 0 });
+  assert.equal(result.usage_accounting.descendant_sessions, 2);
+  assert.equal(result.usage_accounting.requests, 3);
+});
+
+for (const [label, flag, message] of [
+  ["missing native-child counters", "CEW_TEST_MISSING_CHILD_COUNTER", /Invalid Codex response usage/],
+  ["child with copied history but no owned response", "CEW_TEST_CHILD_HISTORY_ONLY", /Missing Codex session response usage/],
+  ["partial child records inconsistent with cumulative usage", "CEW_TEST_PARTIAL_CHILD_USAGE", /session total disagrees/],
+  ["conflicting copied provider response", "CEW_TEST_CONFLICTING_RESPONSE", /Conflicting Codex response ID/],
+  ["CLI counters inconsistent with response records", "CEW_TEST_BAD_CLI_COUNTER", /disagrees with session evidence/],
+]) test(`${label} cannot produce a resolved trial with unverifiable metrics`, (t) => {
+  const result = fixture(t).run({ env: { CEW_TEST_CHILD_USAGE: "1", [flag]: "1" } });
+  assert.equal(result.target.passed, 1);
+  assert.equal(result.resolved, false);
+  assert.equal(result.usage, null);
+  assert.match(result.usage_error, message);
+});
 
 test("interrupted target cannot resolve despite passed cases", (t) => {
   const f = fixture(t);
