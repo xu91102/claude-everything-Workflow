@@ -1,0 +1,9 @@
+{
+  "checked_at": "2026-10-18T19:33:07.522Z",
+  "actual_auth_copies_removed": 9,
+  "scope": "Only fifthattempt3templates+6trials; originaluserauthandotherattempts untouched",
+  "public_files_credential_match": false,
+  "review_source_sha256": "d8e5caaca24b7fdadf14e55414f2799afa7e9f16ba42544e2421bde90502d96c",
+  "original_model_and_probe_outputs_changed": false,
+  "report_change": "Expectedreviewplaceholder replacedafterreview; READMElatestpointeronly; no measurementchange"
+}

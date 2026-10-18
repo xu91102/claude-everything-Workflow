@@ -1,0 +1,460 @@
+{
+  "status": "FAIL",
+  "overall": "FAIL",
+  "mode": "independent",
+  "mode_reason": "Explicit fresh independent read-only review of a frozen partial benchmark after repeated numeric quality failures. No further agents were created.",
+  "reviewed_at_utc": "2026-10-18T19:32:12.643641+00:00",
+  "base_sha": "00c8313e4a31f0511ced847a579d7b5342504e43",
+  "measured_sha": "775fc75a2de9c119a21bc6db89c93592d179a25e",
+  "scope_source": "<BENCH_ROOT>/partial-review-package.json",
+  "scope": {
+    "included": [
+      "Frozen one-line runtime policy diff and named optimized source snapshots",
+      "All six actual model patches and receipts",
+      "All eighteen original baseline/target/after-full JUnit reports",
+      "All ten root/native-child sessions: metadata, unique response usage and visible completed commands",
+      "Frozen controller, installed policy/config, seven task identities and all 42 supplemental queries for all eight versions",
+      "Exact public partial report, JSONL, CSV, analysis, probe reports and 36 NOT RUN records"
+    ],
+    "excluded": [
+      "Uncommitted next-candidate source in the active worktree",
+      "Re-audit of the four separately reviewed historical complete 42-run experiments",
+      "New model runs, artifact edits, behavior probes, authentication files, hidden reasoning and decryption",
+      "Live GitHub/CI/merge/release/deployment verification"
+    ]
+  },
+  "fixed_package": {
+    "package_sha256": "7319bc30a1d5f7cb0a7090544a2ad2bc1fd78468661203344090c58bb885aef7",
+    "source_diff_sha256": "e73fa36314fe5c6ddf9ae218a75c4759e0a3d0c80cb9047865dee713b549662a",
+    "hashed_entries_checked": 25,
+    "hash_mismatches": [],
+    "rechecked_immediately_before_writing": true,
+    "source_snapshots_match_measured_commit": true,
+    "scoped_diff_matches_base_to_measured_commit": true,
+    "AGENTS_byte_identical_base_measured_and_main": true,
+    "AGENTS_net_additions": 0,
+    "public_JS_and_review_routing_unchanged_from_base": true,
+    "worktree_next_candidate_used": false
+  },
+  "Standards": {
+    "status": "PASS",
+    "scope": "Frozen runtime source-policy hunk against supplied repository standards. Artifact correctness is separately FAIL under Spec.",
+    "findings": [],
+    "hard_rule_violations": [],
+    "smell_observations": [],
+    "evidence": [
+      {
+        "file": "<BENCH_ROOT>/sources/optimized/rules/common/testing.md",
+        "line": 51,
+        "detail": "The only runtime source change adds actual mixed-type converted values to the existing arithmetic-boundary requirement. No task name, numeric answer, dependency, approval step or new mechanism is added."
+      },
+      {
+        "file": "<BENCH_ROOT>/sources/optimized/rules/common/testing.md",
+        "line": 52,
+        "detail": "Representative equivalent-semantics boundaries, supported types, configurable contexts, exception classes, baseline-legal local queries and bounded worst-case checks remain required."
+      },
+      {
+        "file": "<BENCH_ROOT>/sources/optimized/skills/code-review/SKILL.md",
+        "line": 35,
+        "detail": "Independent numeric-search/correction review and fixed fresh context remain unchanged."
+      },
+      {
+        "file": "<BENCH_ROOT>/sources/optimized/skills/using-superpowers/references/fast-path.md",
+        "line": 10,
+        "detail": "Localized repair of the failing type/branch and reuse of unaffected paths remain unchanged."
+      }
+    ],
+    "boundary": "Source Standards PASS does not establish model-artifact quality or completion of the optimization objective."
+  },
+  "Spec": {
+    "status": "FAIL",
+    "scope": "Actual six artifacts and declared quality/continuation acceptance, not source wording alone.",
+    "quality_status": "FAIL",
+    "candidate_original_suite": {
+      "passed": 2,
+      "total": 2
+    },
+    "candidate_all_executed_quality_checks": {
+      "passed": 0,
+      "total": 2
+    },
+    "candidate_supplemental_totals": {
+      "gpt-fixed-r1": "40/42",
+      "gpt-fixed-r2": "38/42"
+    },
+    "findings": [
+      {
+        "id": "SPEC-R1-ROUNDED",
+        "severity": "Important",
+        "priority": 2,
+        "classification": "new_regression",
+        "title": "R1 makes baseline-legal local Decimal queries raise Rounded",
+        "requirement": {
+          "file": "<BENCH_ROOT>/protocol/protocol.json",
+          "line": 195,
+          "text": "Original strict suite resolved AND all applicable predeclared supplemental probes pass AND independent artifact review has no important finding. Report per-arm numerator/denominator and preserve failing outcomes."
+        },
+        "compatibility_rule": {
+          "file": "<BENCH_ROOT>/sources/optimized/rules/common/testing.md",
+          "line": 52,
+          "text": "Check each supported type, configurable arithmetic context and exception class, including local queries legal in the baseline."
+        },
+        "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/runs/more-itertools-1247/gpt-fixed-r1/more_itertools/more.py",
+        "start": 2447,
+        "end": 2454,
+        "evidence": {
+          "file": "<BENCH_ROOT>/promotion-probes.json",
+          "line": 692,
+          "parent_queries_passed": 2,
+          "candidate_queries_passed": 0,
+          "candidate_exception": "Rounded",
+          "case": {
+            "precision": 2,
+            "Rounded_trap": true,
+            "start": "Decimal(1)",
+            "stop": "Decimal(2)",
+            "step": "Decimal(\".001\")",
+            "queries": [
+              "Decimal(1) in r",
+              "r.index(Decimal(1))"
+            ]
+          }
+        },
+        "detail": "Both local queries return True/0 on the parent. R1 routes them through _find_index and before(0), which performs start + 0 * step under the caller arithmetic context. Even an equal Decimal value can emit Rounded; the narrow overflow handlers do not catch it. The independent iteration policy is not an excuse to break these previously legal queries. No claim is made that the parent iteration is legal with this trap.",
+        "smallest_correction": "Preserve baseline-legal local-query exception semantics and avoid introducing unnecessary arithmetic that triggers caller traps; verify the actual changed query path with an independent expected result."
+      },
+      {
+        "id": "SPEC-R2-MIXED",
+        "severity": "Important",
+        "priority": 2,
+        "classification": "preexisting_target_incomplete",
+        "title": "R2 still rejects the first item it generates after mixed int/float conversion",
+        "requirement": {
+          "file": "<BENCH_ROOT>/protocol/protocol.json",
+          "line": 195,
+          "text": "Original strict suite resolved AND all applicable predeclared supplemental probes pass AND independent artifact review has no important finding. Report per-arm numerator/denominator and preserve failing outcomes."
+        },
+        "target_requirement": {
+          "source": "Frozen more-itertools-1247 issue and caller requirement",
+          "text": "numeric_range length, membership and first index must agree with the values it produces."
+        },
+        "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/runs/more-itertools-1247/gpt-fixed-r2/more_itertools/more.py",
+        "start": 2433,
+        "end": 2439,
+        "evidence": {
+          "file": "<BENCH_ROOT>/promotion-probes.json",
+          "line": 342,
+          "queries_failed": 4,
+          "directions": [
+            1,
+            -1
+          ],
+          "start": "sign * (2**53 + 1)",
+          "stop": "sign * (2**53 + 6)",
+          "step": "sign * 1.0",
+          "positive_first_actual_value": "9007199254740992.0",
+          "negative_first_actual_value": "-9007199254740992.0",
+          "sequence_and_len": "PASS in both directions; six values",
+          "contains": "False in both directions",
+          "index": "ValueError in both directions"
+        },
+        "detail": "The bounds check compares the queried generated float against raw integer _start. Conversion changes the first produced value, so index rejects it before the corrected search; __contains__ delegates to index and also fails. The parent already fails these four queries: this is the requested target left incomplete, not a newly introduced behavior regression.",
+        "smallest_correction": "Apply the bounds and first-match contract to actual generated values after mixed-type conversion, while preserving unaffected supported paths."
+      }
+    ],
+    "matrix": [
+      {
+        "version": "parent",
+        "boundary_passed": 16,
+        "boundary_total": 16,
+        "cost_passed": 0,
+        "cost_total": 4,
+        "context_passed": 12,
+        "context_total": 12,
+        "promotion_Rounded_passed": 4,
+        "promotion_Rounded_total": 10,
+        "supplemental_passed": 32,
+        "supplemental_total": 42
+      },
+      {
+        "version": "upstream_reference",
+        "boundary_passed": 0,
+        "boundary_total": 16,
+        "cost_passed": 0,
+        "cost_total": 4,
+        "context_passed": 2,
+        "context_total": 12,
+        "promotion_Rounded_passed": 4,
+        "promotion_Rounded_total": 10,
+        "supplemental_passed": 6,
+        "supplemental_total": 42
+      },
+      {
+        "version": "gpt-cew-r1",
+        "boundary_passed": 8,
+        "boundary_total": 16,
+        "cost_passed": 4,
+        "cost_total": 4,
+        "context_passed": 2,
+        "context_total": 12,
+        "promotion_Rounded_passed": 4,
+        "promotion_Rounded_total": 10,
+        "supplemental_passed": 18,
+        "supplemental_total": 42
+      },
+      {
+        "version": "gpt-fixed-r2",
+        "boundary_passed": 16,
+        "boundary_total": 16,
+        "cost_passed": 4,
+        "cost_total": 4,
+        "context_passed": 12,
+        "context_total": 12,
+        "promotion_Rounded_passed": 6,
+        "promotion_Rounded_total": 10,
+        "supplemental_passed": 38,
+        "supplemental_total": 42
+      },
+      {
+        "version": "gpt-trim-r1",
+        "boundary_passed": 16,
+        "boundary_total": 16,
+        "cost_passed": 4,
+        "cost_total": 4,
+        "context_passed": 12,
+        "context_total": 12,
+        "promotion_Rounded_passed": 10,
+        "promotion_Rounded_total": 10,
+        "supplemental_passed": 42,
+        "supplemental_total": 42
+      },
+      {
+        "version": "gpt-trim-r2",
+        "boundary_passed": 16,
+        "boundary_total": 16,
+        "cost_passed": 4,
+        "cost_total": 4,
+        "context_passed": 12,
+        "context_total": 12,
+        "promotion_Rounded_passed": 10,
+        "promotion_Rounded_total": 10,
+        "supplemental_passed": 42,
+        "supplemental_total": 42
+      },
+      {
+        "version": "gpt-fixed-r1",
+        "boundary_passed": 16,
+        "boundary_total": 16,
+        "cost_passed": 4,
+        "cost_total": 4,
+        "context_passed": 12,
+        "context_total": 12,
+        "promotion_Rounded_passed": 8,
+        "promotion_Rounded_total": 10,
+        "supplemental_passed": 40,
+        "supplemental_total": 42
+      },
+      {
+        "version": "gpt-cew-r2",
+        "boundary_passed": 8,
+        "boundary_total": 16,
+        "cost_passed": 0,
+        "cost_total": 4,
+        "context_passed": 2,
+        "context_total": 12,
+        "promotion_Rounded_passed": 4,
+        "promotion_Rounded_total": 10,
+        "supplemental_passed": 14,
+        "supplemental_total": 42
+      }
+    ],
+    "important_findings_remaining": [
+      "SPEC-R1-ROUNDED",
+      "SPEC-R2-MIXED"
+    ],
+    "new_additional_important_findings": [],
+    "additional_findings_boundary": "No further Important issue was established by this fixed package. No new behavior probes were authorized or run; this is not a proof that no other inputs can fail."
+  },
+  "EvidenceIntegrity": {
+    "status": "PASS",
+    "findings": [],
+    "boundary": "Evidence is a faithful failed partial result. This PASS does not override Spec FAIL.",
+    "source_and_protocol": {
+      "all_package_hashes_match": true,
+      "frozen_driver_and_five_quality_controller_hashes_match": true,
+      "freeze_before_first_trial": true,
+      "all_seven_task_identities_match": true,
+      "all_six_trial_manifest_copies_match": true,
+      "all_source_template_and_trial_policy_hashes_match": true,
+      "all_six_config_changes_are_checkout_trust_only": true,
+      "same_model_effort_timeout": {
+        "model": "gpt-6.1-sol",
+        "effort": "high",
+        "timeout_s": 720
+      },
+      "concurrency": 2,
+      "arm_rotation": "Same-task arms serial per repetition; second repetition reverses order; two task blocks concurrent."
+    },
+    "artifact_and_test_checks": {
+      "patches": 6,
+      "receipts": 6,
+      "JUnit_files": 18,
+      "patch_hashes_match_receipts_and_public": 6,
+      "raw_patches_match_measured_checkout_diff": 6,
+      "reverse_apply_check_passes": 6,
+      "test_file_changes": 0,
+      "JUnit_reports_match_public_hashes_and_scores": 18,
+      "per_trial_base_full": {
+        "passed": 737,
+        "failed": 2,
+        "skipped": 0,
+        "errors": 0,
+        "exit": 1
+      },
+      "per_trial_target": {
+        "passed": 594,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "exit": 0
+      },
+      "per_trial_after_full": {
+        "passed": 739,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "exit": 0
+      },
+      "test_count_unchanged": true,
+      "new_full_suite_failures": 0,
+      "model_timeouts": 0
+    },
+    "supplemental_checks": {
+      "groups": [
+        16,
+        4,
+        12,
+        10
+      ],
+      "total_per_version": 42,
+      "versions": 8,
+      "source_hashes_match_parent_reference_and_actual_artifacts": true,
+      "uniform_query_identities_across_all_eight": true,
+      "critical_and_final_reports_byte_identical": true,
+      "raw_and_public_reports_equal_after_root_path_normalization": true,
+      "embedded_controller_sources_match_frozen_files": true
+    },
+    "usage_checks": {
+      "root_sessions": 6,
+      "native_child_sessions": 4,
+      "sessions_total": 10,
+      "unique_response_ids": 179,
+      "visible_completed_commands": 147,
+      "response_usage_matches_runner_receipt_and_public": true,
+      "per_session_cumulative_usage_matches_response_records": true,
+      "session_hashes_and_parent_relationships_match": true,
+      "raw_CLI_turn_usage_matches_raw_cli_usage_fields": true,
+      "public_visible_commands_match_raw_records_after_path_normalization": true,
+      "cached_input_and_reasoning_counters_not_double_counted": true,
+      "by_arm": [
+        {
+          "cell": "gpt-cew",
+          "full_family_tokens": 1084642,
+          "raw_CLI_tokens": 1084642,
+          "native_child_sessions": 0,
+          "mean_model_duration_s": 209.85000000000002,
+          "mean_runner_duration_s": 225.8105
+        },
+        {
+          "cell": "gpt-trim",
+          "full_family_tokens": 3283173,
+          "raw_CLI_tokens": 1981182,
+          "native_child_sessions": 2,
+          "mean_model_duration_s": 478.75,
+          "mean_runner_duration_s": 494.9695
+        },
+        {
+          "cell": "gpt-fixed",
+          "full_family_tokens": 2670887,
+          "raw_CLI_tokens": 1454095,
+          "native_child_sessions": 2,
+          "mean_model_duration_s": 354.29999999999995,
+          "mean_runner_duration_s": 370.3405
+        }
+      ]
+    },
+    "partial_stop": {
+      "planned": 42,
+      "executed": 6,
+      "not_run": 36,
+      "actual_and_not_run_form_exact_disjoint_plan_partition": true,
+      "critical_gate_passed": false,
+      "status": "ABORTED_AT_PREDECLARED_CRITICAL_QUALITY_GATE",
+      "locale_checks": {
+        "status": "NOT RUN",
+        "planned_artifacts": 12,
+        "actual_results": 0
+      },
+      "public_export_guard": "Accepts complete42 or failed predeclared6 plus36 NOT RUN; report/export changes are postprocessing only."
+    },
+    "report_accuracy": {
+      "report": "<REPO>/docs/eval/fast-path-mixed-2026-10-19.md",
+      "lead_states_quality_FAIL_and_full_performance_NOT_RUN": true,
+      "candidate_numerator_denominator": "0/2 current critical artifacts",
+      "contemporaneous_previous_candidate": "2/2 current critical artifacts",
+      "historical_previous_candidate": "13/14 is explicitly historical posthoc quality, not a current 14/14 or complete-current-batch result",
+      "all_failed_outcomes_retained": true,
+      "source_only_review_not_used_as_artifact_PASS": true,
+      "independent_review_placeholder": "Expected pending marker in frozen report; controller can replace it only after this review is delivered."
+    },
+    "provenance_and_limits": [
+      "Eight recorded source checks and production-only package installation verification are tied to measured source 775; log hashes match. The current test:eval log reports 29/29, exit 0. These were inspected, not rerun by this reviewer.",
+      "Historic RED/GREEN and 43-family accounting replay are explicitly reused for unchanged public JS. No fresh historical replay is claimed.",
+      "The existing quality-diagnosis.json names historical measured source 6238192; it was not used as current-candidate evidence. Current outcomes use all six actual artifact sources and current trace-diagnosis.",
+      "Main R1 installed ruff; the isolated environment audit records this package change. Partial timings are descriptive and do not establish causal savings.",
+      "Recorded PR readback is OPEN/Draft. No live PR, CI, merge or deployment action or verification was performed."
+    ]
+  },
+  "WholeBatchPerformance": {
+    "status": "NOT RUN",
+    "reason": "The predeclared critical quality gate failed after six actual trials, so the remaining36 were not started. A complete seven-task performance gate cannot be scored.",
+    "partial_descriptive_comparison_only": {
+      "against_previous_candidate": {
+        "tokens_change_pct": -18.649215256095243,
+        "model_mean_duration_change_pct": -25.99477806788513
+      },
+      "against_main": {
+        "tokens_change_pct": 146.24595027668116,
+        "model_mean_duration_change_pct": 68.83488205861326
+      }
+    },
+    "interpretation": "The one-task point estimates match the report; they neither establish retained whole-batch acceleration nor repair the quality failure. Repeated development tasks, two repetitions and changed middle control preclude a general or causal claim."
+  },
+  "visible_process_observations": [
+    {
+      "trial": "gpt-fixed-r1",
+      "detail": "Root visible commands read common/testing.md; child visible commands read base implementation/forbidden rules and review prompts but contain no explicit common/testing.md read. Child does exercise some Decimal contexts. This establishes the visible read gap, not absence of opaque supplied instructions or a causal diagnosis."
+    },
+    {
+      "trial": "gpt-fixed-r2",
+      "detail": "Both root and child visibly read common/testing.md. Visible tests include mixed inputs around 10**16 and multiple contexts, but the frozen 2**53+1 first-generated-value case still fails. Loading a rule and broad tests did not prove the particular produced-value invariant."
+    }
+  ],
+  "checks_not_run": [
+    "No new model trials, retries, behavior probes, or test execution; existing closed evidence was independently read and recalculated.",
+    "Remaining36 planned trials and12 humanize translation artifacts NOT RUN.",
+    "Whole-batch performance gate and retained-general-speedup conclusion NOT RUN.",
+    "Other Python versions, hosts, OSes and production acceptance NOT RUN.",
+    "No auth files, hidden reasoning, or decryption inspected for evidence. Opaque delegation message content was not interpreted or used.",
+    "No re-review of prior four complete histories and no live CI/merge/release/deployment check."
+  ],
+  "writes": [
+    "<BENCH_ROOT>/partial-independent-review.json"
+  ],
+  "next_step": "Keep the candidate quality status FAIL and the full performance status NOT RUN. Any subsequent source candidate and authorized acceptance must be recorded separately; preserve this failed partial result.",
+  "publication": {
+    "raw_review_sha256": "d8e5caaca24b7fdadf14e55414f2799afa7e9f16ba42544e2421bde90502d96c",
+    "reviewed_package_sha256": "7319bc30a1d5f7cb0a7090544a2ad2bc1fd78468661203344090c58bb885aef7",
+    "note": "Frozen report expectedpendingmarker replacedonlyafterdeliveredreview. All25originalpackagehashes matched. Publicpathsnormalized; no changes to outcomes, probes, scripts, familymetrics or scoring."
+  }
+}

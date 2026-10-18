@@ -1,8 +1,8 @@
 # CEW × GPT 真实任务对照评测
 
-最新结果见 [PR #62 原因定位与优化复测](fast-path-optimization-2026-10-18.md)：同批 7 题各 2 次，对照 main、上一版 PR 和优化版，共 42 次实际运行。
-优化版相对上一版 token −16.7%、平均耗时 −6.1%，但补充质量检查仅 13/14，仍有大输入回退。AGENTS.md 与 main 一致，PR 保持 Draft。
-[上一轮最终规则复测](final-benchmark-2026-10-18.md)及下文 Pilot/P0 数据保留作历史记录，不能替代本轮证据。
+最新停止记录见 [PR #62 混合类型质量复测](fast-path-mixed-2026-10-19.md)：同七题×2次×3组计划42次，关键质量门失败后仅执行6次，其余36次未运行。
+候选两次数值产物原套件通过，但完整质量0/2；整批token与耗时比较未完成。AGENTS.md与main一致，PR保持Draft。
+[上一轮完整42次及独立发现](fast-path-targeted-2026-10-19.md)和下文Pilot/P0数据保留为历史，不能替代最新结果。
 
 2026-10-18 · 模型 `gpt-6.1-sol`（reasoning=high）· Codex 宿主
 

@@ -1,0 +1,7 @@
+task,cell,run,resolved,agent_duration_s,input_tokens,cached_input_tokens,uncached_input_tokens,output_tokens,total_tokens,tests_modified,new_failures,overclaim,packages_changed,all_executed_checks_passed
+more-itertools-1247,gpt-cew,1,true,224.3,594817,552704,42113,9892,604709,false,0,false,true,false
+more-itertools-1247,gpt-fixed,2,true,438.9,1680308,1603840,76468,23602,1703910,false,0,false,false,false
+more-itertools-1247,gpt-trim,1,true,498.8,1477028,1368064,108964,23678,1500706,false,0,false,false,true
+more-itertools-1247,gpt-trim,2,true,458.7,1761133,1664640,96493,21334,1782467,false,0,false,false,true
+more-itertools-1247,gpt-fixed,1,true,269.7,953442,887552,65890,13535,966977,false,0,false,false,false
+more-itertools-1247,gpt-cew,2,true,195.4,471659,433408,38251,8274,479933,false,0,false,false,false
