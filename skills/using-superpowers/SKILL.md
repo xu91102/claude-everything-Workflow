@@ -14,8 +14,8 @@ Own routing and continuation. Skills return outcomes here instead of selecting o
 
 ## Micro Task Fast Path
 
-用户未明确指定其他流程且满足 `AGENTS.md` 的微改条件时，只读取 [Fast Path](references/fast-path.md)，
-按其中前置检查和步骤执行。Git 隔离、安全、授权、审查和项目质量门始终生效。
+用户未明确指定其他流程时，按 [Fast Path](references/fast-path.md) 确认微改条件并执行前置检查；
+不满足条件则继续 Routing。Git 隔离、安全、授权、审查和项目质量门始终生效。
 
 命中该引用的升级条件时，回到 Routing 选择入口，只补充当前决策需要的步骤。
 

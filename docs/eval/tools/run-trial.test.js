@@ -205,3 +205,25 @@ test("provider references an environment key without persisting its credential",
     assert.equal(config.includes(credential), false);
   }
 });
+
+test("provisioned runtime config is preserved equally across benchmark arms", (t) => {
+  const f = fixture(t);
+  const config = 'model_provider = "fixture-provider"\n[model_providers.fixture-provider]\nenv_key = "FIXTURE_API_KEY"\n';
+  const files = ["codex-base", "cew-home"].map((home) => path.join(f.root, "homes", home, ".codex/config.toml"));
+  for (const file of files) {
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, config);
+  }
+  f.run();
+  for (const file of files) assert.equal(fs.readFileSync(file, "utf8"), config);
+});
+
+test("prepared task does not expose the reference fix through another Git branch", (t) => {
+  const f = fixture(t);
+  const reference = spawnSync("git", ["rev-parse", "HEAD"],
+    { cwd: path.join(f.root, "repos/fixture"), encoding: "utf8" }).stdout.trim();
+  f.run();
+  const result = spawnSync("git", ["cat-file", "-e", reference + "^{commit}"],
+    { cwd: path.join(f.root, "runs/fixture/gpt-base-r1"), encoding: "utf8" });
+  assert.notEqual(result.status, 0, "A model must not be able to read the reference answer from a retained branch");
+});

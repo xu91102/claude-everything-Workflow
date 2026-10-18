@@ -41,7 +41,8 @@ function sh(args, { cwd, env, input, check = true } = {}) {
 function ensureHomes() {
   for (const home of [homes["codex-base"], homes["cew-home"]]) {
     fs.mkdirSync(path.join(home, ".codex"), { recursive: true });
-    fs.writeFileSync(path.join(home, ".codex", "config.toml"), codexConfig);
+    const config = path.join(home, ".codex", "config.toml");
+    if (!fs.existsSync(config)) fs.writeFileSync(config, codexConfig);
   }
   for (const home of [homes["claude-base"], homes["cew-home"]]) {
     fs.mkdirSync(home, { recursive: true });
@@ -60,6 +61,9 @@ function prepare(task, runDir) {
   git("checkout", "--quiet", "-B", "work", base);
   git("remote", "remove", "origin");
   for (const tag of git("tag").stdout.split(/\s+/).filter(Boolean)) git("tag", "-d", tag);
+  for (const ref of git("for-each-ref", "--format=%(refname)", "refs/heads", "refs/remotes").stdout.split(/\s+/).filter(Boolean)) {
+    if (ref !== "refs/heads/work") git("update-ref", "-d", ref);
+  }
   git("reflog", "expire", "--expire=now", "--all");
   git("gc", "--prune=now", "--quiet");
   const patch = sh(["git", "diff", base, task.commit, "--", ...task.test_files], { cwd: repo }).stdout;
@@ -244,4 +248,7 @@ async function main() {
     .map((key) => [key, result[key]]))));
 }
 
-main().catch((error) => { console.error(error.message); process.exitCode = 1; });
+module.exports = { prepare, runPytest, pytestCompleted, parseReport };
+if (require.main === module) {
+  main().catch((error) => { console.error(error.message); process.exitCode = 1; });
+}
