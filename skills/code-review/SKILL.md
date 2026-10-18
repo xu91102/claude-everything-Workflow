@@ -47,6 +47,7 @@ For independent or dual review, load `references/standards-reviewer-prompt.md` a
 `references/spec-reviewer-prompt.md` only for the reviewer that needs them. Repository standards override
 smell heuristics. Each independent context receives only the frozen package, relevant rules, confirmed
 scope and verification evidence. Reviewers are read-only and must not influence each other.
+Use `fork_turns="none"` or the host's equivalent fresh context; pass the fixed package, not the full exploration history.
 
 When independent or dual review is selected, lack of agent capacity is never a reason to downgrade to
 self. If parallelism is unavailable, run dual axes sequentially in fresh isolated contexts. If no
