@@ -1,0 +1,481 @@
+[
+  {
+    "commit": "21d3d88359437146a6d8882328df4bd73edd685c",
+    "subject": "Issue 1003: Multidimensional reshape() (#1062)",
+    "files": [
+      "more_itertools/recipes.py",
+      "more_itertools/recipes.pyi",
+      "tests/test_recipes.py"
+    ],
+    "tests": [
+      "tests/test_recipes.py"
+    ],
+    "src": [
+      "more_itertools/recipes.py",
+      "more_itertools/recipes.pyi"
+    ],
+    "added": 117,
+    "deleted": 9,
+    "lines": 126,
+    "src_files": 2,
+    "score": 166,
+    "repo": "more-itertools",
+    "id": "more-itertools-21d3d88",
+    "test_files": [
+      "tests/test_recipes.py"
+    ],
+    "base": {
+      "exit": 1,
+      "passed": 139,
+      "failed": 1,
+      "tail": " tests/test_recipes.py::ReshapeTests::test_multidimensional\nSUBFAILED(new_shape=(1, 1, 3, 1, 2)) tests/test_recipes.py::ReshapeTests::test_multidimensional\nFAILED tests/test_recipes.py::ReshapeTests::test_multidimensional - TypeError...\n7 failed, 138 passed, 1 skipped, 9833 subtests passed in 8.52s\n"
+    },
+    "fix": {
+      "exit": 0,
+      "passed": 140,
+      "failed": 0,
+      "tail": "............................................... [ 33%]\n........................................................................s..... [ 89%]\n...............                              [100%]\n139 passed, 1 skipped, 9839 subtests passed in 5.50s\n"
+    },
+    "valid": true,
+    "issue": "Issue 1003: Multidimensional reshape() (#1062)",
+    "origin": "mined"
+  },
+  {
+    "commit": "1b7f033d50589295f9f9b600e2d76dddf29af920",
+    "subject": "Issue 1096: Concurrent tee",
+    "files": [
+      "more_itertools/more.py",
+      "more_itertools/more.pyi",
+      "tests/test_more.py"
+    ],
+    "tests": [
+      "tests/test_more.py"
+    ],
+    "src": [
+      "more_itertools/more.py",
+      "more_itertools/more.pyi"
+    ],
+    "added": 115,
+    "deleted": 2,
+    "lines": 117,
+    "src_files": 2,
+    "score": 157,
+    "repo": "more-itertools",
+    "id": "more-itertools-1b7f033",
+    "test_files": [
+      "tests/test_more.py"
+    ],
+    "base": {
+      "exit": 1,
+      "passed": 557,
+      "failed": 1,
+      "tail": "99%]\nF                                                                        [100%]\n=========================== short test summary info ============================\nFAILED tests/test_more.py::TestConcurrentTee::test_concurrent_consumers - Att...\n1 failed, 557 passed, 10027 subtests passed in 2.82s\n"
+    },
+    "fix": {
+      "exit": 0,
+      "passed": 558,
+      "failed": 0,
+      "tail": "[ 72%]\n.............................................................................................. [ 89%]\n............................................................ [ 99%]\n.                                                                        [100%]\n558 passed, 10027 subtests passed in 2.89s\n"
+    },
+    "valid": true,
+    "issue": "Issue 1096: Concurrent tee",
+    "origin": "mined"
+  },
+  {
+    "commit": "910a7a94ee88b15d0677f65ed87d7ccbbd998048",
+    "subject": "datetimes are timezone-aware utc",
+    "files": [
+      "src/itsdangerous/exc.py",
+      "src/itsdangerous/jws.py",
+      "src/itsdangerous/timed.py",
+      "tests/test_itsdangerous/test_timed.py"
+    ],
+    "tests": [
+      "tests/test_itsdangerous/test_timed.py"
+    ],
+    "src": [
+      "src/itsdangerous/exc.py",
+      "src/itsdangerous/jws.py",
+      "src/itsdangerous/timed.py"
+    ],
+    "added": 31,
+    "deleted": 6,
+    "lines": 37,
+    "src_files": 3,
+    "score": 117,
+    "repo": "itsdangerous",
+    "id": "itsdangerous-910a7a9",
+    "test_files": [
+      "tests/test_itsdangerous/test_timed.py"
+    ],
+    "base": {
+      "exit": 1,
+      "passed": 74,
+      "failed": 22,
+      "tail": "alizer_kwargs\nFAILED tests/test_itsdangerous/test_timed.py::TestTimedSerializer::test_fallback_signers\nFAILED tests/test_itsdangerous/test_timed.py::TestTimedSerializer::test_max_age\nFAILED tests/test_itsdangerous/test_timed.py::TestTimedSerializer::test_return_payload\n22 failed, 74 passed in 0.27s\n"
+    },
+    "fix": {
+      "exit": 0,
+      "passed": 96,
+      "failed": 0,
+      "tail": "........................................................................ [ 75%]\n........................                                                 [100%]\n96 passed in 0.23s\n"
+    },
+    "valid": true,
+    "issue": "datetimes are timezone-aware utc",
+    "origin": "mined"
+  },
+  {
+    "commit": "f966a62e4c0031b885566b529cc33fe9f6ae9f18",
+    "subject": "Added fallback signers and switch back to sha1",
+    "files": [
+      "src/itsdangerous/serializer.py",
+      "src/itsdangerous/signer.py",
+      "tests/test_itsdangerous/test_serializer.py"
+    ],
+    "tests": [
+      "tests/test_itsdangerous/test_serializer.py"
+    ],
+    "src": [
+      "src/itsdangerous/serializer.py",
+      "src/itsdangerous/signer.py"
+    ],
+    "added": 59,
+    "deleted": 9,
+    "lines": 68,
+    "src_files": 2,
+    "score": 108,
+    "repo": "itsdangerous",
+    "id": "itsdangerous-f966a62",
+    "test_files": [
+      "tests/test_itsdangerous/test_serializer.py"
+    ],
+    "base": {
+      "exit": 1,
+      "passed": 36,
+      "failed": 1,
+      "tail": "....................................F                                    [100%]\n=========================== short test summary info ============================\nFAILED tests/test_itsdangerous/test_serializer.py::TestSerializer::test_fallback_signers\n1 failed, 36 passed in 0.04s\n"
+    },
+    "fix": {
+      "exit": 0,
+      "passed": 37,
+      "failed": 0,
+      "tail": ".....................................                                    [100%]\n37 passed in 0.04s\n"
+    },
+    "valid": true,
+    "issue": "Added fallback signers and switch back to sha1",
+    "origin": "mined"
+  },
+  {
+    "commit": "6c58e969a513646c8e37260417929770a4ab1b67",
+    "subject": "Added fallback signer support to timed serializer",
+    "files": [
+      "src/itsdangerous/timed.py",
+      "tests/test_itsdangerous/test_timed.py"
+    ],
+    "tests": [
+      "tests/test_itsdangerous/test_timed.py"
+    ],
+    "src": [
+      "src/itsdangerous/timed.py"
+    ],
+    "added": 27,
+    "deleted": 7,
+    "lines": 34,
+    "src_files": 1,
+    "score": 34,
+    "repo": "itsdangerous",
+    "id": "itsdangerous-6c58e96",
+    "test_files": [
+      "tests/test_itsdangerous/test_timed.py"
+    ],
+    "base": {
+      "exit": 1,
+      "passed": 91,
+      "failed": 1,
+      "tail": "mtimestamp(ts)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED tests/test_itsdangerous/test_timed.py::TestTimedSerializer::test_fallback_signers\n1 failed, 91 passed, 23 warnings in 0.24s\n"
+    },
+    "fix": {
+      "exit": 0,
+      "passed": 92,
+      "failed": 0,
+      "tail": "uled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).\n    return datetime.utcfromtimestamp(ts)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n92 passed, 24 warnings in 0.35s\n"
+    },
+    "valid": true,
+    "issue": "Added fallback signer support to timed serializer",
+    "origin": "mined"
+  },
+  {
+    "commit": "c9e9698c70c8fe1ffe6e13158bb19a6251471b8b",
+    "subject": "Preserve modern word-boundary replacement delimiters (#204)",
+    "files": [
+      "slugify/slugify.py",
+      "tests/test_modern_word_boundary.py"
+    ],
+    "tests": [
+      "tests/test_modern_word_boundary.py"
+    ],
+    "src": [
+      "slugify/slugify.py"
+    ],
+    "added": 50,
+    "deleted": 4,
+    "lines": 54,
+    "src_files": 1,
+    "score": 54,
+    "repo": "python-slugify",
+    "id": "python-slugify-c9e9698",
+    "test_files": [
+      "tests/test_modern_word_boundary.py"
+    ],
+    "base": {
+      "exit": 1,
+      "passed": 1,
+      "failed": 1,
+      "tail": "'::', limit=12, save_order=True)\u001b[0m tests/test_modern_word_boundary.py::\u001b[1mModernWordBoundaryTests::test_replacement_delimiters_are_budgeted_and_preserved\u001b[0m - AssertionError: 'one::two' != '::::one'\n\u001b[31m\u001b[31m\u001b[1m10 failed\u001b[0m, \u001b[32m2 passed\u001b[0m, \u001b[32m5 subtests passed\u001b[0m\u001b[31m in 0.01s\u001b[0m\u001b[0m\n"
+    },
+    "fix": {
+      "exit": 0,
+      "passed": 2,
+      "failed": 0,
+      "tail": "\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                        [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m2 passed\u001b[0m, \u001b[32m\u001b[1m15 subtests passed\u001b[0m\u001b[32m in 0.01s\u001b[0m\u001b[0m\n"
+    },
+    "valid": true,
+    "issue": "Preserve modern word-boundary replacement delimiters (#204)",
+    "origin": "mined"
+  },
+  {
+    "commit": "df37f92c5329eaf28328e88d0da0a7a93709e37a",
+    "subject": "Support uppercase hexadecimal references in modern slugs (#195)",
+    "files": [
+      "slugify/slugify.py",
+      "test_release.py"
+    ],
+    "tests": [
+      "test_release.py"
+    ],
+    "src": [
+      "slugify/slugify.py"
+    ],
+    "added": 27,
+    "deleted": 2,
+    "lines": 29,
+    "src_files": 1,
+    "score": 29,
+    "repo": "python-slugify",
+    "id": "python-slugify-df37f92",
+    "test_files": [
+      "test_release.py"
+    ],
+    "base": {
+      "exit": 1,
+      "passed": 24,
+      "failed": 3,
+      "tail": "exadecimal_prefixes\u001b[0m - AssertionError: 'x41-xe9' != 'a-é'\n\u001b[31mFAILED\u001b[0m test_release.py::\u001b[1mUppercaseHexReferenceTests::test_uppercase_reference_through_cli\u001b[0m - AssertionError: 'x41\\n' != 'a\\n'\n\u001b[31m\u001b[31m\u001b[1m3 failed\u001b[0m, \u001b[32m25 passed\u001b[0m, \u001b[32m31 subtests passed\u001b[0m\u001b[31m in 0.88s\u001b[0m\u001b[0m\n"
+    },
+    "fix": {
+      "exit": 0,
+      "passed": 27,
+      "failed": 0,
+      "tail": "2m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m              [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m27 passed\u001b[0m, \u001b[32m\u001b[1m32 subtests passed\u001b[0m\u001b[32m in 0.66s\u001b[0m\u001b[0m\n"
+    },
+    "valid": true,
+    "issue": "Support uppercase hexadecimal references in modern slugs (#195)",
+    "origin": "mined"
+  },
+  {
+    "commit": "0841e578490098b21497782f7063f9350164d114",
+    "subject": "Add classify_unique",
+    "files": [
+      "more_itertools/more.py",
+      "more_itertools/more.pyi",
+      "tests/test_more.py"
+    ],
+    "tests": [
+      "tests/test_more.py"
+    ],
+    "src": [
+      "more_itertools/more.py",
+      "more_itertools/more.pyi"
+    ],
+    "added": 241,
+    "deleted": 0,
+    "lines": 241,
+    "src_files": 2,
+    "score": 281,
+    "repo": "more-itertools",
+    "id": "more-itertools-0841e57",
+    "test_files": [
+      "tests/test_more.py"
+    ],
+    "base": {
+      "exit": 1,
+      "passed": 491,
+      "failed": 14,
+      "tail": ".\nFAILED tests/test_more.py::ClassifyUniqueTests::test_vs_unique_everseen_key\nFAILED tests/test_more.py::ClassifyUniqueTests::test_vs_unique_justseen - Att...\nFAILED tests/test_more.py::ClassifyUniqueTests::test_vs_unique_justseen_key\n14 failed, 491 passed, 5 warnings, 2211 subtests passed in 1.28s\n"
+    },
+    "fix": {
+      "exit": 0,
+      "passed": 505,
+      "failed": 0,
+      "tail": "more.py:1650: DeprecationWarning: zip_equal will be removed in a future version of more-itertools. Use the builtin zip function with strict=True instead.\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n505 passed, 5 warnings, 2211 subtests passed in 1.34s\n"
+    },
+    "valid": true,
+    "issue": "Add classify_unique",
+    "origin": "mined"
+  },
+  {
+    "commit": "3082c063b51b22b26f1b599274d78ac00abd333e",
+    "subject": "Sync with itertool recipes by adding transpose(), matmul(), and factor()~",
+    "files": [
+      "more_itertools/more.py",
+      "more_itertools/recipes.py",
+      "more_itertools/recipes.pyi",
+      "tests/test_recipes.py"
+    ],
+    "tests": [
+      "tests/test_recipes.py"
+    ],
+    "src": [
+      "more_itertools/more.py",
+      "more_itertools/recipes.py",
+      "more_itertools/recipes.pyi"
+    ],
+    "added": 125,
+    "deleted": 3,
+    "lines": 128,
+    "src_files": 3,
+    "score": 208,
+    "repo": "more-itertools",
+    "id": "more-itertools-3082c06",
+    "test_files": [
+      "tests/test_recipes.py"
+    ],
+    "base": {
+      "exit": 1,
+      "passed": 105,
+      "failed": 7,
+      "tail": "LED(n=999936000799) tests/test_recipes.py::FactorTests::test_basic - At...\nSUBFAILED(n=909909090909) tests/test_recipes.py::FactorTests::test_basic - At...\nFAILED tests/test_recipes.py::FactorTests::test_cross_check - AttributeError:...\n16 failed, 106 passed, 7 warnings, 71 subtests passed in 0.59s\n"
+    },
+    "fix": {
+      "exit": 0,
+      "passed": 112,
+      "failed": 0,
+      "tail": "ipes.py:873: DeprecationWarning: batched will be removed in a future version of more-itertools. Use the standard library itertools.batched function instead\n    warnings.warn(\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n112 passed, 9 warnings, 81 subtests passed in 0.68s\n"
+    },
+    "valid": true,
+    "issue": "Sync with itertool recipes by adding transpose(), matmul(), and factor()~",
+    "origin": "mined"
+  },
+  {
+    "commit": "19726a0fefa5beb3c4024cc6ce64d6df7b93dfc2",
+    "subject": "Add humanize.metric() for converting big/small numbers to SI units.",
+    "files": [
+      "src/humanize/__init__.py",
+      "src/humanize/number.py",
+      "tests/test_number.py"
+    ],
+    "tests": [
+      "tests/test_number.py"
+    ],
+    "src": [
+      "src/humanize/__init__.py",
+      "src/humanize/number.py"
+    ],
+    "added": 95,
+    "deleted": 0,
+    "lines": 95,
+    "src_files": 2,
+    "score": 135,
+    "repo": "humanize",
+    "id": "humanize-19726a0",
+    "test_files": [
+      "tests/test_number.py"
+    ],
+    "base": {
+      "exit": 1,
+      "passed": 105,
+      "failed": 27,
+      "tail": "y::\u001b[1mtest_metric[[100]-100]\u001b[0m - AttributeError: module 'humanize' has no attribute 'metric'\n\u001b[31mFAILED\u001b[0m tests/test_number.py::\u001b[1mtest_metric[[0.1]-100 m]\u001b[0m - AttributeError: module 'humanize' has no attribute 'metric'\n\u001b[31m\u001b[31m\u001b[1m27 failed\u001b[0m, \u001b[32m105 passed\u001b[0m\u001b[31m in 0.09s\u001b[0m\u001b[0m\n"
+    },
+    "fix": {
+      "exit": 0,
+      "passed": 132,
+      "failed": 0,
+      "tail": "\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m             [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m132 passed\u001b[0m\u001b[32m in 0.07s\u001b[0m\u001b[0m\n"
+    },
+    "valid": true,
+    "issue": "Add humanize.metric() for converting big/small numbers to SI units.",
+    "origin": "mined"
+  },
+  {
+    "id": "humanize-381",
+    "repo": "humanize",
+    "commit": "ffdf407",
+    "issue": "Support general iterables in natural_list (#381)",
+    "test_files": [
+      "tests/test_lists.py"
+    ],
+    "base": {
+      "tag": "base",
+      "exit": 2,
+      "passed": 0,
+      "failed": 1,
+      "failed_names": [
+        "tests.test_lists"
+      ],
+      "tail": "\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mERROR\u001b[0m tests/test_lists.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.04s\u001b[0m\u001b[0m\n"
+    },
+    "fix": {
+      "tag": "fix",
+      "exit": 2,
+      "passed": 0,
+      "failed": 1,
+      "failed_names": [
+        "tests.test_lists"
+      ],
+      "tail": "\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mERROR\u001b[0m tests/test_lists.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n\u001b[31m\u001b[31m\u001b[1m1 error\u001b[0m\u001b[31m in 0.04s\u001b[0m\u001b[0m\n"
+    },
+    "valid": false,
+    "origin": "pilot01"
+  },
+  {
+    "id": "more-itertools-1247",
+    "repo": "more-itertools",
+    "commit": "dc2664b",
+    "issue": "Issue 1247: Keep numeric_range consistent with the items it produces\n\nnumeric_range produces its items by repeated multiplication, but derived len(), __contains__ and index() from division by the step. With floats the two disagree, so a range could report a length that did not match what it yielded, and could deny membership to its own items.",
+    "test_files": [
+      "tests/test_more.py"
+    ],
+    "valid": true,
+    "origin": "pilot01"
+  },
+  {
+    "id": "itsdangerous-sha1",
+    "repo": "itsdangerous",
+    "commit": "7f4dcf8",
+    "issue": "access sha1 lazily",
+    "test_files": [
+      "tests/test_itsdangerous/test_serializer.py"
+    ],
+    "base": {
+      "tag": "base",
+      "exit": 2,
+      "passed": 0,
+      "failed": 1,
+      "failed_names": [
+        "tests.test_itsdangerous.test_serializer"
+      ],
+      "tail": "\n=========================== short test summary info ============================\nERROR tests/test_itsdangerous/test_serializer.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.05s\n"
+    },
+    "fix": {
+      "tag": "fix",
+      "exit": 0,
+      "passed": 41,
+      "failed": 0,
+      "failed_names": [],
+      "tail": ".........................................                                [100%]\n41 passed in 0.03s\n"
+    },
+    "valid": true,
+    "origin": "pilot01"
+  }
+]

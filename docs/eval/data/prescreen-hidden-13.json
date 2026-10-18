@@ -1,0 +1,106 @@
+[
+  {
+    "id": "more-itertools-21d3d88",
+    "resolved": true,
+    "input": 486078,
+    "cmds": 34,
+    "sec": 149.4,
+    "timed_out": false
+  },
+  {
+    "id": "more-itertools-1b7f033",
+    "resolved": true,
+    "input": 316011,
+    "cmds": 28,
+    "sec": 100.0,
+    "timed_out": false
+  },
+  {
+    "id": "itsdangerous-910a7a9",
+    "resolved": true,
+    "input": 160256,
+    "cmds": 14,
+    "sec": 48.6,
+    "timed_out": false
+  },
+  {
+    "id": "itsdangerous-f966a62",
+    "resolved": true,
+    "input": 207087,
+    "cmds": 18,
+    "sec": 97.6,
+    "timed_out": false
+  },
+  {
+    "id": "itsdangerous-6c58e96",
+    "resolved": true,
+    "input": 122192,
+    "cmds": 18,
+    "sec": 47.2,
+    "timed_out": false
+  },
+  {
+    "id": "python-slugify-c9e9698",
+    "resolved": true,
+    "input": 206294,
+    "cmds": 24,
+    "sec": 83.5,
+    "timed_out": false
+  },
+  {
+    "id": "python-slugify-df37f92",
+    "resolved": true,
+    "input": 113089,
+    "cmds": 14,
+    "sec": 45.6,
+    "timed_out": false
+  },
+  {
+    "id": "more-itertools-0841e57",
+    "resolved": true,
+    "input": 314422,
+    "cmds": 18,
+    "sec": 113.3,
+    "timed_out": false
+  },
+  {
+    "id": "more-itertools-3082c06",
+    "resolved": false,
+    "input": 350958,
+    "cmds": 18,
+    "sec": 99.7,
+    "timed_out": false
+  },
+  {
+    "id": "humanize-19726a0",
+    "resolved": false,
+    "input": 224148,
+    "cmds": 22,
+    "sec": 93.0,
+    "timed_out": false
+  },
+  {
+    "id": "humanize-381",
+    "resolved": true,
+    "input": 84196,
+    "cmds": 16,
+    "sec": 40.8,
+    "timed_out": false
+  },
+  {
+    "id": "more-itertools-1247",
+    "resolved": true,
+    "input": 333045,
+    "cmds": 24,
+    "sec": 255.9,
+    "timed_out": false
+  },
+  {
+    "id": "itsdangerous-sha1",
+    "resolved": true,
+    "input": 148138,
+    "cmds": 12,
+    "sec": 56.4,
+    "timed_out": false
+  }
+]
