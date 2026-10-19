@@ -1,0 +1,55 @@
+{
+  "checked_at": "2026-10-18T23:32:34.704Z",
+  "passed": false,
+  "completed_trials": 6,
+  "quality_report_sha256": "49af325d5de511e06f343ac21462040db89d1df9ce551b62408ccc484999e6a8",
+  "cost_report_sha256": "6d7e46a086d91fdc3ebbe83b4a39d2dff86709c1236b8b599671724813d9b08c",
+  "context_report_sha256": "077f6992bfe221a476c70d48c906d44ee27645461d639e5b2320fb6834c837fd",
+  "promotion_report_sha256": "7f9dbb72faa29b174466bc1e4106a11e7d4f9dbf5a2355dd72d66e4b3d894385",
+  "compatibility_report_sha256": "08466777243904d13981722f70fa2a21284765a9dc29a0b94153b117aba4ec8e",
+  "extra_reports_sha256": {
+    "shortcircuit": "e99667d81fa4dc32a97fa2b82402e22af54da8de14de21043e922ccb6794adcc",
+    "floatstop": "f952be095641943c021237696ddab21eeb047bf2ecd3caac3484453da3ece6fb",
+    "infinite-stop": "6a1671bde770ef175313844869eb7fdfdf3530e108e88596b842fc3c65db7c23"
+  },
+  "no_measured_model_active_during_probes": true,
+  "process_audit_sha256": "7b5ce2165c4575806b25e8c8033303cd6eba00b3fa0ffe48d9236f1d6b2ebdf8",
+  "recovery_kind": "First five original probe outputs reused; remaining frozen8 Python queries run after requested explicit process audit, actual wrapper source preserved. No model rerun or score relaxation.",
+  "failed_runs": [
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "exit": -9,
+      "timed_out": true,
+      "raw_cli_scope": "incomplete_failed_run",
+      "resolved": false
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-trim",
+      "run": 2,
+      "exit": 1,
+      "timed_out": false,
+      "raw_cli_scope": "incomplete_failed_run",
+      "resolved": false
+    }
+  ],
+  "steps": [
+    {
+      "file": "<BENCH_ROOT>/recovery/shortcircuit-probes.cjs",
+      "exit": 0,
+      "log": "<BENCH_ROOT>/recovery/critical-shortcircuit.log"
+    },
+    {
+      "file": "<BENCH_ROOT>/recovery/floatstop-probes.cjs",
+      "exit": 0,
+      "log": "<BENCH_ROOT>/recovery/critical-floatstop.log"
+    },
+    {
+      "file": "<BENCH_ROOT>/recovery/infinite-stop-probes.cjs",
+      "exit": 0,
+      "log": "<BENCH_ROOT>/recovery/critical-infinite-stop.log"
+    }
+  ]
+}

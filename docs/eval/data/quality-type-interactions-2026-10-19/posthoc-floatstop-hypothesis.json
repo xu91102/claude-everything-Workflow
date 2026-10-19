@@ -1,0 +1,14 @@
+{
+  "proposed_at": "2026-10-18T22:41:55.723Z",
+  "status": "NOT RUN",
+  "kind": "Post-start static target-not-fully-fixed hypothesis; run only after all42 models close",
+  "source": "5ae9d13344fb7d96a69461d3616c220e29b3d796",
+  "location": "closed candidateR1 _len dispatch depends on start/step float but distance also depends on stop",
+  "scope": "Actual Issue1247 requires len/contains/index consistent with generated items, not only float start or step",
+  "hypothesis": "Integral start/step generate exact integer items; a precisely representable large float stop can make existing subtraction lose one unit. A start/step-only guard leaves this original target length discrepancy unfixed.",
+  "cases": 2,
+  "versions": 8,
+  "oracle": "builtin integer range with exactsame integral values and exact float stop converted to its identical integer, 64bit len within bound; no enumeration. Parent may fail expected targetbug; upstream reference positive control required.",
+  "controller_sha256": "256fcc74b6dfc3f256793fb36f9abc4153826caa56c45307cb92fa9a1eb91320",
+  "model_or_original46_changes": false
+}

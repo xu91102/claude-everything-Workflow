@@ -1,0 +1,70 @@
+{
+  "kind": "Recorded failed model attempts, not resampled. Only visible CLI lifecycle errors and response usage; no hidden body/auth. CLI zero totals are absent final CLI totals, not zero resource consumption. No unfinished-request or billing estimate.",
+  "failed": [
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "exit": -9,
+      "timed_out": true,
+      "duration_s": 720,
+      "resolved": false,
+      "patch_sha256": "a9a6a19c68f78acd9f2bbc33b62191cd3a8e2f7793817d19c85568a7b9166e7d",
+      "empty_patch": false,
+      "raw_cli_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "raw_cli_scope": "incomplete_failed_run",
+      "recorded_response_usage": {
+        "input_tokens": 2801789,
+        "cached_input_tokens": 2647680,
+        "output_tokens": 39906,
+        "reasoning_output_tokens": 24016
+      },
+      "recorded_requests": 59,
+      "visible_lifecycle_errors": []
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-trim",
+      "run": 2,
+      "exit": 1,
+      "timed_out": false,
+      "duration_s": 82.8,
+      "resolved": false,
+      "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "empty_patch": true,
+      "raw_cli_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "raw_cli_scope": "incomplete_failed_run",
+      "recorded_response_usage": {
+        "input_tokens": 91330,
+        "cached_input_tokens": 68224,
+        "output_tokens": 1464,
+        "reasoning_output_tokens": 524
+      },
+      "recorded_requests": 4,
+      "visible_lifecycle_errors": [
+        {
+          "type": "error",
+          "message_sha256": "3076d430426648312741c2d400cfe33e8d4d9034224153bc347432151d5ad527",
+          "known_provider_capacity": true,
+          "message_excerpt": "Selected model is at capacity. Please try a different model."
+        },
+        {
+          "type": "turn.failed",
+          "message_sha256": "3076d430426648312741c2d400cfe33e8d4d9034224153bc347432151d5ad527",
+          "known_provider_capacity": true,
+          "message_excerpt": "Selected model is at capacity. Please try a different model."
+        }
+      ]
+    }
+  ]
+}

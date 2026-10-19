@@ -1,0 +1,506 @@
+{
+  "schema_version": 2,
+  "reviewed_at_utc": "2026-10-18T18:57:34.524904+00:00",
+  "mode": "independent",
+  "mode_reason": "Explicit fresh independent final review of generated patches, configurable arithmetic behavior, complete experimental evidence and performance gates. No subagents were spawned.",
+  "scope_source": "Caller-confirmed full-review-package.json requirements, supplied AGENTS/rules, and subsequently explicitly authorized posthoc-review-addon.json. Requirements were not reconstructed from the diff.",
+  "base": "10403cf728fdb9247dbfa094a047f0d77c157e3c",
+  "measured": "00c8313e4a31f0511ced847a579d7b5342504e43",
+  "worktree_head_excluded": "e890a92 doc-only plus later uncommitted next-candidate testing.md preparation; neither entered this archived-source verdict.",
+  "package": {
+    "path": "<BENCH_ROOT>/full-review-package.json",
+    "sha256": "41d091f3d6584d0fc0beff8479a827411450eadd454d695a6e7c9cabc60171ae",
+    "fixed_file_count": 22,
+    "all_hashes_match_at_start_and_close": true,
+    "files": [
+      {
+        "path": "<BENCH_ROOT>/final-source.diff",
+        "sha256": "b10f3b02884b3e699c68bb6f16d9f3243e37bd295f07203a568f00bc0b3dc6e8"
+      },
+      {
+        "repo_path": "rules/common/testing.md",
+        "path": "<BENCH_ROOT>/sources/optimized/rules/common/testing.md",
+        "sha256": "77c7edcd1d8084578eb3350b0e1da5662c531250348559f3ef178d4d6c80d861"
+      },
+      {
+        "repo_path": "skills/code-review/SKILL.md",
+        "path": "<BENCH_ROOT>/sources/optimized/skills/code-review/SKILL.md",
+        "sha256": "ac9ea16d9cfe912c98f6fb00e1fb79573ec7e40b8c6b3932a1d94a33c215576d"
+      },
+      {
+        "repo_path": "skills/using-superpowers/references/fast-path.md",
+        "path": "<BENCH_ROOT>/sources/optimized/skills/using-superpowers/references/fast-path.md",
+        "sha256": "873589a03e8cb99d5412764201fcf05ced5d7c2760f5ee61d6a60b5f73cd0eb3"
+      },
+      {
+        "repo_path": "docs/eval/tools/run-trial.js",
+        "path": "<BENCH_ROOT>/sources/optimized/docs/eval/tools/run-trial.js",
+        "sha256": "99deae2fd88616645e89a03754b20594ab9e7f6e91bfccb0aff8dc62b48507cc"
+      },
+      {
+        "repo_path": "docs/eval/tools/run-trial.test.js",
+        "path": "<BENCH_ROOT>/sources/optimized/docs/eval/tools/run-trial.test.js",
+        "sha256": "e4aa68083487fdc0c5d95e66db154596eb533aaf6b439d31e41a9b8aa3fa12e8"
+      },
+      {
+        "repo_path": "docs/eval/tools/codex-usage.js",
+        "path": "<BENCH_ROOT>/sources/optimized/docs/eval/tools/codex-usage.js",
+        "sha256": "c96e966575b7d1145a04196f173855c9e282640b253552ce5bd5c9a3cc7b2033"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/fast-path-targeted-2026-10-19.md",
+        "sha256": "c4fc43196811774a5be8f5ad9f366ab42c3350a8f414f4e8f49467b148d9f6c9"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/analysis.json",
+        "sha256": "f2d903bbacc7ee702df1a652479129e1e56d2993df8df77bdb00da9c03f81dd4"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/context-probes.json",
+        "sha256": "c9e10deb4bfa6150a8840bdc5e52fe35628d98f6ab32147828ee3b96a4d51fef"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/cost-probes.json",
+        "sha256": "d6ef3a81dbb5cedc0ae507839060d59e400b05992f122c9d7abd2f56e2c8a5f0"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/critical-context-probes.json",
+        "sha256": "057864f1c9cbc2ac932009c441c9f3e849fc6e8a37576a20fe78bca02906a304"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/critical-cost-probes.json",
+        "sha256": "f50320b6be4db69e1dfd9acda0c4260154b8a86fe5398b6a3d5311f5b255899a"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/critical-quality-probes.json",
+        "sha256": "72fe10e9dc7d7c505768c2a1de31426d318f3b96c6edfa05bbc026b3d322b313"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/experiment.json",
+        "sha256": "317d9fa60bf1928c4d2ec80c76e9d7e647eeec1f09b74c514f48889a54640d85"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/i18n-probes.json",
+        "sha256": "f7909566ae088d5c29b707a0afd9a9f1245ea568ceec11c1837328225df8e3fd"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/quality-diagnosis.json",
+        "sha256": "37a97fb98db05194bdaad8fe971345c79b18f37a5d18a2effd5d6c070b9bef23"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/quality-probes.json",
+        "sha256": "b3d1fb011f4598bab8a2b55f16d7f253feba7a421b2b66a0c272f5345fa9600b"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/task-fixtures.json",
+        "sha256": "1c7a58c23e35880dea1962f5a89cea233118f2c01162d527366d2fab3f43f225"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/trace-diagnosis.json",
+        "sha256": "bd3c02f04f8332ed186b8fb85030b84aab6536fadfe9c8a5853b6f42e8d71cc9"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/trials.csv",
+        "sha256": "8511db2902b08f4f1d48b3f16be911793952c87a56a2f12cbad83659e647dc1d"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/trials.jsonl",
+        "sha256": "692b5352b70795e84fa64a129d1743fe2b91675c801dfcb021f49eafacfea323"
+      }
+    ],
+    "source_diff_sha256": "b10f3b02884b3e699c68bb6f16d9f3243e37bd295f07203a568f00bc0b3dc6e8"
+  },
+  "additive_package": {
+    "path": "<BENCH_ROOT>/posthoc-review-addon.json",
+    "sha256": "8b3907194564604eebccf7fae2e2caa4537d9a20a79bead464a98e9e34d221a7",
+    "fixed_file_count": 3,
+    "all_hashes_match": true,
+    "files": [
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/posthoc-promotion-probes.json",
+        "sha256": "e96c7f84e184a6ea8acc519865fea36595fbe890c08d9c4bf1c149cf0e08b401"
+      },
+      {
+        "path": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/posthoc-promotion-amendment.json",
+        "sha256": "b8c7df9f7dc1cf1d2163a8436075e2958d62b329cd624c08f8aed3e7f7a2742f"
+      },
+      {
+        "path": "<BENCH_ROOT>/posthoc-promotion-probes.cjs",
+        "sha256": "0028a0bf52baeecb5502a97394495836687900cd5864c2f0e52f1c960b23006d"
+      }
+    ],
+    "declared_at": "2026-10-18T18:49:18.055Z",
+    "executed_at": "2026-10-18T18:49:21.115Z",
+    "models_already_finished_at": "2026-10-18T18:39:06.586Z",
+    "status": "PASS",
+    "new_probes_executed_by_this_reviewer_after_addon": "NONE"
+  },
+  "standards": {
+    "status": "PASS",
+    "scope": "The pinned three policy changes and unchanged evaluator context; actual artifacts also checked for unauthorized test/config/runner/dependency changes. Artifact correctness findings remain in the Spec axis.",
+    "hard_rule_violations": [],
+    "smell_observations": [],
+    "findings": [],
+    "confirmed": [
+      "Existing owners retain the testing, routing, review, authorization and escalation contracts.",
+      "Representative boundaries are limited to equivalent arithmetic and exception semantics; precision, contexts, exception categories, local queries, first match and bounded worst work remain.",
+      "Numeric search/correction rewrites explicitly require independent review including float-only rewrites; fresh fixed-context review remains.",
+      "Fast Path prioritizes affected branches without forcing a type-specific design or waiving compatibility.",
+      "No task names, expected answers or numeric fixture constants were added to policy. AGENTS.md is byte-identical to the pinned main."
+    ]
+  },
+  "source_spec": {
+    "status": "PASS",
+    "findings": [],
+    "limitation": "Source-policy plausibility does not establish generated-artifact correctness or speed."
+  },
+  "artifact_spec": {
+    "status": "FAIL",
+    "findings": [
+      {
+        "id": "A1",
+        "severity": "Important",
+        "axis": "Artifact Spec",
+        "classification": "Unfixed part of the original numeric_range issue; preexists the policy diff, not an introduced regression attributable to the three policy changes.",
+        "title": "Mixed integer/float promotion still excludes the actual first generated item",
+        "requirement": "Recorded task more-itertools-1247 requires len, membership and index to agree with the items produced; testing.md requires boundaries based on the actual arithmetic semantics.",
+        "artifact": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/runs/more-itertools-1247/gpt-fixed-r2/more_itertools/more.py",
+        "line_start": 2448,
+        "line_end": 2450,
+        "source_sha256": "e6a808746b385e8506b5e57ac03615bd76896cf7eb6ada3dc7d44308ce832e59",
+        "patch_sha256": "62060e7ae9b1489f683d7ad57b692cd1756c7f8ba22a8a08d42fe69578646036",
+        "condition": "For sign in (1,-1), r=numeric_range(sign*(2**53+1), sign*(2**53+6), sign*1.0). Integer-to-float promotion changes the first generated value to sign*9007199254740992.0, below/above the raw integer start used by index().",
+        "expected": {
+          "sequence_items": 6,
+          "len": 6,
+          "contains_first": true,
+          "first_index": 0
+        },
+        "actual_candidate_r2": {
+          "sequence_items": 6,
+          "len": 6,
+          "contains_first": false,
+          "index_exception": "ValueError"
+        },
+        "affected_current_artifacts": [
+          "gpt-fixed-r2",
+          "gpt-trim-r2",
+          "gpt-cew-r1",
+          "gpt-cew-r2"
+        ],
+        "baseline_classification": "Parent also fails contains/index and has length 5; upstream fixes length but still rejects the generated first value. gpt-fixed-r1 and gpt-trim-r1 satisfy the complete condition.",
+        "smallest_correction": "Base float-search membership bounds on the actual promoted first value produced by start+0*step, preserving the exact-type path and validating both directions. Treat this as a general arithmetic-boundary rule; do not add benchmark constants to policy text.",
+        "authoritative_uniform_evidence": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/posthoc-promotion-probes.json"
+      },
+      {
+        "id": "A2",
+        "severity": "Important",
+        "axis": "Artifact Spec",
+        "classification": "New local-query exception in the gpt-trim-r2 generated artifact relative to its task parent; not a regression in either current candidate artifact and not causal attribution to this policy diff.",
+        "title": "Decimal Rounded trap breaks previously legal local membership/index queries",
+        "requirement": "testing.md:52 preserves configurable arithmetic contexts, exception categories and original legal local queries without new failures from unrelated probes.",
+        "artifact": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/runs/more-itertools-1247/gpt-trim-r2/more_itertools/more.py",
+        "line_start": 2465,
+        "line_end": 2469,
+        "source_sha256": "e34e17119bbdaf91b29f4adae85215ec926eb9967b9fa0f2c6dfb391d54a7ce8",
+        "patch_sha256": "30dbb1ac4baa2e8ea559f83aba89477e2a8717b5024a601d67b0e53ee5fc61c1",
+        "condition": "Within localcontext(), set prec=2 and traps[Rounded]=True; construct numeric_range(Decimal(1),Decimal(2),Decimal(\".001\")); independently query Decimal(1) in r and r.index(Decimal(1)).",
+        "expected_parent": {
+          "contains": true,
+          "index": 0
+        },
+        "actual_reference_r2": {
+          "contains_exception": "Rounded",
+          "index_exception": "Rounded"
+        },
+        "reason": "The new _get_position path evaluates start+n*step at n=0 under the trap, introducing a Rounded signal; previous local modulo/divmod queries did not perform this generated-value arithmetic.",
+        "candidate_two_artifacts": "Both preserve these legal local queries: True / 0.",
+        "important_boundary": "The parent iterator itself raises Rounded and parent len raises InvalidOperation for this context. Only the two successful parent local queries support this finding; no claim of legal parent iteration or length.",
+        "smallest_correction": "Keep original supported non-float local-query semantics or avoid speculative arithmetic that introduces new arithmetic-context exceptions; do not disable the caller traps.",
+        "authoritative_uniform_evidence": "<WORKTREE>/docs/eval/data/quality-targeted-2026-10-19/posthoc-promotion-probes.json"
+      }
+    ],
+    "candidate_important_count": 1,
+    "reference_important_count": 2,
+    "source_important_count": 0,
+    "other_36_artifacts": "All six distinct source families and every byte variant were inspected; no additional Important finding in slugify-194, slugify-200, humanize-346, humanize-381, bucket-1284 or lazy-SHA1. This is a bounded review, not proof of all inputs.",
+    "strict_original_suite": {
+      "gpt-cew": "14/14",
+      "gpt-trim": "14/14",
+      "gpt-fixed": "14/14"
+    },
+    "predeclared_32_plus_i18n": {
+      "gpt-cew": "12/14",
+      "gpt-trim": "14/14",
+      "gpt-fixed": "14/14"
+    },
+    "posthoc_all_ten_by_numeric_version": {
+      "parent": {
+        "passed": 4,
+        "total": 10
+      },
+      "upstream_reference": {
+        "passed": 4,
+        "total": 10
+      },
+      "gpt-cew-r1": {
+        "passed": 4,
+        "total": 10
+      },
+      "gpt-fixed-r2": {
+        "passed": 6,
+        "total": 10
+      },
+      "gpt-trim-r1": {
+        "passed": 10,
+        "total": 10
+      },
+      "gpt-trim-r2": {
+        "passed": 4,
+        "total": 10
+      },
+      "gpt-cew-r2": {
+        "passed": 4,
+        "total": 10
+      },
+      "gpt-fixed-r1": {
+        "passed": 10,
+        "total": 10
+      }
+    },
+    "original_plus_predeclared_plus_authorized_posthoc": {
+      "gpt-cew": "12/14",
+      "gpt-trim": "13/14",
+      "gpt-fixed": "13/14"
+    },
+    "scoring_boundary": "The posthoc composite is separately labelled. No original resolved field, frozen probe score, result, duration or usage value was rewritten."
+  },
+  "evidence_integrity": {
+    "status": "PASS",
+    "findings": [],
+    "review_process_compliance": "DEVIATIONS DISCLOSED BELOW; this PASS refers to integrity and traceability of the fixed experiment plus authorized uniform additive evidence.",
+    "audit": [
+      {
+        "name": "Immutable package and source pin",
+        "status": "PASS",
+        "details": "22/22 hashes; scoped git diff 10403cf→00c8313 equals archived diff; all 6 archived sources equal measured git objects; all 3 JS equal 10403cf; AGENTS equals pinned main."
+      },
+      {
+        "name": "Actual trials, receipts and patches",
+        "status": "PASS",
+        "trials": 42,
+        "distinct_patch_byte_variants": 31,
+        "details": "Unique 7×2×3 keys, receipt==progress, result fields match public JSONL after documented path normalization, patch/log SHA-256 match receipts, exact git diff equals both raw/public patch, all 42 reverse-apply checks pass, only one intended source file changed per trial, given tests and runners unchanged."
+      },
+      {
+        "name": "Raw original JUnit",
+        "status": "PASS",
+        "reports": 126,
+        "details": "All report hashes, testcase counts and base/after case identities checked; targets execute and pass, no new failure IDs, collection/exit status valid. humanize-346/main-r1 compiles resources and removes 110 skips; every humanize artifact gets the same additional translation run."
+      },
+      {
+        "name": "Complete public usage and lifecycle accounting",
+        "status": "PASS",
+        "sessions": 46,
+        "root_sessions": 42,
+        "native_children": 4,
+        "unique_responses": 472,
+        "plaintext_commands": 577,
+        "native_child_commands": 70,
+        "details": "All roots/parent links belong to their trial; every session owns responses; unique response counters agree with session cumulative counters and raw CLI parent/family scope; provider response IDs do not cross trials; original CLI turn sums equal retained raw_cli_usage. All actual session models/efforts are gpt-6.1-sol/high. No unrelated session, duplicate/conflicting counters, auth-reading command, cross-trial fixture access or retrieval of an upstream solution observed. The two disclosed pip installs were dependency installations. No hidden reasoning was used."
+      },
+      {
+        "name": "Installation and configurations",
+        "status": "PASS",
+        "source_template_policy_hashes": 11,
+        "trial_policy_hashes": 154,
+        "trial_configs_and_agents": 42,
+        "details": "Policy sources/templates/trial copies match; config changes consist solely of the documented checkout trust entry, with five execution settings identical. Every AGENTS copy matches the corresponding unchanged source."
+      },
+      {
+        "name": "Fixture and dependency provenance",
+        "status": "PASS",
+        "task_fixtures": 7,
+        "regression_file_checks": 42,
+        "base_source_checks": 42,
+        "package_baselines": 4,
+        "trial_package_snapshots": 42,
+        "details": "Every trial HEAD^ equals task parent; HEAD regression tests equal replay-commit tests and source starts at the task parent; public test/reference patches match git; no reference replay commit in accessible refs. Reused manifest and validator bytes equal the disclosed earlier source. Pip-freeze baseline/after hashes match all receipts; only ruff==0.17.1 was added in main-r1 and reference-r1 numeric trials, as disclosed."
+      },
+      {
+        "name": "Frozen critical and final 32 probes",
+        "status": "PASS",
+        "versions": 8,
+        "checks_per_version": 32,
+        "stages": 2,
+        "details": "All controller/program hashes and critical/final case identities, results and actual source hashes match; 16 boundary +4 cost/first-match +12 Decimal context checks uniformly cover parent/upstream/all6. Protocol frozen 17:54:21.499Z before first trial 17:54:22.043Z. Critical models all finished 18:17:25.989Z; probes closed at 18:17:43.965Z before remaining trials 18:17:44.352Z; final context run 18:39:30.508Z follows all-model completion."
+      },
+      {
+        "name": "Uniform i18n coverage",
+        "status": "PASS",
+        "artifacts": 12,
+        "executed_tests_each": 118,
+        "compiled_mo_files_each": 36,
+        "details": "All 12 JUnit hashes and identical testcase sets pass with zero skips/errors; copied changed source files and existing test_i18n/translation scripts match measured originals."
+      },
+      {
+        "name": "Summary, pairs, CSV and schedule",
+        "status": "PASS",
+        "summary_arms": 3,
+        "task_arm_means": 21,
+        "paired_rows": 14,
+        "csv_rows": 42,
+        "details": "All summary fields, per-task means, paired token/time ratios and CSV cells independently recalculated from actual rows; peak task concurrency is 2 and all 14 task/repetition blocks follow declared serial arm order."
+      },
+      {
+        "name": "Source and production-package validation evidence",
+        "status": "PASS",
+        "source_checks": 8,
+        "fresh_public_cli_regressions": 29,
+        "historic_replays_reused": 43,
+        "details": "Eight current-source checks have exit 0 and matching log hashes; fresh evaluator TAP is 29/29; production pack/install/verify report exit0. Three packaged policy files match archived inputs; evaluator docs JS is intentionally excluded by npm files manifest. Historic 43-family replay is disclosed reuse, justified by unchanged public JS, not claimed as freshly executed."
+      },
+      {
+        "name": "Authorized additive posthoc evidence",
+        "status": "PASS",
+        "files": 3,
+        "versions": 8,
+        "individual_queries": 80,
+        "details": "All 3 new file hashes, exact Python/controller source, uniform 10-query identities, actual source hashes, exits and explicit post-model timestamps verified. Independent bounded enumeration supplies the mixed-type oracle; Rounded checks only the two legal parent local operations."
+      }
+    ],
+    "audit_tool_chunks": [
+      "8fa44d",
+      "f5c23f",
+      "710794",
+      "955cb0",
+      "f3aa64",
+      "c720ee",
+      "7b6835",
+      "3e4fe5",
+      "448299"
+    ],
+    "middle_control": "Explicitly switched from historical44ff0a4 to quality-passing10403cf before every measured model. Report discloses this; no contemporaneous44 difference is asserted. Earlier complete runs remain separate and were not re-reviewed wholesale.",
+    "remaining_reporting_work": "Parent must replace the pending review marker and transparently append this failed artifact verdict and separately labelled posthoc composite. This fixed report and original data remain unchanged during this review."
+  },
+  "performance": {
+    "status": "FAIL",
+    "requirement": "Frozen performance_acceptance requires lower whole-batch total input+output tokens AND lower mean model duration than main.",
+    "finding": {
+      "severity": "Important",
+      "requirement_source": "protocol/protocol.json:performance_acceptance",
+      "evidence": "42 completed outcomes retained, 14 per arm; same7 development tasks and 2 repeats.",
+      "candidate_total_tokens": 6054218,
+      "reference104_total_tokens": 6793915,
+      "main_total_tokens": 3937068,
+      "candidate_mean_s": 131.00714285714284,
+      "reference104_mean_s": 116.71428571428571,
+      "main_mean_s": 78.58571428571429,
+      "candidate_vs_main_token_pct": 53.774788751426186,
+      "candidate_vs_main_mean_time_pct": 66.70605344482819,
+      "candidate_vs_reference104_token_pct": -10.887639895406409,
+      "candidate_vs_reference104_mean_time_pct": 12.246022031823745,
+      "result": "Both main-relative gates fail. Lower tokens versus104 does not offset a slower mean or the main-relative failure."
+    },
+    "raw_cli_totals_preserved": {
+      "gpt-cew": 3937068,
+      "gpt-trim": 5077019,
+      "gpt-fixed": 4617368
+    },
+    "diagnosis": {
+      "kind": "Directly evidenced cost concentration, not causal ablation or an instruction to weaken review.",
+      "numeric_candidate_two_trials": {
+        "tokens": 3513244,
+        "mean_duration_s": 551.9,
+        "native_review_tokens": 1436850,
+        "requests_including_children": 85
+      },
+      "numeric_main_two_trials": {
+        "tokens": 896501,
+        "mean_duration_s": 187.7,
+        "native_review_tokens": 0,
+        "requests": 24
+      },
+      "remaining_six_candidate_twelve_trials": {
+        "tokens": 2540974,
+        "mean_duration_s": 60.85833333333333
+      },
+      "remaining_six_main_twelve_trials": {
+        "tokens": 3040567,
+        "mean_duration_s": 60.4
+      },
+      "safe_redundant_validation_confirmed": false,
+      "duplicate_test_hypothesis_rejected": "Candidate r2 full unittest passes at18:01:24.650Z and18:02:22.830Z bracket an actual source patch at18:02:17.435Z. The second run is justified; it must not be counted as safely removable duplicate cost.",
+      "limitations": "No causal ablation, no server-load/cache control, 2 repeats on a development set, ordering not fully balanced. Child token totals and broad trace categories cannot prove the savings from removing any single rule or quality gate."
+    }
+  },
+  "overall_spec": {
+    "status": "FAIL",
+    "blocking_reasons": [
+      "At least one candidate artifact leaves a concrete Important portion of the original numeric issue unfixed.",
+      "Whole-batch main-relative token and mean-duration gates both fail."
+    ],
+    "allowed_completion_claim": "The fourth42-run experiment and independent evidence review are complete and negative; the user goal of resolving remaining quality while retaining a measured Fast Path advantage is not achieved.",
+    "delivery": "Keep PR62 Draft; do not merge or publish. PR update/remote CI/merge/release are not performed or independently refreshed by this read-only reviewer."
+  },
+  "review_process_deviations": [
+    {
+      "kind": "Two unplanned read-only behavior checks",
+      "description": "The reviewer executed the two retained manual checks below before realizing the caller intended frozen-evidence-only review. They were actual execution, not static reasoning. No frozen source, artifact, protocol, grading or metric was modified. The root then supplied a fixed additive package with uniform actual validation under the provisioned complete-module environment and explicit UTC.",
+      "authority": "The later additive package was explicitly authorized by the parent; this does not retroactively make the two original checks predeclared.",
+      "manual_checks": [
+        {
+          "tool_chunk_id": "0308cb",
+          "command": "python3 -B - <<'PY'\nfrom pathlib import Path\nimport ast,subprocess,json,math\nfrom collections.abc import Sequence\nfrom functools import cached_property,partial\nfrom itertools import count,takewhile\nfrom operator import gt,lt\nfrom contextlib import suppress\nfrom decimal import Decimal,Overflow as DecimalOverflow,localcontext,Rounded,Inexact\nr=Path('<BENCH_ROOT>');sources={'parent':subprocess.check_output(['git','show','2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10:more_itertools/more.py'],cwd=r/'repos/more-itertools',text=True)}\nfor x in (r/'trials').glob('more-itertools-1247--*'):\n cell=x.name.split('--')[1];rn=x.name.split('--')[2];sources[cell+'-'+rn]=(x/'runs'/'more-itertools-1247'/(cell+'-'+rn)/'more_itertools/more.py').read_text()\nfor label,source in sources.items():\n node=next(x for x in ast.parse(source).body if isinstance(x,ast.ClassDef) and x.name=='numeric_range');ns=globals().copy();exec(compile(ast.Module(body=[node],type_ignores=[]),'<read-only-artifact>','exec'),ns);cls=ns['numeric_range'];out={}\n for op in ['contains','index','first','len']:\n  with localcontext() as ctx:\n   ctx.prec=2;ctx.traps[Rounded]=True;rr=cls(Decimal(1),Decimal(2),Decimal('.001'))\n   try:out[op]=str(Decimal(1) in rr if op=='contains' else rr.index(Decimal(1)) if op=='index' else next(iter(rr)) if op=='first' else len(rr))\n   except Exception as e:out[op]='ERROR '+type(e).__name__\n print('ROUNDED_TRAP',label,json.dumps(out))\n print('MIXED_HUGE',label,end=' ')\n for op in ['contains','index']:\n  rr=cls(10**400,10**400+1,0.1)\n  try:print(op,str(10**400 in rr if op=='contains' else rr.index(10**400)),end=' ')\n  except Exception as e:print(op,type(e).__name__,end=' ')\n print()\nPY",
+          "stdout": "ROUNDED_TRAP parent {\"contains\": \"True\", \"index\": \"0\", \"first\": \"ERROR Rounded\", \"len\": \"ERROR InvalidOperation\"}\nMIXED_HUGE parent contains True index 0 \nROUNDED_TRAP gpt-trim-r2 {\"contains\": \"ERROR Rounded\", \"index\": \"ERROR Rounded\", \"first\": \"ERROR Rounded\", \"len\": \"ERROR InvalidOperation\"}\nMIXED_HUGE gpt-trim-r2 contains False index ValueError \nROUNDED_TRAP gpt-fixed-r1 {\"contains\": \"True\", \"index\": \"0\", \"first\": \"ERROR Rounded\", \"len\": \"ERROR InvalidOperation\"}\nMIXED_HUGE gpt-fixed-r1 contains OverflowError index OverflowError \nROUNDED_TRAP gpt-cew-r2 {\"contains\": \"ERROR Rounded\", \"index\": \"ERROR Rounded\", \"first\": \"ERROR Rounded\", \"len\": \"ERROR InvalidOperation\"}\nMIXED_HUGE gpt-cew-r2 contains OverflowError index OverflowError \nROUNDED_TRAP gpt-trim-r1 {\"contains\": \"True\", \"index\": \"0\", \"first\": \"ERROR Rounded\", \"len\": \"ERROR InvalidOperation\"}\nMIXED_HUGE gpt-trim-r1 contains False index ValueError \nROUNDED_TRAP gpt-fixed-r2 {\"contains\": \"True\", \"index\": \"0\", \"first\": \"ERROR Rounded\", \"len\": \"ERROR InvalidOperation\"}\nMIXED_HUGE gpt-fixed-r2 contains False index ValueError \nROUNDED_TRAP gpt-cew-r1 {\"contains\": \"ERROR InvalidOperation\", \"index\": \"ERROR InvalidOperation\", \"first\": \"ERROR Rounded\", \"len\": \"ERROR InvalidOperation\"}\nMIXED_HUGE gpt-cew-r1 contains False index ValueError \n",
+          "stderr": "",
+          "exit_code": 0,
+          "exact_execution_utc": null,
+          "executed_before_observed_utc": "2026-10-18T18:48:54Z",
+          "timestamp_limitation": "The original invocation did not print UTC; exact execution time was not recorded. The upper bound is the later clock tool observation, not a fabricated timestamp.",
+          "command_sha256": "7820112737283aadc00ed115c1b47dac894cccfa369ccfc7b81665f752726fac",
+          "stdout_sha256": "538ef2c931c9156ab5b0cc3a13753fc80dde446a1dce74a094e3bd0acf302a0b",
+          "method": "AST-extract the archived class and execute it in memory under system python3 -B. No model execution, file writes, fixture edits or frozen-probe edits. This differs from the provisioned complete-module environment used by the authoritative additive uniform validation."
+        },
+        {
+          "tool_chunk_id": "818e5f",
+          "command": "python3 -B - <<'PY'\nfrom pathlib import Path\nimport ast,subprocess,json,math\nfrom collections.abc import Sequence\nfrom functools import cached_property,partial\nfrom itertools import count,takewhile,islice\nfrom operator import gt,lt\nfrom contextlib import suppress\nfrom decimal import Decimal,Overflow as DecimalOverflow,localcontext\nr=Path('<BENCH_ROOT>');versions={'parent':subprocess.check_output(['git','show','2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10:more_itertools/more.py'],cwd=r/'repos/more-itertools',text=True),'upstream_reference':subprocess.check_output(['git','show','dc2664b4a7c66209485c9f5e359137bf4b365eb3:more_itertools/more.py'],cwd=r/'repos/more-itertools',text=True)}\nfor d in sorted((r/'trials').glob('more-itertools-1247--*')):\n cell=d.name.split('--')[1];run=d.name.split('--')[2];versions[cell+'-'+run]=(d/'runs'/'more-itertools-1247'/(cell+'-'+run)/'more_itertools/more.py').read_text()\nfor label,source in versions.items():\n node=next(x for x in ast.parse(source).body if isinstance(x,ast.ClassDef) and x.name=='numeric_range');ns=globals().copy();exec(compile(ast.Module(body=[node],type_ignores=[]),'<read-only-artifact>','exec'),ns);cls=ns['numeric_range']\n out=[]\n for sign in [1,-1]:\n  start=sign*(2**53+1);stop=sign*(2**53+6);step=sign*1.0;rr=cls(start,stop,step);vals=list(islice(iter(rr),12));query=vals[0];x={'direction':sign,'args':[start,stop,step],'items':vals,'actual_first':query,'expected_index':0,'contains':query in rr}\n  try:x['index']=rr.index(query)\n  except Exception as e:x['index_exception']=type(e).__name__\n  try:x['length']=len(rr)\n  except Exception as e:x['length_exception']=type(e).__name__\n  out.append(x)\n print(label,json.dumps(out))\nPY",
+          "stdout": "parent [{\"direction\": 1, \"args\": [9007199254740993, 9007199254740998, 1.0], \"items\": [9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0], \"actual_first\": 9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 5}, {\"direction\": -1, \"args\": [-9007199254740993, -9007199254740998, -1.0], \"items\": [-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0], \"actual_first\": -9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 5}]\nupstream_reference [{\"direction\": 1, \"args\": [9007199254740993, 9007199254740998, 1.0], \"items\": [9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0], \"actual_first\": 9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 6}, {\"direction\": -1, \"args\": [-9007199254740993, -9007199254740998, -1.0], \"items\": [-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0], \"actual_first\": -9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 6}]\ngpt-cew-r1 [{\"direction\": 1, \"args\": [9007199254740993, 9007199254740998, 1.0], \"items\": [9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0], \"actual_first\": 9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 6}, {\"direction\": -1, \"args\": [-9007199254740993, -9007199254740998, -1.0], \"items\": [-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0], \"actual_first\": -9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 6}]\ngpt-cew-r2 [{\"direction\": 1, \"args\": [9007199254740993, 9007199254740998, 1.0], \"items\": [9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0], \"actual_first\": 9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 6}, {\"direction\": -1, \"args\": [-9007199254740993, -9007199254740998, -1.0], \"items\": [-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0], \"actual_first\": -9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 6}]\ngpt-fixed-r1 [{\"direction\": 1, \"args\": [9007199254740993, 9007199254740998, 1.0], \"items\": [9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0], \"actual_first\": 9007199254740992.0, \"expected_index\": 0, \"contains\": true, \"index\": 0, \"length\": 6}, {\"direction\": -1, \"args\": [-9007199254740993, -9007199254740998, -1.0], \"items\": [-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0], \"actual_first\": -9007199254740992.0, \"expected_index\": 0, \"contains\": true, \"index\": 0, \"length\": 6}]\ngpt-fixed-r2 [{\"direction\": 1, \"args\": [9007199254740993, 9007199254740998, 1.0], \"items\": [9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0], \"actual_first\": 9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 6}, {\"direction\": -1, \"args\": [-9007199254740993, -9007199254740998, -1.0], \"items\": [-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0], \"actual_first\": -9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 6}]\ngpt-trim-r1 [{\"direction\": 1, \"args\": [9007199254740993, 9007199254740998, 1.0], \"items\": [9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0], \"actual_first\": 9007199254740992.0, \"expected_index\": 0, \"contains\": true, \"index\": 0, \"length\": 6}, {\"direction\": -1, \"args\": [-9007199254740993, -9007199254740998, -1.0], \"items\": [-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0], \"actual_first\": -9007199254740992.0, \"expected_index\": 0, \"contains\": true, \"index\": 0, \"length\": 6}]\ngpt-trim-r2 [{\"direction\": 1, \"args\": [9007199254740993, 9007199254740998, 1.0], \"items\": [9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0], \"actual_first\": 9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 6}, {\"direction\": -1, \"args\": [-9007199254740993, -9007199254740998, -1.0], \"items\": [-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0], \"actual_first\": -9007199254740992.0, \"expected_index\": 0, \"contains\": false, \"index_exception\": \"ValueError\", \"length\": 6}]\n",
+          "stderr": "",
+          "exit_code": 0,
+          "exact_execution_utc": null,
+          "executed_before_observed_utc": "2026-10-18T18:48:54Z",
+          "timestamp_limitation": "The original invocation did not print UTC; exact execution time was not recorded. The upper bound is the later clock tool observation, not a fabricated timestamp.",
+          "command_sha256": "87c2fbae1c4fc1f3d39d8854b1dac78e292487c9470e62dd1ed32d43277b7927",
+          "stdout_sha256": "141275c0066421cb9c66899134c5fe81fd6ceddd6789e7f25b9d0b2fb39d1614",
+          "method": "AST-extract the archived class and execute it in memory under system python3 -B. No model execution, file writes, fixture edits or frozen-probe edits. This differs from the provisioned complete-module environment used by the authoritative additive uniform validation."
+        }
+      ],
+      "discarded_nonfinding": "The 10**400 integer/float exploratory case has invalid iteration arithmetic and is not used as an Important finding or as a scored query. Parent Rounded iteration/len also fail and were not treated as legal baselines."
+    },
+    {
+      "kind": "Opaque message argument exposure during command chronology extraction",
+      "description": "A broad plaintext tool-call timeline extraction incidentally emitted opaque encrypted send_message/followup_task argument strings. No decryption, interpretation or use as evidence occurred; their contents are not included in this result. The relevant chronology is supported only by plaintext exec commands and FileChange lifecycle metadata. No auth file was read."
+    }
+  ],
+  "checks_not_run": [
+    "No new model run, retry, artifact edit, fixture edit or frozen-probe rewrite.",
+    "No original32 or i18n probe rerun by this reviewer; retained raw results audited. After the authorized addon arrived, no additional behavior probe was executed.",
+    "No fresh43historical-family replay; unchanged-input evidence reused with its disclosed provenance.",
+    "No new npm verification/installation/package mutation by this reviewer; existing pinned logs/tar audited.",
+    "No full historical42-attempt re-review; outside this fixed scope.",
+    "No GitHub write, PR merge, release, production-use validation, Claude Code host acceptance or multi-Python/native-Windows acceptance."
+  ],
+  "mutation_scope": "This reviewer created only root/final-independent-review.json. Root separately created the explicitly supplied additive evidence and prepared a later candidate outside this pinned verdict.",
+  "memory_use": {
+    "registry_lines": "MEMORY.md:3148-3156",
+    "purpose": "Prior verifier-contract, separate benchmark evidence and Draft-delivery conventions; all current conclusions verified from this fixed package.",
+    "rollout_id": "01a10565-e814-7c50-a674-9af466d8f6f3"
+  },
+  "publication_provenance": {
+    "original_review_sha256": "ff2866a6227c9ae2b1613da267d6181250e9d359ae02ed5847029a57f98dd165",
+    "paths_normalized": true,
+    "original_report_and_analysis_hashes_preserved_in_review": true,
+    "amendment": "Add posthoc summary and qualify published report afterclosedfixed22+3review; rawmodelartifacts/results/32scores/metricsunchanged"
+  }
+}

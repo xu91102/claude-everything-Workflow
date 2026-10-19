@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CEW 改进方案 · 基于真实测评 · 2026-10-18</title>
+<style>
+  :root {
+    --ink:#16202b; --muted:#66788a; --line:#e3e9f0; --bg:#f6f8fb; --card:#fff;
+    --blue:#1f5f8b; --blue-soft:#e8f1f8; --teal:#2b7a6f; --amber:#b26a12;
+    --red:#b23b3b; --green:#2f7d4f;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+    font:15px/1.68 -apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; }
+  .wrap { max-width:1060px; margin:0 auto; padding:42px 28px 80px; }
+  header { border-bottom:1px solid var(--line); padding-bottom:22px; margin-bottom:26px; }
+  .eyebrow { color:var(--blue); font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; }
+  h1 { font-size:30px; line-height:1.28; margin:8px 0 10px; letter-spacing:-.01em; }
+  .sub { color:var(--muted); font-size:14px; }
+  h2 { font-size:20px; margin:38px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  h3 { font-size:16px; margin:24px 0 8px; }
+  p { margin:9px 0; }
+  .cards { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:22px 0 10px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+  .card .v { font-size:23px; font-weight:650; letter-spacing:-.02em; }
+  .card .l { color:var(--muted); font-size:12px; margin-top:2px; }
+  .card .n { font-size:12px; margin-top:6px; color:var(--amber); }
+  .callout { background:#fff8ec; border:1px solid #f0dcb8; border-left:4px solid var(--amber);
+    padding:14px 16px; border-radius:8px; margin:16px 0; }
+  .good { background:#eef8f2; border-color:#cfe7da; border-left-color:var(--green); }
+  .bad { background:#fdf2f2; border-color:#efd3d3; border-left-color:var(--red); }
+  table { width:100%; border-collapse:collapse; background:var(--card); font-size:13.5px;
+    border:1px solid var(--line); border-radius:8px; overflow:hidden; margin:10px 0 6px; }
+  th { text-align:left; font-size:12px; color:var(--muted); font-weight:600; background:#fbfcfe;
+    padding:9px 10px; border-bottom:1px solid var(--line); }
+  td { padding:9px 10px; border-bottom:1px solid #eef2f6; vertical-align:top; }
+  tr:last-child td { border-bottom:none; }
+  .num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .muted { color:var(--muted); font-size:12px; }
+  .win { color:var(--green); font-weight:600; }
+  .lose { color:var(--red); font-weight:600; }
+  code { background:#f1f4f8; padding:1.5px 5px; border-radius:4px; font-size:12.5px; }
+  pre { background:#0f1a24; color:#dce7f1; padding:14px 16px; border-radius:8px; overflow:auto;
+    font-size:12px; line-height:1.58; }
+  pre .c { color:#7fa4bf; }
+  ul, ol { margin:8px 0 8px 20px; padding:0; }
+  li { margin:5px 0; }
+  .flow { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:14px 0; }
+  .node { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:9px 12px;
+    font-size:13px; }
+  .node.start { border-color:#a9c7dc; background:var(--blue-soft); }
+  .node.esc { border-color:#f0dcb8; background:#fff8ec; }
+  .arrow { color:var(--muted); font-size:16px; }
+  .tag { display:inline-block; font-size:11px; font-weight:700; letter-spacing:.06em;
+    padding:2px 7px; border-radius:999px; margin-right:6px; }
+  .p0 { background:#fde8e8; color:#8f2f2f; }
+  .p1 { background:#fdf1dc; color:#8a5a10; }
+  .p2 { background:#e6f2ec; color:#255f45; }
+  .step { background:var(--card); border:1px solid var(--line); border-radius:9px; padding:14px 16px; margin:10px 0; }
+  .step .h { font-weight:650; margin-bottom:4px; }
+  .foot { color:var(--muted); font-size:12px; margin-top:34px; border-top:1px solid var(--line); padding-top:14px; }
+  @media (max-width:820px) { .cards { grid-template-columns:repeat(2,1fr); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">CEW Improvement Plan · 已实施并复测 · 2026-10-18</div>
+  <h1>把“流程前置”改成“停止条件”<br>CEW 的成本问题不在规则，在迭代次数</h1>
+  <div class="sub">依据：7 个真实修复任务 × 28 次对照运行（每格 2 次重复）+ 10 次固定开销探针</div>
+</header>
+
+<div class="cards">
+  <div class="card"><div class="v">14/14</div><div class="l">完成率（新 CEW）</div><div class="n">与裸跑持平，天花板未破</div></div>
+  <div class="card"><div class="v win">-24%</div><div class="l">输入 token（vs 裸跑）</div><div class="n">原 CEW 为 +81%</div></div>
+  <div class="card"><div class="v">6.9 vs 9.6</div><div class="l">命令数/次（新 CEW vs 裸跑）</div><div class="n">原 CEW 为 18.9</div></div>
+  <div class="card"><div class="v win">0/7</div><div class="l">运行中读取技能文件</div><div class="n">原 CEW 为 8/8</div></div>
+</div>
+
+<div class="callout">
+<strong>核心判断：</strong>CEW 的规则内容不是主要问题，<strong>缺少停止条件</strong>才是。
+改造前，一个 1 行修复被扩展成 32 条命令：读 5 个技能、跑 doctest、benchmark、翻译脚本、ruff、black、全量测试。
+固定上下文（技能目录 + AGENTS）改造前只多 <strong>1,486 token</strong>，占那次 807k 输入的 <strong>0.2%</strong>。
+真正烧钱的是<strong>每多一条命令，就重发一次完整上下文</strong>。
+</div>
+
+<h2>0. P0 已落地：实测结果</h2>
+
+<p>P0-1、P0-2 已实现并提交（<code>codex/fast-path-stop-conditions</code>，3 个文件 +57 行），
+用同一套 7 题、每格 2 次重复做 2×2 配对回归。原 CEW 与裸跑沿用第一批数据，新 CEW 为本次实测。</p>
+
+<table>
+  <thead><tr>
+    <th>组</th><th class="num">运行数</th><th class="num">完成</th><th class="num">输入/次</th>
+    <th class="num">未缓存/次</th><th class="num">输出/次</th><th class="num">命令/次</th><th class="num">耗时/次</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>裸跑</td><td class="num">14</td><td class="num">14/14</td><td class="num">243,344</td>
+      <td class="num">28,295</td><td class="num">2,071</td><td class="num">9.6</td><td class="num">79s</td></tr>
+    <tr><td>原 CEW（全量流程）</td><td class="num">8</td><td class="num">8/8</td><td class="num lose">440,954</td>
+      <td class="num lose">40,410</td><td class="num lose">3,830</td><td class="num lose">18.9</td><td class="num lose">130s</td></tr>
+    <tr><td><strong>新 CEW（Fast Path）</strong></td><td class="num">14</td><td class="num">14/14</td><td class="num win">185,502</td>
+      <td class="num win">24,524</td><td class="num win">1,604</td><td class="num win">6.9</td><td class="num win">69s</td></tr>
+  </tbody>
+</table>
+<p class="muted">口径：表中都是“每次运行均值”。原 CEW 有 8 次运行（1 题重复 2 次），所以这里的 +81% 与第一批报告的 +68%
+不能用同一个分母直接对比；三行都按同一口径重算，才可横向比较。</p>
+
+<div class="cards">
+  <div class="card"><div class="v win">-24%</div><div class="l">输入 token（对比裸跑）</div><div class="n">原 CEW 为 +81%</div></div>
+  <div class="card"><div class="v win">-28%</div><div class="l">命令数（9.6 → 6.9）</div><div class="n">最差任务 10.5 → 8.5</div></div>
+  <div class="card"><div class="v">14/14</div><div class="l">完成率，与裸跑持平</div><div class="n">新增失败 0，改测试 0</div></div>
+  <div class="card"><div class="v win">11/14</div><div class="l">跑定向测试的运行数</div><div class="n">裸跑 8/14，没有靠少验证省钱</div></div>
+</div>
+
+<h3>逐题配对（输入 token，两次均值）</h3>
+<table>
+  <thead><tr><th>任务</th><th class="num">裸跑</th><th class="num">新 CEW</th><th class="num">比值</th><th class="num">命令（裸 → 新）</th></tr></thead>
+  <tbody>
+    <tr><td>humanize-346</td><td class="num">310k</td><td class="num">236k</td><td class="num win">0.76x</td><td class="num">10.5 → 8.5</td></tr>
+    <tr><td>humanize-381</td><td class="num">219k</td><td class="num">192k</td><td class="num win">0.88x</td><td class="num">10.5 → 7.0</td></tr>
+    <tr><td>itsdangerous-sha1</td><td class="num">163k</td><td class="num">143k</td><td class="num win">0.88x</td><td class="num">9.0 → 7.0</td></tr>
+    <tr><td>more-itertools-1247</td><td class="num">315k</td><td class="num">185k</td><td class="num win">0.59x</td><td class="num">11.0 → 6.0</td></tr>
+    <tr><td>more-itertools-1284</td><td class="num">146k</td><td class="num">120k</td><td class="num win">0.82x</td><td class="num">7.5 → 7.0</td></tr>
+    <tr><td>slugify-194</td><td class="num">312k</td><td class="num">179k</td><td class="num win">0.57x</td><td class="num">9.5 → 6.5</td></tr>
+    <tr><td>slugify-200</td><td class="num">238k</td><td class="num">243k</td><td class="num">1.02x</td><td class="num">9.0 → 6.5</td></tr>
+  </tbody>
+</table>
+
+<div class="callout good">
+<strong>结论：</strong>6/7 任务更省或持平，命令数下降 28%，完成率与代码质量没有退化
+（源码改动行 16.5 → 14.8，说明不是少改少做）。<br>
+<strong>遵从率：</strong>7 次运行里 <strong>0 次</strong>读取 <code>skills/</code> 或 <code>rules/</code>（原 CEW 为 8/8 和 8/8），
+Fast Path 不是“写在纸上没人看”。
+</div>
+
+<div class="callout">
+<strong>必须说明的噪声：</strong>同一题、同一配置重跑两次，裸跑自身的输入 token 比值中位数为
+<strong>1.36x</strong>（范围 1.01–2.66x）。单次运行的差异不足以判断优劣；这里的结论来自 14 对配对、
+6/7 任务方向一致，幅度（-24%）小于单次噪声（±36%），只能作为方向性证据，不能当作精确效应量。
+</div>
+
+<div class="callout bad">
+<strong>第一版翻车记录（有价值）：</strong>v1 的 7 题也全过，但 humanize-381 花了 900k（3.57x 裸跑）。
+日志显示它把“公开类型从 <code>list</code> 放宽为 <code>Iterable</code>”判为公共 API 变更，
+于是读 5 个技能 + 跑构建 + doctest —— <strong>升级被理解成“切回全流程”</strong>。
+补上“升级是增量的”（只读一份相关规则、不自动放大验证范围、兼容性放宽不算高风险）后，
+同一题降到 193k（0.76x）。这说明真正要治的是<strong>升级粒度</strong>，不只是入口分级。
+</div>
+
+<h2>1. 成本拆解（干净环境复测）</h2>
+<table>
+  <thead><tr><th>成本层</th><th class="num">实测</th><th>判断</th></tr></thead>
+  <tbody>
+    <tr><td><strong>命令 / 轮次</strong></td><td class="num">10.3 → 18.9<br><span class="lose">+84%</span></td><td><strong>主因。</strong>最差任务 10 → 32 条；每条命令都重发上下文，缓存只能打折，不能消除。</td></tr>
+    <tr><td><strong>输出 token</strong></td><td class="num">2,495 → 3,830<br><span class="lose">+54%</span></td><td><strong>主因之一。</strong>更多探索、更多解释、更多验证输出。</td></tr>
+    <tr><td>固定上下文</td><td class="num">14,200 → 15,686<br><span class="lose">+1,486（+10.5%）</span></td><td>只占单次任务总输入的 2%–7%，<strong>不是主因</strong>。</td></tr>
+    <tr><td>　其中：技能目录</td><td class="num">+786</td><td>20 个技能的名单/描述，每次调用都付；可通过分层安装省掉。</td></tr>
+    <tr><td>　其中：AGENTS.md</td><td class="num">+700</td><td>2.8KB 规则入口；换成短路径版本可降到 +233。</td></tr>
+    <tr><td>技能文件读取</td><td class="num">3–5 份/任务</td><td>一次性 8–20k；不是最大项，但会挤占上下文、诱发更多步骤。</td></tr>
+  </tbody>
+</table>
+<p class="muted">测量方法：全新 CODEX_HOME、关闭 memories、无会话历史，只改一个变量（技能目录 / AGENTS 版本），同一句“ok”各跑 2 次，结果完全一致。</p>
+
+<div class="callout bad">
+<strong>被数据推翻的假设：</strong>最初以为“20 个技能被注入”是主要成本（4.4k/次）。干净复测后只有 <strong>786 token</strong>；
+之前的 4.4k 是会话状态污染。精简技能目录值得做，但它是 P2，不是救命药。
+</div>
+
+<h2>2. 原型验证：短路径把命令数压回去</h2>
+<table>
+  <thead><tr>
+    <th>任务</th><th class="num">裸跑</th><th class="num">完整 CEW</th><th class="num">短路径</th><th class="num">短路径+精简目录</th><th class="num">命令数（裸/CEW/短）</th>
+  </tr></thead>
+  <tbody>
+    <tr><td>humanize-346<br><span class="muted">1 行修复，CEW 跑 32 条命令</span></td>
+      <td class="num">248k</td><td class="num lose">807k</td><td class="num win">219k</td><td class="num win">255k</td><td class="num">10 / 32 / 11</td></tr>
+    <tr><td>slugify-200<br><span class="muted">7 行修复，探索量正常</span></td>
+      <td class="num">267k</td><td class="num lose">373k</td><td class="num">361k</td><td class="num">297k</td><td class="num">11 / 19 / 14</td></tr>
+    <tr><td>more-itertools-1247<br><span class="muted">中等难度，跨多处逻辑</span></td>
+      <td class="num">278k</td><td class="num lose">394k</td><td class="num win">234k</td><td class="num">—</td><td class="num">9–12 / 15–19 / 9</td></tr>
+  </tbody>
+</table>
+<p class="muted">单位：输入 token；三项原型任务全部解决，无回归。短路径：保留技能，但 AGENTS 规定小修复直接改、失败两次才读技能。精简目录：把 17 个非核心技能移出被扫描目录。</p>
+
+<div class="callout good">
+<strong>原型结论：</strong>短路径把 3 个任务的总输入从 1.57M 压到 814k（<strong>-48%</strong>），
+相对裸跑只高 <strong>2.7%</strong>；命令数从 19 降到 11，接近裸跑的 10。
+在“过度探索”的任务上收益最大（-73%）；在本来就正常的小任务上只有 -3%。
+<strong>所以真正要修的是“什么时候停”，不是“装多少技能”。</strong>
+</div>
+
+<h2>3. 改进方案</h2>
+
+<h3><span class="tag p0">P0-1</span>Fast Path + 停止条件（已实施）</h3>
+<p>已写入 <code>AGENTS.md</code> 常驻策略（+1.9KB）：任务分级表、Fast Path 四步、升级条件、增量升级、命令预算。</p>
+<pre><span class="c">## 任务分级与停止条件</span>
+| 微改 | 单仓库；改动 ≤2 文件；已有可运行测试；不碰公共 API/鉴权/迁移/不可逆副作用 | Fast Path |
+| 常规 | 上述任一不满足 | 按规则索引读取相关规则 |
+| 高风险 | 公共契约、鉴权、数据迁移 | 常规 + 09 对抗测试，必要时 Spec |
+
+<span class="c">### Fast Path</span>
+1. 只读相关源码与测试，定位后直接修改；不先写 Spec/ticket/总结文档
+2. 只跑目标测试；通过后跑受影响模块。不跑全量回归，不重跑已通过的检查
+3. 不读 skills/、不读 rules/，除非命中升级条件
+4. 完成时只说：改了什么、跑了什么、结果、剩余风险
+
+<span class="c">### 升级条件</span>
+同一失败 2 次 / 改动面 &gt;2 文件或改公共 API / 没有可运行测试 / 鉴权、迁移、不可逆副作用
+
+<span class="c">### 升级是增量的</span>
+只读一份相关规则或技能；构建、全量回归、E2E 只在提交或发布时跑；兼容性类型放宽不算高风险
+
+<span class="c">### 命令预算</span>
+微改：探索 ≤4 条（不含依赖安装），验证 ≤3 条；超出前先说明理由</pre>
+<p>同时改了 <code>skills/using-superpowers/SKILL.md</code>：新增 Micro Task Fast Path 段，并收紧两条路由：</p>
+<pre><span class="c">- reported bug or unexplained/repeated failure? -> systematic-debugging</span>
++ unexplained failure, or same failure twice?    -> systematic-debugging
+
+<span class="c">- behavior change with a test path? -> TDD</span>
++ behavior change without clear acceptance, or needs new tests?
++                                                -> TDD</pre>
+<p><strong>实测：</strong>命令数 9.6 → 6.9（原 CEW 18.9），输入 token 243k → 186k；
+完成率 14/14，未读技能 7/7。<strong>预期值（≤11 条命令、≤ +10% token）被超额完成，
+但幅度受单次噪声限制，见第 0 节的说明。</strong></p>
+
+<h3><span class="tag p0">P0-2</span>验证白名单：禁止“顺手全跑”（已实施）</h3>
+<p>当前 CEW 在 1 行修复上跑了 doctest、benchmark、ruff、black、翻译脚本和全量测试。已在
+<code>rules/common/testing.md</code> 增加按改动面选择的白名单：</p>
+<table>
+  <thead><tr><th>改动面</th><th>必跑</th><th>不跑</th></tr></thead>
+  <tbody>
+    <tr><td>单个纯函数 / 工具函数</td><td>该文件对应的测试文件</td><td>全量套件、E2E、构建</td></tr>
+    <tr><td>单个模块内部实现</td><td>该模块的测试目录</td><td>其他模块、E2E</td></tr>
+    <tr><td>跨模块接口</td><td>受影响模块测试 + 类型/构建</td><td>无关模块、E2E</td></tr>
+    <tr><td>公共 API / 依赖升级 / 发布</td><td>全量测试 + 构建</td><td>—</td></tr>
+  </tbody>
+</table>
+<p>并补四条硬约束：同一结论只验证一次；lint 只在提交/完成前跑一次；依赖安装每任务最多一次；
+验证命令超过 3 条要先说明理由。</p>
+<p><strong>实测：</strong>定向测试比例 8/14 → 11/14（裸跑 → 新 CEW），没有出现“少跑测试换速度”。</p>
+
+<h3><span class="tag p1">P1-1</span>失败驱动升级 + 困难任务独立复查</h3>
+<div class="flow">
+  <div class="node start">Fast path<br><span class="muted">直接改，跑目标测试</span></div>
+  <div class="arrow">→</div>
+  <div class="node">失败 2 次 / 超范围</div>
+  <div class="arrow">→</div>
+  <div class="node esc">systematic-debugging<br><span class="muted">定位根因</span></div>
+  <div class="arrow">→</div>
+  <div class="node">TDD / code-review<br><span class="muted">仅行为变化或高风险</span></div>
+</div>
+<p>困难任务增加一次<strong>独立复查</strong>：只给补丁与验收标准，不给作者推理过程，专门找“测试没覆盖但会坏”的情况。
+这是 CEW 真正可能缩小模型能力差距的地方，但只在失败或高风险时付费。</p>
+
+<h3><span class="tag p1">P1-2</span>预算可观测</h3>
+<ul>
+  <li>新增 <code>rules/common/context-budget.md</code>：micro ≤ 8 次工具调用 / 60k 未缓存输入；standard ≤ 20 次；hard ≤ 40 次。超预算先总结再决定。</li>
+  <li>新增 <code>scripts/context-report.js</code>：输出已安装技能数、固定上下文估算、按需技能路径；<code>cew doctor</code> 可调用。</li>
+  <li>Claude 宿主可用 hook 累计工具调用；Codex 宿主先用规则 + 评测约束。</li>
+</ul>
+
+<h3><span class="tag p2">P2-1</span>技能分层安装（小收益，低风险）</h3>
+<p>固定上下文实测 +786 token（20 个技能）。把 5 个核心技能留在 <code>skills/</code>，其余移到 <code>skills-on-demand/</code>，
+可省这 786/次；按 19 次调用约 15k，占单任务总输入不到 5%。<strong>优先级低于停止条件，但改动简单，可一起做。</strong></p>
+<ul>
+  <li>新增 <code>harness/skill-tiers.json</code>：core = using-superpowers、systematic-debugging、TDD、implement、code-review。</li>
+  <li>新增 <code>scripts/install-skills.js</code>：core 复制到扫描目录，extended 复制到 <code>skills-on-demand/</code> 并生成 INDEX。</li>
+  <li>保留 <code>--full-skills</code> 回退开关。</li>
+</ul>
+
+<h3><span class="tag p2">P2-2</span>评测升级：验证“追平 Opus”而不是“能跑通”</h3>
+<ol>
+  <li><strong>筛困难题</strong>：裸跑筛 40 个真实 issue，只留 GPT 失败率 ≥50% 的题；当前这批太简单。</li>
+  <li><strong>难度分层</strong>：单文件 / 跨文件 / 模糊需求，各 5 题 × 2 次重复。</li>
+  <li><strong>等成本比较</strong>：同 token 预算比解决率，避免“用更多算力换同样结果”。</li>
+  <li><strong>盲评代码质量</strong>：匿名补丁，按可读性、范围控制、约定一致性打分。</li>
+  <li><strong>Opus 对照</strong>：端点恢复后补跑，判定口径为“同预算下差距 ≤10pp”。</li>
+</ol>
+
+<h2>4. 实施顺序与验收</h2>
+<div class="step"><div class="h">Step 1（已完成）：Fast Path + 停止条件</div>
+改 <code>AGENTS.md</code> 与 <code>using-superpowers/SKILL.md</code>；7 题 × 2 次回归通过，命令数 18.9 → 6.9。</div>
+<div class="step"><div class="h">Step 2（已完成）：验证白名单</div>
+改 <code>rules/common/testing.md</code>；定向测试比例升到 11/14，无该升级未升级的案例。</div>
+<div class="step"><div class="h">Step 3（待做，约半天）：技能分层 + 上下文报告</div>
+低风险，独立提交；只验证固定上下文和技能可发现性。预计再省 786 token/次。</div>
+<div class="step"><div class="h">Step 4（待做，约一天）：困难题集 + 独立复查 + Opus 臂</div>
+按 P2 建 15 题；产出裸跑 / 新 CEW / Opus 的差距曲线。当前 7 题已到天花板，无法区分能力上限。</div>
+
+<h3>验收标准（更新为实测值）</h3>
+<table>
+  <thead><tr><th>指标</th><th>改造前</th><th>目标</th><th>实测</th></tr></thead>
+  <tbody>
+    <tr><td>Micro 任务命令数</td><td class="num">18.9（最差 32）</td><td class="num">≤ 11</td><td class="num win">6.9 ✅</td></tr>
+    <tr><td>Micro 任务输入 token</td><td class="num">+81%</td><td class="num">≤ +10%</td><td class="num win">-24% ✅</td></tr>
+    <tr><td>Micro 任务完成率</td><td class="num">14/14</td><td class="num">≥ 14/14</td><td class="num win">14/14 ✅</td></tr>
+    <tr><td>固定上下文</td><td class="num">+1,486</td><td class="num">≤ +1,200</td><td class="num lose">+2,065（AGENTS 增 2.3KB，未做分层）</td></tr>
+    <tr><td>Standard 任务完成率</td><td class="num">未单独统计</td><td class="num">≥ 裸跑 + 10pp</td><td class="num">未测</td></tr>
+    <tr><td>困难任务完成率</td><td class="num">未测</td><td class="num">≥ 裸跑 + 15pp</td><td class="num">未测（需先建困难集）</td></tr>
+  </tbody>
+</table>
+<p class="muted">固定上下文变大是这次改动的代价。探针实测（同一句“ok”，各 2 次，结果一致）：
+裸跑 14,203、新 CEW 16,268，差 <strong>+2,065</strong>；其中 AGENTS.md 从 2.8KB 增到 5.2KB，约 +582/次。
+按每次运行约 8 个回合估算，单次多付约 4.7k，而单次平均省下约 57k —— 仍是净收益，但常驻成本必须在 P2-1 分层时回收。</p>
+
+<h2>5. 风险与回退</h2>
+<ul>
+  <li><strong>提示词门禁不硬。</strong>模型可能仍然多跑。先测遵从率；低于 90% 就改用独立 <code>cew-fast</code> profile（精简 AGENTS + 精简技能），而不是继续加规则。</li>
+  <li><strong>停止条件可能伤到困难任务。</strong>用“失败 2 次”做硬触发器，并在困难集上验证；不达标就不默认开启。</li>
+  <li><strong>技能发现性下降。</strong>extended 技能不在扫描目录，必须靠 INDEX + 路由显式路径；加检索测试。</li>
+  <li><strong>插件安装路径未覆盖。</strong>本次改动作用于 npm installer；plugin marketplace 仍装全量技能，需要另行分层或文档说明。</li>
+  <li><strong>宿主差异。</strong>Codex 与 Claude Code 的技能发现机制不同；先在一侧达标，再复制到另一侧。</li>
+</ul>
+
+<h2>6. 执行状态与待决事项</h2>
+<table>
+  <thead><tr><th>事项</th><th>状态</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>微改命令预算 4 探索 + 3 验证</td><td class="win">已实施（软上限）</td><td>实测平均 6.9 条/次，未触发“超预算说明”；如你认为过硬可下调为建议值。</td></tr>
+    <tr><td>Fast Path 写进全局 <code>AGENTS.md</code></td><td class="win">已实施</td><td>分支 <code>codex/fast-path-stop-conditions</code>，未合并；对所有项目生效的影响面需要你确认后再合。</td></tr>
+    <tr><td>P0 实现与回归</td><td class="win">已完成</td><td>7 题 × 2 次，14/14 通过；数据在第 0 节与 <code>docs/eval/data/</code>。</td></tr>
+    <tr><td>P1-1 失败驱动升级 + 独立复查</td><td>待做</td><td>增量升级已随 P0 落地；独立复查需要困难题集才有意义。</td></tr>
+    <tr><td>P1-2 预算可观测 / P2 分层与困难集</td><td>待做</td><td>建议顺序：分层（半天）→ 困难集（一天）→ 独立复查。</td></tr>
+    <tr><td>Opus 对照</td><td class="lose">阻塞</td><td>网关 <code>www.cpass.cc</code> 仍不可达（连接失败），官方端点无凭据；无法回答“追平 Opus”。</td></tr>
+  </tbody>
+</table>
+
+<div class="foot">
+数据来源：<code>docs/eval/data/summary-p0.csv</code>（7 题 × 2 次 × 3 组）、
+<code>docs/eval/data/p0-stats.json</code>（配对统计与噪声）、<code>cew-gpt-benchmark-2026-10-18.html</code>（第一批完整评测）。<br>
+改动提交：<code>codex/fast-path-stop-conditions</code> 2a257da（3 文件 +57 行）。<br>
+“-24%”是 14 对配对的均值；基线自身重复波动中位数 1.36x，幅度小于噪声，只能作方向性结论。
+</div>
+</div>
+</body>
+</html>

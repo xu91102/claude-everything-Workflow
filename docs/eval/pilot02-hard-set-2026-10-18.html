@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pilot 02 · 困难任务集 · 2026-10-18</title>
+<style>
+  :root {
+    --ink:#16202b; --muted:#66788a; --line:#e3e9f0; --bg:#f6f8fb; --card:#fff;
+    --blue:#1f5f8b; --blue-soft:#e8f1f8; --amber:#b26a12; --red:#b23b3b; --green:#2f7d4f;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+    font:15px/1.68 -apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; }
+  .wrap { max-width:1060px; margin:0 auto; padding:42px 28px 80px; }
+  header { border-bottom:1px solid var(--line); padding-bottom:22px; margin-bottom:26px; }
+  .eyebrow { color:var(--blue); font-size:12px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; }
+  h1 { font-size:30px; line-height:1.28; margin:8px 0 10px; letter-spacing:-.01em; }
+  .sub { color:var(--muted); font-size:14px; }
+  h2 { font-size:20px; margin:38px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  h3 { font-size:16px; margin:24px 0 8px; }
+  p { margin:9px 0; }
+  .cards { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:22px 0 10px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+  .card .v { font-size:23px; font-weight:650; letter-spacing:-.02em; }
+  .card .l { color:var(--muted); font-size:12px; margin-top:2px; }
+  .card .n { font-size:12px; margin-top:6px; color:var(--amber); }
+  .callout { background:#fff8ec; border:1px solid #f0dcb8; border-left:4px solid var(--amber);
+    padding:14px 16px; border-radius:8px; margin:16px 0; }
+  .good { background:#eef8f2; border-color:#cfe7da; border-left-color:var(--green); }
+  .bad { background:#fdf2f2; border-color:#efd3d3; border-left-color:var(--red); }
+  table { width:100%; border-collapse:collapse; background:var(--card); font-size:13.5px;
+    border:1px solid var(--line); border-radius:8px; overflow:hidden; margin:10px 0 6px; }
+  th { text-align:left; font-size:12px; color:var(--muted); font-weight:600; background:#fbfcfe;
+    padding:9px 10px; border-bottom:1px solid var(--line); }
+  td { padding:9px 10px; border-bottom:1px solid #eef2f6; vertical-align:top; }
+  tr:last-child td { border-bottom:none; }
+  .num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .muted { color:var(--muted); font-size:12px; }
+  .win { color:var(--green); font-weight:600; }
+  .lose { color:var(--red); font-weight:600; }
+  code { background:#f1f4f8; padding:1.5px 5px; border-radius:4px; font-size:12.5px; }
+  pre { background:#0f1a24; color:#dce7f1; padding:14px 16px; border-radius:8px; overflow:auto;
+    font-size:12px; line-height:1.58; }
+  pre .c { color:#7fa4bf; }
+  ul, ol { margin:8px 0 8px 20px; padding:0; }
+  li { margin:5px 0; }
+  .foot { color:var(--muted); font-size:12px; margin-top:34px; border-top:1px solid var(--line); padding-top:14px; }
+  @media (max-width:820px) { .cards { grid-template-columns:repeat(2,1fr); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">CEW Benchmark · Pilot 02 · 2026-10-18</div>
+  <h1>把题变难以后，差距出现了吗？<br>22 个挖掘任务 + 13 个隐藏测试题 + 4 题配对复测</h1>
+  <div class="sub">模型 gpt-6.1-sol（high）· 4 个开源仓库 · 判分：目标测试 + 全量回归</div>
+</header>
+
+<div class="cards">
+  <div class="card"><div class="v">22/22</div><div class="l">可见测试下基线完成</div><div class="n">最大 241 行、5 个文件</div></div>
+  <div class="card"><div class="v">11/13</div><div class="l">隐藏测试下基线完成</div><div class="n">失败的 2 题都是新增功能</div></div>
+  <div class="card"><div class="v">4/8 vs 5/8</div><div class="l">困难题配对（基线 vs CEW）</div><div class="n">差异在噪声内</div></div>
+  <div class="card"><div class="v lose">+39%</div><div class="l">困难题输入 token</div><div class="n">331k → 461k，没有换来成功率</div></div>
+</div>
+
+<div class="callout">
+<strong>结论先行：</strong>任务“变大”不等于“变难”。把改动量从 9 行提到 241 行、从 1 个文件提到 5 个文件，
+基线仍然 22/22；把测试藏起来，也只掉到 11/13。这批小型 Python 库对 gpt-6.1-sol 已经饱和，
+<strong>天花板来自任务形态，不是测试可见性</strong>。
+</div>
+
+<h2>1. 任务怎么挖出来的</h2>
+<table>
+  <thead><tr><th>步骤</th><th class="num">数量</th><th>做法</th></tr></thead>
+  <tbody>
+    <tr><td>候选提交</td><td class="num">174</td><td>4 个仓库全历史：同时改源码与测试、25–400 行、排除文档/发布/格式化</td></tr>
+    <tr><td>入选验证</td><td class="num">38</td><td>按“行为修复/功能实现”筛掉重构、类型标注、翻译、版权类提交</td></tr>
+    <tr><td>有效任务</td><td class="num">22</td><td>父版本 + 测试补丁必须失败，真实修复必须全过</td></tr>
+    <tr><td>隐藏测试集</td><td class="num">13</td><td>10 个挖掘任务 + 3 个 Pilot 01 任务，checkout 中不含测试</td></tr>
+    <tr><td>困难配对</td><td class="num">4</td><td>2 个基线失败题 + 2 个高消耗题，各 2 次重复</td></tr>
+  </tbody>
+</table>
+<p class="muted">防泄露沿用 Pilot 01：每个 run 重新克隆并截断到父提交，删除远端、标签、reflog 后 gc。
+22 个任务中有 2 个与 Pilot 01 重复（slugify 两个修复），用作校准。</p>
+
+<h2>2. 实验一：改动量翻 20 倍，仍然全过</h2>
+<table>
+  <thead><tr><th>任务</th><th class="num">改动行</th><th class="num">源码文件</th><th class="num">输入 token</th><th class="num">命令数</th><th>结果</th></tr></thead>
+  <tbody>
+    <tr><td>more-itertools-0841e57<br><span class="muted">Add classify_unique</span></td><td class="num">241</td><td class="num">2</td><td class="num">337,585</td><td class="num">26</td><td class="win">通过</td></tr>
+    <tr><td>more-itertools-02e7532<br><span class="muted">grouper recipe 更新</span></td><td class="num">239</td><td class="num">3</td><td class="num">310,958</td><td class="num">26</td><td class="win">通过</td></tr>
+    <tr><td>more-itertools-3082c06<br><span class="muted">transpose / matmul / factor</span></td><td class="num">128</td><td class="num">3</td><td class="num">376,139</td><td class="num">30</td><td class="win">通过</td></tr>
+    <tr><td>more-itertools-1b7f033<br><span class="muted">并发 tee</span></td><td class="num">117</td><td class="num">2</td><td class="num">308,656</td><td class="num">38</td><td class="win">通过</td></tr>
+    <tr><td colspan="3"><strong>22 题平均</strong></td><td class="num">227,858</td><td class="num">22.3</td><td class="win">22/22</td></tr>
+  </tbody>
+</table>
+<p>这批任务的测试文件是<strong>可见</strong>的——测试即规格。模型只要把测试读懂，剩下的是机械实现。
+所以“241 行、5 个文件、500+ 断言”并没有形成障碍，只是把执行时间拉长到 100–150 秒。</p>
+
+<h2>3. 实验二：把测试藏起来，只掉 2 题</h2>
+<p>做法：checkout 只保留父提交源码，测试在评分时才注入；提示词明确说明“仓库不含该问题的测试，
+会有隐藏测试验证”，禁止新增或修改测试。</p>
+<table>
+  <thead><tr><th>任务类型</th><th class="num">题数</th><th class="num">基线通过</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>缺陷修复（issue 文本描述行为）</td><td class="num">10</td><td class="num win">10</td><td>隐藏测试没有阻止定位：读源码 + 复现即可</td></tr>
+    <tr><td>新增功能（只有提交标题当规格）</td><td class="num">3</td><td class="num">1</td><td>失败的 2 题是 API 形状无法从标题推断，属<strong>规格不足</strong></td></tr>
+    <tr><td><strong>合计</strong></td><td class="num">13</td><td class="num">11</td><td>平均 235,839 token / 20.0 条命令</td></tr>
+  </tbody>
+</table>
+<div class="callout bad">
+<strong>不要把“隐藏测试”当成万能难度旋钮。</strong>它能挡住“照着测试写实现”，但挡不住“读懂代码后推理”。
+真正失败的两题也不是因为难，而是因为题目没给出足够规格——这类失败不能算能力差异。
+</div>
+
+<h2>4. 实验三：4 题配对，CEW 多花 39% 没换来成功率</h2>
+<p class="muted">本节使用修正前的 Fast Path（<code>2a257da</code>）；当前版本的行为差异见第 6 节。</p>
+<p>选 2 个基线失败题（<code>3082c06</code> transpose/matmul、<code>19726a0</code> metric）
+和 2 个高消耗通过题（<code>21d3d88</code> reshape、<code>1b7f033</code> tee），隐藏测试、各 2 次重复。</p>
+<table>
+  <thead><tr><th>任务</th><th class="num">基线通过</th><th class="num">CEW 通过</th><th class="num">基线 token/次</th><th class="num">CEW token/次</th></tr></thead>
+  <tbody>
+    <tr><td>more-itertools-3082c06</td><td class="num lose">0/2</td><td class="num">1/2</td><td class="num">491,019</td><td class="num">480,216</td></tr>
+    <tr><td>humanize-19726a0</td><td class="num lose">0/2</td><td class="num lose">0/2</td><td class="num">186,880</td><td class="num">332,844</td></tr>
+    <tr><td>more-itertools-21d3d88</td><td class="num">2/2</td><td class="num">2/2</td><td class="num">341,590</td><td class="num">577,063</td></tr>
+    <tr><td>more-itertools-1b7f033</td><td class="num">2/2</td><td class="num">2/2</td><td class="num">307,122</td><td class="num">455,280</td></tr>
+    <tr><td><strong>合计</strong></td><td class="num">4/8</td><td class="num">5/8</td><td class="num">331,652</td><td class="num lose">461,350（+39%）</td></tr>
+  </tbody>
+</table>
+<p><strong>过程指标解释了成本：</strong>CEW 组 <strong>8/8 读取技能、8/8 读取规则</strong>，命令数只多 5%（13.4 → 14.1），
+但每读一份技能/规则都重发上下文，token 因此 +39%。也就是说——<strong>Fast Path 没有生效</strong>，
+这些题被判为“非微改”，直接落回完整流程。</p>
+<div class="callout">
+<strong>怎么读这个结果：</strong>不是“Fast Path 失效”，而是它只覆盖微改任务；一旦任务看起来跨文件/跨模块，
+CEW 就恢复全额流程税，而这份税在这 4 题上没有换来可测收益（+1/8 在噪声内）。
+下一步要治的是<strong>升级时机</strong>：先按 Fast Path 做，失败一次再读技能，而不是一开始就判定“这题不简单”。
+</div>
+
+<h2>5. 下一步（按优先级）</h2>
+<ol>
+  <li><strong>P1-1 失败驱动升级</strong>：所有任务默认 Fast Path；第一次验证失败才读 <code>systematic-debugging</code>，
+      第二次失败才升级到 TDD/审查。这直接对应本次 +39% 的浪费。</li>
+  <li><strong>换任务形态</strong>：小型工具库已饱和。要测能力差异，需要大仓跨模块任务（Flask/Django 级）、
+      issue 式模糊规格、或把 3 个独立修复合成一题。</li>
+  <li><strong>补 Opus 臂</strong>：仍然没有可用端点；“追平 Opus”依旧无法回答。</li>
+  <li><strong>统计升级</strong>：n=4 只能看方向；正式集需要 ≥12 题 × 3 次，并做配对检验与盲评。</li>
+</ol>
+
+<h2>6. 证据范围：实验跑的是哪一版 CEW</h2>
+<div class="callout bad">
+<strong>重要：</strong>本轮所有配对实验使用的是<strong>修正前</strong>的 Fast Path（提交 <code>2a257da</code>，
+策略内嵌在 <code>AGENTS.md</code>，不强制 Git 隔离检查与相称审查）。之后分支上经过审查修正
+（<code>2156e79</code>、<code>f2f0d27</code>）：Fast Path 改为按需加载的
+<code>skills/using-superpowers/references/fast-path.md</code>，并恢复 Git 隔离、授权与审查要求。
+<strong>因此本页数字不能当作当前规则版本的实测结论。</strong>
+</div>
+<p>对当前版本做了一次小样本 spot check（2 题 × 1 次，非配对统计）：</p>
+<table>
+  <thead><tr><th>任务</th><th class="num">基线 token</th><th class="num">当前版本 token</th><th class="num">基线命令</th><th class="num">当前版本命令</th></tr></thead>
+  <tbody>
+    <tr><td>humanize-346</td><td class="num">235,596</td><td class="num">258,314</td><td class="num">18</td><td class="num">30</td></tr>
+    <tr><td>slugify-194</td><td class="num">206,469</td><td class="num">170,125</td><td class="num">12</td><td class="num">18</td></tr>
+  </tbody>
+</table>
+<p>固定上下文探针（同一句“ok”，各 2 次一致）：裸跑 14,203，当前版本 <strong>15,690（+1,487）</strong>；
+修正前是 16,268（+2,065）。按需加载确实把常驻成本省回来了，但每任务多了一次引用文件读取，
+命令数上升，token 结果在两道题上方向相反。要判断当前版本是否仍省钱，必须重跑 7 题 2×2。</p>
+
+<h2>7. 局限</h2>
+<ul>
+  <li>困难配对只有 4 题 × 2 次，结论是方向性的，不做显著性声明。</li>
+  <li>隐藏测试集里 3 个功能题规格不足，失败不能归因于模型能力。</li>
+  <li>Flask 尝试失败：其测试依赖 <code>tests/conftest.py</code> 与共享 fixture，只跑改动测试文件会收集失败；
+      需要改成“全量测试差分”判分，本轮未完成。</li>
+  <li>仍未做盲评代码质量；仍只覆盖 Codex 宿主。</li>
+</ul>
+
+<div class="foot">
+数据：<code>docs/eval/data/prescreen-visible-22.json</code>、<code>prescreen-hidden-13.json</code>、
+<code>hard2-runs.csv</code>、<code>tasks.hard.json</code>。<br>
+复现：<code>docs/eval/tools/pilot02/discover_hard.py</code> → <code>validate_candidates.py</code> →
+<code>prescreen.py</code> / <code>prescreen_hard.py</code> → <code>run_trial.py --hidden-tests</code>。<br>
+该 Python 判分器是 Pilot 01/02 使用的版本；仓库主线的评测器已改为 <code>run-trial.js</code>。
+</div>
+</div>
+</body>
+</html>

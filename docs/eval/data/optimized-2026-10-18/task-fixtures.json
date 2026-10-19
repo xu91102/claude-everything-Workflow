@@ -1,0 +1,454 @@
+[
+  {
+    "id": "slugify-200",
+    "repo": "python-slugify",
+    "commit": "8f9a550a906701412c8fc93e731582098f2caee2",
+    "original_commit": "8f9a550a906701412c8fc93e731582098f2caee2",
+    "parent": "c442cd4cb61763c85b078d6ea83b5959c3ff364a",
+    "issue": "Avoid trailing post-replacement delimiters in modern hard cuts (#200)",
+    "test_files": [
+      "tests/test_release.py"
+    ],
+    "source_files": [
+      "slugify/slugify.py"
+    ],
+    "fixture_note": "Parent plus regression-test diff from the recorded replay commit.",
+    "validation": {
+      "base_target": {
+        "passed": 38,
+        "failed": 2,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_release.ReleaseRegressionTests::test_modern_hard_cut_does_not_end_in_post_replacement_delimiters",
+          "tests.test_release.ReleaseRegressionTests::test_modern_word_boundary_hard_cut_keeps_delimiters_with_the_next_word"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": "rror: '-' != ''\n\u001b[31mSUBFAILED(replacement='x--two', separator='x', limit=3)\u001b[0m tests/test_release.py::\u001b[1mReleaseRegressionTests::test_modern_hard_cut_does_not_end_in_post_replacement_delimiters\u001b[0m - AssertionError: 'xx' != 'x'\n\u001b[31mFAILED\u001b[0m tests/test_release.py::\u001b[1mReleaseRegressionTests::test_modern_word_boundary_hard_cut_keeps_delimiters_with_the_next_word\u001b[0m - AssertionError: '-' != ''\n\u001b[31m\u001b[31m\u001b[1m7 failed\u001b[0m, \u001b[32m39 passed\u001b[0m, \u001b[32m109 subtests passed\u001b[0m\u001b[31m in 0.40s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 123,
+        "failed": 2,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_release.ReleaseRegressionTests::test_modern_hard_cut_does_not_end_in_post_replacement_delimiters",
+          "tests.test_release.ReleaseRegressionTests::test_modern_word_boundary_hard_cut_keeps_delimiters_with_the_next_word"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": "ror: '-' != ''\n\u001b[31mSUBFAILED(replacement='x--two', separator='x', limit=3)\u001b[0m tests/test_release.py::\u001b[1mReleaseRegressionTests::test_modern_hard_cut_does_not_end_in_post_replacement_delimiters\u001b[0m - AssertionError: 'xx' != 'x'\n\u001b[31mFAILED\u001b[0m tests/test_release.py::\u001b[1mReleaseRegressionTests::test_modern_word_boundary_hard_cut_keeps_delimiters_with_the_next_word\u001b[0m - AssertionError: '-' != ''\n\u001b[31m\u001b[31m\u001b[1m7 failed\u001b[0m, \u001b[32m124 passed\u001b[0m, \u001b[32m109 subtests passed\u001b[0m\u001b[31m in 0.44s\u001b[0m\u001b[0m\n"
+      },
+      "reference_target": {
+        "passed": 40,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m [ 72%]\n\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                              [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m40 passed\u001b[0m, \u001b[32m\u001b[1m115 subtests passed\u001b[0m\u001b[32m in 0.41s\u001b[0m\u001b[0m\n"
+      },
+      "reference_full": {
+        "passed": 125,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m [ 82%]\n\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                 [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m125 passed\u001b[0m, \u001b[32m\u001b[1m115 subtests passed\u001b[0m\u001b[32m in 0.44s\u001b[0m\u001b[0m\n"
+      }
+    },
+    "test_patch": "diff --git a/tests/test_release.py b/tests/test_release.py\nindex 85ea4e9..83c11ec 100644\n--- a/tests/test_release.py\n+++ b/tests/test_release.py\n@@ -53,6 +53,32 @@ class ReleaseRegressionTests(unittest.TestCase):\n                                                  separator=separator, max_length=limit,\n                                                  word_boundary=boundary, save_order=order), expected)\n \n+    def test_modern_hard_cut_does_not_end_in_post_replacement_delimiters(self):\n+        cases = (\n+            ('one--two', '-', 4, 'one'),\n+            ('one--two', '-', 5, 'one'),\n+            ('one--two', '-', 6, 'one--t'),\n+            ('one--two', '::', 6, 'one'),\n+            ('one--two', '::', 7, 'one'),\n+            ('one--two', '::', 8, 'one::::t'),\n+            ('--one', '-', 2, ''),\n+            ('--one', '-', 3, '--o'),\n+            ('---', '-', 2, ''),\n+            ('x--two', 'x', 3, 'x'),\n+            ('one--two', '', 4, 'onet'),\n+        )\n+        for replacement, separator, limit, expected in cases:\n+            with self.subTest(replacement=replacement, separator=separator, limit=limit):\n+                self.assertEqual(slugify('value', replacements=[('value', replacement)],\n+                                         replacement_stage='post', allow_unicode=True,\n+                                         separator=separator, max_length=limit), expected)\n+\n+    def test_modern_word_boundary_hard_cut_keeps_delimiters_with_the_next_word(self):\n+        for order in (False, True):\n+            self.assertEqual(slugify('value', replacements=[('value', '--longword')],\n+                                     replacement_stage='post', allow_unicode=True,\n+                                     max_length=2, word_boundary=True, save_order=order), '')\n+\n     def test_cli_preserves_legacy_default_shape(self):\n         expected = dict(text='', entities=True, decimal=True, hexadecimal=True,\n                         max_length=0, word_boundary=False, save_order=False, separator='-',\n",
+    "reference_source_patch": "diff --git a/slugify/slugify.py b/slugify/slugify.py\nindex 0194378..ebe424a 100644\n--- a/slugify/slugify.py\n+++ b/slugify/slugify.py\n@@ -92,13 +92,18 @@ def _modern_truncate(text: str, max_length: int, word_boundary: bool, separator:\n     # A hard cut may shorten a word but must not emit a partial/trailing delimiter.\n     parts: list[str] = []\n     length = 0\n+    previous_index = 0\n     for index, word in enumerate(tokens):\n-        delimiter = separator if index else ''\n+        if not word:\n+            continue\n+        # Keep repeated delimiters with the next nonempty word until it fits.\n+        delimiter = separator * (index - previous_index)\n         remaining = max_length - length - len(delimiter)\n         if remaining <= 0:\n             break\n         parts.append(delimiter + word[:remaining])\n         length += len(delimiter) + min(len(word), remaining)\n+        previous_index = index\n         if len(word) > remaining:\n             break\n     return ''.join(parts)\n"
+  },
+  {
+    "id": "slugify-194",
+    "repo": "python-slugify",
+    "commit": "2f23599bfb2efe4ceecfad64997fda0a2c1f9f0d",
+    "original_commit": "2f23599bfb2efe4ceecfad64997fda0a2c1f9f0d",
+    "parent": "548b14fab321ae9bfcb6db7fd990f6ddd7d3192b",
+    "issue": "Fix add_uppercase_char to leave input unchanged on error (#194)",
+    "test_files": [
+      "test_add_uppercase_error.py"
+    ],
+    "source_files": [
+      "slugify/special.py"
+    ],
+    "fixture_note": "Parent plus regression-test diff from the recorded replay commit.",
+    "validation": {
+      "base_target": {
+        "passed": 2,
+        "failed": 1,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [
+          "test_add_uppercase_error.TestAddUppercaseCharAtomicity::test_list_unmodified_on_unpack_error"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": "\u001b[31mF\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[31m                                                                      [100%]\u001b[0m\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mFAILED\u001b[0m test_add_uppercase_error.py::\u001b[1mTestAddUppercaseCharAtomicity::test_list_unmodified_on_unpack_error\u001b[0m - AssertionError: List should remain unmodified on error, got [('A', 'B'), ('...\n\u001b[31m\u001b[31m\u001b[1m1 failed\u001b[0m, \u001b[32m2 passed\u001b[0m\u001b[31m in 0.02s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 111,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "%]\n\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m  [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m111 passed\u001b[0m, \u001b[32m\u001b[1m104 subtests passed\u001b[0m\u001b[32m in 0.43s\u001b[0m\u001b[0m\n"
+      },
+      "reference_target": {
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                                      [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m3 passed\u001b[0m\u001b[32m in 0.01s\u001b[0m\u001b[0m\n"
+      },
+      "reference_full": {
+        "passed": 111,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "%]\n\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m  [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m111 passed\u001b[0m, \u001b[32m\u001b[1m104 subtests passed\u001b[0m\u001b[32m in 0.40s\u001b[0m\u001b[0m\n"
+      }
+    },
+    "test_patch": "diff --git a/test_add_uppercase_error.py b/test_add_uppercase_error.py\nnew file mode 100644\nindex 0000000..a0705d5\n--- /dev/null\n+++ b/test_add_uppercase_error.py\n@@ -0,0 +1,48 @@\n+\"\"\"Regression test for add_uppercase_char error handling.\n+\n+Tests that add_uppercase_char either completes atomically or leaves\n+the input list unchanged on error.\n+\"\"\"\n+from __future__ import annotations\n+\n+import pytest\n+from slugify.special import add_uppercase_char\n+\n+\n+class TestAddUppercaseCharAtomicity:\n+\n+    def test_list_unmodified_on_unpack_error(self) -> None:\n+        \"\"\"Input list should remain unchanged when unpack fails.\n+\n+        Before fix: the list was partially modified with items inserted\n+        before the failing element, leaving state inconsistent.\n+        \"\"\"\n+        # Create list with malformed second element\n+        original = [('a', 'b')]\n+        original.append(('bad',))  # type: ignore[arg-type]  # malformed - only 1 element\n+\n+        with pytest.raises(ValueError):\n+            add_uppercase_char(original)  # malformed data triggers ValueError\n+\n+        # After fix: the first valid item should NOT have been processed\n+        # Before fix: original would be [('A', 'B'), ('a', 'b'), ('bad',)]\n+        assert original == [('a', 'b'), ('bad',)], (\n+            f\"List should remain unmodified on error, got {original}\"\n+        )\n+\n+    def test_successful_processing_modifies_list(self) -> None:\n+        \"\"\"Verify normal operation still modifies list in place.\"\"\"\n+        original = [('x', 'y')]\n+        result = add_uppercase_char(original)\n+\n+        # Should add uppercase version at position 0\n+        assert result == [('X', 'Y'), ('x', 'y')]\n+        assert original is result  # same object\n+\n+    def test_empty_list_returns_empty(self) -> None:\n+        \"\"\"Empty list is valid and returns empty list.\"\"\"\n+        empty: list[tuple[str, str]] = []\n+        result = add_uppercase_char(empty)\n+\n+        assert result == []\n+        assert empty == []\n",
+    "reference_source_patch": "diff --git a/slugify/special.py b/slugify/special.py\nindex 918cb2a..3c25658 100644\n--- a/slugify/special.py\n+++ b/slugify/special.py\n@@ -4,11 +4,19 @@ from __future__ import annotations\n def add_uppercase_char(char_list: list[tuple[str, str]]) -> list[tuple[str, str]]:\n     \"\"\" Given a replacement char list, this adds uppercase chars to the list \"\"\"\n \n+    # Collect additions to avoid modifying input during iteration\n+    # and ensure atomicity on error\n+    insertions = []\n     for item in char_list:\n         char, xlate = item\n         upper_dict = char.upper(), xlate.capitalize()\n         if upper_dict not in char_list and char != upper_dict[0]:\n-            char_list.insert(0, upper_dict)\n+            insertions.append(upper_dict)\n+\n+    # Apply all insertions to original list (maintains documented in-place modification)\n+    for upper_dict in insertions:\n+        char_list.insert(0, upper_dict)\n+\n     return char_list\n \n \n"
+  },
+  {
+    "id": "humanize-346",
+    "repo": "humanize",
+    "commit": "ca892b368a535a79cc5e2181d052245b94fd6652",
+    "original_commit": "ca892b368a535a79cc5e2181d052245b94fd6652",
+    "parent": "f971127ce7e7770d3ff5be05cfc484bdf9302e04",
+    "issue": "Fix intword() rounding carry for very large numbers (#346)",
+    "test_files": [
+      "tests/test_number.py"
+    ],
+    "source_files": [
+      "src/humanize/number.py"
+    ],
+    "fixture_note": "Parent plus regression-test diff from the recorded replay commit.",
+    "validation": {
+      "base_target": {
+        "passed": 240,
+        "failed": 1,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_number::test_intword_rounding_rollover"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": "\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[31m                                                [100%]\u001b[0m\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mFAILED\u001b[0m tests/test_number.py::\u001b[1mtest_intword_rounding_rollover\u001b[0m - AssertionError: assert '1000.0 sextillion' == '1.0 septillion'\n\u001b[31m\u001b[31m\u001b[1m1 failed\u001b[0m, \u001b[32m240 passed\u001b[0m\u001b[31m in 0.08s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 740,
+        "failed": 1,
+        "skipped": 110,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_number::test_intword_rounding_rollover"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": "m\n\nLegend:\n  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.\n  OPS: Operations Per Second, computed as 1 / Mean\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mFAILED\u001b[0m tests/test_number.py::\u001b[1mtest_intword_rounding_rollover\u001b[0m - AssertionError: assert '1000.0 sextillion' == '1.0 septillion'\n\u001b[31m\u001b[31m\u001b[1m1 failed\u001b[0m, \u001b[32m740 passed\u001b[0m, \u001b[33m110 skipped\u001b[0m\u001b[31m in 7.36s\u001b[0m\u001b[0m\n"
+      },
+      "reference_target": {
+        "passed": 241,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m [ 89%]\n\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m241 passed\u001b[0m\u001b[32m in 0.06s\u001b[0m\u001b[0m\n"
+      },
+      "reference_full": {
+        "passed": 741,
+        "failed": 0,
+        "skipped": 110,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "6.5614 (0.03)   \u001b[0m   25424           1\n\u001b[33m--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\u001b[0m\n\nLegend:\n  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.\n  OPS: Operations Per Second, computed as 1 / Mean\n\u001b[32m\u001b[32m\u001b[1m741 passed\u001b[0m, \u001b[33m110 skipped\u001b[0m\u001b[32m in 8.15s\u001b[0m\u001b[0m\n"
+      }
+    },
+    "test_patch": "diff --git a/tests/test_number.py b/tests/test_number.py\nindex 755e29e..5fb12fa 100644\n--- a/tests/test_number.py\n+++ b/tests/test_number.py\n@@ -148,6 +148,47 @@ def test_intword(test_args: list[str], expected: str) -> None:\n     assert humanize.intword(*test_args) == expected\n \n \n+def test_intword_rounding_rollover() -> None:\n+    \"\"\"Values that round up to the next power must carry to the next unit.\n+\n+    Regression: for magnitudes above ~10**22 the carry was checked in floating\n+    point (``rounded_value * power == powers[ordinal + 1]``) and no longer\n+    matched the exact integer power, so e.g. ``10**24 - 1`` was rendered as\n+    \"1000.0 sextillion\" instead of \"1.0 septillion\".\n+    \"\"\"\n+    units = [\n+        \"thousand\",\n+        \"million\",\n+        \"billion\",\n+        \"trillion\",\n+        \"quadrillion\",\n+        \"quintillion\",\n+        \"sextillion\",\n+        \"septillion\",\n+        \"octillion\",\n+        \"nonillion\",\n+        \"decillion\",\n+    ]\n+    # value = 10**e - 1 rounds up to 10**e with \"%.1f\"/\"%.0f\", i.e. exactly 1.0\n+    # of the unit sitting at 10**e (units[i] where 10**e == powers[i]).\n+    for i, exponent in enumerate(range(6, 34, 3), start=1):\n+        value = 10**exponent - 1\n+        assert humanize.intword(value) == f\"1.0 {units[i]}\"\n+        assert humanize.intword(value, \"%.0f\") == f\"1 {units[i]}\"\n+\n+    # The mantissa must never render at or above 1000 for values below a\n+    # decillion; a bare \"1000.0\" is only expected in the sparse gap between\n+    # decillion and googol, which has no dedicated unit.\n+    for exponent in range(6, 34, 3):\n+        rendered = humanize.intword(10**exponent - 1)\n+        mantissa = float(rendered.split(\" \", 1)[0])\n+        assert mantissa < 1000\n+\n+    # The documented decillion..googol gap must be left untouched.\n+    assert humanize.intword(10**36) == \"1000.0 decillion\"\n+    assert humanize.intword(2 * 10**100) == \"2.0 googol\"\n+\n+\n @pytest.mark.parametrize(\n     \"test_input, expected\",\n     [\n",
+    "reference_source_patch": "diff --git a/src/humanize/number.py b/src/humanize/number.py\nindex ebccfb9..52a5356 100644\n--- a/src/humanize/number.py\n+++ b/src/humanize/number.py\n@@ -282,8 +282,12 @@ def intword(value: NumberOrString, format: str = \"%.1f\") -> str:\n     chopped = value / power\n     rounded_value = float(format % chopped)\n \n-    if not largest_ordinal and rounded_value * power == powers[ordinal + 1]:\n-        # After rounding, we end up just at the next power\n+    if not largest_ordinal and rounded_value == powers[ordinal + 1] // power:\n+        # After rounding, we end up just at the next power. Compare against the\n+        # integer ratio between the two powers instead of ``rounded_value * power``:\n+        # for values above ~10**22 the latter is evaluated in floating point and\n+        # no longer equals the exact ``powers[ordinal + 1]``, so the carry was\n+        # silently skipped (e.g. 10**24 - 1 rendered as \"1000.0 sextillion\").\n         ordinal += 1\n         rounded_value = 1.0\n \n"
+  },
+  {
+    "id": "humanize-381",
+    "repo": "humanize",
+    "commit": "ffdf407fdfe1a5738159b989eb2df190ed780448",
+    "original_commit": "ffdf407fdfe1a5738159b989eb2df190ed780448",
+    "parent": "bada0f88b4d115b96d94db1fe73b20579e84fc14",
+    "issue": "Support general iterables in natural_list (#381)",
+    "test_files": [
+      "tests/test_lists.py"
+    ],
+    "source_files": [
+      "src/humanize/lists.py"
+    ],
+    "fixture_note": "Parent plus regression-test diff from the recorded replay commit.",
+    "validation": {
+      "base_target": {
+        "passed": 12,
+        "failed": 2,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_lists::test_natural_list[test_args11-one and two]",
+          "tests.test_lists::test_natural_list[test_args12-one, two and three]"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": "                                     [100%]\u001b[0m\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mFAILED\u001b[0m tests/test_lists.py::\u001b[1mtest_natural_list[test_args11-one and two]\u001b[0m - TypeError: 'dict_keys' object is not subscriptable\n\u001b[31mFAILED\u001b[0m tests/test_lists.py::\u001b[1mtest_natural_list[test_args12-one, two and three]\u001b[0m - TypeError: object of type 'generator' has no len()\n\u001b[31m\u001b[31m\u001b[1m2 failed\u001b[0m, \u001b[32m12 passed\u001b[0m\u001b[31m in 0.01s\u001b[0m\u001b[0m\n"
+      },
+      "base_full": {
+        "passed": 738,
+        "failed": 2,
+        "skipped": 110,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_lists::test_natural_list[test_args11-one and two]",
+          "tests.test_lists::test_natural_list[test_args12-one, two and three]"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": "nd, computed as 1 / Mean\n\u001b[36m\u001b[1m=========================== short test summary info ============================\u001b[0m\n\u001b[31mFAILED\u001b[0m tests/test_lists.py::\u001b[1mtest_natural_list[test_args11-one and two]\u001b[0m - TypeError: 'dict_keys' object is not subscriptable\n\u001b[31mFAILED\u001b[0m tests/test_lists.py::\u001b[1mtest_natural_list[test_args12-one, two and three]\u001b[0m - TypeError: object of type 'generator' has no len()\n\u001b[31m\u001b[31m\u001b[1m2 failed\u001b[0m, \u001b[32m738 passed\u001b[0m, \u001b[33m110 skipped\u001b[0m\u001b[31m in 7.59s\u001b[0m\u001b[0m\n"
+      },
+      "reference_target": {
+        "passed": 14,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m.\u001b[0m\u001b[32m                                                           [100%]\u001b[0m\n\u001b[32m\u001b[32m\u001b[1m14 passed\u001b[0m\u001b[32m in 0.01s\u001b[0m\u001b[0m\n"
+      },
+      "reference_full": {
+        "passed": 740,
+        "failed": 0,
+        "skipped": 110,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "2.0419 (0.03)   \u001b[0m   18576           1\n\u001b[33m--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\u001b[0m\n\nLegend:\n  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.\n  OPS: Operations Per Second, computed as 1 / Mean\n\u001b[32m\u001b[32m\u001b[1m740 passed\u001b[0m, \u001b[33m110 skipped\u001b[0m\u001b[32m in 6.56s\u001b[0m\u001b[0m\n"
+      }
+    },
+    "test_patch": "diff --git a/tests/test_lists.py b/tests/test_lists.py\nindex cc514f3..9b3c1b7 100644\n--- a/tests/test_lists.py\n+++ b/tests/test_lists.py\n@@ -1,5 +1,8 @@\n from __future__ import annotations\n \n+from collections.abc import Iterable\n+from typing import Any\n+\n import pytest\n \n import humanize\n@@ -16,9 +19,13 @@ import humanize\n         ([[\"\"]], \"\"),\n         ([[1, 2, 3]], \"1, 2 and 3\"),\n         ([[1, \"two\"]], \"1 and two\"),\n+        ([(\"one\", \"two\", \"three\")], \"one, two and three\"),\n+        ([(\"one\", \"two\")], \"one and two\"),\n+        ([(\"one\",)], \"one\"),\n+        ([{\"one\": 1, \"two\": 2}.keys()], \"one and two\"),\n+        ([(x for x in [\"one\", \"two\", \"three\"])], \"one, two and three\"),\n+        ([range(1, 4)], \"1, 2 and 3\"),\n     ],\n )\n-def test_natural_list(\n-    test_args: list[str] | list[int] | list[str | int], expected: str\n-) -> None:\n+def test_natural_list(test_args: Iterable[Any], expected: str) -> None:\n     assert humanize.natural_list(*test_args) == expected\n",
+    "reference_source_patch": "diff --git a/src/humanize/lists.py b/src/humanize/lists.py\nindex 525f0e3..36e8ab7 100644\n--- a/src/humanize/lists.py\n+++ b/src/humanize/lists.py\n@@ -4,15 +4,16 @@ from __future__ import annotations\n \n TYPE_CHECKING = False\n if TYPE_CHECKING:\n+    from collections.abc import Iterable\n     from typing import Any\n \n __all__ = [\"natural_list\"]\n \n \n-def natural_list(items: list[Any]) -> str:\n+def natural_list(items: Iterable[Any]) -> str:\n     \"\"\"Natural list.\n \n-    Convert a list of items into a human-readable string with commas and 'and'.\n+    Convert an iterable of items into a human-readable string with commas and 'and'.\n \n     Examples:\n         >>> natural_list([\"one\", \"two\", \"three\"])\n@@ -23,16 +24,17 @@ def natural_list(items: list[Any]) -> str:\n         'one'\n \n     Args:\n-        items (list): An iterable of items.\n+        items (Iterable): An iterable of items.\n \n     Returns:\n         str: A string with commas and 'and' in the right places.\n     \"\"\"\n-    if not items:\n+    item_list = [str(item) for item in items]\n+    if not item_list:\n         return \"\"\n-    if len(items) == 1:\n-        return str(items[0])\n-    elif len(items) == 2:\n-        return f\"{str(items[0])} and {str(items[1])}\"\n+    if len(item_list) == 1:\n+        return item_list[0]\n+    elif len(item_list) == 2:\n+        return f\"{item_list[0]} and {item_list[1]}\"\n     else:\n-        return \", \".join([str(item) for item in items[:-1]]) + f\" and {str(items[-1])}\"\n+        return \", \".join(item_list[:-1]) + f\" and {item_list[-1]}\"\n"
+  },
+  {
+    "id": "more-itertools-1284",
+    "repo": "more-itertools",
+    "commit": "2b8d5cddce4ea01f88a973551cd50479cf5fa45f",
+    "original_commit": "2b8d5cddce4ea01f88a973551cd50479cf5fa45f",
+    "parent": "b2f3aff7633057d234ec9186c18a53f4df306d08",
+    "issue": "Issue 1284: don't let a bucket lookup invent a key",
+    "test_files": [
+      "tests/test_more.py"
+    ],
+    "source_files": [
+      "more_itertools/more.py"
+    ],
+    "fixture_note": "Parent plus regression-test diff from the recorded replay commit.",
+    "validation": {
+      "base_target": {
+        "passed": 609,
+        "failed": 4,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_more.BucketTests::test_getitem_miss_does_not_add_key",
+          "tests.test_more.BucketTests::test_in_does_not_add_key",
+          "tests.test_more.BucketTests::test_in_does_not_add_key_with_validator",
+          "tests.test_more.BucketTests::test_keys_are_only_those_seen"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": ".........                           [100%]\n=========================== short test summary info ============================\nFAILED tests/test_more.py::BucketTests::test_getitem_miss_does_not_add_key - ...\nFAILED tests/test_more.py::BucketTests::test_in_does_not_add_key - AssertionE...\nFAILED tests/test_more.py::BucketTests::test_in_does_not_add_key_with_validator\nFAILED tests/test_more.py::BucketTests::test_keys_are_only_those_seen - Asser...\n4 failed, 609 passed, 11313 subtests passed in 2.69s\n"
+      },
+      "base_full": {
+        "passed": 754,
+        "failed": 4,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_more.BucketTests::test_getitem_miss_does_not_add_key",
+          "tests.test_more.BucketTests::test_in_does_not_add_key",
+          "tests.test_more.BucketTests::test_in_does_not_add_key_with_validator",
+          "tests.test_more.BucketTests::test_keys_are_only_those_seen"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": "......                              [100%]\n=========================== short test summary info ============================\nFAILED tests/test_more.py::BucketTests::test_getitem_miss_does_not_add_key - ...\nFAILED tests/test_more.py::BucketTests::test_in_does_not_add_key - AssertionE...\nFAILED tests/test_more.py::BucketTests::test_in_does_not_add_key_with_validator\nFAILED tests/test_more.py::BucketTests::test_keys_are_only_those_seen - Asser...\n4 failed, 754 passed, 21173 subtests passed in 6.72s\n"
+      },
+      "reference_target": {
+        "passed": 613,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "............................................... [ 46%]\n..................................................................... [ 57%]\n..................................... [ 63%]\n.................................... [ 69%]\n.............................................................................. [ 82%]\n.............................................................. [ 92%]\n..............................................                           [100%]\n613 passed, 11313 subtests passed in 2.61s\n"
+      },
+      "reference_full": {
+        "passed": 758,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "..... [ 51%]\n.................................... [ 56%]\n.............................................................................. [ 66%]\n.............................................................. [ 74%]\n........................................................................ [ 84%]\n............................................ [ 90%]\n...........................................................................                              [100%]\n758 passed, 21173 subtests passed in 7.59s\n"
+      }
+    },
+    "test_patch": "diff --git a/tests/test_more.py b/tests/test_more.py\nindex 4401dc6..3896451 100644\n--- a/tests/test_more.py\n+++ b/tests/test_more.py\n@@ -1109,6 +1109,38 @@ class BucketTests(TestCase):\n         self.assertEqual(list(D[20]), [])\n         self.assertEqual(list(D[30]), [30, 31, 33])\n \n+    def test_in_does_not_add_key(self):\n+        # A failed membership test must not invent a key (see #1284)\n+        iterable = [10, 20, 11, 21]\n+        D = mi.bucket(iterable, key=lambda x: 10 * (x // 10))\n+        self.assertFalse(30 in D)\n+        self.assertEqual(set(D), {10, 20})\n+        self.assertEqual(list(D[30]), [])\n+\n+    def test_getitem_miss_does_not_add_key(self):\n+        # Selecting an absent bucket must not invent a key either\n+        iterable = [10, 20, 11, 21]\n+        D = mi.bucket(iterable, key=lambda x: 10 * (x // 10))\n+        self.assertEqual(list(D[30]), [])\n+        self.assertEqual(set(D), {10, 20})\n+\n+    def test_in_does_not_add_key_with_validator(self):\n+        # A key the validator accepts but the iterable never produces\n+        iterable = [10, 20, 11, 21]\n+        key = lambda x: 10 * (x // 10)\n+        validator = lambda x: x in {10, 20, 30}\n+        D = mi.bucket(iterable, key, validator=validator)\n+        self.assertFalse(30 in D)\n+        self.assertEqual(set(D), {10, 20})\n+\n+    def test_keys_are_only_those_seen(self):\n+        # Every reported key must have had at least one matching item\n+        iterable = [10, 20, 11]\n+        D = mi.bucket(iterable, key=lambda x: 10 * (x // 10))\n+        for missing in (30, 40, 50):\n+            self.assertFalse(missing in D)\n+        self.assertEqual(set(D), {10, 20})\n+\n \n class SpyTests(TestCase):\n     \"\"\"Tests for ``spy()``\"\"\"\n",
+    "reference_source_patch": "diff --git a/more_itertools/more.py b/more_itertools/more.py\nindex e90b893..42a751f 100755\n--- a/more_itertools/more.py\n+++ b/more_itertools/more.py\n@@ -1181,7 +1181,7 @@ class bucket:\n     def __init__(self, iterable, key, validator=None):\n         self._it = iter(iterable)\n         self._key = key\n-        self._cache = defaultdict(deque)\n+        self._cache = {}\n         self._validator = validator or (lambda x: True)\n \n     def __contains__(self, value):\n@@ -1206,7 +1206,7 @@ class bucket:\n         while True:\n             # If we've cached some items that match the target value, emit\n             # the first one and evict it from the cache.\n-            if self._cache[value]:\n+            if self._cache.get(value):\n                 yield self._cache[value].popleft()\n             # Otherwise we need to advance the parent iterator to search for\n             # a matching item, caching the rest.\n@@ -1218,16 +1218,20 @@ class bucket:\n                         return\n                     item_value = self._key(item)\n                     if item_value == value:\n+                        # This item goes straight to the caller rather than\n+                        # through the cache, but the key is a real one and\n+                        # __iter__ must still report it.\n+                        self._cache.setdefault(value, deque())\n                         yield item\n                         break\n                     elif self._validator(item_value):\n-                        self._cache[item_value].append(item)\n+                        self._cache.setdefault(item_value, deque()).append(item)\n \n     def __iter__(self):\n         for item in self._it:\n             item_value = self._key(item)\n             if self._validator(item_value):\n-                self._cache[item_value].append(item)\n+                self._cache.setdefault(item_value, deque()).append(item)\n \n         return iter(self._cache)\n \n"
+  },
+  {
+    "id": "itsdangerous-sha1",
+    "repo": "itsdangerous",
+    "commit": "50c3c72e4a876d68e60670977ac5a46b074bf293",
+    "original_commit": "7f4dcf83a07bb3d53f4e0e65ef1b43327b4cca90",
+    "parent": "93ae366874bbd4f69d90495c45b2cd336387496c",
+    "issue": "access sha1 lazily",
+    "test_files": [
+      "tests/test_itsdangerous/test_serializer.py"
+    ],
+    "source_files": [
+      "CHANGES.rst",
+      "src/itsdangerous/signer.py"
+    ],
+    "fixture_note": "Same source fix and parent as upstream 7f4dcf8; replaces internal _lazy_sha1 import with digest behavior and adds subprocess import/sign/unsign without hashlib.sha1.",
+    "validation": {
+      "base_target": {
+        "passed": 41,
+        "failed": 1,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_itsdangerous.test_serializer::test_import_and_sha256_signing_without_sha1"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": ".........................................F                               [100%]\n=========================== short test summary info ============================\nFAILED tests/test_itsdangerous/test_serializer.py::test_import_and_sha256_signing_without_sha1\n1 failed, 41 passed in 0.05s\n"
+      },
+      "base_full": {
+        "passed": 297,
+        "failed": 1,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_itsdangerous.test_serializer::test_import_and_sha256_signing_without_sha1"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": ".............................................. [ 48%]\n........................................................................ [ 72%]\n........................................................................ [ 96%]\n..........                                                               [100%]\n=========================== short test summary info ============================\nFAILED tests/test_itsdangerous/test_serializer.py::test_import_and_sha256_signing_without_sha1\n1 failed, 297 passed in 0.33s\n"
+      },
+      "reference_target": {
+        "passed": 42,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "..........................................                               [100%]\n42 passed in 0.05s\n"
+      },
+      "reference_full": {
+        "passed": 298,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "........................................................................ [ 24%]\n........................................................................ [ 48%]\n........................................................................ [ 72%]\n........................................................................ [ 96%]\n..........                                                               [100%]\n298 passed in 0.40s\n"
+      }
+    },
+    "test_patch": "diff --git a/tests/test_itsdangerous/test_serializer.py b/tests/test_itsdangerous/test_serializer.py\nindex 2837121..218543e 100644\n--- a/tests/test_itsdangerous/test_serializer.py\n+++ b/tests/test_itsdangerous/test_serializer.py\n@@ -177,7 +177,7 @@ class TestSerializer:\n         )\n \n         unsigners = serializer.iter_unsigners()\n-        assert next(unsigners).digest_method == hashlib.sha1\n+        assert next(unsigners).digest_method(b\"value\").hexdigest() == hashlib.sha1(b\"value\").hexdigest()\n \n         for signer in unsigners:\n             assert signer.digest_method == hashlib.sha256\n@@ -194,3 +194,19 @@ def test_digests():\n         \"[42].MKCz_0nXQqv7wKpfHZcRtJRmpT2T5uvs9YQsJEhJimqxc\"\n         \"9bCLxG31QzS5uC8OVBI1i6jyOLAFNoKaF5ckO9L5Q\"\n     )\n+\n+\n+def test_import_and_sha256_signing_without_sha1():\n+    import subprocess\n+    import sys\n+\n+    code = \"\"\"\n+import hashlib\n+del hashlib.sha1\n+from itsdangerous import Signer\n+signer = Signer(\"secret\", digest_method=hashlib.sha256)\n+signed = signer.sign(b\"value\")\n+assert signer.unsign(signed) == b\"value\"\n+\"\"\"\n+    result = subprocess.run([sys.executable, \"-c\", code], capture_output=True, text=True)\n+    assert result.returncode == 0, result.stderr\n",
+    "reference_source_patch": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex cdd39b4..8b56a4d 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -13,6 +13,9 @@ Unreleased\n     By default it is ``Serializer[str]`` and ``dumps`` returns a ``str``. If a\n     different ``serializer`` argument is given, it will try to infer the return\n     type of its ``dumps`` method. :issue:`347`\n+-   The default ``hashlib.sha1`` may not be available in FIPS builds. Don't\n+    access it at import time so the developer has time to change the default.\n+    :issue:`375`\n \n \n Version 2.1.2\ndiff --git a/src/itsdangerous/signer.py b/src/itsdangerous/signer.py\nindex 6410e65..e324dc0 100644\n--- a/src/itsdangerous/signer.py\n+++ b/src/itsdangerous/signer.py\n@@ -37,13 +37,21 @@ class NoneAlgorithm(SigningAlgorithm):\n         return b\"\"\n \n \n+def _lazy_sha1(string: bytes = b\"\") -> t.Any:\n+    \"\"\"Don't access ``hashlib.sha1`` until runtime. FIPS builds may not include\n+    SHA-1, in which case the import and use as a default would fail before the\n+    developer can configure something else.\n+    \"\"\"\n+    return hashlib.sha1(string)\n+\n+\n class HMACAlgorithm(SigningAlgorithm):\n     \"\"\"Provides signature generation using HMACs.\"\"\"\n \n     #: The digest method to use with the MAC algorithm. This defaults to\n     #: SHA1, but can be changed to any other function in the hashlib\n     #: module.\n-    default_digest_method: t.Any = staticmethod(hashlib.sha1)\n+    default_digest_method: t.Any = staticmethod(_lazy_sha1)\n \n     def __init__(self, digest_method: t.Any = None):\n         if digest_method is None:\n@@ -109,7 +117,7 @@ class Signer:\n     #: doesn't apply when used intermediately in HMAC.\n     #:\n     #: .. versionadded:: 0.14\n-    default_digest_method: t.Any = staticmethod(hashlib.sha1)\n+    default_digest_method: t.Any = staticmethod(_lazy_sha1)\n \n     #: The default scheme to use to derive the signing key from the\n     #: secret key and salt. The default is ``django-concat``. Possible\n"
+  },
+  {
+    "id": "more-itertools-1247",
+    "repo": "more-itertools",
+    "commit": "dc2664b4a7c66209485c9f5e359137bf4b365eb3",
+    "original_commit": "dc2664b4a7c66209485c9f5e359137bf4b365eb3",
+    "parent": "2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10",
+    "issue": "Issue 1247: Keep numeric_range consistent with the items it produces\n\nnumeric_range produces its items by repeated multiplication, but derived len(), __contains__ and index() from division by the step. With floats the two disagree, so a range could report a length that did not match what it yielded, and could deny membership to its own items.",
+    "test_files": [
+      "tests/test_more.py"
+    ],
+    "source_files": [
+      "more_itertools/more.py"
+    ],
+    "fixture_note": "Parent plus regression-test diff from the recorded replay commit.",
+    "validation": {
+      "base_target": {
+        "passed": 592,
+        "failed": 2,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_more.NumericRangeTests::test_contains_items_with_inexact_step",
+          "tests.test_more.NumericRangeTests::test_len_matches_iteration"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": "76%]\n........................................................................................ [ 91%]\n.............................................. [ 99%]\n...                                    [100%]\n=========================== short test summary info ============================\nFAILED tests/test_more.py::NumericRangeTests::test_contains_items_with_inexact_step\nFAILED tests/test_more.py::NumericRangeTests::test_len_matches_iteration - As...\n2 failed, 592 passed, 11179 subtests passed in 2.50s\n"
+      },
+      "base_full": {
+        "passed": 737,
+        "failed": 2,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [
+          "tests.test_more.NumericRangeTests::test_contains_items_with_inexact_step",
+          "tests.test_more.NumericRangeTests::test_len_matches_iteration"
+        ],
+        "report_error": "",
+        "exit": 1,
+        "tail": "................... [ 84%]\n.............................................. [ 91%]\n..................................................... [ 98%]\n.............                                       [100%]\n=========================== short test summary info ============================\nFAILED tests/test_more.py::NumericRangeTests::test_contains_items_with_inexact_step\nFAILED tests/test_more.py::NumericRangeTests::test_len_matches_iteration - As...\n2 failed, 737 passed, 21039 subtests passed in 6.37s\n"
+      },
+      "reference_target": {
+        "passed": 594,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": "............................................................................................... [ 53%]\n............................................................................... [ 66%]\n............................................................... [ 76%]\n........................................................................................ [ 91%]\n.............................................. [ 99%]\n...                                    [100%]\n594 passed, 11179 subtests passed in 2.40s\n"
+      },
+      "reference_full": {
+        "passed": 739,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0,
+        "failed_names": [],
+        "report_error": "",
+        "exit": 0,
+        "tail": ".......... [ 53%]\n............................................................... [ 61%]\n........................................................................................ [ 73%]\n.............................................. [ 79%]\n.................................... [ 84%]\n.............................................. [ 91%]\n..................................................... [ 98%]\n.............                                       [100%]\n739 passed, 21039 subtests passed in 6.70s\n"
+      }
+    },
+    "test_patch": "diff --git a/tests/test_more.py b/tests/test_more.py\nindex 8303601..945e2d0 100644\n--- a/tests/test_more.py\n+++ b/tests/test_more.py\n@@ -2771,6 +2771,35 @@ class NumericRangeTests(TestCase):\n                 self.assertFalse(v in r)\n                 self.assertTrue(v not in r)\n \n+    def test_contains_items_with_inexact_step(self):\n+        # The items are produced by repeated multiplication, so with a step\n+        # that has no exact float representation they do not land on an exact\n+        # multiple of it. Every item must still be a member, and index() must\n+        # locate it where __getitem__ puts it.\n+        for args in [\n+            (0.0, 1.0, 0.1),\n+            (0.0, 3.0, 0.7),\n+            (1.0, 0.0, -0.1),\n+            (2.1, 5.1, 0.5),\n+            (-1.0, 1.0, 0.25),\n+        ]:\n+            r = mi.numeric_range(*args)\n+            for i, v in enumerate(r):\n+                self.assertIn(v, r)\n+                self.assertEqual(i, r.index(v))\n+                self.assertEqual(v, r[i])\n+                self.assertEqual(1, r.count(v))\n+\n+    def test_contains_non_items_with_inexact_step(self):\n+        # Values the range does not produce stay out of it.\n+        r = mi.numeric_range(0.0, 1.0, 0.1)\n+        items = set(r)\n+        for i in range(1000):\n+            v = i / 1000\n+            if v not in items:\n+                self.assertNotIn(v, r)\n+                self.assertRaises(ValueError, r.index, v)\n+\n     def test_eq(self):\n         # numeric_range objects are equal to themselves\n         range_1 = mi.numeric_range(2, 4, 1)\n@@ -2981,6 +3010,28 @@ class NumericRangeTests(TestCase):\n         ]:\n             self.assertEqual(expected, len(mi.numeric_range(*args)))\n \n+    def test_len_matches_iteration(self):\n+        # len() is derived by division while the items come from repeated\n+        # multiplication; the two must not disagree, or the last index reports\n+        # an item the range never yields.\n+        for args in [\n+            # the division overshoots: len() counted an item past the stop\n+            (-8.732, -13.532, -2.4),\n+            (4.51, 10.375, 0.255),\n+            # the division falls short: len() missed an item the range yields\n+            (-69.37276490678778, -29.8339073344664, 4.942357196540172),\n+            (32.50227965239458, 9.003418351482358, -1.9582384417426848),\n+            (0.0, 1.0, 0.1),\n+            (0.0, 3.0, 0.7),\n+            (10.0, -10.0, -0.7),\n+            (2.1, 5.1, 0.5),\n+        ]:\n+            r = mi.numeric_range(*args)\n+            items = list(r)\n+            self.assertEqual(len(items), len(r))\n+            if items:\n+                self.assertEqual(items[-1], r[len(r) - 1])\n+\n     def test_repr(self):\n         for args, *expected in [\n             ((7.0,), \"numeric_range(0.0, 7.0)\"),\n",
+    "reference_source_patch": "diff --git a/more_itertools/more.py b/more_itertools/more.py\nindex f2dbe57..033fae8 100755\n--- a/more_itertools/more.py\n+++ b/more_itertools/more.py\n@@ -2331,14 +2331,11 @@ class numeric_range(Sequence):\n             return self._start > self._stop\n \n     def __contains__(self, elem):\n-        if self._growing:\n-            if self._start <= elem < self._stop:\n-                return (elem - self._start) % self._step == self._zero\n-        else:\n-            if self._start >= elem > self._stop:\n-                return (self._start - elem) % (-self._step) == self._zero\n-\n-        return False\n+        try:\n+            self.index(elem)\n+        except ValueError:\n+            return False\n+        return True\n \n     def __eq__(self, other):\n         # numeric_range object equality is intended to mirror the built-in range\n@@ -2417,7 +2414,20 @@ class numeric_range(Sequence):\n             return 0\n         else:  # distance > 0 and step > 0: regular euclidean division\n             q, r = divmod(distance, step)\n-            return int(q) + int(r != self._zero)\n+            n = int(q) + int(r != self._zero)\n+            # The division above measures the distance to cover, but the items\n+            # are produced by repeated multiplication (see `__iter__`). With\n+            # inexact arithmetic the two disagree at the boundary, so settle\n+            # the count against the items themselves.\n+            while n and not self._before_stop(n - 1):\n+                n -= 1\n+            while self._before_stop(n):\n+                n += 1\n+            return n\n+\n+    def _before_stop(self, i):\n+        value = self._start + i * self._step\n+        return value < self._stop if self._growing else value > self._stop\n \n     def __reduce__(self):\n         return numeric_range, (self._start, self._stop, self._step)\n@@ -2446,14 +2456,27 @@ class numeric_range(Sequence):\n     def index(self, value):\n         if self._growing:\n             if self._start <= value < self._stop:\n-                q, r = divmod(value - self._start, self._step)\n-                if r == self._zero:\n-                    return int(q)\n+                q, _ = divmod(value - self._start, self._step)\n+                return self._index_near(int(q), value)\n         else:\n             if self._start >= value > self._stop:\n-                q, r = divmod(self._start - value, -self._step)\n-                if r == self._zero:\n-                    return int(q)\n+                q, _ = divmod(self._start - value, -self._step)\n+                return self._index_near(int(q), value)\n+\n+        raise ValueError(f\"{value} is not in numeric range\")\n+\n+    def _index_near(self, i, value):\n+        # `i` is the quotient of the division of `value` by the step, which\n+        # locates the value on the grid of items this range produces. For\n+        # exact types that quotient is the index. For inexact ones (floats)\n+        # it can land one short, and the remainder of the division is not a\n+        # reliable membership test either: `numeric_range(0.0, 1.0, 0.1)`\n+        # yields 0.30000000000000004, which leaves a non-zero remainder.\n+        # So compare against the item the range actually produces there.\n+        for candidate in (i, i + 1):\n+            if 0 <= candidate < self._len:\n+                if self._start + candidate * self._step == value:\n+                    return candidate\n \n         raise ValueError(f\"{value} is not in numeric range\")\n \n"
+  }
+]

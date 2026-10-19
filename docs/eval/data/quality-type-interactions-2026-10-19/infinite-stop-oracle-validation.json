@@ -1,0 +1,36 @@
+{
+  "kind": "Actual parent-only oracle validation before uniform matrix;2calls not scored as model artifact queries",
+  "started_at": "2026-10-18T22:46:57.989Z",
+  "finished_at": "2026-10-18T22:46:58.095Z",
+  "python_program": "import json,sys\npayload=json.load(sys.stdin)\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('infinite_stop_ascending',(0,float('inf'),1)),('infinite_stop_descending',(0,-float('inf'),-1))]\nfor name,args in cases:\n if payload['case_filter']!=[name,'len']:continue\n try:\n  instance=cls(*args)\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':False,'constructor_exception':type(error).__name__}));continue\n print(json.dumps({'stage':'constructed','case':name,'operation':'len'}),flush=True)\n try:\n  actual=len(instance)\n  print(json.dumps({'case':name,'operation':'len','passed':None if payload['oracle_validation'] else False,'value':actual,'expected':payload['expected_exception']}))\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':None if payload['oracle_validation'] else type(error).__name__==payload['expected_exception'],'exception':type(error).__name__,'message':str(error),'expected':payload['expected_exception']}))\n",
+  "cases": [
+    {
+      "case": "infinite_stop_ascending",
+      "operation": "len",
+      "passed": null,
+      "exception": "ValueError",
+      "message": "cannot convert float NaN to integer",
+      "expected": null,
+      "constructor_valid": true,
+      "started_at": "2026-10-18T22:46:57.990Z",
+      "finished_at": "2026-10-18T22:46:58.031Z",
+      "exit": 0,
+      "signal": null,
+      "timed_out": false
+    },
+    {
+      "case": "infinite_stop_descending",
+      "operation": "len",
+      "passed": null,
+      "exception": "ValueError",
+      "message": "cannot convert float NaN to integer",
+      "expected": null,
+      "constructor_valid": true,
+      "started_at": "2026-10-18T22:46:58.031Z",
+      "finished_at": "2026-10-18T22:46:58.095Z",
+      "exit": 0,
+      "signal": null,
+      "timed_out": false
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "proposed_at": "2026-10-18T22:22:13.809Z",
+  "status": "NOT RUN",
+  "kind": "Posthoc static hypothesis proposed after reviewing completed candidateR1 while remaining frozen benchmark models are active; do not run untilall42close",
+  "source": "5ae9d13344fb7d96a69461d3616c220e29b3d796",
+  "location": "more-itertools-1247--gpt-fixed--r1 more_itertools/more.py:2464-2466",
+  "hypothesis": "Promoting a finite largeinteger start to float before original bounds may raise OverflowError in old arithmetic-free legal empty-range nonmember contains/index. Mixedint/float types are already supported; constructor and actual baseline query legality must be confirmed, not assumed. No iteration legality claim.",
+  "cases": 4,
+  "versions": 8,
+  "expected_contains": false,
+  "expected_index": "ValueError",
+  "controller_sha256": "3526e5366993e2e21deb1d051a83365eed6f75d6c699e2f6c541423b4829932d",
+  "model_or_original46_changes": false,
+  "initial_controller_sha256": "44351f8b7fc5a8fe924a071630cda96584e9381daa95fae53cf3d33c3ec59607",
+  "pre_execution_revision_at": "2026-10-18T22:31:00.141Z",
+  "pre_execution_revision": "Added never-overwrite guard only; actual Python program, inputs and oracle unchanged; bothversions NOTRUN"
+}

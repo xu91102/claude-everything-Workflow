@@ -1,0 +1,293 @@
+{
+  "kind": "Immutable pre-model evaluator integration review; current eleventh models NOT RUN",
+  "root": "<BENCH_ROOT>",
+  "base_root": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC",
+  "source": "05a2569677746e935cd2b3daaa4d7f17d322c98d",
+  "review_skill": {
+    "path": "/Users/xu/project/worktrees/cew-fast-path/skills/code-review/SKILL.md",
+    "sha256": "ce8f298cc3b8bedadea506692bc191f8e2787a6b5d65bee8332e8b1ec9f871ab"
+  },
+  "prompts": [
+    {
+      "path": "/Users/xu/project/worktrees/cew-fast-path/skills/code-review/references/standards-reviewer-prompt.md",
+      "sha256": "cf73a1f372e9cacc59c0fa17532bda30e98859514688665cb7ecaef3ba96be33"
+    },
+    {
+      "path": "/Users/xu/project/worktrees/cew-fast-path/skills/code-review/references/spec-reviewer-prompt.md",
+      "sha256": "f9a3bbf8ccff053ce9006a8e432c455b3492185ea0e1d5763373cc98cdde3be0"
+    }
+  ],
+  "rules": [
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/01-base.md",
+      "sha256": "0d10b2ce8f6c4cae51560b739174ffb7b37885fda84d6b3375629053e859b98c"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/02-implementation.md",
+      "sha256": "700331676ad40d65acdeb469a67cf802cddff78ebf0861ec5e4427b5a3d23620"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/07-forbidden.md",
+      "sha256": "925a8a1e3df9a734522d570f967912ca7b6f69a83aceb8499bda3e292dcd16a5"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/09-first-principles-adversarial-testing.md",
+      "sha256": "182ab761713451fd9b04c290a070e0235a52833f52cbaf695f065363675faf2f"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/testing.md",
+      "sha256": "21b25bc65754993668baad758098a36d8b80a22f0e520b24de1053578d0d1b50"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/harness-engineering.md",
+      "sha256": "9247631278f21f200dc9231ad6c9a2608824f8382acbe136721db042d1626ad4"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/performance.md",
+      "sha256": "451a91bf7f92e747785e56d2e669ef14bca344bcddd3fa8ee0c6b2daf9aa0036"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/context-hygiene.md",
+      "sha256": "65bc9a40aa4f79f0e882853a6c355e4109c46468073ba617cdced00a8ed3ced4"
+    }
+  ],
+  "files": [
+    {
+      "path": "<BENCH_ROOT>/setup.cjs",
+      "sha256": "4a5f80a46e764d9b91ad868558c4c5d3dbe0e067b17ec135e1be977c5c90da6c"
+    },
+    {
+      "path": "<BENCH_ROOT>/check-source.cjs",
+      "sha256": "f90d05529d4ec5e83423a4fa8daf205a8ef73c4df5b2802e4e8388856e6249e8"
+    },
+    {
+      "path": "<BENCH_ROOT>/verify-production.cjs",
+      "sha256": "886549af78a7cfb8ac4696f6e34c872a9f5962072fa5f71b0ce4cafc4b95fcfc"
+    },
+    {
+      "path": "<BENCH_ROOT>/run-final-benchmark.cjs",
+      "sha256": "53275d5e603cc0df7983b9c4baae1a6117ae390f415c08f18565e0418523489b"
+    },
+    {
+      "path": "<BENCH_ROOT>/freeze-protocol.cjs",
+      "sha256": "525eede9f032dd9586edb097a5f627200896f47302f77fca7b31fe4fa3f9e417"
+    },
+    {
+      "path": "<BENCH_ROOT>/launch-once.cjs",
+      "sha256": "bd41a9e6cd3082509cc8c5cc51ac91ca599e4560d5a1ed6b3ac2e44d5f591745"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-environment.cjs",
+      "sha256": "d0af4a02ee024e628e77408e17427858a7181ff5b1d335fbe12b573ee0468cc3"
+    },
+    {
+      "path": "<BENCH_ROOT>/quality-probes.cjs",
+      "sha256": "ae0aa64c7cd51853ba5f85a412ef2983f3086b240b3dce9fd58bfe4198b3fb11"
+    },
+    {
+      "path": "<BENCH_ROOT>/cost-probes.cjs",
+      "sha256": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262"
+    },
+    {
+      "path": "<BENCH_ROOT>/context-probes.cjs",
+      "sha256": "e8bb0dbd5e07ea6f80ed1dfa031c098a71ebf263494736435d3c530cfc39519b"
+    },
+    {
+      "path": "<BENCH_ROOT>/promotion-probes.cjs",
+      "sha256": "b9c24a9d58c40e90f635ea2ca15ce9d9c82925eeb3945197c9427b3cf6481786"
+    },
+    {
+      "path": "<BENCH_ROOT>/compatibility-probes.cjs",
+      "sha256": "f83e94c4f8e04c039e5edd7c810306c8c2cf04628e85e67c3a82a8e9e27aecb3"
+    },
+    {
+      "path": "<BENCH_ROOT>/shortcircuit-probes.cjs",
+      "sha256": "d80b39aaf5ec4c054c4e7bd9ec9ace445f6f436c6344612045c8178c7793fa27"
+    },
+    {
+      "path": "<BENCH_ROOT>/floatstop-probes.cjs",
+      "sha256": "a4b43713d9507bcb59afea3a63d1bb891331be0df25be5f0b28d17bfd9ba9a01"
+    },
+    {
+      "path": "<BENCH_ROOT>/infinite-stop-probes.cjs",
+      "sha256": "716e5311387ff0b5ee6edddd8fdcd00efe86fd61eb25f04013826b22a616a28d"
+    },
+    {
+      "path": "<BENCH_ROOT>/i18n-probes.cjs",
+      "sha256": "5b8dc2ac5ea1142c5690930a97f386c2a9bb9f34989eb4802fe213354b1cfe55"
+    },
+    {
+      "path": "<BENCH_ROOT>/after-benchmark.cjs",
+      "sha256": "f739947bc76c1370c9e34711d48d4fa5a39efa04eff8b79777ad9fd248ba0281"
+    },
+    {
+      "path": "<BENCH_ROOT>/account-usage.cjs",
+      "sha256": "4668e9dd1a425f35eb09f32f0760aec8acb680c7198da0ab7c0d7d1cd89ab334"
+    },
+    {
+      "path": "<BENCH_ROOT>/summarize.cjs",
+      "sha256": "67a5c2abf4f04a6aa575437c967f254bd62175d8b90c5f57707603c82c7a8ae2"
+    },
+    {
+      "path": "<BENCH_ROOT>/trace-diagnose.cjs",
+      "sha256": "92540817af24da5f72a8ec7de48945ddb81568ffc6a2efa679c0fc4b5adea4ec"
+    },
+    {
+      "path": "<BENCH_ROOT>/make-diagnosis.cjs",
+      "sha256": "81a30552242916170dabdb1c22ba0342fd0f5c52c9deb46c036bcd5dd8f80382"
+    },
+    {
+      "path": "<BENCH_ROOT>/export-evidence.cjs",
+      "sha256": "fc0d8474421ee4ab76e52416b9b5f382202c383ec0abafe923f92e31617a3e22"
+    },
+    {
+      "path": "<BENCH_ROOT>/write-report.cjs",
+      "sha256": "605541469c9db9b9e23ba3466f56b5cd07b9decf63ba17107ba7f5591c6dca1e"
+    },
+    {
+      "path": "<BENCH_ROOT>/make-review-package.cjs",
+      "sha256": "3a60298218eea94c59083c5533fa584a634c4c10ea9c02d221cee3d2e9d10397"
+    },
+    {
+      "path": "<BENCH_ROOT>/preparation.json",
+      "sha256": "0fcb0a542646128a9b9643e1ee043a0ff005f82c57def2b46707fe91bd59db9a"
+    },
+    {
+      "path": "<BENCH_ROOT>/adaptation.json",
+      "sha256": "3413c8845e57e0b68c92062e89bbf3f6d157a42a61ef8a9229976f65f89cc990"
+    },
+    {
+      "path": "<BENCH_ROOT>/source-check-results.json",
+      "sha256": "a516ff4650566fe3855a8df3525b9d49b7bf163a7268d2246e8c48691faabf8e"
+    },
+    {
+      "path": "<BENCH_ROOT>/production-validation.json",
+      "sha256": "b6a7847960f09b7259f47a5ae25dd06d3321c079796eb190e9c1a2e7282f76ff"
+    },
+    {
+      "path": "<BENCH_ROOT>/environment-preflight.json",
+      "sha256": "4e23cb9213a41bc2006d50b2debfebd7153dfc30e372de2d852368043326f7cc"
+    },
+    {
+      "path": "<BENCH_ROOT>/environment-preflight-initial-failure.json",
+      "sha256": "c89aa4d314bc4cca5ebb8d544cd61037d14239edc5880580ef282dbb4fb81cf5"
+    },
+    {
+      "path": "<BENCH_ROOT>/protocol/installed-sources.json",
+      "sha256": "45f25d026812d3b47adc2e1230fd8b924bb2f057bded3f07db1605e9ff72a7fa"
+    },
+    {
+      "path": "<BENCH_ROOT>/tasks.validated.json",
+      "sha256": "dc08f7afa2c1274473b789e27ad5cdab473edf086268cc38cf4d26c66b08adc7"
+    },
+    {
+      "path": "<BENCH_ROOT>/accounting-29.log",
+      "sha256": "330f3c4c2437e2a83752b4c81acad0f5e3f0f3796aad34584e0a230d61a2e783"
+    },
+    {
+      "path": "<BENCH_ROOT>/controller-review-inputs/shortcircuit-preparation-seed.json",
+      "sha256": "31a969a3d801e5bd2a2239da00fb73559a7549851937aafb4cc8bd782ca713cf"
+    },
+    {
+      "path": "<BENCH_ROOT>/controller-review-inputs/floatstop-preparation-seed.json",
+      "sha256": "4064ad5980282b60f3bbf87c21b3d09511fd2251f880c23a26dae44dc205f4af"
+    },
+    {
+      "path": "<BENCH_ROOT>/controller-review-inputs/infinite-stop-preparation-seed.json",
+      "sha256": "e8be071986ddbb36d75dbb370ff7a5a7af748e624cb1ee2ff0eee8322ccab2b8"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/posthoc-shortcircuit-probes.json",
+      "sha256": "63d7922aff8cb2b7a3a6cf4d4d7901bdf00e22380d02f3880be439b56bb9f4e3"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/posthoc-floatstop-probes.json",
+      "sha256": "34021ae205f6437322f2fbadabe9f09da36ac16c33aa5099a32ba8401954ea73"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/posthoc-infinite-stop-probes.json",
+      "sha256": "1dd9afba6830f165bf58e8a91737586d3f3455403686a13d06020836b8d9801c"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/quality-probes.cjs",
+      "sha256": "ae0aa64c7cd51853ba5f85a412ef2983f3086b240b3dce9fd58bfe4198b3fb11"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/cost-probes.cjs",
+      "sha256": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/context-probes.cjs",
+      "sha256": "e8bb0dbd5e07ea6f80ed1dfa031c098a71ebf263494736435d3c530cfc39519b"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/promotion-probes.cjs",
+      "sha256": "b9c24a9d58c40e90f635ea2ca15ce9d9c82925eeb3945197c9427b3cf6481786"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/compatibility-probes.cjs",
+      "sha256": "f83e94c4f8e04c039e5edd7c810306c8c2cf04628e85e67c3a82a8e9e27aecb3"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/i18n-probes.cjs",
+      "sha256": "5b8dc2ac5ea1142c5690930a97f386c2a9bb9f34989eb4802fe213354b1cfe55"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/account-usage.cjs",
+      "sha256": "4668e9dd1a425f35eb09f32f0760aec8acb680c7198da0ab7c0d7d1cd89ab334"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/summarize.cjs",
+      "sha256": "67a5c2abf4f04a6aa575437c967f254bd62175d8b90c5f57707603c82c7a8ae2"
+    },
+    {
+      "path": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/trace-diagnose.cjs",
+      "sha256": "92540817af24da5f72a8ec7de48945ddb81568ffc6a2efa679c0fc4b5adea4ec"
+    },
+    {
+      "path": "<BENCH_ROOT>/controller-review-package-v1.json",
+      "sha256": "fc1353388d0ddfe982db00af33700aa1d7158114863c0dc51d4b7102ce661a5d"
+    },
+    {
+      "path": "<BENCH_ROOT>/controller-independent-review-v1.json",
+      "sha256": "ebf83d18fe00d8bf557e09afb419571f9a34e3061a775754ee94900d6e5764c2"
+    },
+    {
+      "path": "<BENCH_ROOT>/environment-preflight-v1.json",
+      "sha256": "5e9e98b1258f7746b81a1766fe218f1e5e3ce74f8cbfc2d371ad8d43845e19c7"
+    },
+    {
+      "path": "<BENCH_ROOT>/controller-review-inputs/floatstop-preparation-seed-v2.json",
+      "sha256": "08c226d7fe209c1395684dfb665095b1f27e0c42b809a0b447651875f7dca4ac"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-raw-stdout/floatstop-probes.json",
+      "sha256": "4c86959f2a10931c78faf544242e0c15193b79ada9cd008e55d03eefd4fec377"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-raw-stdout/execution.json",
+      "sha256": "fbac5bf5702635d7e12baf7126ae0945cf0b83d7fd578ea43ac281fe49b789a9"
+    }
+  ],
+  "requirements": "Same original7 tasks x2 x3 all42 once, same main e57 and middle previous5ae/current05a; model high/gpt-6.1-sol,720s,rotation/concurrent blocks,prompt/strictgrader/accounting unchanged. All known54 numeric queries predeclared before models, original46+i18n controller byte-identical, added8 actual prior Python/inputs/oracles byte-identical with only phase/provenance wrappers adapted. Both critical6 and final42 uniformly parent/reference/all6; strict AND all54 plusi18n AND final independent artifact review required for quality. Collect remaining36 even criticalqualityFAIL unchanged. Whole14 full-family tokenANDmean below contemporarymain for speed claim. AGENTS exactmain zero additions. No model run/resample/artifact edit or merge. Preserve exact successful Python stdout and expected/value decimal strings for large-integer floatstop records, score stays Python Boolean. Old raw outputs not replaced; historical lossy representation explicitly disclosed.",
+  "review_boundary": "This review is for evaluator source/protocol/export/report integration only, source policy independently reviewed in source-review/review-result.json. Actual new model quality/performance NOT RUN. Preparation seed amendments are frozen COPIES for review, live protocol amendments will be rewritten by reviewed freeze generator before models; never treat seed timestamp as model freeze. Initial old-artifact preflight comparison failed only because two already-failing10sec queries changed timeout vs exception outcomes; exact old sources/Python/input/oracle/pass-fail controls remained. Actual closed6 outputs reused, only pendingphase42new8 executed once. Initial failure and rawresults retained; no production gate weakened. v2 follows first independent PASS with an output-only preservation fix, independently recheck affected Standards+Spec against same base and updated fixed package. Other current inputs unchanged; initial evaluation and old-artifact preflight retained, one16query old-artifact matrix validates exact strings and same verdict/source. No new model.",
+  "constraints": "Read-only; only write own controller-independent-review.json. No models, probes, tests, edits to source/results/history, auth values, hidden reasoning/encrypted bodies, messages or delegation. Check all fixed hashes and control evidence, independently inspect changes against base_root sources (scripts available). Need concrete Important findings with trigger and code references; generic possible risks insufficient. Return package_sha256, separate Standards and Spec status/findings, checks_not_run, integrity counts. Verify all54 are enforced by critical gate AND exporter, freeze includes extra controllers and oracle declaration BEFORE launch; same full-family metrics preserved. Source/artifact/performance axes do not conflate.",
+  "revision": 2,
+  "initial_review": {
+    "path": "<BENCH_ROOT>/controller-independent-review-v1.json",
+    "sha256": "ebf83d18fe00d8bf557e09afb419571f9a34e3061a775754ee94900d6e5764c2"
+  },
+  "changes_since_initial_review": {
+    "scope": "floatstop wrapper retains exact Python raw stdout and decimal-string fields; write-report discloses original Number field limits; preserve v1 review/package/environment immutable. Same Python program/input/oracle/Boolean score, timeout and phase guards; raw16old-artifact controls actualsame verdict/source.",
+    "changed_current_files": [
+      "floatstop-probes.cjs",
+      "environment-preflight.json",
+      "write-report.cjs"
+    ],
+    "new_models_executed": 0,
+    "preflight_report": {
+      "path": "<BENCH_ROOT>/preflight-raw-stdout/floatstop-probes.json",
+      "sha256": "4c86959f2a10931c78faf544242e0c15193b79ada9cd008e55d03eefd4fec377"
+    }
+  }
+}

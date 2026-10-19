@@ -1,0 +1,950 @@
+{
+  "kind": "Sixteen boundary queries frozen before this benchmark; all eight prior queries retained; separate from original-suite scoring",
+  "task": "more-itertools-1247",
+  "protocol_version": 3,
+  "protocol_history": [
+    {
+      "version": 1,
+      "discovered_in": "gpt-base-r1",
+      "queries": "Four float/Decimal contains/index checks"
+    },
+    {
+      "version": 2,
+      "discovered_in": "gpt-cew-r1",
+      "queries": "Preserves v1 and adds four datetime upper/lower len/first checks"
+    },
+    {
+      "version": 3,
+      "discovered_in": "582ab48 candidate date-boundary regression",
+      "queries": "Preserves all eight and adds nonstart float/Decimal members and datetime in-bounds nonmember queries, eight additional checks, before any final-round model"
+    }
+  ],
+  "discovered_in": "Prior rounds and failed 582ab48 attempt",
+  "protocol": "Same sixteen queries for parent, upstream reference, and all six numeric_range artifacts, first at the predeclared critical gate and again after the full round; no model rerun or checkout modification; every input frozen before this round",
+  "timeout_ms_per_case": 10000,
+  "execution_note": "Same eight inputs and assertions; each query has its own child process so one hang cannot hide the remaining outcomes. Frozen before any measured model run.",
+  "python_program": "import json, sys\nfrom decimal import Decimal, localcontext\nfrom datetime import datetime, timedelta\ndata = json.load(sys.stdin)\nsys.path.insert(0, data[\"support\"])\nnamespace = {\"__name__\": \"more_itertools.more\", \"__package__\": \"more_itertools\", \"__file__\": \"<frozen-source>\"}\nexec(compile(data[\"source\"], \"<frozen-source>\", \"exec\"), namespace)\ncls = namespace[\"numeric_range\"]\nrows = []\nwith localcontext() as context:\n    context.prec = 2\n    cases = [(\"finite_float_huge_range\", (0.0, 1e308, 1e-308), 0.0, 0), (\"decimal_precision_2\", (Decimal(0), Decimal(10), Decimal(\"0.1\")), Decimal(0), 0), (\"finite_float_nonstart\", (0.0, 1e308, 1e-308), 1e-308, 1), (\"decimal_nonstart\", (Decimal(0), Decimal(10), Decimal(\"0.1\")), Decimal(\"0.1\"), 1)]\n    for name, args, query, expected_index in cases:\n        for operation in (\"contains\", \"index\"):\n            if data.get(\"case_filter\") != [name, operation]:\n                continue\n            try:\n                instance = cls(*args)\n                value = (query in instance) if operation == \"contains\" else instance.index(query)\n                correct = (value is True) if operation == \"contains\" else (type(value) is int and value == expected_index)\n                rows.append({\"case\": name, \"operation\": operation, \"passed\": correct, \"value\": repr(value), \"expected_index\": expected_index})\n            except Exception as error:\n                rows.append({\"case\": name, \"operation\": operation, \"passed\": False, \"exception\": type(error).__name__, \"message\": str(error)})\ndate_cases = [(\"datetime_upper_bound\", (datetime.max - timedelta(days=1), datetime.max, timedelta(days=2))), (\"datetime_lower_bound\", (datetime.min + timedelta(days=1), datetime.min, -timedelta(days=2)))]\nfor name, args in date_cases:\n    for operation in (\"len\", \"first\"):\n        if data.get(\"case_filter\") != [name, operation]:\n            continue\n        try:\n            instance = cls(*args)\n            value = len(instance) if operation == \"len\" else instance[0]\n            correct = value == (1 if operation == \"len\" else args[0])\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": correct, \"value\": repr(value)})\n        except Exception as error:\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": False, \"exception\": type(error).__name__, \"message\": str(error)})\nnonmembers = [(\"datetime_upper_nonmember\", (datetime.max - timedelta(days=1), datetime.max, timedelta(days=2)), datetime.max - timedelta(hours=12)), (\"datetime_lower_nonmember\", (datetime.min + timedelta(days=1), datetime.min, -timedelta(days=2)), datetime.min + timedelta(hours=12))]\nfor name, args, query in nonmembers:\n    for operation in (\"contains\", \"index\"):\n        if data.get(\"case_filter\") != [name, operation]:\n            continue\n        try:\n            instance = cls(*args)\n        except Exception as error:\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": False, \"constructor_exception\": type(error).__name__})\n            continue\n        try:\n            value = query in instance if operation == \"contains\" else instance.index(query)\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": value is False if operation == \"contains\" else False, \"value\": repr(value)})\n        except Exception as error:\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": operation == \"index\" and isinstance(error, ValueError), \"exception\": type(error).__name__, \"message\": str(error)})\nprint(json.dumps(rows))\n",
+  "controller_source": "\"use strict\";\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst cp = require(\"node:child_process\");\nconst crypto = require(\"node:crypto\");\nconst root = __dirname;\nconst progress = JSON.parse(fs.readFileSync(path.join(root, \"progress.json\")));\nconst trials = progress.completed.filter((r) => r.task === \"more-itertools-1247\");\nconst sourceRepo = path.join(root, \"repos/more-itertools\");\nconst gitSource = (ref) => cp.execFileSync(\"git\", [\"show\", ref + \":more_itertools/more.py\"], { cwd: sourceRepo, encoding: \"utf8\" });\nconst program = `import json, sys\nfrom decimal import Decimal, localcontext\nfrom datetime import datetime, timedelta\ndata = json.load(sys.stdin)\nsys.path.insert(0, data[\"support\"])\nnamespace = {\"__name__\": \"more_itertools.more\", \"__package__\": \"more_itertools\", \"__file__\": \"<frozen-source>\"}\nexec(compile(data[\"source\"], \"<frozen-source>\", \"exec\"), namespace)\ncls = namespace[\"numeric_range\"]\nrows = []\nwith localcontext() as context:\n    context.prec = 2\n    cases = [(\"finite_float_huge_range\", (0.0, 1e308, 1e-308), 0.0, 0), (\"decimal_precision_2\", (Decimal(0), Decimal(10), Decimal(\"0.1\")), Decimal(0), 0), (\"finite_float_nonstart\", (0.0, 1e308, 1e-308), 1e-308, 1), (\"decimal_nonstart\", (Decimal(0), Decimal(10), Decimal(\"0.1\")), Decimal(\"0.1\"), 1)]\n    for name, args, query, expected_index in cases:\n        for operation in (\"contains\", \"index\"):\n            if data.get(\"case_filter\") != [name, operation]:\n                continue\n            try:\n                instance = cls(*args)\n                value = (query in instance) if operation == \"contains\" else instance.index(query)\n                correct = (value is True) if operation == \"contains\" else (type(value) is int and value == expected_index)\n                rows.append({\"case\": name, \"operation\": operation, \"passed\": correct, \"value\": repr(value), \"expected_index\": expected_index})\n            except Exception as error:\n                rows.append({\"case\": name, \"operation\": operation, \"passed\": False, \"exception\": type(error).__name__, \"message\": str(error)})\ndate_cases = [(\"datetime_upper_bound\", (datetime.max - timedelta(days=1), datetime.max, timedelta(days=2))), (\"datetime_lower_bound\", (datetime.min + timedelta(days=1), datetime.min, -timedelta(days=2)))]\nfor name, args in date_cases:\n    for operation in (\"len\", \"first\"):\n        if data.get(\"case_filter\") != [name, operation]:\n            continue\n        try:\n            instance = cls(*args)\n            value = len(instance) if operation == \"len\" else instance[0]\n            correct = value == (1 if operation == \"len\" else args[0])\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": correct, \"value\": repr(value)})\n        except Exception as error:\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": False, \"exception\": type(error).__name__, \"message\": str(error)})\nnonmembers = [(\"datetime_upper_nonmember\", (datetime.max - timedelta(days=1), datetime.max, timedelta(days=2)), datetime.max - timedelta(hours=12)), (\"datetime_lower_nonmember\", (datetime.min + timedelta(days=1), datetime.min, -timedelta(days=2)), datetime.min + timedelta(hours=12))]\nfor name, args, query in nonmembers:\n    for operation in (\"contains\", \"index\"):\n        if data.get(\"case_filter\") != [name, operation]:\n            continue\n        try:\n            instance = cls(*args)\n        except Exception as error:\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": False, \"constructor_exception\": type(error).__name__})\n            continue\n        try:\n            value = query in instance if operation == \"contains\" else instance.index(query)\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": value is False if operation == \"contains\" else False, \"value\": repr(value)})\n        except Exception as error:\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": operation == \"index\" and isinstance(error, ValueError), \"exception\": type(error).__name__, \"message\": str(error)})\nprint(json.dumps(rows))\n`;\nconst python = path.join(root, \"venvs/more-itertools/bin/python\");\nconst support = path.join(root, \"validation/more-itertools-1247/checkout\");\nconst versions = [\n  { version: \"parent\", source: gitSource(\"2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10\") },\n  { version: \"upstream_reference\", source: gitSource(\"dc2664b4a7c66209485c9f5e359137bf4b365eb3\") },\n  ...trials.map((r) => {\n    const trial = path.dirname(r.result_file).replace(/\\/results\\/.+$/, \"\");\n    return { version: `${r.cell}-r${r.repetition}`, cell: r.cell, run: r.repetition,\n      source: fs.readFileSync(path.join(trial, \"runs\", r.task, `${r.cell}-r${r.repetition}`, \"more_itertools/more.py\"), \"utf8\") };\n  }),\n];\nconst results = versions.map(({ source, ...meta }) => {\n  const checks = [\n    ...[\"finite_float_huge_range\", \"decimal_precision_2\", \"finite_float_nonstart\", \"decimal_nonstart\"].flatMap((name) => [\"contains\", \"index\"].map((operation) => [name, operation])),\n    ...[\"datetime_upper_bound\", \"datetime_lower_bound\"].flatMap((name) => [\"len\", \"first\"].map((operation) => [name, operation])),\n    ...[\"datetime_upper_nonmember\", \"datetime_lower_nonmember\"].flatMap((name) => [\"contains\", \"index\"].map((operation) => [name, operation]))\n  ];\n  const cases = checks.map(([name, operation]) => {\n    const test = cp.spawnSync(python, [\"-B\", \"-c\", program], { input: JSON.stringify({ source, support, case_filter: [name, operation] }), encoding: \"utf8\", timeout: 10000,\n      env: { ...process.env, PYTHONDONTWRITEBYTECODE: \"1\" } });\n    if (test.error || test.status !== 0) return { case: name, operation, passed: false, exit: test.status,\n      timed_out: test.error?.code === \"ETIMEDOUT\", execution_error: String(test.error?.code || test.stderr || \"Nonzero probe exit\").slice(-800) };\n    const rows = JSON.parse(test.stdout);\n    if (rows.length !== 1) throw new Error(\"Expected exactly one quality probe outcome\");\n    return rows[0];\n  });\n  return { ...meta, source_sha256: crypto.createHash(\"sha256\").update(source).digest(\"hex\"), cases };\n});\nconst evidence = { kind: \"Sixteen boundary queries frozen before this benchmark; all eight prior queries retained; separate from original-suite scoring\", task: \"more-itertools-1247\",\n  protocol_version: 3, protocol_history: [\n    { version: 1, discovered_in: \"gpt-base-r1\", queries: \"Four float/Decimal contains/index checks\" },\n    { version: 2, discovered_in: \"gpt-cew-r1\", queries: \"Preserves v1 and adds four datetime upper/lower len/first checks\" },\n    { version: 3, discovered_in: \"582ab48 candidate date-boundary regression\", queries: \"Preserves all eight and adds nonstart float/Decimal members and datetime in-bounds nonmember queries, eight additional checks, before any final-round model\" },\n  ],\n  discovered_in: \"Prior rounds and failed 582ab48 attempt\", protocol: \"Same sixteen queries for parent, upstream reference, and all six numeric_range artifacts, first at the predeclared critical gate and again after the full round; no model rerun or checkout modification; every input frozen before this round\",\n  timeout_ms_per_case: 10000, execution_note: \"Same eight inputs and assertions; each query has its own child process so one hang cannot hide the remaining outcomes. Frozen before any measured model run.\",\n  python_program: program, controller_source: fs.readFileSync(__filename, \"utf8\"), results };\nfs.writeFileSync(path.join(root, \"quality-probes.json\"), JSON.stringify(evidence, null, 2));\nconsole.log(JSON.stringify(results.map((r) => ({ version: r.version, passed: r.cases.filter((c) => c.passed).length, total: r.cases.length }))));\n",
+  "results": [
+    {
+      "version": "parent",
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 0
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "expected_index": 0
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 0
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "expected_index": 0
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 1
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "index",
+          "passed": true,
+          "value": "1",
+          "expected_index": 1
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 1
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "index",
+          "passed": true,
+          "value": "1",
+          "expected_index": 1
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(1, 1, 2, 0, 0)"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "9999-12-31 11:59:59.999999 is not in numeric range"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0001-01-01 12:00:00 is not in numeric range"
+        }
+      ]
+    },
+    {
+      "version": "upstream_reference",
+      "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r1",
+      "cell": "gpt-cew",
+      "run": 1,
+      "source_sha256": "e037638924aa815ca2caddc49c5f4667c2b962c784fb19bd1def95341b93275f",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(1, 1, 2, 0, 0)"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "9999-12-31 11:59:59.999999 is not in numeric range"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0001-01-01 12:00:00 is not in numeric range"
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "source_sha256": "672621009291161cd0707ef43fe89ae524872969558936bbab30af352b87cae4",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 0
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "expected_index": 0
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 0
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "expected_index": 0
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 1
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "index",
+          "passed": true,
+          "value": "1",
+          "expected_index": 1
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 1
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "index",
+          "passed": true,
+          "value": "1",
+          "expected_index": 1
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(1, 1, 2, 0, 0)"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "9999-12-31 11:59:59.999999 is not in numeric range"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0001-01-01 12:00:00 is not in numeric range"
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r1",
+      "cell": "gpt-trim",
+      "run": 1,
+      "source_sha256": "566f96658f21234017e189fbef6e4acd845dbb5f98685030cb65e9e3b068ecd6",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 0
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "expected_index": 0
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 0
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "expected_index": 0
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 1
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "index",
+          "passed": true,
+          "value": "1",
+          "expected_index": 1
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 1
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "index",
+          "passed": true,
+          "value": "1",
+          "expected_index": 1
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(1, 1, 2, 0, 0)"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "9999-12-31 11:59:59.999999 is not in numeric range"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0001-01-01 12:00:00 is not in numeric range"
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r2",
+      "cell": "gpt-trim",
+      "run": 2,
+      "source_sha256": "183b90b05b52e6154014f781d1cda7458b72f0732f3d7053274e0f5fc834301f",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 0
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "expected_index": 0
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 0
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "expected_index": 0
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 1
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "index",
+          "passed": true,
+          "value": "1",
+          "expected_index": 1
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 1
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "index",
+          "passed": true,
+          "value": "1",
+          "expected_index": 1
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(1, 1, 2, 0, 0)"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "9999-12-31 11:59:59.999999 is not in numeric range"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0001-01-01 12:00:00 is not in numeric range"
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r2",
+      "cell": "gpt-cew",
+      "run": 2,
+      "source_sha256": "4cc6a3b24bbea47398a2ed60ee70d4c9fbba9316096d9a0daa31a9d436a5f821",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "source_sha256": "702a2777d1a3a4def1f9d443d4883370dbd91e9050e61a83487157eb4b07f6dc",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 0
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "expected_index": 0
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 0
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": true,
+          "value": "0",
+          "expected_index": 0
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 1
+        },
+        {
+          "case": "finite_float_nonstart",
+          "operation": "index",
+          "passed": true,
+          "value": "1",
+          "expected_index": 1
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "contains",
+          "passed": true,
+          "value": "True",
+          "expected_index": 1
+        },
+        {
+          "case": "decimal_nonstart",
+          "operation": "index",
+          "passed": true,
+          "value": "1",
+          "expected_index": 1
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(1, 1, 2, 0, 0)"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_upper_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "9999-12-31 11:59:59.999999 is not in numeric range"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "contains",
+          "passed": true,
+          "value": "False"
+        },
+        {
+          "case": "datetime_lower_nonmember",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0001-01-01 12:00:00 is not in numeric range"
+        }
+      ]
+    }
+  ]
+}

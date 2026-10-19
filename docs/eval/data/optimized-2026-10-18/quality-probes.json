@@ -1,0 +1,498 @@
+{
+  "kind": "Eight supplemental quality queries frozen before this benchmark; separate from original-suite scoring",
+  "task": "more-itertools-1247",
+  "protocol_version": 2,
+  "protocol_history": [
+    {
+      "version": 1,
+      "discovered_in": "gpt-base-r1",
+      "queries": "Four float/Decimal contains/index checks"
+    },
+    {
+      "version": 2,
+      "discovered_in": "gpt-cew-r1",
+      "queries": "Preserves v1 and adds four datetime upper/lower len/first checks"
+    }
+  ],
+  "discovered_in": "gpt-base-r1, then gpt-cew-r1",
+  "protocol": "Same eight queries for parent, upstream reference, and every completed numeric_range trial; no model rerun and no checkout modification; queries predeclared from the previous benchmark",
+  "python_program": "import json, sys\nfrom decimal import Decimal, localcontext\nfrom datetime import datetime, timedelta\ndata = json.load(sys.stdin)\nsys.path.insert(0, data[\"support\"])\nnamespace = {\"__name__\": \"more_itertools.more\", \"__package__\": \"more_itertools\", \"__file__\": \"<frozen-source>\"}\nexec(compile(data[\"source\"], \"<frozen-source>\", \"exec\"), namespace)\ncls = namespace[\"numeric_range\"]\nrows = []\nwith localcontext() as context:\n    context.prec = 2\n    cases = [(\"finite_float_huge_range\", (0.0, 1e308, 1e-308)), (\"decimal_precision_2\", (Decimal(0), Decimal(10), Decimal(\"0.1\")))]\n    for name, args in cases:\n        for operation in (\"contains\", \"index\"):\n            try:\n                instance = cls(*args)\n                value = (args[0] in instance) if operation == \"contains\" else instance.index(args[0])\n                correct = (value is True) if operation == \"contains\" else (type(value) is int and value == 0)\n                rows.append({\"case\": name, \"operation\": operation, \"passed\": correct, \"value\": repr(value)})\n            except Exception as error:\n                rows.append({\"case\": name, \"operation\": operation, \"passed\": False, \"exception\": type(error).__name__, \"message\": str(error)})\ndate_cases = [(\"datetime_upper_bound\", (datetime.max - timedelta(days=1), datetime.max, timedelta(days=2))), (\"datetime_lower_bound\", (datetime.min + timedelta(days=1), datetime.min, -timedelta(days=2)))]\nfor name, args in date_cases:\n    for operation in (\"len\", \"first\"):\n        try:\n            instance = cls(*args)\n            value = len(instance) if operation == \"len\" else instance[0]\n            correct = value == (1 if operation == \"len\" else args[0])\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": correct, \"value\": repr(value)})\n        except Exception as error:\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": False, \"exception\": type(error).__name__, \"message\": str(error)})\nprint(json.dumps(rows))\n",
+  "results": [
+    {
+      "version": "parent",
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": true,
+          "value": "True"
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": true,
+          "value": "0"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": true,
+          "value": "True"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": true,
+          "value": "0"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(1, 1, 2, 0, 0)"
+        }
+      ]
+    },
+    {
+      "version": "upstream_reference",
+      "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r1",
+      "cell": "gpt-cew",
+      "run": 1,
+      "source_sha256": "69f1b8dd9addaf4c365cdac70f75b9535b242ac36b3605b03eea87c4586d5ce8",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r1",
+      "cell": "gpt-trim",
+      "run": 1,
+      "source_sha256": "90b51c1e807e30a6120ae64d0d9e9563de5730ac3675bf08a9d8fcfa009787d8",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(1, 1, 2, 0, 0)"
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "source_sha256": "8814289000481a88306657c10745bff1cdcc51d27ca258efa5428bd758288cc6",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": true,
+          "value": "True"
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": true,
+          "value": "0"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": true,
+          "value": "True"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": true,
+          "value": "0"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(1, 1, 2, 0, 0)"
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "source_sha256": "89b3e8201d861c564afe9323fc5769185a11c5fedb14d8ab4116d5de4a85b24a",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": true,
+          "value": "True"
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": true,
+          "value": "0"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": true,
+          "value": "True"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": true,
+          "value": "0"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": true,
+          "value": "1"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": true,
+          "value": "datetime.datetime(1, 1, 2, 0, 0)"
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r2",
+      "cell": "gpt-trim",
+      "run": 2,
+      "source_sha256": "ef784612779c66b2c04ce2719161bedb2a2c727de42473a9a5f6751dce65f03c",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "cannot convert float infinity to integer"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": false,
+          "exception": "InvalidOperation",
+          "message": "[<class 'decimal.DivisionImpossible'>]"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r2",
+      "cell": "gpt-cew",
+      "run": 2,
+      "source_sha256": "b872e3d6d834864bef804e31f3a67998e7beb3c2f66342105f0e89011b2007d4",
+      "cases": [
+        {
+          "case": "finite_float_huge_range",
+          "operation": "contains",
+          "passed": true,
+          "value": "True"
+        },
+        {
+          "case": "finite_float_huge_range",
+          "operation": "index",
+          "passed": true,
+          "value": "0"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "contains",
+          "passed": true,
+          "value": "True"
+        },
+        {
+          "case": "decimal_precision_2",
+          "operation": "index",
+          "passed": true,
+          "value": "0"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_upper_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "len",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "case": "datetime_lower_bound",
+          "operation": "first",
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        }
+      ]
+    }
+  ]
+}

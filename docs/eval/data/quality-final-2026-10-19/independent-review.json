@@ -1,0 +1,150 @@
+{
+  "mode": "independent",
+  "reviewer": "/root/pr62_final_104_evidence_review",
+  "base": "44ff0a401d0c9a194c35f2dbfe21cbf7c08d7f2b",
+  "measured": "10403cf728fdb9247dbfa094a047f0d77c157e3c",
+  "reviewed_at": "2026-10-18T17:56:36.677Z",
+  "Standards": "PASS",
+  "artifact_Spec": "PASS within this batch and review coverage",
+  "evidence_integrity": "PASS",
+  "performance": "FAIL",
+  "overall_spec": "FAIL due performance requirement",
+  "remaining_artifact_Important": 0,
+  "performance_Important": 1,
+  "pinned_files": [
+    {
+      "path": "/private<BENCH_ROOT>/final-source.diff",
+      "sha256": "b5d29ae76b7771db13a671bdcee5a2553ea72afacc80c06bf81dd39340e6d2cc"
+    },
+    {
+      "path": "/private<BENCH_ROOT>/sources/optimized/rules/common/testing.md",
+      "sha256": "793dfe8b381dcfc85aa912a35b5f8d760fb3e7e971f5d05bfa837de1e67f0f54"
+    },
+    {
+      "path": "/private<BENCH_ROOT>/sources/optimized/skills/code-review/SKILL.md",
+      "sha256": "d9f2d88fc3323aa9eace0335c61f1d143ae996649889110685249937fae4e739"
+    },
+    {
+      "path": "/private<BENCH_ROOT>/sources/optimized/skills/using-superpowers/references/fast-path.md",
+      "sha256": "e6c190f936b489a6b2850091a5a31044ff150a8b074ac517041e450110b451cd"
+    },
+    {
+      "path": "/private<BENCH_ROOT>/sources/optimized/docs/eval/tools/run-trial.js",
+      "sha256": "99deae2fd88616645e89a03754b20594ab9e7f6e91bfccb0aff8dc62b48507cc"
+    },
+    {
+      "path": "/private<BENCH_ROOT>/sources/optimized/docs/eval/tools/run-trial.test.js",
+      "sha256": "e4aa68083487fdc0c5d95e66db154596eb533aaf6b439d31e41a9b8aa3fa12e8"
+    },
+    {
+      "path": "/private<BENCH_ROOT>/sources/optimized/docs/eval/tools/codex-usage.js",
+      "sha256": "c96e966575b7d1145a04196f173855c9e282640b253552ce5bd5c9a3cc7b2033"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/fast-path-quality-fix-2026-10-19.md",
+      "sha256": "438c84f5c25983882cc68cc804deb6e958c73f6559f3702aee188d104e6568c5"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/analysis.json",
+      "sha256": "87deee5bb872e3b152531b6e53447e477ec87da172be5c708cbdc6c900a3f027"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/context-probes.json",
+      "sha256": "c61ab10c9a0f2749d414ec30bb35c93ac0bd39d5e240988b0d0681927be6c93d"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/cost-probes.json",
+      "sha256": "fb89109ecec40e548f6d4426c8f5f8785da18f68b3d1e1137c4b6167f9ef63e5"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/critical-context-probes.json",
+      "sha256": "bda0694447e44749e0929d551189f4a6b7cc63b97c305cefb71a75b2700edee4"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/critical-cost-probes.json",
+      "sha256": "57a7b7166dc2175e23631ae3805b4d44ddeb8da267b7ac4f22dc06b83988845d"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/critical-quality-probes.json",
+      "sha256": "d8bb7210cf1ffb01b7d2942c6cd0230e8c22ab5b437605894798aba91a29d732"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/experiment.json",
+      "sha256": "c4c14ef978a5eaf29529416d0a7741476d412adb48c6ff17e2c9f17bd6d252dc"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/i18n-probes.json",
+      "sha256": "96ff8ae37ce705de8cf1e51dfcd6dc6779a81c0915dcc30e8b2df64e9908362c"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/quality-diagnosis.json",
+      "sha256": "37a97fb98db05194bdaad8fe971345c79b18f37a5d18a2effd5d6c070b9bef23"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/quality-probes.json",
+      "sha256": "56255a2ae986dfe86ec58cd04ceb77f41bfd6fd2404c22f3243f927cefbc7bd2"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/task-fixtures.json",
+      "sha256": "1c7a58c23e35880dea1962f5a89cea233118f2c01162d527366d2fab3f43f225"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/trace-diagnosis.json",
+      "sha256": "f53837f835537bc0169d4a9ae9783515e99c4e949069d0cf8b109204a63a020d"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/trials.csv",
+      "sha256": "2ec46e8b78184ff505b84f5297d91f7e740c6d161dddcf4da0a41a1ea26e3138"
+    },
+    {
+      "path": "<WORKTREE>/docs/eval/data/quality-final-2026-10-19/trials.jsonl",
+      "sha256": "d724e2104d8300ad3ae31a3bbb02e21ea64ba6026abbec778278fc2416ed2bfc"
+    }
+  ],
+  "audits": {
+    "trials": 42,
+    "junit_reports": 126,
+    "sessions": 44,
+    "unique_responses": 382,
+    "plaintext_commands": 530,
+    "full_template_rules_skills_files": [
+      77,
+      78,
+      78
+    ],
+    "trial_policy_file_comparisons": 3262,
+    "config_trust_only": 42,
+    "candidate_numeric_checks_each": 32,
+    "candidate_numeric_pass": [
+      32,
+      32
+    ],
+    "i18n_artifacts": 12,
+    "i18n_tests_passed_each": 118,
+    "i18n_skipped_each": 0,
+    "tests_modified": 0,
+    "new_suite_failures": 0,
+    "candidate_child_tokens": 858896
+  },
+  "summary": {
+    "main": {
+      "tokens": 3940240,
+      "mean_agent_s": 83.58571428571427
+    },
+    "previous44": {
+      "tokens": 3415176,
+      "mean_agent_s": 100.88571428571426
+    },
+    "candidate104": {
+      "tokens": 5109139,
+      "mean_agent_s": 128.40714285714287
+    }
+  },
+  "observations": [
+    "R2 repeated thousand-sample verification twice after test-program oracle failures, with source unchanged; reuse unaffected passed portions after correcting the failing check.",
+    "R1 child read three rules and two reviewer prompts separately; combine independently required reads once paths are known.",
+    "R1 generic rewrite required Decimal repairs; R2 preserved nonfloat paths. Supports genuine local-repair experiment, not causal proof."
+  ],
+  "limits": "No new models/artifact probes/tests;29CLI/43historicreplay validated separately. No otherhost/Pythonversion/production/remoteCI acceptance.",
+  "publication_amendment": "Replace pending marker only after fixed-packet review; original reviewed report hash preserved here. Metrics and model artifacts unchanged."
+}

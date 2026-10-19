@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "kind": "Collection and derived export/rendering only, original export failure preserved; not quality/speed acceptance",
+  "at": "2026-10-19T00:00:44.390Z",
+  "steps": [
+    {
+      "file": "write-report.cjs",
+      "exit": 0
+    },
+    {
+      "file": "make-review-package.cjs",
+      "exit": 0
+    }
+  ],
+  "new_model_or_probe_runs": 0
+}

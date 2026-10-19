@@ -1,0 +1,289 @@
+{
+  "kind": "第九版完整42次固定证据的独立只读审查",
+  "mode": "independent",
+  "mode_reason": "调用方明确要求独立审查，且存在反复的精度敏感兼容性验收失败。",
+  "reviewed_at_utc": "2026-10-18T21:59:16.299Z",
+  "base": "eb104fd2a0ec8c5f1e86d92a996982f8362a84be",
+  "measured_source": "1770cc0d0588a37b31a753965752b476abb0bc49",
+  "package": {
+    "path": "<BENCH_ROOT>/full-review-package.json",
+    "sha256": "2c603ed2840f69d05e3e501db8910625fbd82b0258e45bf4c28b8a71c8d27895"
+  },
+  "scope_source": "固定包requirements/review_scope/constraints、原先冻结protocol及包内resolved relevant_rules。",
+  "scope_boundary": "只审查第九版七份固定源文件、一项Spec条目差异和本轮42次实际数据；未读取第十版提案或之后workspace源码。历史预检与43-family重放只核对来源、输入哈希及既有审计，未重扫旧28JUnit。",
+  "overall_status": "FAIL",
+  "critical_findings": 0,
+  "important_findings": 1,
+  "new_important_findings_outside_predeclared46": 0,
+  "axes": {
+    "Standards": {
+      "status": "PASS",
+      "important": 0,
+      "findings": [],
+      "source_Spec": "PASS",
+      "basis": "相对eb104fd2仅既有Spec-evidence条目补足变更操作、操作数类型、调用方配置和合法短路的同路径证据要求，仍要求有界只读检查或报告缺口。必要审查、代表性边界、独立预期和Fast Path均保留；AGENTS三组逐字相同、增加0行。没有任务名、题目数值或异常答案注入。"
+    },
+    "ActualArtifactSpec": {
+      "status": "FAIL",
+      "important": 1,
+      "findings": [
+        {
+          "id": "SPEC-1",
+          "severity": "Important",
+          "title": "两份候选仍把原版合法 Decimal 非成员查询变为 FloatOperation 异常",
+          "requirement": "full-review-package.json requirements/review_scope；protocol/protocol.json quality_acceptance；rules/common/testing.md:48-53 要求保留原有合法局部查询的结果、异常及信号。",
+          "locations": [
+            {
+              "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/runs/more-itertools-1247/gpt-fixed-r1/more_itertools/more.py",
+              "start": 2455,
+              "end": 2460
+            },
+            {
+              "file": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/runs/more-itertools-1247/gpt-fixed-r2/more_itertools/more.py",
+              "start": 2449,
+              "end": 2455
+            }
+          ],
+          "trigger": {
+            "ascending": {
+              "range_arguments": [
+                "1",
+                "2",
+                "0.1"
+              ],
+              "query": "Decimal(0)"
+            },
+            "descending": {
+              "range_arguments": [
+                "1",
+                "0",
+                "-0.1"
+              ],
+              "query": "Decimal(2)"
+            },
+            "context": "构造范围后，在 localcontext 中设置 traps[FloatOperation]=True，分别执行 contains/index。",
+            "baseline": {
+              "contains": "False",
+              "index": "ValueError"
+            },
+            "candidate_r1": "0/4；四项均 FloatOperation",
+            "candidate_r2": "0/4；四项均 FloatOperation",
+            "controls": "父版和上游参考均4/4；同期上一候选两份均0/4；同期main R1为4/4、R2为0/4。"
+          },
+          "evidence": "两个 index 实现均先以 start + 0*float_step 把原整数起点提升为浮点，再与 Decimal 查询执行有序比较；原版能以整数起点合法短路。contains 仅捕获 ValueError，新增 FloatOperation 外泄。",
+          "impact": "候选两份原严格套件和原42项均通过，全部46项验收仍为0/2，整批适用冻结检查通过率12/14。用户要求的剩余质量修复未实现。",
+          "attribution": "实际产物相对库父版的兼容性回归；不据此推断本轮Spec措辞造成该回归，也不把同期上一候选视为质量等价对照。",
+          "smallest_correction": "保留浮点一致性修复与必要质量门，同时保留原版合法短路的结果和信号；在新的冻结产物中验证实际参数、查询类型及调用方配置的交互。",
+          "raw_evidence": {
+            "path": "<BENCH_ROOT>/compatibility-probes.json",
+            "sha256": "acdf3bcfea919fbcb7b21e2c4b5e5dd8b81c67b602014ebe70402f89319a8257"
+          },
+          "critical_evidence": {
+            "path": "<BENCH_ROOT>/critical-compatibility-probes.json",
+            "sha256": "9dd198f5d7caa4dd3f70cc8f677490c98812ffd444150d58a96ced13f68f5745"
+          }
+        }
+      ],
+      "strict_original_suites": "42/42；各组14/14",
+      "all_applicable_frozen_checks": [
+        {
+          "cell": "gpt-cew",
+          "strict": 14,
+          "all_applicable_frozen": 12,
+          "total": 14
+        },
+        {
+          "cell": "gpt-trim",
+          "strict": 14,
+          "all_applicable_frozen": 12,
+          "total": 14
+        },
+        {
+          "cell": "gpt-fixed",
+          "strict": 14,
+          "all_applicable_frozen": 12,
+          "total": 14
+        }
+      ],
+      "candidate_numeric_original42": "2/2",
+      "candidate_numeric_all46": "0/2",
+      "i18n": "12/12均通过；各组4/4",
+      "additional_new_behavioral_discoveries": 0
+    },
+    "EvidenceIntegrity": {
+      "status": "PASS",
+      "important": 0,
+      "findings": [],
+      "minor_observations": [
+        {
+          "severity": "Minor",
+          "kind": "report wording",
+          "location": {
+            "file": "/Users/xu/project/worktrees/cew-fast-path/docs/eval/fast-path-operation-evidence-2026-10-19.md",
+            "line": 69
+          },
+          "statement": "“具体passed/failed/skipped和资源哈希见翻译证据”中的“资源哈希”不够准确。",
+          "evidence": "i18n-probes.json 的每项实际记录有变更Python源文件哈希与JUnit哈希，没有编译翻译资源(.mo)的哈希字段；12份翻译测试实际通过。",
+          "smallest_correction": "把“资源哈希”改成“源文件与JUnit哈希”，或另列实际翻译资源哈希。此处不影响测试结果或质量/性能结论。"
+        }
+      ],
+      "basis": "固定包36项哈希、三份完整源archive、七份源文件、42份原始patch/receipt、126份本轮JUnit、47份原始会话及456个唯一响应、551项可见CommandExecution一致。全部原有case身份和跳过身份保留，当前JUnit均位于本次runner时间窗；严格分数与全部适用冻结检查重算一致。关键与最终46项程序、控制器和实质结果一致。",
+      "driver": "所有42模型正常完成收集后，按模型前声明的质量失败分支退出2(signal=null)。不是中止、缺36或模型超时。",
+      "environment": "模型前初次预检失败保留；成功预检与冻结均早于首个模型，原版正控制16/12/4及旧候选0/4负控制回读一致，不计作本轮质量。",
+      "source_verification": "8项源检查与当轮29项公开CLI回归日志记录通过；新生产包141项文件均匹配冻结源码和实际仅生产依赖安装，verify记录通过。",
+      "dependencies": "42份私有环境现有发行包与初始基线一致，仅main数值R1安装Ruff，与唯一变化receipt和实际可见安装命令一致。",
+      "configuration": "三份模板及42份实际HOME执行字段相同，只追加各自checkout trust；所有实际主/子上下文均gpt-6.1-sol/high、never及相同直接执行配置。"
+    },
+    "WholePerformance": {
+      "status": "FAIL",
+      "important": 0,
+      "findings": [
+        {
+          "kind": "required whole-batch gate not met",
+          "requirement": "冻结performance_acceptance要求整批主子会话输入加输出token总量及平均模型耗时同时低于main。",
+          "observed": {
+            "vs_main": {
+              "token_percent": 74.80298934846952,
+              "time_percent": 60.944865751178526
+            },
+            "vs_previous": {
+              "token_percent": 33.78764246671366,
+              "time_percent": 8.941453940066623
+            },
+            "whole_gate": "FAIL",
+            "driver_wall_clock_minutes": 38.75075
+          },
+          "impact": "两项均高于main，也均高于同期上一候选；数值/其余六题分组或较低中位数不能替代整批门。"
+        }
+      ],
+      "arms": [
+        {
+          "cell": "gpt-cew",
+          "n": 14,
+          "total_tokens": 3832407,
+          "raw_cli_total_tokens": 3832407,
+          "model_duration_mean_s": 69.7,
+          "model_duration_median_s": 52.849999999999994,
+          "runner_duration_mean_s": 79.75421428571427,
+          "unique_responses": 120,
+          "native_children": 0
+        },
+        {
+          "cell": "gpt-trim",
+          "n": 14,
+          "total_tokens": 5007310,
+          "raw_cli_total_tokens": 3984632,
+          "model_duration_mean_s": 102.97142857142855,
+          "model_duration_median_s": 53.45,
+          "runner_duration_mean_s": 113.3237142857143,
+          "unique_responses": 151,
+          "native_children": 2
+        },
+        {
+          "cell": "gpt-fixed",
+          "n": 14,
+          "total_tokens": 6699162,
+          "raw_cli_total_tokens": 4961875,
+          "model_duration_mean_s": 112.17857142857143,
+          "model_duration_median_s": 52.3,
+          "runner_duration_mean_s": 122.38235714285715,
+          "unique_responses": 185,
+          "native_children": 3
+        }
+      ],
+      "limitation": "同一开发集每题两次、位置未完全平衡、缓存与服务负载未控制；点估计不证明普遍/显著速度变化，也不构成因果消融。"
+    }
+  },
+  "context_diagnosis": {
+    "verified": true,
+    "initial_numeric_main_inputs": [
+      {
+        "trial": "more-itertools-1247--gpt-cew--r1",
+        "input": 15943
+      },
+      {
+        "trial": "more-itertools-1247--gpt-cew--r2",
+        "input": 15943
+      },
+      {
+        "trial": "more-itertools-1247--gpt-fixed--r1",
+        "input": 15937
+      },
+      {
+        "trial": "more-itertools-1247--gpt-fixed--r2",
+        "input": 15937
+      },
+      {
+        "trial": "more-itertools-1247--gpt-trim--r1",
+        "input": 15945
+      },
+      {
+        "trial": "more-itertools-1247--gpt-trim--r2",
+        "input": 15945
+      }
+    ],
+    "main_numeric_unique_responses": 23,
+    "candidate_numeric_unique_responses": 94,
+    "candidate_numeric_parent_tokens": 2445552,
+    "candidate_numeric_review_tokens": 1580167,
+    "candidate_review_share_percent": 39.25179576617245,
+    "candidate_both_main_and_review_read_new_Spec": true,
+    "all_four_numeric_candidate_previous_review_spawns_fork_turns": "none",
+    "interpretation": "报告第16行的94vs23、39.3%及fresh继承边界准确。原始可见命令确实在Decimal原精确路径开启全部信号，也确实在默认配置检查浮点路径；未覆盖两者在新增比较上的交互。成本分布不能证明可删除必要审查，原报告已明确这一限制。",
+    "closed_R2_observation": "冻结记录明确为静态诊断、当时等待统一46项结果；不是新增行为探针。本审查未追加或重复任何行为探针。"
+  },
+  "audit_counts": {
+    "fixed_package_hashes": 36,
+    "trials": 42,
+    "patches": 42,
+    "receipts": 42,
+    "junit": 126,
+    "junit_testcase_elements": 54066,
+    "session_families": 42,
+    "raw_response_records": 456,
+    "duplicate_response_copies": 0,
+    "sessions": 47,
+    "descendants": 5,
+    "unique_responses": 456,
+    "plaintext_commands": 551,
+    "numeric_actual_checks_per_stage": 368,
+    "i18n": 12,
+    "production_files": 141,
+    "all_raw_session_cumulative_totals_matched": 47,
+    "conflicting_response_ids": 0,
+    "original_case_identity_preserved_trials": 42,
+    "current_JUnit_timestamp_checks": 126,
+    "private_dependency_states": 42,
+    "source_archives": 3,
+    "source_files": 7,
+    "fixture_patches": 14,
+    "source_checks": 8,
+    "public_CLI_regressions": 29,
+    "historical_replay_reused": 43,
+    "old_prevalidation_JUnit_reparsed": 0,
+    "checks_asserted": 5226,
+    "failed_audit_assertions": 0,
+    "hash_comparisons": 631
+  },
+  "provenance": {
+    "original_review_sha256": "c44274cefeed11fca125e6ffd5451659f7cd7a5b5454fd785817e7e8a1fcb308",
+    "fixed_package_sha256": "2c603ed2840f69d05e3e501db8910625fbd82b0258e45bf4c28b8a71c8d27895",
+    "note": "Original independent full42 review retained privately. Only benchmark-root paths normalized and overallFAIL added. Original model and predeclared46 probe outputs unchanged; source review never substitutes actual quality or performance acceptance."
+  },
+  "checks_not_run": [
+    "本审查未启动模型、测试、外部行为检查或重复46项探针；仅Node.js审计并读取只读Git对象。",
+    "未检查隐藏推理、认证值或其他版本workspace源码；未发送外部消息、修改源码/原始证据、合并或发布。",
+    "未重新运行历史7题预检、43-family重放或扫描旧28JUnit；按已验证来源及既有审计复用。",
+    "实时GitHub状态及其他宿主、Python版本、生产使用不在固定包审查范围。"
+  ],
+  "writes": [
+    "full-independent-audit.cjs",
+    "full-independent-audit.json",
+    "full-independent-supplement.cjs",
+    "full-independent-supplement.json",
+    "full-independent-review.json"
+  ],
+  "memory_used": false,
+  "overall": "FAIL",
+  "status": "FAIL"
+}

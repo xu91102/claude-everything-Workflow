@@ -1,0 +1,18 @@
+{
+  "at": "2026-10-18T23:59:34.192Z",
+  "kind": "Actual failed capacity attempt has exact empty patch and no source edits; no model/probe reruns",
+  "receipt": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/result.json",
+  "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "model_exit": 1,
+  "resolved": false,
+  "diff_files": [],
+  "ordinary": {
+    "exit": 128,
+    "stderr": "error: No valid patches in input (allow with \"--allow-empty\")\n"
+  },
+  "allow_empty": {
+    "exit": 0,
+    "stderr": ""
+  },
+  "original_model_or_patch_changed": false
+}

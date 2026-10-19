@@ -12,6 +12,14 @@ Own routing and continuation. Skills return outcomes here instead of selecting o
 用于工程交付（实现、调试、测试、审查）及用户明确请求的工程工作流，并接续这些流程的返回结果。
 普通问答、翻译、总结和一般资料检索直接处理；复杂度本身不触发本路由。
 
+## Micro Task Fast Path
+
+用户未明确指定其他流程，且单仓库、预计 ≤2 个文件、已有可运行回归测试、按既有契约修复时，
+直接按 [Fast Path](references/fast-path.md) 执行；修复公开函数的既有行为不等于改变公共契约。
+不涉及鉴权、数据迁移或不可逆副作用才适用；其余继续 Routing。Git 隔离、安全、授权、审查和项目质量门始终生效。
+
+命中该引用的升级条件时，回到 Routing 选择入口，只补充当前决策需要的步骤。
+
 ## Priority
 
 User instructions, `AGENTS.md`, `CLAUDE.md`, and repository rules take precedence over Skills,
@@ -56,7 +64,7 @@ Task arrives
   -> explicit harness audit?                       -> agents/harness-optimizer.md
   -> explicit architecture-health audit?           -> skills/improve-codebase-architecture/SKILL.md
   -> merge or rebase conflict?                     -> skills/resolving-merge-conflicts/SKILL.md
-  -> reported bug or unexplained/repeated failure? -> skills/systematic-debugging/SKILL.md
+  -> unexplained failure, or same failure twice?    -> skills/systematic-debugging/SKILL.md
   -> discoverable fact?                            -> inspect it; do not ask
   -> external engineering fact or documentation question? -> inspect primary sources directly; cite the answer
   -> explicit prototype or runnable design question? -> skills/prototype/SKILL.md
@@ -68,7 +76,8 @@ Task arrives
        -> independent frontier tickets with no overlapping write surface?
                                                      -> skills/subagent-driven-development/SKILL.md
        -> otherwise                                 -> skills/implement/SKILL.md
-  -> behavior change with a test path?             -> test-driven-development
+  -> behavior change without clear acceptance, or needs new tests?
+                                                     -> test-driven-development
   -> new feature or other Git-rule isolation need? -> rules/05-git-workflow.md
   -> completion, fixed, or ready claim?            -> rules/common/testing.md
   -> skill discovery or install request?           -> use available host tooling for the explicit request

@@ -1,0 +1,429 @@
+{
+ "cells": [
+  "gpt-base",
+  "gpt-cew",
+  "gpt-fixed"
+ ],
+ "comparisons": [
+  {
+   "arm": "gpt-fixed",
+   "ref": "gpt-cew",
+   "metric": "total_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.0516963689442849,
+   "median_ratio": 0.9854199845311182,
+   "min_ratio": 0.5658880797314068,
+   "max_ratio": 1.526834780259482,
+   "better_pairs": 8,
+   "worse_pairs": 6,
+   "task_mean_ratio_geo": 1.044496959319346,
+   "task_clustered_ci95": [
+    0.9607721583925118,
+    1.1414625129148555
+   ],
+   "sign_test_p": 0.79052734375,
+   "sign_test_pos_neg": [
+    6,
+    8
+   ],
+   "signflip_p_pairs": 0.8790283203125,
+   "signflip_p_tasks": 0.390625,
+   "sd_log_tasks": 0.1263922202964491,
+   "n_for_10pct_80power": 14,
+   "n_for_5pct_80power": 53
+  },
+  {
+   "arm": "gpt-fixed",
+   "ref": "gpt-cew",
+   "metric": "input_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.0513751700408966,
+   "median_ratio": 0.9848353151771787,
+   "min_ratio": 0.564697991796108,
+   "max_ratio": 1.5220624001111807,
+   "better_pairs": 8,
+   "worse_pairs": 6,
+   "task_mean_ratio_geo": 1.0440755545498932,
+   "task_clustered_ci95": [
+    0.9595936652990786,
+    1.1408961246439864
+   ],
+   "sign_test_p": 0.79052734375,
+   "sign_test_pos_neg": [
+    6,
+    8
+   ],
+   "signflip_p_pairs": 0.8861083984375,
+   "signflip_p_tasks": 0.390625,
+   "sd_log_tasks": 0.12721473890440163,
+   "n_for_10pct_80power": 14,
+   "n_for_5pct_80power": 54
+  },
+  {
+   "arm": "gpt-fixed",
+   "ref": "gpt-cew",
+   "metric": "uncached_input_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.015674914529183,
+   "median_ratio": 0.9398723973556053,
+   "min_ratio": 0.6398535461032014,
+   "max_ratio": 1.8629666834086724,
+   "better_pairs": 10,
+   "worse_pairs": 4,
+   "task_mean_ratio_geo": 0.9869318187002655,
+   "task_clustered_ci95": [
+    0.8541151091157775,
+    1.1938718894217155
+   ],
+   "sign_test_p": 0.1795654296875,
+   "sign_test_pos_neg": [
+    4,
+    10
+   ],
+   "signflip_p_pairs": 0.7333984375,
+   "signflip_p_tasks": 0.90625,
+   "sd_log_tasks": 0.24736476873412813,
+   "n_for_10pct_80power": 53,
+   "n_for_5pct_80power": 202
+  },
+  {
+   "arm": "gpt-fixed",
+   "ref": "gpt-cew",
+   "metric": "output_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.0911394803620793,
+   "median_ratio": 1.0549422722603947,
+   "min_ratio": 0.6348867037195383,
+   "max_ratio": 1.9006633781255315,
+   "better_pairs": 5,
+   "worse_pairs": 9,
+   "task_mean_ratio_geo": 1.0559648273940252,
+   "task_clustered_ci95": [
+    0.8768049529062214,
+    1.2782763952813583
+   ],
+   "sign_test_p": 0.4239501953125,
+   "sign_test_pos_neg": [
+    9,
+    5
+   ],
+   "signflip_p_pairs": 0.6551513671875,
+   "signflip_p_tasks": 0.625,
+   "sd_log_tasks": 0.2757399432782696,
+   "n_for_10pct_80power": 66,
+   "n_for_5pct_80power": 251
+  },
+  {
+   "arm": "gpt-fixed",
+   "ref": "gpt-cew",
+   "metric": "agent_duration_s",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.088101889280901,
+   "median_ratio": 1.101203886635934,
+   "min_ratio": 0.7219193020719739,
+   "max_ratio": 1.4541484716157205,
+   "better_pairs": 4,
+   "worse_pairs": 10,
+   "task_mean_ratio_geo": 1.080041589409679,
+   "task_clustered_ci95": [
+    0.98959390993674,
+    1.1853063935718524
+   ],
+   "sign_test_p": 0.1795654296875,
+   "sign_test_pos_neg": [
+    10,
+    4
+   ],
+   "signflip_p_pairs": 0.251953125,
+   "signflip_p_tasks": 0.171875,
+   "sd_log_tasks": 0.1306361936574674,
+   "n_for_10pct_80power": 15,
+   "n_for_5pct_80power": 57
+  },
+  {
+   "arm": "gpt-fixed",
+   "ref": "gpt-base",
+   "metric": "total_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.669031328546779,
+   "median_ratio": 1.6211685303003136,
+   "min_ratio": 0.8273405579504779,
+   "max_ratio": 2.911936606317621,
+   "better_pairs": 1,
+   "worse_pairs": 13,
+   "task_mean_ratio_geo": 1.6306645913146494,
+   "task_clustered_ci95": [
+    1.379627771646397,
+    1.9089287655183955
+   ],
+   "sign_test_p": 0.0018310546875,
+   "sign_test_pos_neg": [
+    13,
+    1
+   ],
+   "signflip_p_pairs": 0.0003662109375,
+   "signflip_p_tasks": 0.015625,
+   "sd_log_tasks": 0.2376721768621843,
+   "n_for_10pct_80power": 49,
+   "n_for_5pct_80power": 187
+  },
+  {
+   "arm": "gpt-fixed",
+   "ref": "gpt-base",
+   "metric": "input_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.6711339794085773,
+   "median_ratio": 1.618025569746788,
+   "min_ratio": 0.823050223135227,
+   "max_ratio": 2.912207192120247,
+   "better_pairs": 1,
+   "worse_pairs": 13,
+   "task_mean_ratio_geo": 1.631660204112289,
+   "task_clustered_ci95": [
+    1.3767768907651103,
+    1.9142847354621833
+   ],
+   "sign_test_p": 0.0018310546875,
+   "sign_test_pos_neg": [
+    13,
+    1
+   ],
+   "signflip_p_pairs": 0.0003662109375,
+   "signflip_p_tasks": 0.015625,
+   "sd_log_tasks": 0.2408971777528074,
+   "n_for_10pct_80power": 51,
+   "n_for_5pct_80power": 192
+  },
+  {
+   "arm": "gpt-fixed",
+   "ref": "gpt-base",
+   "metric": "uncached_input_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.4358320322691864,
+   "median_ratio": 1.2370379502245332,
+   "min_ratio": 0.8077744553609568,
+   "max_ratio": 2.7102257810448935,
+   "better_pairs": 2,
+   "worse_pairs": 12,
+   "task_mean_ratio_geo": 1.3866765320544845,
+   "task_clustered_ci95": [
+    1.17069170746839,
+    1.6956127405209116
+   ],
+   "sign_test_p": 0.012939453125,
+   "sign_test_pos_neg": [
+    12,
+    2
+   ],
+   "signflip_p_pairs": 0.00634765625,
+   "signflip_p_tasks": 0.015625,
+   "sd_log_tasks": 0.27713993666225645,
+   "n_for_10pct_80power": 67,
+   "n_for_5pct_80power": 253
+  },
+  {
+   "arm": "gpt-fixed",
+   "ref": "gpt-base",
+   "metric": "output_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.732651164923876,
+   "median_ratio": 1.5782814841791213,
+   "min_ratio": 1.3557887610020312,
+   "max_ratio": 2.8650887573964496,
+   "better_pairs": 0,
+   "worse_pairs": 14,
+   "task_mean_ratio_geo": 1.6970864111444117,
+   "task_clustered_ci95": [
+    1.4719749801148905,
+    1.9821664964663006
+   ],
+   "sign_test_p": 0.0001220703125,
+   "sign_test_pos_neg": [
+    14,
+    0
+   ],
+   "signflip_p_pairs": 0.0001220703125,
+   "signflip_p_tasks": 0.015625,
+   "sd_log_tasks": 0.2172105487191303,
+   "n_for_10pct_80power": 41,
+   "n_for_5pct_80power": 156
+  },
+  {
+   "arm": "gpt-fixed",
+   "ref": "gpt-base",
+   "metric": "agent_duration_s",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.420354327226382,
+   "median_ratio": 1.3730857879810061,
+   "min_ratio": 0.9332023575638507,
+   "max_ratio": 2.607456140350877,
+   "better_pairs": 1,
+   "worse_pairs": 13,
+   "task_mean_ratio_geo": 1.3998590866758271,
+   "task_clustered_ci95": [
+    1.2424391745722545,
+    1.5904696028621081
+   ],
+   "sign_test_p": 0.0018310546875,
+   "sign_test_pos_neg": [
+    13,
+    1
+   ],
+   "signflip_p_pairs": 0.0003662109375,
+   "signflip_p_tasks": 0.015625,
+   "sd_log_tasks": 0.1822505207345909,
+   "n_for_10pct_80power": 29,
+   "n_for_5pct_80power": 110
+  },
+  {
+   "arm": "gpt-cew",
+   "ref": "gpt-base",
+   "metric": "total_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.6075914651626866,
+   "median_ratio": 1.6415426063959462,
+   "min_ratio": 0.9273329118689577,
+   "max_ratio": 2.410467781678453,
+   "better_pairs": 1,
+   "worse_pairs": 13,
+   "task_mean_ratio_geo": 1.5850539525568645,
+   "task_clustered_ci95": [
+    1.396418318641174,
+    1.796220389718233
+   ],
+   "sign_test_p": 0.0018310546875,
+   "sign_test_pos_neg": [
+    13,
+    1
+   ],
+   "signflip_p_pairs": 0.000244140625,
+   "signflip_p_tasks": 0.015625,
+   "sd_log_tasks": 0.1826116722961409,
+   "n_for_10pct_80power": 29,
+   "n_for_5pct_80power": 110
+  },
+  {
+   "arm": "gpt-cew",
+   "ref": "gpt-base",
+   "metric": "input_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.610184360311203,
+   "median_ratio": 1.6395512657490923,
+   "min_ratio": 0.9255970299016657,
+   "max_ratio": 2.445060018467221,
+   "better_pairs": 1,
+   "worse_pairs": 13,
+   "task_mean_ratio_geo": 1.586495190878511,
+   "task_clustered_ci95": [
+    1.3938437098774084,
+    1.8043169132577273
+   ],
+   "sign_test_p": 0.0018310546875,
+   "sign_test_pos_neg": [
+    13,
+    1
+   ],
+   "signflip_p_pairs": 0.000244140625,
+   "signflip_p_tasks": 0.015625,
+   "sd_log_tasks": 0.1867520821121539,
+   "n_for_10pct_80power": 31,
+   "n_for_5pct_80power": 115
+  },
+  {
+   "arm": "gpt-cew",
+   "ref": "gpt-base",
+   "metric": "uncached_input_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.4120856754846152,
+   "median_ratio": 1.3376502337835396,
+   "min_ratio": 1.0287988389759406,
+   "max_ratio": 2.202020447315379,
+   "better_pairs": 0,
+   "worse_pairs": 14,
+   "task_mean_ratio_geo": 1.4040498060425142,
+   "task_clustered_ci95": [
+    1.2959032424783885,
+    1.5169941701560454
+   ],
+   "sign_test_p": 0.0001220703125,
+   "sign_test_pos_neg": [
+    14,
+    0
+   ],
+   "signflip_p_pairs": 0.0001220703125,
+   "signflip_p_tasks": 0.015625,
+   "sd_log_tasks": 0.11569471424543905,
+   "n_for_10pct_80power": 12,
+   "n_for_5pct_80power": 45
+  },
+  {
+   "arm": "gpt-cew",
+   "ref": "gpt-base",
+   "metric": "output_tokens",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.7595847971328928,
+   "median_ratio": 1.6734225173322916,
+   "min_ratio": 0.718440669681046,
+   "max_ratio": 3.808284023668639,
+   "better_pairs": 2,
+   "worse_pairs": 12,
+   "task_mean_ratio_geo": 1.6412412165438086,
+   "task_clustered_ci95": [
+    1.23470971298891,
+    2.1826132757558145
+   ],
+   "sign_test_p": 0.012939453125,
+   "sign_test_pos_neg": [
+    12,
+    2
+   ],
+   "signflip_p_pairs": 0.001220703125,
+   "signflip_p_tasks": 0.03125,
+   "sd_log_tasks": 0.4032000640849778,
+   "n_for_10pct_80power": 141,
+   "n_for_5pct_80power": 536
+  },
+  {
+   "arm": "gpt-cew",
+   "ref": "gpt-base",
+   "metric": "agent_duration_s",
+   "n_pairs": 14,
+   "n_tasks": 7,
+   "mean_ratio": 1.3270139287941662,
+   "median_ratio": 1.2640476312507474,
+   "min_ratio": 0.9135285913528591,
+   "max_ratio": 2.3289473684210527,
+   "better_pairs": 2,
+   "worse_pairs": 12,
+   "task_mean_ratio_geo": 1.2988642303649887,
+   "task_clustered_ci95": [
+    1.1219763333519226,
+    1.5146616630985779
+   ],
+   "sign_test_p": 0.012939453125,
+   "sign_test_pos_neg": [
+    12,
+    2
+   ],
+   "signflip_p_pairs": 0.0010986328125,
+   "signflip_p_tasks": 0.03125,
+   "sd_log_tasks": 0.22143923662903495,
+   "n_for_10pct_80power": 43,
+   "n_for_5pct_80power": 162
+  }
+ ]
+}

@@ -1,0 +1,582 @@
+{
+  "started_at": "2026-10-18T09:20:45.353Z",
+  "candidate_sha": "6238192c244f7c719934c266ef8e3991a397ae78",
+  "main_sha": "e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5",
+  "previous_pr_sha": "704ef6fdb589637468985f835b0f50e456490d40",
+  "arms": {
+    "gpt-cew": "main CEW",
+    "gpt-trim": "previous PR #62",
+    "gpt-fixed": "optimized PR #62"
+  },
+  "quality_protocol_sha256": "019019d64755cc029a71329485b9883ab94b6fd7832dd277f238b9a528877b7e",
+  "benchmark_driver_sha256": "6949820903ff2546a485886ed400da68b8a89a0eddaeff88d1b97b3a02a0fac1",
+  "runner_sha256": "8071d48f1f679ea5b5e362ba5cf42a77becba85c36f9f5e1093a5f008007f53c",
+  "manifest_sha256": "9dd001e86d4815b62f5fef0e5776414122d2190fc69555f96c31425f4d30cd6e",
+  "cli": "codex-cli 0.160.1",
+  "node": "v22.23.2",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "timeout_s": 720,
+  "concurrency": 2,
+  "trials_planned": 42,
+  "plan": [
+    {
+      "task": "slugify-200",
+      "repetition": 1,
+      "order": [
+        "gpt-cew",
+        "gpt-trim",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "slugify-194",
+      "repetition": 1,
+      "order": [
+        "gpt-trim",
+        "gpt-fixed",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "humanize-346",
+      "repetition": 1,
+      "order": [
+        "gpt-fixed",
+        "gpt-cew",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "humanize-381",
+      "repetition": 1,
+      "order": [
+        "gpt-cew",
+        "gpt-trim",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "more-itertools-1284",
+      "repetition": 1,
+      "order": [
+        "gpt-trim",
+        "gpt-fixed",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repetition": 1,
+      "order": [
+        "gpt-fixed",
+        "gpt-cew",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "more-itertools-1247",
+      "repetition": 1,
+      "order": [
+        "gpt-cew",
+        "gpt-trim",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "slugify-200",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-trim",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "slugify-194",
+      "repetition": 2,
+      "order": [
+        "gpt-cew",
+        "gpt-fixed",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "humanize-346",
+      "repetition": 2,
+      "order": [
+        "gpt-trim",
+        "gpt-cew",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "humanize-381",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-trim",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "more-itertools-1284",
+      "repetition": 2,
+      "order": [
+        "gpt-cew",
+        "gpt-fixed",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repetition": 2,
+      "order": [
+        "gpt-trim",
+        "gpt-cew",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "more-itertools-1247",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-trim",
+        "gpt-cew"
+      ]
+    }
+  ],
+  "quality_protocol_frozen_at": "2026-10-18 before all model trials",
+  "protocol_change": "Same seven tasks, two repetitions and two concurrent task blocks. Native control replaced by previous PR arm to compare old/new concurrently. All other prompt/model/strict-grading/isolation settings preserved.",
+  "isolation": "Fresh checkout, HOME, Codex state, and private virtualenv per trial; reference refs removed; same provisioned auth and model config in every arm.",
+  "fixture_note": "Same source fix and parent as upstream 7f4dcf8; replaces internal _lazy_sha1 import with digest behavior and adds subprocess import/sign/unsign without hashlib.sha1.",
+  "finished_at": "2026-10-18T09:59:56.440Z",
+  "end_runner_sha256": "8071d48f1f679ea5b5e362ba5cf42a77becba85c36f9f5e1093a5f008007f53c",
+  "end_manifest_sha256": "9dd001e86d4815b62f5fef0e5776414122d2190fc69555f96c31425f4d30cd6e",
+  "predeclared_protocol": {
+    "frozen_at": "2026-10-18T09:20:45.329Z",
+    "tasks": [
+      {
+        "id": "slugify-200",
+        "repo": "python-slugify",
+        "parent": "c442cd4cb61763c85b078d6ea83b5959c3ff364a",
+        "commit": "8f9a550a906701412c8fc93e731582098f2caee2",
+        "test_files": [
+          "tests/test_release.py"
+        ],
+        "issue": "Avoid trailing post-replacement delimiters in modern hard cuts (#200)"
+      },
+      {
+        "id": "slugify-194",
+        "repo": "python-slugify",
+        "parent": "548b14fab321ae9bfcb6db7fd990f6ddd7d3192b",
+        "commit": "2f23599bfb2efe4ceecfad64997fda0a2c1f9f0d",
+        "test_files": [
+          "test_add_uppercase_error.py"
+        ],
+        "issue": "Fix add_uppercase_char to leave input unchanged on error (#194)"
+      },
+      {
+        "id": "humanize-346",
+        "repo": "humanize",
+        "parent": "f971127ce7e7770d3ff5be05cfc484bdf9302e04",
+        "commit": "ca892b368a535a79cc5e2181d052245b94fd6652",
+        "test_files": [
+          "tests/test_number.py"
+        ],
+        "issue": "Fix intword() rounding carry for very large numbers (#346)"
+      },
+      {
+        "id": "humanize-381",
+        "repo": "humanize",
+        "parent": "bada0f88b4d115b96d94db1fe73b20579e84fc14",
+        "commit": "ffdf407fdfe1a5738159b989eb2df190ed780448",
+        "test_files": [
+          "tests/test_lists.py"
+        ],
+        "issue": "Support general iterables in natural_list (#381)"
+      },
+      {
+        "id": "more-itertools-1284",
+        "repo": "more-itertools",
+        "parent": "b2f3aff7633057d234ec9186c18a53f4df306d08",
+        "commit": "2b8d5cddce4ea01f88a973551cd50479cf5fa45f",
+        "test_files": [
+          "tests/test_more.py"
+        ],
+        "issue": "Issue 1284: don't let a bucket lookup invent a key"
+      },
+      {
+        "id": "itsdangerous-sha1",
+        "repo": "itsdangerous",
+        "parent": "93ae366874bbd4f69d90495c45b2cd336387496c",
+        "commit": "50c3c72e4a876d68e60670977ac5a46b074bf293",
+        "test_files": [
+          "tests/test_itsdangerous/test_serializer.py"
+        ],
+        "issue": "access sha1 lazily"
+      },
+      {
+        "id": "more-itertools-1247",
+        "repo": "more-itertools",
+        "parent": "2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10",
+        "commit": "dc2664b4a7c66209485c9f5e359137bf4b365eb3",
+        "test_files": [
+          "tests/test_more.py"
+        ],
+        "issue": "Issue 1247: Keep numeric_range consistent with the items it produces\n\nnumeric_range produces its items by repeated multiplication, but derived len(), __contains__ and index() from division by the step. With floats the two disagree, so a range could report a length that did not match what it yielded, and could deny membership to its own items."
+      }
+    ],
+    "arms": [
+      {
+        "cell": "gpt-cew",
+        "home": "cew-home",
+        "version": "main",
+        "sha": "e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5",
+        "archive_sha256": "1f71595799bf66629f560a46a0d33096e90937e9981fa8ebb5701d35e07e4f80",
+        "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+        "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd",
+        "policy_files": [
+          {
+            "path": "rules/common/testing.md",
+            "sha256": "e349934f4e97c2576a68ce3d123a52471d877612e2e7967c841c0c4164560b4f"
+          },
+          {
+            "path": "skills/using-superpowers/SKILL.md",
+            "sha256": "294cf51d32aabd143bbae2b401d5b7f48d883336d1076ef2ba00af922c3e2faf"
+          }
+        ]
+      },
+      {
+        "cell": "gpt-trim",
+        "home": "cew-trim",
+        "version": "previous-pr",
+        "sha": "704ef6fdb589637468985f835b0f50e456490d40",
+        "archive_sha256": "52dea685b04ca46895fd351975d3585423d4e1353615af753209d7d8e48dc170",
+        "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+        "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd",
+        "policy_files": [
+          {
+            "path": "rules/common/testing.md",
+            "sha256": "72f4ab2f45acb22ea2e7b78da2f5deb92106daacc17360114fa91f69d98f766a"
+          },
+          {
+            "path": "skills/using-superpowers/SKILL.md",
+            "sha256": "3fe492e1560b3a71ffc302032c3dbc34a10eb88cfa1d6cd1beecefdf31569e6c"
+          },
+          {
+            "path": "skills/using-superpowers/references/fast-path.md",
+            "sha256": "f4b076b4e02202a243481246aa8b1fbf3d6e1b53baf629c60a29038485e2eeb9"
+          }
+        ]
+      },
+      {
+        "cell": "gpt-fixed",
+        "home": "cew-fixed",
+        "version": "optimized",
+        "sha": "6238192c244f7c719934c266ef8e3991a397ae78",
+        "archive_sha256": "ebfef1e036b553dd8e71077c0d9d6ebb1cd0cbcc7091273c8723cbfb523810e3",
+        "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+        "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd",
+        "policy_files": [
+          {
+            "path": "rules/common/testing.md",
+            "sha256": "8c91beb7d82524738742c4dd9c508cc44bec53a2d7f04a24005904a70ca380ac"
+          },
+          {
+            "path": "skills/using-superpowers/SKILL.md",
+            "sha256": "27d1fffd1f6f21aac2f95fc092cf2b3598c1ffcaef5ae1f858614487bbcf9929"
+          },
+          {
+            "path": "skills/using-superpowers/references/fast-path.md",
+            "sha256": "77d33b28bc70ef7a6e9a27f3adbf9d40d747a72df98d70294491e0d0046a5398"
+          }
+        ]
+      }
+    ],
+    "repetitions": 2,
+    "concurrency": 2,
+    "timeout_s": 720,
+    "strict_grader": "Unchanged complete baseline/target/full suite grading from previous round",
+    "quality": "All eight previously discovered boundary queries applied uniformly to all six numeric_range artifacts; same task prompt, query details not added to model prompts",
+    "quality_protocol_sha256": "019019d64755cc029a71329485b9883ab94b6fd7832dd277f238b9a528877b7e",
+    "decisions": "Retain all scheduled outcomes; no model reruns; quality-qualified is original-suite resolved AND no observed supplemental regression AND independent artifact review with no important findings; unused native control replaced by previous PR arm for direct same-window old/new comparison"
+  },
+  "installed_sources": [
+    {
+      "cell": "gpt-cew",
+      "home": "cew-home",
+      "version": "main",
+      "sha": "e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5",
+      "archive_sha256": "1f71595799bf66629f560a46a0d33096e90937e9981fa8ebb5701d35e07e4f80",
+      "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+      "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd",
+      "policy_files": [
+        {
+          "path": "rules/common/testing.md",
+          "sha256": "e349934f4e97c2576a68ce3d123a52471d877612e2e7967c841c0c4164560b4f"
+        },
+        {
+          "path": "skills/using-superpowers/SKILL.md",
+          "sha256": "294cf51d32aabd143bbae2b401d5b7f48d883336d1076ef2ba00af922c3e2faf"
+        }
+      ]
+    },
+    {
+      "cell": "gpt-trim",
+      "home": "cew-trim",
+      "version": "previous-pr",
+      "sha": "704ef6fdb589637468985f835b0f50e456490d40",
+      "archive_sha256": "52dea685b04ca46895fd351975d3585423d4e1353615af753209d7d8e48dc170",
+      "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+      "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd",
+      "policy_files": [
+        {
+          "path": "rules/common/testing.md",
+          "sha256": "72f4ab2f45acb22ea2e7b78da2f5deb92106daacc17360114fa91f69d98f766a"
+        },
+        {
+          "path": "skills/using-superpowers/SKILL.md",
+          "sha256": "3fe492e1560b3a71ffc302032c3dbc34a10eb88cfa1d6cd1beecefdf31569e6c"
+        },
+        {
+          "path": "skills/using-superpowers/references/fast-path.md",
+          "sha256": "f4b076b4e02202a243481246aa8b1fbf3d6e1b53baf629c60a29038485e2eeb9"
+        }
+      ]
+    },
+    {
+      "cell": "gpt-fixed",
+      "home": "cew-fixed",
+      "version": "optimized",
+      "sha": "6238192c244f7c719934c266ef8e3991a397ae78",
+      "archive_sha256": "ebfef1e036b553dd8e71077c0d9d6ebb1cd0cbcc7091273c8723cbfb523810e3",
+      "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+      "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd",
+      "policy_files": [
+        {
+          "path": "rules/common/testing.md",
+          "sha256": "8c91beb7d82524738742c4dd9c508cc44bec53a2d7f04a24005904a70ca380ac"
+        },
+        {
+          "path": "skills/using-superpowers/SKILL.md",
+          "sha256": "27d1fffd1f6f21aac2f95fc092cf2b3598c1ffcaef5ae1f858614487bbcf9929"
+        },
+        {
+          "path": "skills/using-superpowers/references/fast-path.md",
+          "sha256": "77d33b28bc70ef7a6e9a27f3adbf9d40d747a72df98d70294491e0d0046a5398"
+        }
+      ]
+    }
+  ],
+  "end_driver_sha256": "6949820903ff2546a485886ed400da68b8a89a0eddaeff88d1b97b3a02a0fac1",
+  "end_quality_protocol_sha256": "019019d64755cc029a71329485b9883ab94b6fd7832dd277f238b9a528877b7e",
+  "source_integrity": [
+    {
+      "cell": "gpt-cew",
+      "sha": "e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5",
+      "source_and_template_match": true
+    },
+    {
+      "cell": "gpt-trim",
+      "sha": "704ef6fdb589637468985f835b0f50e456490d40",
+      "source_and_template_match": true
+    },
+    {
+      "cell": "gpt-fixed",
+      "sha": "6238192c244f7c719934c266ef8e3991a397ae78",
+      "source_and_template_match": true
+    }
+  ],
+  "benchmark_driver_source": "\"use strict\";\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst cp = require(\"node:child_process\");\nconst crypto = require(\"node:crypto\");\nconst root = __dirname;\nconst source = \"/Users/xu/project/worktrees/cew-fast-path\";\nconst runner = path.join(root, \"sources/optimized/docs/eval/tools/run-trial.js\");\nconst tasks = JSON.parse(fs.readFileSync(path.join(root, \"tasks.validated.json\")));\nif (tasks.length !== 7 || tasks.some((task) => !task.valid)) throw new Error(\"All seven tasks must pass preparation validation first\");\nconst arms = [\"gpt-cew\", \"gpt-trim\", \"gpt-fixed\"];\nconst homes = { \"gpt-trim\": \"cew-trim\", \"gpt-cew\": \"cew-home\", \"gpt-fixed\": \"cew-fixed\" };\nconst hash = (bytes) => crypto.createHash(\"sha256\").update(bytes).digest(\"hex\");\nconst command = (args, cwd) => cp.execFileSync(args[0], args.slice(1), { cwd, encoding: \"utf8\" }).trim();\nconst plan = [];\nfor (let repetition = 1; repetition <= 2; repetition++) {\n  for (let i = 0; i < tasks.length; i++) {\n    let order = arms.map((_, k) => arms[(k + i) % arms.length]);\n    if (repetition === 2) order = order.reverse();\n    plan.push({ task: tasks[i].id, repetition, order });\n  }\n}\nconst metadata = {\n  started_at: new Date().toISOString(), candidate_sha: command([\"git\", \"rev-parse\", \"HEAD\"], source),\n  main_sha: \"e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5\",\n  previous_pr_sha: \"704ef6fdb589637468985f835b0f50e456490d40\",\n  arms: {\"gpt-cew\":\"main CEW\", \"gpt-trim\":\"previous PR #62\", \"gpt-fixed\":\"optimized PR #62\"},\n  quality_protocol_sha256: hash(fs.readFileSync(path.join(root,\"protocol/frozen-quality-probes.cjs\"))),\n  benchmark_driver_sha256: hash(fs.readFileSync(__filename)),\n  runner_sha256: hash(fs.readFileSync(runner)), manifest_sha256: hash(fs.readFileSync(path.join(root, \"tasks.validated.json\"))),\n  cli: command([\"codex\", \"--version\"]), node: process.version,\n  model: \"gpt-6.1-sol\", reasoning_effort: \"high\", timeout_s: 720,\n  concurrency: 2, trials_planned: 42, plan,\n  quality_protocol_frozen_at: \"2026-10-18 before all model trials\",\n  protocol_change: \"Same seven tasks, two repetitions and two concurrent task blocks. Native control replaced by previous PR arm to compare old/new concurrently. All other prompt/model/strict-grading/isolation settings preserved.\",\n  isolation: \"Fresh checkout, HOME, Codex state, and private virtualenv per trial; reference refs removed; same provisioned auth and model config in every arm.\",\n  fixture_note: tasks.find((task) => task.id === \"itsdangerous-sha1\").fixture_note,\n};\nfs.writeFileSync(path.join(root, \"experiment.json\"), JSON.stringify(metadata, null, 2));\nfs.mkdirSync(path.join(root, \"trials\"), { recursive: true });\nconst completed = [];\nlet next = 0;\nfunction snapshot() {\n  fs.writeFileSync(path.join(root, \"progress.json\"), JSON.stringify({ completed, count: completed.length, planned: 42, updated_at: new Date().toISOString() }, null, 2));\n}\nasync function trial(taskId, cell, repetition) {\n  const task = tasks.find((item) => item.id === taskId);\n  const id = `${taskId}--${cell}--r${repetition}`;\n  const dir = path.join(root, \"trials\", id);\n  if (fs.existsSync(dir)) throw new Error(`Refusing to overwrite ${id}`);\n  fs.mkdirSync(path.join(dir, \"venvs\"), { recursive: true });\n  fs.symlinkSync(path.join(root, \"repos\"), path.join(dir, \"repos\"));\n  fs.copyFileSync(path.join(root, \"tasks.validated.json\"), path.join(dir, \"tasks.validated.json\"));\n  const homeName = homes[cell];\n  const home = path.join(dir, \"homes\", homeName);\n  fs.mkdirSync(path.dirname(home), { recursive: true });\n  fs.cpSync(path.join(root, \"templates\", homeName), home, { recursive: true, verbatimSymlinks: true });\n  fs.chmodSync(path.join(home, \".codex/auth.json\"), 0o600);\n  const originalVenv = path.join(\"/tmp/cew-eval/venvs\", task.repo);\n  const venv = path.join(dir, \"venvs\", task.repo);\n  const copy = cp.spawnSync(\"cp\", [\"-cR\", originalVenv, venv], { encoding: \"utf8\" });\n  if (copy.status !== 0) {\n    fs.rmSync(venv, { recursive: true, force: true });\n    fs.cpSync(originalVenv, venv, { recursive: true, verbatimSymlinks: true });\n  }\n  for (const file of fs.readdirSync(path.join(venv, \"bin\"))) {\n    const target = path.join(venv, \"bin\", file);\n    if (!fs.lstatSync(target).isFile()) continue;\n    const bytes = fs.readFileSync(target);\n    if (!bytes.subarray(0, 2).equals(Buffer.from(\"#!\"))) continue;\n    const text = bytes.toString(\"utf8\").replaceAll(originalVenv, venv);\n    fs.writeFileSync(target, text);\n  }\n  const packagesBefore = command([path.join(venv, \"bin/python\"), \"-m\", \"pip\", \"freeze\"]);\n  const runDir = path.join(dir, \"runs\", taskId, `${cell}-r${repetition}`);\n  const env = { ...process.env, CEW_EVAL_ROOT: dir, PATH: `${venv}/bin:${process.env.PATH}`,\n    VIRTUAL_ENV: venv, PYTHONPATH: `${runDir}/src:${runDir}`, PYTHONDONTWRITEBYTECODE: \"1\" };\n  const log = fs.openSync(path.join(dir, \"runner.log\"), \"wx\");\n  const startedAt = new Date().toISOString();\n  const start = Date.now();\n  console.log(JSON.stringify({ event: \"started\", task: taskId, cell, repetition, started_at: startedAt }));\n  const child = cp.spawn(process.execPath, [runner, \"--task\", taskId, \"--cell\", cell, \"--run\", String(repetition), \"--timeout\", \"720\"],\n    { cwd: source, env, stdio: [\"ignore\", log, log] });\n  fs.closeSync(log);\n  const exit = await new Promise((resolve, reject) => { child.once(\"error\", reject); child.once(\"close\", resolve); });\n  const resultFile = path.join(dir, \"results\", taskId, `${cell}-r${repetition}`, \"result.json\");\n  const result = fs.existsSync(resultFile) ? JSON.parse(fs.readFileSync(resultFile)) : null;\n  const packagesAfter = command([path.join(venv, \"bin/python\"), \"-m\", \"pip\", \"freeze\"]);\n  const patch = command([\"git\", \"diff\", \"HEAD\", \"--\"], runDir);\n  fs.writeFileSync(path.join(dir, \"change.patch\"), patch ? patch + \"\\n\" : \"\");\n  const receipt = { task: taskId, cell, repetition, started_at: startedAt, finished_at: new Date().toISOString(),\n    runner_exit: exit, total_duration_s: (Date.now() - start) / 1000, result_file: resultFile,\n    packages_changed: packagesBefore !== packagesAfter, packages_before_sha256: hash(packagesBefore), packages_after_sha256: hash(packagesAfter),\n    patch_sha256: hash(fs.readFileSync(path.join(dir, \"change.patch\"))),\n    agent_log_sha256: fs.existsSync(path.join(path.dirname(resultFile), \"agent.log\")) ? hash(fs.readFileSync(path.join(path.dirname(resultFile), \"agent.log\"))) : null,\n    resolved: result?.resolved ?? false, duration_s: result?.agent.duration_s ?? null, usage: result?.usage ?? null,\n    tests_modified: result?.tests_modified ?? null, new_failures: result?.new_failures ?? null,\n    harness_error: result ? null : fs.readFileSync(path.join(dir, \"runner.log\"), \"utf8\").slice(-1500) };\n  fs.writeFileSync(path.join(dir, \"receipt.json\"), JSON.stringify(receipt, null, 2));\n  completed.push(receipt); snapshot();\n  console.log(JSON.stringify({ event: \"completed\", count: completed.length, task: taskId, cell, repetition,\n    resolved: receipt.resolved, duration_s: receipt.duration_s, usage: receipt.usage, packages_changed: receipt.packages_changed }));\n}\nasync function worker() {\n  while (next < plan.length) {\n    const block = plan[next++];\n    for (const cell of block.order) await trial(block.task, cell, block.repetition);\n  }\n}\nPromise.all([worker(), worker()]).then(() => {\n  metadata.finished_at = new Date().toISOString();\n  fs.writeFileSync(path.join(root, \"experiment.json\"), JSON.stringify(metadata, null, 2));\n  console.log(JSON.stringify({ event: \"finished\", trials: completed.length }));\n}).catch((error) => { console.error(error.stack); process.exitCode = 1; });\n",
+  "setup_source": "\"use strict\";\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst cp = require(\"node:child_process\");\nconst crypto = require(\"node:crypto\");\nconst root = __dirname;\nconst repo = \"/Users/xu/project/worktrees/cew-fast-path\";\nconst hash = (b) => crypto.createHash(\"sha256\").update(b).digest(\"hex\");\nconst config = 'model = \"gpt-6.1-sol\"\\nmodel_reasoning_effort = \"high\"\\napproval_policy = \"never\"\\nsandbox_mode = \"workspace-write\"\\nsuppress_unstable_features_warning = true\\n';\nconst arms = [\n  { cell: \"gpt-cew\", home: \"cew-home\", version: \"main\", sha: \"e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5\" },\n  { cell: \"gpt-trim\", home: \"cew-trim\", version: \"previous-pr\", sha: \"704ef6fdb589637468985f835b0f50e456490d40\" },\n  { cell: \"gpt-fixed\", home: \"cew-fixed\", version: \"optimized\", sha: \"6238192c244f7c719934c266ef8e3991a397ae78\" },\n];\nfor (const arm of arms) {\n  const source = path.join(root, \"sources\", arm.version);\n  fs.mkdirSync(source, { recursive: true });\n  const archive = cp.execFileSync(\"git\", [\"archive\", \"--format=tar\", arm.sha], { cwd: repo, maxBuffer: 64 * 1024 * 1024 });\n  cp.execFileSync(\"tar\", [\"-xf\", \"-\", \"-C\", source], { input: archive });\n  fs.symlinkSync(path.join(repo, \"node_modules\"), path.join(source, \"node_modules\"));\n  const home = path.join(root, \"templates\", arm.home);\n  fs.mkdirSync(home, { recursive: true });\n  const install = cp.spawnSync(\"/bin/bash\", [path.join(source, \"scripts/install.sh\"), \"--codex-only\"],\n    { cwd: source, encoding: \"utf8\", env: { ...process.env, HOME: home, CODEX_HOME: path.join(home, \".codex\") } });\n  fs.writeFileSync(path.join(root, `install-${arm.version}.log`), (install.stdout || \"\") + (install.stderr || \"\"));\n  if (install.error || install.status !== 0) throw new Error(`Installer failed: ${arm.version}`);\n  fs.writeFileSync(path.join(home, \".codex/config.toml\"), config);\n  fs.copyFileSync(\"/Users/xu/.codex/auth.json\", path.join(home, \".codex/auth.json\"));\n  fs.chmodSync(path.join(home, \".codex/auth.json\"), 0o600);\n  arm.archive_sha256 = hash(archive);\n  arm.config_sha256 = hash(config);\n  arm.agents_sha256 = hash(fs.readFileSync(path.join(home, \".codex/AGENTS.md\")));\n  arm.policy_files = [\"rules/common/testing.md\", \"skills/using-superpowers/SKILL.md\", \"skills/using-superpowers/references/fast-path.md\"].flatMap((file) => {\n    const installed = path.join(home, \".codex\", file);\n    if (!fs.existsSync(installed)) return [];\n    if (!fs.readFileSync(installed).equals(fs.readFileSync(path.join(source, file)))) throw new Error(\"Installation mismatch: \" + file);\n    return [{ path: file, sha256: hash(fs.readFileSync(installed)) }];\n  });\n  console.log(JSON.stringify({ version: arm.version, installed: true, sha: arm.sha }));\n}\nif (new Set(arms.map((a) => a.agents_sha256)).size !== 1) throw new Error(\"AGENTS.md must remain exactly main\");\nif (new Set(arms.map((a) => a.config_sha256)).size !== 1) throw new Error(\"Execution configuration differs\");\nfs.writeFileSync(path.join(root, \"protocol/installed-sources.json\"), JSON.stringify(arms, null, 2));\n",
+  "configs": [
+    {
+      "arm": "cew-home",
+      "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+      "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd"
+    },
+    {
+      "arm": "cew-trim",
+      "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+      "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd"
+    },
+    {
+      "arm": "cew-fixed",
+      "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+      "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd"
+    }
+  ],
+  "config_public_fields": {
+    "model": "gpt-6.1-sol",
+    "model_reasoning_effort": "high",
+    "approval_policy": "never",
+    "sandbox_mode": "workspace-write",
+    "suppress_unstable_features_warning": true
+  },
+  "execution_override": "Every arm uses the same existing runner flag --dangerously-bypass-approvals-and-sandbox; isolation is a process convention, not an OS security boundary.",
+  "environment_audit": {
+    "trials": 42,
+    "initial_snapshot_matches": 42,
+    "final_snapshot_matches": 42,
+    "package_baselines": [
+      {
+        "repo": "python-slugify",
+        "python_version": "Python 3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+        "sha256": "9aab6083f8984c7ca35bfc17d614ceb1146328eed5c24ae4934b566545ea20ea",
+        "packages": [
+          "iniconfig==2.3.1",
+          "packaging==26.3",
+          "pluggy==1.7.0",
+          "Pygments==2.21.0",
+          "pytest==9.1.1",
+          "-e git+https://github.com/un33k/python-slugify.git@35aca63fc2672cba2c739ff6dff685a4f26a4f9a#egg=python_slugify",
+          "text-unidecode==1.3"
+        ]
+      },
+      {
+        "repo": "humanize",
+        "python_version": "Python 3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+        "sha256": "2e1661fed52320e6591c41b9eaf8791ce0c143f4fb5596ceeca9f8d91316b074",
+        "packages": [
+          "freezegun==1.5.5",
+          "-e git+https://github.com/python-humanize/humanize.git@785e5dcc0d0308ad0dff3f6cc0faa7085ad0375b#egg=humanize",
+          "iniconfig==2.3.1",
+          "packaging==26.3",
+          "pluggy==1.7.0",
+          "py-cpuinfo2==10.1.1",
+          "Pygments==2.21.0",
+          "pytest==9.1.1",
+          "pytest-benchmark==5.3.0",
+          "python-dateutil==2.9.0.post0",
+          "six==1.17.0"
+        ]
+      },
+      {
+        "repo": "more-itertools",
+        "python_version": "Python 3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+        "sha256": "a4284340a85b3a311682d023a48691c95a009a9fd59beb85d8685e34dcb0243b",
+        "packages": [
+          "hypothesis==6.170.1",
+          "iniconfig==2.3.1",
+          "-e git+https://github.com/more-itertools/more-itertools.git@4aeb4338ae1407d8da9723e86da99efeb446f719#egg=more_itertools",
+          "packaging==26.3",
+          "pluggy==1.7.0",
+          "Pygments==2.21.0",
+          "pytest==9.1.1",
+          "sortedcontainers==2.4.0"
+        ]
+      },
+      {
+        "repo": "itsdangerous",
+        "python_version": "Python 3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+        "sha256": "824afbbaf43045f0daedbde265ab30589b43743bcb270210ad8debe2400dec8f",
+        "packages": [
+          "freezegun==1.5.5",
+          "iniconfig==2.3.1",
+          "-e git+https://github.com/pallets/itsdangerous.git@672971d66a2ef9f85151e53283113f33d642dabd#egg=itsdangerous",
+          "packaging==26.3",
+          "pluggy==1.7.0",
+          "Pygments==2.21.0",
+          "pytest==9.1.1",
+          "python-dateutil==2.9.0.post0",
+          "six==1.17.0"
+        ]
+      }
+    ],
+    "package_changes": [
+      {
+        "task": "slugify-194",
+        "cell": "gpt-trim",
+        "run": 1,
+        "added": [
+          "ast_serialize==0.13.1",
+          "flake8==7.4.1",
+          "librt==0.16.0",
+          "mccabe==0.7.0",
+          "mypy==2.4.0",
+          "mypy_extensions==1.1.0",
+          "pathspec==1.1.1",
+          "pycodestyle==2.15.0",
+          "pyflakes==4.0.3",
+          "typing_extensions==4.16.0"
+        ],
+        "removed": []
+      },
+      {
+        "task": "humanize-346",
+        "cell": "gpt-trim",
+        "run": 1,
+        "added": [
+          "black==26.10.1",
+          "click==8.5.0",
+          "mypy_extensions==1.1.0",
+          "pathspec==1.1.1",
+          "platformdirs==4.13.4",
+          "pytokens==0.4.1",
+          "ruff==0.17.1"
+        ],
+        "removed": []
+      },
+      {
+        "task": "more-itertools-1247",
+        "cell": "gpt-cew",
+        "run": 1,
+        "added": [
+          "ast_serialize==0.13.1",
+          "librt==0.16.0",
+          "mypy==2.4.0",
+          "mypy_extensions==1.1.0",
+          "pathspec==1.1.1",
+          "ruff==0.17.1",
+          "typing_extensions==4.16.0"
+        ],
+        "removed": []
+      },
+      {
+        "task": "more-itertools-1247",
+        "cell": "gpt-trim",
+        "run": 1,
+        "added": [
+          "ruff==0.17.1"
+        ],
+        "removed": []
+      },
+      {
+        "task": "more-itertools-1247",
+        "cell": "gpt-trim",
+        "run": 2,
+        "added": [
+          "ruff==0.17.1"
+        ],
+        "removed": []
+      }
+    ]
+  },
+  "patch_export_amendment": {
+    "reason": "Independent review found the benchmark driver's command helper trims trailing patch whitespace. Original change.patch bytes and receipt hashes are retained unchanged; replay_patch is the raw git diff from the unchanged measured checkout.",
+    "recorded_after_all_model_runs": true,
+    "trials": 42,
+    "original_patch_hashes_match_receipts": 42,
+    "original_patches_failing_reverse_apply": 12,
+    "replay_patches_differing_only_in_trailing_whitespace": 12,
+    "replay_patches_passing_reverse_apply": 42,
+    "model_artifacts_and_scores_changed": false,
+    "exporter_source": "\"use strict\";\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst cp = require(\"node:child_process\");\nconst crypto = require(\"node:crypto\");\nconst root = __dirname;\nconst source = \"/Users/xu/project/worktrees/cew-fast-path\";\nconst out = path.join(source, \"docs/eval/data/optimized-2026-10-18\");\nconst progress = JSON.parse(fs.readFileSync(path.join(root, \"progress.json\")));\nif (progress.count !== 42) throw new Error(\"Require all 42 scheduled outcomes, including failures\");\nconst experiment = JSON.parse(fs.readFileSync(path.join(root, \"experiment.json\")));\nconst analysis = JSON.parse(fs.readFileSync(path.join(root, \"analysis.json\")));\nconst hash = (bytes) => crypto.createHash(\"sha256\").update(bytes).digest(\"hex\");\nconst normalize = (value) => JSON.parse(JSON.stringify(value).replaceAll(`/private${root}`, \"<BENCH_ROOT>\").replaceAll(root, \"<BENCH_ROOT>\"));\nconst secrets = [];\nfunction collectSecrets(value) {\n  if (typeof value === \"string\" && value.length >= 20) secrets.push(value);\n  else if (value && typeof value === \"object\") for (const v of Object.values(value)) collectSecrets(v);\n}\ncollectSecrets(JSON.parse(fs.readFileSync(path.join(root, \"templates/cew-home/.codex/auth.json\"))));\nfor (const name of [\"cew-home\", \"cew-trim\", \"cew-fixed\"]) collectSecrets(JSON.parse(fs.readFileSync(path.join(root, \"templates\", name, \".codex/auth.json\"))));\nfor (const receipt of progress.completed) {\n  const trial = path.dirname(receipt.result_file).replace(/\\/results\\/.+$/, \"\");\n  const home = { \"gpt-cew\": \"cew-home\", \"gpt-trim\": \"cew-trim\", \"gpt-fixed\": \"cew-fixed\" }[receipt.cell];\n  collectSecrets(JSON.parse(fs.readFileSync(path.join(trial, \"homes\", home, \".codex/auth.json\"))));\n}\nconst oldSource = cp.execFileSync(\"git\", [\"show\", \"2296603:docs/eval/tools/run_trial.py\"], { cwd: source, encoding: \"utf8\" });\nfor (const m of oldSource.matchAll(/[\"']([A-Za-z0-9_./:+-]{24,})[\"']/g)) {\n  if (/token|key|bearer/i.test(oldSource.slice(Math.max(0, m.index - 80), m.index))) secrets.push(m[1]);\n}\nfunction save(name, data) {\n  const text = typeof data === \"string\" ? data : JSON.stringify(normalize(data), null, 2) + \"\\n\";\n  if (secrets.some((secret) => text.includes(secret))) throw new Error(`Credential match in ${name}; refusing export`);\n  fs.writeFileSync(path.join(out, name), text);\n}\nfs.mkdirSync(out, { recursive: true });\nconst runnerNow = hash(fs.readFileSync(path.join(source, \"docs/eval/tools/run-trial.js\")));\nconst manifestNow = hash(fs.readFileSync(path.join(root, \"tasks.validated.json\")));\nif (runnerNow !== experiment.runner_sha256 || manifestNow !== experiment.manifest_sha256) throw new Error(\"Frozen inputs changed during experiment\");\nexperiment.end_runner_sha256 = runnerNow;\nexperiment.end_manifest_sha256 = manifestNow;\nexperiment.predeclared_protocol = JSON.parse(fs.readFileSync(path.join(root, \"protocol/protocol.json\")));\nexperiment.installed_sources = JSON.parse(fs.readFileSync(path.join(root, \"protocol/installed-sources.json\")));\nexperiment.end_driver_sha256 = hash(fs.readFileSync(path.join(root, \"run-final-benchmark.cjs\")));\nexperiment.end_quality_protocol_sha256 = hash(fs.readFileSync(path.join(root, \"protocol/frozen-quality-probes.cjs\")));\nif (experiment.end_driver_sha256 !== experiment.benchmark_driver_sha256 || experiment.end_quality_protocol_sha256 !== experiment.quality_protocol_sha256) throw new Error(\"Frozen protocol changed\");\nconst sourceIntegrity = [];\nfor (const arm of experiment.installed_sources) {\n  for (const policy of arm.policy_files) {\n    const sourceBytes = fs.readFileSync(path.join(root, \"sources\", arm.version, policy.path));\n    const templateBytes = fs.readFileSync(path.join(root, \"templates\", arm.home, \".codex\", policy.path));\n    if (hash(sourceBytes) !== policy.sha256 || hash(templateBytes) !== policy.sha256) throw new Error(\"Frozen source/template changed\");\n  }\n  sourceIntegrity.push({ cell: arm.cell, sha: arm.sha, source_and_template_match: true });\n}\nexperiment.source_integrity = sourceIntegrity;\nexperiment.benchmark_driver_source = fs.readFileSync(path.join(root, \"run-final-benchmark.cjs\"), \"utf8\");\nexperiment.setup_source = fs.readFileSync(path.join(root, \"setup.cjs\"), \"utf8\");\nexperiment.configs = [\"cew-home\", \"cew-trim\", \"cew-fixed\"].map((arm) => {\n  const home = path.join(root, \"templates\", arm, \".codex\");\n  return { arm, config_sha256: hash(fs.readFileSync(path.join(home, \"config.toml\"))),\n    agents_sha256: fs.existsSync(path.join(home, \"AGENTS.md\")) ? hash(fs.readFileSync(path.join(home, \"AGENTS.md\"))) : null };\n});\nexperiment.config_public_fields = { model: \"gpt-6.1-sol\", model_reasoning_effort: \"high\", approval_policy: \"never\", sandbox_mode: \"workspace-write\", suppress_unstable_features_warning: true };\nexperiment.execution_override = \"Every arm uses the same existing runner flag --dangerously-bypass-approvals-and-sandbox; isolation is a process convention, not an OS security boundary.\";\nconst packageBaselines = new Map();\nconst packageChanges = [];\nlet baselineMatches = 0, finishedMatches = 0;\nfor (const receipt of progress.completed) {\n  const result = JSON.parse(fs.readFileSync(receipt.result_file));\n  const repo = result.repo;\n  if (!packageBaselines.has(repo)) {\n    const python = path.join(root, \"venvs\", repo, \"bin/python\");\n    const freeze = cp.execFileSync(python, [\"-m\", \"pip\", \"freeze\"], { encoding: \"utf8\" }).trim();\n    packageBaselines.set(repo, { repo, python_version: cp.execFileSync(python, [\"-VV\"], { encoding: \"utf8\" }).trim(),\n      sha256: hash(freeze), packages: freeze.split(\"\\n\") });\n  }\n  const baseline = packageBaselines.get(repo);\n  if (baseline.sha256 === receipt.packages_before_sha256) baselineMatches++;\n  const trial = path.dirname(receipt.result_file).replace(/\\/results\\/.+$/, \"\");\n  const freeze = cp.execFileSync(path.join(trial, \"venvs\", repo, \"bin/python\"), [\"-m\", \"pip\", \"freeze\"], { encoding: \"utf8\" }).trim();\n  if (hash(freeze) === receipt.packages_after_sha256) finishedMatches++;\n  if (receipt.packages_changed) {\n    const after = freeze.split(\"\\n\");\n    packageChanges.push({ task: receipt.task, cell: receipt.cell, run: receipt.repetition,\n      added: after.filter((p) => !baseline.packages.includes(p)), removed: baseline.packages.filter((p) => !after.includes(p)) });\n  }\n}\nexperiment.environment_audit = { trials: progress.count, initial_snapshot_matches: baselineMatches, final_snapshot_matches: finishedMatches,\n  package_baselines: [...packageBaselines.values()], package_changes: packageChanges };\nsave(\"experiment.json\", experiment);\nsave(\"analysis.json\", analysis);\nconst quality = JSON.parse(fs.readFileSync(path.join(root, \"quality-probes.json\")));\nif (quality.results.filter((r) => r.cell).length !== 6) throw new Error(\"Require supplemental queries for all six numeric_range outcomes\");\nsave(\"quality-probes.json\", quality);\nconst i18n = JSON.parse(fs.readFileSync(path.join(root, \"i18n-probes.json\")));\nif (i18n.results.length !== 12) throw new Error(\"Require supplemental translation checks for all twelve humanize artifacts\");\nif (hash(fs.readFileSync(path.join(root, \"i18n-probes.cjs\"))) !== i18n.amendment.controller_sha256) throw new Error(\"Translation check protocol changed\");\nsave(\"i18n-probes.json\", i18n);\nconst cost = JSON.parse(fs.readFileSync(path.join(root, \"cost-probes.json\")));\nif (cost.results.filter((r) => r.cell).length !== 6) throw new Error(\"Require supplemental cost/sequence checks for all six numeric_range artifacts\");\nif (hash(fs.readFileSync(path.join(root, \"cost-probes.cjs\"))) !== cost.amendment.controller_sha256) throw new Error(\"Cost check protocol changed\");\nsave(\"cost-probes.json\", cost);\nconst fixtures = JSON.parse(fs.readFileSync(path.join(root, \"tasks.validated.json\"))).map((task) => {\n  const repo = path.join(root, \"repos\", task.repo);\n  const git = (...args) => cp.execFileSync(\"git\", args, { cwd: repo, encoding: \"utf8\" });\n  const targetPatch = git(\"diff\", task.parent, task.commit, \"--\", ...task.test_files);\n  const sourcePatch = git(\"diff\", task.parent, task.commit, \"--\", ...task.source_files);\n  return { id: task.id, repo: task.repo, commit: task.commit, original_commit: task.original_commit || task.commit,\n    parent: task.parent, issue: task.issue, test_files: task.test_files, source_files: task.source_files,\n    fixture_note: task.fixture_note || \"Parent plus regression-test diff from the recorded replay commit.\",\n    validation: task.validation, test_patch: targetPatch, reference_source_patch: sourcePatch };\n});\nsave(\"task-fixtures.json\", fixtures);\nconst rows = progress.completed.map((receipt) => {\n  if (!fs.existsSync(receipt.result_file)) throw new Error(`Missing graded result: ${receipt.task}/${receipt.cell}/${receipt.repetition}`);\n  const result = JSON.parse(fs.readFileSync(receipt.result_file));\n  const trial = path.dirname(receipt.result_file).replace(/\\/results\\/.+$/, \"\");\n  const log = fs.readFileSync(path.join(path.dirname(receipt.result_file), \"agent.log\"), \"utf8\");\n  const events = log.split(\"\\n\").flatMap((line) => { try { return [JSON.parse(line)]; } catch { return []; } });\n  const homeName = { \"gpt-trim\": \"cew-trim\", \"gpt-cew\": \"cew-home\", \"gpt-fixed\": \"cew-fixed\" }[result.cell];\n  const configHash = hash(fs.readFileSync(path.join(trial, \"homes\", homeName, \".codex/config.toml\")));\n  const configUnchanged = configHash === experiment.configs.find((c) => c.arm === homeName).config_sha256;\n  const installed = experiment.installed_sources.find((arm) => arm.cell === result.cell);\n  const trialPoliciesMatch = installed.policy_files.every((file) => hash(fs.readFileSync(path.join(trial, \"homes\", homeName, \".codex\", file.path))) === file.sha256);\n  if (!trialPoliciesMatch) throw new Error(\"Trial modified its own policy files\");\n  const templateConfig = fs.readFileSync(path.join(root, \"templates\", homeName, \".codex/config.toml\"), \"utf8\").trim();\n  const actualConfig = fs.readFileSync(path.join(trial, \"homes\", homeName, \".codex/config.toml\"), \"utf8\").trim();\n  const checkout = fs.realpathSync(path.join(trial, \"runs\", result.task, `${result.cell}-r${result.run}`));\n  const expectedTrustConfig = templateConfig + \"\\n\\n[projects.\" + JSON.stringify(checkout) + \"]\\ntrust_level = \\\"trusted\\\"\";\n  const trustOnly = actualConfig === expectedTrustConfig;\n  const commands = events.filter((e) => e.type === \"item.completed\" && e.item?.type === \"command_execution\")\n    .map((e) => ({ command: e.item.command, exit_code: e.item.exit_code }));\n  const reports = [\"base-full\", \"target\", \"after-full\"].map((name) => {\n    const file = path.join(path.dirname(receipt.result_file), name + \".xml\");\n    return { name, sha256: hash(fs.readFileSync(file)) };\n  });\n  const testOrRunnerFiles = result.diff.files.filter((file) => /(?:^|\\/)(?:tests?|conftest\\.py|pytest\\.ini|tox\\.ini|setup\\.cfg|pyproject\\.toml|Makefile)(?:\\/|$)|(?:^|\\/)test[^/]*\\.py$/.test(file));\n  const supplemental = quality.results.find((q) => q.cell === result.cell && q.run === result.run);\n  const probeApplies = result.task === \"more-itertools-1247\";\n  if (probeApplies && !supplemental) throw new Error(\"Missing predeclared supplemental grading\");\n  const costCheck = probeApplies ? cost.results.find((r) => r.cell === result.cell && r.run === result.run) : null;\n  const translations = i18n.results.find((r) => r.task === result.task && r.cell === result.cell && r.run === result.run);\n  const allChecksPassed = result.resolved && (!probeApplies || supplemental.cases.every((r) => r.passed) && costCheck.cases.every((r) => r.passed)) && (!translations || translations.passed);\n  const originalPatch = fs.readFileSync(path.join(trial, \"change.patch\"), \"utf8\");\n  if (hash(originalPatch) !== receipt.patch_sha256) throw new Error(\"Original patch receipt mismatch\");\n  const replayPatch = cp.execFileSync(\"git\", [\"diff\", \"--binary\", \"HEAD\", \"--\"], { cwd: checkout, encoding: \"utf8\", maxBuffer: 16 * 1024 * 1024 });\n  if (originalPatch.trim() !== replayPatch.trim()) throw new Error(\"Replay patch differs beyond trailing whitespace\");\n  const replayCheck = cp.spawnSync(\"git\", [\"apply\", \"--check\", \"--reverse\", \"-\"], { cwd: checkout, input: replayPatch, encoding: \"utf8\" });\n  if (replayCheck.status !== 0) throw new Error(`Replay patch cannot reverse-apply: ${result.task}/${result.cell}/${result.run}: ${replayCheck.stderr}`);\n  const originalCheck = cp.spawnSync(\"git\", [\"apply\", \"--check\", \"--reverse\", \"-\"], { cwd: checkout, input: originalPatch, encoding: \"utf8\" });\n  return normalize({ ...result, receipt, commands, reports, config_sha256: configHash, config_unchanged: configUnchanged,\n    installed_policy_matches: trialPoliciesMatch,\n    test_or_runner_files_changed: testOrRunnerFiles,\n    test_case_count_unchanged: result.base_full.passed + result.base_full.failed + result.base_full.skipped === result.after_full.passed + result.after_full.failed + result.after_full.skipped,\n    skip_delta: result.after_full.skipped - result.base_full.skipped,\n    additional_numeric_quality: costCheck,\n    additional_translation_quality: translations || null,\n    all_executed_checks_passed: allChecksPassed,\n    supplemental_quality: { applicable: probeApplies, passed: probeApplies ? supplemental.cases.filter((c) => c.passed).length : null,\n      total: probeApplies ? supplemental.cases.length : null, regressions_observed: probeApplies && supplemental.cases.some((c) => !c.passed) },\n    execution_config_unchanged: configUnchanged || trustOnly,\n    config_change_kind: configUnchanged ? \"none\" : trustOnly ? \"cli_checkout_trust_only\" : \"unexpected\",\n    config_changes: trustOnly ? [{ field: \"projects.<checkout>.trust_level\", type: \"string\", value: \"trusted\" }] : [],\n    usage_events: events.filter((e) => e.type === \"turn.completed\").length,\n    item_types: [...new Set(events.flatMap((e) => e.item?.type ? [e.item.type] : []))].sort(),\n    patch: originalPatch,\n    original_patch_reverse_apply_exit: originalCheck.status,\n    replay_patch: replayPatch,\n    replay_patch_sha256: hash(replayPatch),\n    replay_patch_reverse_apply_exit: replayCheck.status,\n    replay_patch_differs_only_in_trailing_whitespace: originalPatch !== replayPatch });\n});\nexperiment.patch_export_amendment = {\n  reason: \"Independent review found the benchmark driver's command helper trims trailing patch whitespace. Original change.patch bytes and receipt hashes are retained unchanged; replay_patch is the raw git diff from the unchanged measured checkout.\",\n  recorded_after_all_model_runs: true,\n  trials: rows.length,\n  original_patch_hashes_match_receipts: rows.length,\n  original_patches_failing_reverse_apply: rows.filter((row) => row.original_patch_reverse_apply_exit !== 0).length,\n  replay_patches_differing_only_in_trailing_whitespace: rows.filter((row) => row.replay_patch_differs_only_in_trailing_whitespace).length,\n  replay_patches_passing_reverse_apply: rows.filter((row) => row.replay_patch_reverse_apply_exit === 0).length,\n  model_artifacts_and_scores_changed: false,\n  exporter_source: fs.readFileSync(__filename, \"utf8\")\n};\nexperiment.config_audit = { trials: rows.length, byte_identical_to_template: rows.filter((r) => r.config_unchanged).length,\n  execution_fields_unchanged: rows.filter((r) => r.execution_config_unchanged).length,\n  only_checkout_trust_added: rows.filter((r) => r.config_change_kind === \"cli_checkout_trust_only\").length,\n  audited_execution_fields: [\"model\", \"model_reasoning_effort\", \"approval_policy\", \"sandbox_mode\", \"suppress_unstable_features_warning\"],\n  explanation: \"Codex CLI adds one projects.<real checkout path>.trust_level = trusted entry per isolated checkout. All five provisioned execution fields are byte-for-byte preserved; the path-specific trust section alone changes the whole-file hash.\" };\nsave(\"experiment.json\", experiment);\nsave(\"trials.jsonl\", rows.map((row) => JSON.stringify(row)).join(\"\\n\") + \"\\n\");\nanalysis.supplemental_quality_summary = [\"gpt-cew\", \"gpt-trim\", \"gpt-fixed\"].map((cell) => {\n  const selected = rows.filter((r) => r.cell === cell);\n  return { cell, original_suite_resolved: selected.filter((r) => r.resolved).length,\n    all_executed_checks_passed: selected.filter((r) => r.all_executed_checks_passed).length,\n    predeclared_boundary_failures: selected.filter((r) => r.supplemental_quality.regressions_observed).length,\n    additional_numeric_failures: selected.filter((r) => r.additional_numeric_quality?.cases.some((c) => !c.passed)).length,\n    translation_checks: selected.filter((r) => r.additional_translation_quality).length,\n    translation_checks_passed: selected.filter((r) => r.additional_translation_quality?.passed).length };\n});\nsave(\"analysis.json\", analysis);\nconst header = [\"task\", \"cell\", \"run\", \"resolved\", \"agent_duration_s\", \"input_tokens\", \"cached_input_tokens\", \"uncached_input_tokens\", \"output_tokens\", \"total_tokens\", \"tests_modified\", \"new_failures\", \"overclaim\", \"packages_changed\", \"all_executed_checks_passed\"];\nconst csv = [header.join(\",\"), ...rows.map((r) => [r.task, r.cell, r.run, r.resolved, r.agent.duration_s, r.usage.input_tokens,\n  r.usage.cached_input_tokens, r.usage.input_tokens - r.usage.cached_input_tokens, r.usage.output_tokens,\n  r.usage.input_tokens + r.usage.output_tokens, r.tests_modified, r.new_failures.length, r.overclaim, r.receipt.packages_changed, r.all_executed_checks_passed].join(\",\"))].join(\"\\n\") + \"\\n\";\nsave(\"trials.csv\", csv);\nsave(\"prior-diagnosis.json\", JSON.parse(fs.readFileSync(path.join(root, \"protocol/prior-diagnosis.json\"))));\nsave(\"trace-diagnosis.json\", JSON.parse(fs.readFileSync(path.join(root, \"diagnosis.json\"))));\nconsole.log(JSON.stringify({ exported_trials: rows.length, credential_scan: \"PASS\", frozen_inputs: \"PASS\", out }));\n"
+  },
+  "config_audit": {
+    "trials": 42,
+    "byte_identical_to_template": 0,
+    "execution_fields_unchanged": 42,
+    "only_checkout_trust_added": 42,
+    "audited_execution_fields": [
+      "model",
+      "model_reasoning_effort",
+      "approval_policy",
+      "sandbox_mode",
+      "suppress_unstable_features_warning"
+    ],
+    "explanation": "Codex CLI adds one projects.<real checkout path>.trust_level = trusted entry per isolated checkout. All five provisioned execution fields are byte-for-byte preserved; the path-specific trust section alone changes the whole-file hash."
+  }
+}

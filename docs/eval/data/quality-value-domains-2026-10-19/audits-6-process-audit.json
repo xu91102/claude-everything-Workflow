@@ -1,0 +1,176 @@
+{
+  "status": "PASS",
+  "checked_at": "2026-10-19T01:38:42.259Z",
+  "phase": 6,
+  "owned_live_trial_processes": [],
+  "method": "Current-user cwd plus argument ownership under exact private measured trials; process metadata only. No auth or hidden-body inspection, no process termination.",
+  "progress_sha256": "60348a015d53f6d59f5e5f6831f2d0efe6466040c5aca09cfddb964ab8d8ec26",
+  "snapshots": [
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/results/more-itertools-1247/gpt-cew-r1/result.json",
+      "sha256": "03f81c1fcd2864786e558ab2829ba4eea483f60a8b8ecc39ddd4796661eff190"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/receipt.json",
+      "sha256": "1ee3862b2ade95caca26185cd7d03639eda0fd4535eae1d76caf8dc256b44d08"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/change.patch",
+      "sha256": "f9aa11367872a7125a03ac96977f8915d3ca2cd82cb32454739ef86aa1616344"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/results/more-itertools-1247/gpt-cew-r1/base-full.xml",
+      "sha256": "bf67d05b550b097c4ce1d97714b136961e3c971aba5533122b370e80bd233f09"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/results/more-itertools-1247/gpt-cew-r1/target.xml",
+      "sha256": "747f5119f4397bee41603295bcd3a2b82b5b91cfb11bcb14bcc7fe523dfc2ccf"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/results/more-itertools-1247/gpt-cew-r1/after-full.xml",
+      "sha256": "32ce4688a0d9e512ac38f89d7c7c670b54034ca2d94ab519d747382f242f2b4d"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/results/more-itertools-1247/gpt-fixed-r2/result.json",
+      "sha256": "9d523deaa213835eeacdd2be6dd82e6dc86a7cb3accf14b962e343664ed1bde8"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/receipt.json",
+      "sha256": "9276dac56dc3bc662c7d1b49393cd74bc5f3c89e22f5cc0b9251c75d7cd5399b"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/change.patch",
+      "sha256": "4ae3e0e16cb132801d550153052486bbccd4230d76b622218f1450466a5cbbc8"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/results/more-itertools-1247/gpt-fixed-r2/base-full.xml",
+      "sha256": "6940e27c2c4afe3b1249f75f72713566ce26145a469bed1c44bc49f3928b2e3a"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/results/more-itertools-1247/gpt-fixed-r2/target.xml",
+      "sha256": "ef9605b3acca916d5d09004038822c9790086d8b536d2235233837a6445c9611"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/results/more-itertools-1247/gpt-fixed-r2/after-full.xml",
+      "sha256": "9c7ede6e329dcb3941cb79574ec30dab0b944bd8fed30095d09a6de28ff02d6a"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/results/more-itertools-1247/gpt-trim-r1/result.json",
+      "sha256": "a984520f5d55efada32200fe86d7e032e300fc1a69ff603863f104ed3103c511"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/receipt.json",
+      "sha256": "499503925a9245c544ff90ad7e854f95ae74e57ef59d9b90a5a267f460867d2e"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/change.patch",
+      "sha256": "7760dc4dff96cb6c95b5cc3eb73d32ea9b2ea53ceca18efba8bba72fa59aeadb"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/results/more-itertools-1247/gpt-trim-r1/base-full.xml",
+      "sha256": "88b4a1b557f878fd9b07ad4409ba13f6f9945c0163dddfe14bcd008ade8164c8"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/results/more-itertools-1247/gpt-trim-r1/target.xml",
+      "sha256": "1efa4f4db8dc02575626da87598ad0e6d72aa687819d1026c16c077a0c1bc62f"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/results/more-itertools-1247/gpt-trim-r1/after-full.xml",
+      "sha256": "b12c3281e54e5b3b4f5f976d8ad81f4b8f2d29b8379df9166bf998beb2dbf1e4"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/result.json",
+      "sha256": "da699905884989ce7eb4ecb640e27aa7e09fce4159a04706b44e00ba788559e9"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/receipt.json",
+      "sha256": "493d7c8825ac2b22278e436f32855f5f7aadf39a2b12552269ed2a6ea9b17189"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/change.patch",
+      "sha256": "9908bd1c9d587c19b6a28a9d0ff198835992a8a42bc5ace747825c30678649a4"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/base-full.xml",
+      "sha256": "29901b3a6499448bcf4491a258aa3309ca4c85ef87af326883da117cbfd700dd"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/target.xml",
+      "sha256": "2cbc052d320e8d187548720410f6cb3ca2891f0cb4bfbb6c8cac1fd6dd9040e4"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/after-full.xml",
+      "sha256": "c3b655041617bbba7b9766aa6092dc2111552fc37c3fa024f356ad2392c21ee3"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/results/more-itertools-1247/gpt-cew-r2/result.json",
+      "sha256": "3c2ddb5db889c82381bd7a040064ca023fdf950ee94dd0e61bcce09e014c8322"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/receipt.json",
+      "sha256": "0e21074311713db7fd284b25912111a22ffde9a2639d9c46455e076d06e746f2"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/change.patch",
+      "sha256": "a9a5f83c05f511757830d5ca2e1b0f23a2fac70bcb446347999ee8297bf52909"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/results/more-itertools-1247/gpt-cew-r2/base-full.xml",
+      "sha256": "ec2b7d593d4d11290fed6385acfcd2a0773600298e142660298bdef744b8ec8a"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/results/more-itertools-1247/gpt-cew-r2/target.xml",
+      "sha256": "fe00285f106ebcfdd040b732bc0443796cfdf60ff995b1c447723670cb6ee559"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/results/more-itertools-1247/gpt-cew-r2/after-full.xml",
+      "sha256": "f2802413e76dab74dedc97a4410111103a8775a6287ac93ec70e132f21cb108a"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/results/more-itertools-1247/gpt-fixed-r1/result.json",
+      "sha256": "b5ed152d6aa771f2fee2eb5a7c01f2b64e9c13dbe84d31a2e03dff69d9ba3919"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/receipt.json",
+      "sha256": "c870ef83fb080512657bce465ffd0822bc6a6b6ee23ac36c5907a035dba99b1b"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/change.patch",
+      "sha256": "24a7adcdd3bde77b9d59e83fd1aa6e60fc536646cc160c092694c2526b4dedcf"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/results/more-itertools-1247/gpt-fixed-r1/base-full.xml",
+      "sha256": "8dc2d38d1417de2f482acda8337917b64361ea1cafd3bf367a701b3d726f7b79"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/results/more-itertools-1247/gpt-fixed-r1/target.xml",
+      "sha256": "542564e7aa3c409b41b08abc9971095c1b0b9d6bcab15483baec1d3c37676606"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/results/more-itertools-1247/gpt-fixed-r1/after-full.xml",
+      "sha256": "0ef5f1f3025afebdec59024748ff068a2fa0d0157ed37dba7143d3f9d3c32d66"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/homes/cew-fixed/.codex/sessions/2026/10/19/rollout-2026-10-19T09-26-34-01a151c4-7981-70c1-b829-8e35466257f6.jsonl",
+      "sha256": "6bfa662d993bea6f077eb06afb362f33d72bbc499fe51ae84411562c76bca118",
+      "failed_session": true
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/homes/cew-fixed/.codex/sessions/2026/10/19/rollout-2026-10-19T09-30-19-01a151c7-ed95-7af1-9c0e-95c22dd83398.jsonl",
+      "sha256": "22024901e02c950f98a8a86c9b4b43bf51ae3bfa0c04ae353a17f12dc2156c0b",
+      "failed_session": true
+    }
+  ],
+  "failed_runs": [
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "exit": -9,
+      "timed_out": true,
+      "raw_cli_scope": "incomplete_failed_run",
+      "resolved": false
+    }
+  ],
+  "original_frozen_protocol_sha256": "908c47afc8f8603cb7c59625cac5d7ff9554d6bf7a08eaba9eef600b365078b6"
+}

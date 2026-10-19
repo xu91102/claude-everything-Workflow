@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-18T22:49:50.742Z",
+  "kind": "Report table alignment only after posthoc procedures, before independent review",
+  "before_report_sha256": "6f9d5e3d83ea7d5005c5ef61e7f884644cbc384f7e5f4c3f6e8878bf5a6383e1",
+  "after_report_sha256": "51aff1f5fe41741d36acfd6accc644e3291234a26b4ea9976b6dc351a7ddc614",
+  "old": "| numeric_range版本 | 事后2项无限终点 | 2秒超时数 |\n| --- | ---: | ---: | ---: |",
+  "new": "| numeric_range版本 | 事后2项无限终点 | 2秒超时数 |\n| --- | ---: | ---: |",
+  "original_measurements_and_quality_unchanged": true
+}

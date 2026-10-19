@@ -1,0 +1,392 @@
+{
+  "started_at": "2026-10-18T20:35:50.482Z",
+  "candidate_sha": "eb104fd2a0ec8c5f1e86d92a996982f8362a84be",
+  "main_sha": "e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5",
+  "previous_candidate_sha": "36ccc9018247bed8892948099b79132a511f0b93",
+  "arms": {
+    "gpt-cew": "main CEW",
+    "gpt-trim": "previous PR #62 candidate36ccc901 (predeclared46quality0/2)",
+    "gpt-fixed": "quality-gate candidate PR #62"
+  },
+  "quality_protocol_sha256": "ae0aa64c7cd51853ba5f85a412ef2983f3086b240b3dce9fd58bfe4198b3fb11",
+  "cost_protocol_sha256": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262",
+  "context_protocol_sha256": "e8bb0dbd5e07ea6f80ed1dfa031c098a71ebf263494736435d3c530cfc39519b",
+  "compatibility_protocol_sha256": "f83e94c4f8e04c039e5edd7c810306c8c2cf04628e85e67c3a82a8e9e27aecb3",
+  "promotion_protocol_sha256": "b9c24a9d58c40e90f635ea2ca15ce9d9c82925eeb3945197c9427b3cf6481786",
+  "i18n_protocol_sha256": "5b8dc2ac5ea1142c5690930a97f386c2a9bb9f34989eb4802fe213354b1cfe55",
+  "usage_accounting_sha256": "4668e9dd1a425f35eb09f32f0760aec8acb680c7198da0ab7c0d7d1cd89ab334",
+  "benchmark_driver_sha256": "c7620b5852bfc85083e249fc05145b0a3327be943f58b9a632e5b2206ea2ceae",
+  "runner_sha256": "99deae2fd88616645e89a03754b20594ab9e7f6e91bfccb0aff8dc62b48507cc",
+  "manifest_sha256": "dc08f7afa2c1274473b789e27ad5cdab473edf086268cc38cf4d26c66b08adc7",
+  "runner_usage_collector_sha256": "c96e966575b7d1145a04196f173855c9e282640b253552ce5bd5c9a3cc7b2033",
+  "cli": "codex-cli 0.160.1",
+  "node": "v22.23.2",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "timeout_s": 720,
+  "concurrency": 2,
+  "trials_planned": 42,
+  "plan": [
+    {
+      "task": "more-itertools-1247",
+      "repetition": 1,
+      "order": [
+        "gpt-cew",
+        "gpt-trim",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "more-itertools-1247",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-trim",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "slugify-200",
+      "repetition": 1,
+      "order": [
+        "gpt-cew",
+        "gpt-trim",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "slugify-194",
+      "repetition": 1,
+      "order": [
+        "gpt-trim",
+        "gpt-fixed",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "humanize-346",
+      "repetition": 1,
+      "order": [
+        "gpt-fixed",
+        "gpt-cew",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "humanize-381",
+      "repetition": 1,
+      "order": [
+        "gpt-cew",
+        "gpt-trim",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "more-itertools-1284",
+      "repetition": 1,
+      "order": [
+        "gpt-trim",
+        "gpt-fixed",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repetition": 1,
+      "order": [
+        "gpt-fixed",
+        "gpt-cew",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "slugify-200",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-trim",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "slugify-194",
+      "repetition": 2,
+      "order": [
+        "gpt-cew",
+        "gpt-fixed",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "humanize-346",
+      "repetition": 2,
+      "order": [
+        "gpt-trim",
+        "gpt-cew",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "humanize-381",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-trim",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "more-itertools-1284",
+      "repetition": 2,
+      "order": [
+        "gpt-cew",
+        "gpt-fixed",
+        "gpt-trim"
+      ]
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repetition": 2,
+      "order": [
+        "gpt-trim",
+        "gpt-cew",
+        "gpt-fixed"
+      ]
+    }
+  ],
+  "quality_protocol_frozen_at": "2026-10-18T20:26:07.366Z",
+  "protocol_change": "Same seven tasks, two repetitions, model prompts, strict grader, two concurrent task blocks and per-task arm rotation. Main e57 unchanged; middle control explicitly changed from55fc8ea topreviouscandidate36ccc901 beforeallmodels. Priorcandidatepredeclared46quality0/2withoriginal42pass2/2, notqualityequivalentclaim. Historiesremainseparate. Same critical-first order as f88 attempt. All46known queries (16boundary+4cost+12context+10promotion/Rounded+4FloatOperation) frozen before every model, uniform for all6critical artifacts with no model active. Both candidate outcomes must pass original suite and all46; else unstarted36 NOTRUN, incomplete. Successful gate continuesall42. Prior successful seven-task fixture validation reused unchanged with explicit provenance; per-trial baseline/target/full fresh as before.",
+  "isolation": "Fresh checkout, HOME, Codex state, and private virtualenv per trial; reference refs removed; same provisioned auth and model config in every arm.",
+  "fixture_note": "Same source fix and parent as upstream 7f4dcf8; replaces internal _lazy_sha1 import with digest behavior and adds subprocess import/sign/unsign without hashlib.sha1.",
+  "critical_gate": {
+    "checked_at": "2026-10-18T20:53:56.984Z",
+    "passed": false,
+    "completed_trials": 6,
+    "quality_report_sha256": "15df4fa207bdc5ef2da5aadf4b110a9c8b88adfbb2e5ac344929df13e1f8d946",
+    "cost_report_sha256": "a1bd96355ed12a5d0705648173c75256c1d675a5fea22ac9d9e8e1cfbe8524eb",
+    "compatibility_report_sha256": "265c2793e80d9d62c248bc8f2f34d2a8b0879eb8ade5ed232bc6c078fcb88f2c",
+    "promotion_report_sha256": "e75ba455f57f5dd53385f477d4fef7c9566009676ca46da938761089cdff24c3",
+    "context_report_sha256": "68a2b4c13eccf8c6264e2fc6a5c0f22cf3a0bf8c245f9af227f7a89d7f1c4a7f",
+    "no_measured_model_active_during_probes": true
+  },
+  "status": "ABORTED_AT_PREDECLARED_CRITICAL_QUALITY_GATE",
+  "not_run": [
+    {
+      "task": "slugify-200",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "status": "NOT RUN"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "status": "NOT RUN"
+    }
+  ],
+  "finished_at": "2026-10-18T20:53:56.984Z"
+}

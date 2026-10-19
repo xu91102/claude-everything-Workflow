@@ -1,0 +1,21 @@
+{
+  "error": {
+    "status": "FAIL",
+    "at": "2026-10-18T22:59:57.383Z",
+    "error": "Error: Actual prior positive/negative control drift quality gpt-cew-r1",
+    "eleventh_models_executed": 0
+  },
+  "controller_sha256": "31fe467b249bf22d61a94c9708ab3d6bef662553b056caefc0d27b33f245013e",
+  "kind": "Infrastructure comparison was too strict for already-failing bounded checks: unchanged programs/source had same false scores but two prior ETIMEDOUT queries reached actual OverflowError/InvalidOperation within10sec. All raw results retained; no model ran or quality score changed.",
+  "raw_reports": {
+    "quality": "976e39b01feb62e4ec3d5d6714d7e574cf48d48ecaaa2bdd331e902a6e9dd449",
+    "cost": "3196009f83d7a1350e8ec13d3737fbcd68b71312769c9eccd6fa07846a6c24ae",
+    "context": "fe61a2bf7afec3a605d95fe3a3de64f0aa62c127c8929fce72589977e2e8fb1c",
+    "promotion": "e45836c27ffd7406c73aa0bfcec14f51f8a7f13491a458b58e647a758a0c67f1",
+    "compatibility": "de4d2e0ef92bfc5aeca277fcbbba7a464a511347bfece7db4a1621bbc5cb14b7",
+    "shortcircuit": "eb846092de157d01e3f1a182891415b26f5c747736ef97ac9b785be4234bf117",
+    "floatstop": "e559d7d2436b6531d1c5e44d97ab189bf50acfaa58e966d3189d35e2fffa40f2",
+    "infinite-stop": "6a4181d9f45fb771b8f98d681859c847bf1b20cb2ea55cdd1104e41030a8abfc"
+  },
+  "models_executed": 0
+}

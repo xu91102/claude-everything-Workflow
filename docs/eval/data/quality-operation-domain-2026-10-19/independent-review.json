@@ -1,0 +1,188 @@
+{
+  "package": {
+    "path": "<BENCH_ROOT>/full-review-package.json",
+    "sha256": "f71619dd51242b16d184703e1a276d96c92333b5869cc73373c33cb060eb252e",
+    "base": "5ae9d13344fb7d96a69461d3616c220e29b3d796",
+    "measured_source": "05a2569677746e935cd2b3daaa4d7f17d322c98d",
+    "contemporary_main": "e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5"
+  },
+  "reviewer_model": "gpt-6-sol",
+  "reviewer_model_scope": "outside timed benchmark; user explicitly authorized reviewer-only switch",
+  "mode": "independent_read_only",
+  "axes": {
+    "Standards": {
+      "status": "PASS",
+      "findings": [],
+      "evidence": [
+        "Pinned source diff changes only item 2 of skills/using-superpowers/references/fast-path.md:10, preserving the existing five-item flow, testing and review gates; it asks for per-operation type/value/config applicability and termination without task-specific answers.",
+        "Measured and main AGENTS.md are byte-identical (SHA-256 f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd); zero additions. Frozen relevant rules and reviewer prompts were checked against package pins.",
+        "All 42 output patches affect only allowed source files, no test or runner files; no new hard-rule or concrete maintenance finding beyond the separately reported acceptance failures."
+      ]
+    },
+    "ActualArtifactSpec": {
+      "status": "FAIL",
+      "findings": [
+        {
+          "severity": "Important",
+          "kind": "known_frozen_54_failure",
+          "location": "trials/more-itertools-1247--gpt-fixed--r1/change.patch, _find_index exponential search; infinite-stop-probes.json results[gpt-fixed-r1]",
+          "evidence": "Both constructor-valid numeric_range(0,+Infinity,1) and numeric_range(0,-Infinity,-1) length queries timed out at 2000 ms; parent raises the frozen expected ValueError for both. Strict JUnit passes, but the two required termination checks are 0/2.",
+          "impact": "Candidate R1 cannot satisfy all applicable frozen checks or be accepted as a quality-complete artifact."
+        },
+        {
+          "severity": "Important",
+          "kind": "incomplete_model_attempt",
+          "location": "trials/more-itertools-1247--gpt-fixed--r2/receipt.json and failed-attempts.json",
+          "evidence": "Model exit -9, timed_out true at 720 s, resolved false; a nonempty patch and passing post-run JUnit/probes do not establish a completed model attempt.",
+          "impact": "Candidate R2 is one of the 14 required attempts and fails strict completion; no resampling is authorized."
+        }
+      ],
+      "evidence": {
+        "candidate_strict_completed_and_preserved": "13/14",
+        "candidate_strict_plus_all_applicable_checks": "12/14",
+        "main_strict_plus_checks": "12/14",
+        "previous_candidate_strict_plus_checks": "12/14",
+        "numeric_groups_per_artifact": [
+          16,
+          4,
+          12,
+          10,
+          4,
+          4,
+          2,
+          2
+        ],
+        "uniform_versions": [
+          "parent",
+          "upstream_reference",
+          "gpt-cew-r1",
+          "gpt-cew-r2",
+          "gpt-trim-r1",
+          "gpt-trim-r2",
+          "gpt-fixed-r1",
+          "gpt-fixed-r2"
+        ],
+        "candidate_numeric": {
+          "gpt-fixed-r1": {
+            "frozen54": "52/54",
+            "infinite_stop": "0/2",
+            "strict_completed": true
+          },
+          "gpt-fixed-r2": {
+            "frozen54": "54/54",
+            "strict_completed": false,
+            "model_exit": -9
+          }
+        },
+        "i18n": "12/12 humanize artifacts passed; four per arm"
+      }
+    },
+    "EvidenceIntegrity": {
+      "status": "PASS",
+      "findings": [],
+      "evidence": {
+        "package_sha256_verified": true,
+        "pinned_file_references_verified": 95,
+        "pin_mismatches": 0,
+        "plan_identities": 42,
+        "trial_records": 42,
+        "patches_matching_receipts": 42,
+        "junit_xml_checked": 126,
+        "junit_count_mismatches": 0,
+        "session_hashes_checked": 47,
+        "provider_response_ids_unique": 470,
+        "provider_usage_sum_mismatches": 0,
+        "plaintext_command_entries_reviewed": 570,
+        "trial_private_venvs": 42,
+        "installed_agents_and_policy_checks": 84,
+        "uniform_critical_and_final_numeric_query_verdict_mismatches": 0,
+        "exact_floatstop_stdout_and_decimal_pairs_checked": 16,
+        "recovery_phase6_snapshots_verified": 39,
+        "recovery_phase42_snapshots_verified": 255,
+        "original_trial_and_stage_function_bytes_equal_in_continuation": true,
+        "original_failed_attempts_retained": 2,
+        "empty_failed_patch": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "model_exit": 1,
+          "resolved": false,
+          "diff_files": 0,
+          "captured_and_replayed_bytes_exact_empty": true,
+          "allow_empty_limited_to_failed_noop": true,
+          "normal_nonempty_reverse_apply_kept": true
+        },
+        "export_v2": "Only export of exact empty failed patch and provenance fields changed; original export failure and partial output retained; no model/probe/grader rerun",
+        "source_checks": "8/8 recorded exits 0; 29/29 evaluator regression tests; production pack/install/verify exits 0",
+        "preflight": "Old-artifact positive/negative controls and initial overstrict comparator failure preserved; formal protocol frozen 2026-10-18T23:10:08.894Z before first model 2026-10-18T23:10:09.619Z",
+        "reuse": "Identity-unchanged seven fixture prevalidations and 43 historical accounting sessions explicitly labeled as reused; current 42 trial suites fresh",
+        "public_report": "Pinned report retains independent-review pending marker and reports quality/performance failure; not mistaken for a completed independent approval",
+        "limits": "Recorded completed provider responses only; unfinished request and billing totals cannot be inferred."
+      }
+    },
+    "WholePerformance": {
+      "status": "FAIL",
+      "findings": [
+        {
+          "severity": "Important",
+          "kind": "whole_batch_gate_failure",
+          "location": "analysis.json summary; session-diagnosis.json rows[42]",
+          "evidence": "Independently summed unique parent and native-child response usage over all 14 trials per arm: candidate 8,297,332 tokens versus contemporary main 3,968,076 (+109.1%) and previous candidate 4,466,033 (+85.8%). Mean model duration candidate 139.9214 s versus main 73.0786 s (+91.5%) and previous 85.6857 s (+63.3%).",
+          "impact": "Both required whole-batch metrics must be lower than main; neither is. Subgroup, median, raw CLI totals or historical comparisons cannot replace this gate."
+        }
+      ],
+      "evidence": {
+        "main": {
+          "trials": 14,
+          "input_tokens": 3926058,
+          "output_tokens": 42018,
+          "total_tokens": 3968076,
+          "mean_model_s": 73.07857142857142,
+          "raw_cli_tokens": 3968076,
+          "child_sessions": 0
+        },
+        "previous": {
+          "trials": 14,
+          "input_tokens": 4409977,
+          "output_tokens": 56056,
+          "total_tokens": 4466033,
+          "mean_model_s": 85.68571428571428,
+          "raw_cli_tokens": 3599766,
+          "child_sessions": 2
+        },
+        "candidate": {
+          "trials": 14,
+          "input_tokens": 8192343,
+          "output_tokens": 104989,
+          "total_tokens": 8297332,
+          "mean_model_s": 139.92142857142858,
+          "raw_cli_tokens": 3970375,
+          "child_sessions": 3
+        },
+        "failed_attempts_included": [
+          "gpt-fixed more-itertools-1247 r2: 720 s timeout, 2,841,695 recorded tokens",
+          "gpt-trim more-itertools-1247 r2: provider capacity exit 1, 92,794 recorded tokens"
+        ],
+        "interpretation": "Descriptive development-set comparison; failed attempts are retained, with no estimate for unfinished requests. No causal inference from numeric versus other-six subgroup."
+      }
+    }
+  },
+  "audit_counts": {
+    "trials": 42,
+    "junit": 126,
+    "sessions": 47,
+    "unique_responses": 470,
+    "plaintext_commands": 570
+  },
+  "new_important_findings_outside_all_executed54": 0,
+  "checks_not_run": [
+    "No model, trial, probe, grader, or known-54 rerun by this reviewer.",
+    "NaN source hypothesis NOT RUN: numeric_range documents orderable numeric arguments; unordered NaN has no supported refusal oracle, so old/new behavior difference alone is not a validated regression.",
+    "No hidden reasoning, encrypted bodies, authentication values, unfinished provider-request estimates, billing totals, other hosts, Python versions, production workflow, push, merge, or publication review."
+  ],
+  "decision": "Frozen measured candidate fails actual artifact quality and required whole-batch performance; evidence integrity and source Standards pass. PR #62 remains Draft; no merge acceptance.",
+  "overall": "FAIL",
+  "provenance": {
+    "original_review_sha256": "e1fefd3b6a65fec90de8d3b2604f6a36d881718a99a894d195bae767225d0a49",
+    "fixed_package_sha256": "f71619dd51242b16d184703e1a276d96c92333b5869cc73373c33cb060eb252e",
+    "note": "Only benchmark-root paths normalized and calculated overall status added; original measurements and artifacts unchanged."
+  }
+}

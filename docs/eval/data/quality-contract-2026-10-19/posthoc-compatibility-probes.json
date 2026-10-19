@@ -1,0 +1,428 @@
+{
+  "kind": "Posthoc4FloatOperation compatibilityqueries for supported intstart/floatstep ranges and baselinelegal Decimal nonmembers, discovered by actualcandidateR2 source inspection after modelstart; not part of original42predeclaredchecks. Uniform all8versions only after all6measuredcalls closed. No modelreruns or artifactedits.",
+  "started_at": "2026-10-18T19:53:40.692Z",
+  "finished_at": "2026-10-18T19:53:41.976Z",
+  "pause": {
+    "status": "PAUSED_POSTCRITICAL_BEFORE_REMAINING",
+    "paused_at": "2026-10-18T19:52:51.543Z",
+    "pid": 10960,
+    "source": "55fc8ea534e01676ebd97958033374e5143edb01",
+    "completed": 6,
+    "ordinary_model_calls_started": 0,
+    "measured_models_active": 0,
+    "driver_source_changed": false,
+    "purpose": "Run uniform posthoc compatibility queries after all6measured calls closed; root driver pause is outside every agent process timer. Resume unchanged driver if no failure; otherwise retain6 and mark36NOTRUN with explicitposthocabort."
+  },
+  "timeout_ms_per_case": 10000,
+  "task": "more-itertools-1247",
+  "python_program": "import json,sys\nfrom decimal import Decimal as D, localcontext, FloatOperation\npayload=json.load(sys.stdin)\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('float_operation_nonmember_ascending',(1,2,0.1),D(0)),('float_operation_nonmember_descending',(1,0,-0.1),D(2))]\nfor name,args,query in cases:\n for operation in ('contains','index'):\n  if payload['case_filter']!=[name,operation]:continue\n  try:\n   instance=cls(*args)\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':False,'constructor_exception':type(error).__name__}));continue\n  try:\n   with localcontext() as context:\n    context.traps[FloatOperation]=True\n    actual=(query in instance) if operation=='contains' else instance.index(query)\n   print(json.dumps({'case':name,'operation':operation,'passed':actual is False if operation=='contains' else False,'value':repr(actual),'expected':'False' if operation=='contains' else 'ValueError'}))\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':operation=='index' and isinstance(error,ValueError),'exception':type(error).__name__,'message':str(error),'expected':'False' if operation=='contains' else 'ValueError'}))\n",
+  "controller_source": "'use strict';\nconst fs=require('node:fs'),p=require('node:path'),cp=require('node:child_process'),crypto=require('node:crypto');\nconst root=__dirname,progress=JSON.parse(fs.readFileSync(p.join(root,'progress.json'))),pause=JSON.parse(fs.readFileSync(p.join(root,'posthoc-compatibility-pause.json')));\nif(progress.count!==6||pause.status!=='PAUSED_POSTCRITICAL_BEFORE_REMAINING'||pause.measured_models_active!==0)throw Error('Need actual closed6 and paused owned driver before querying');\nconst program=`import json,sys\nfrom decimal import Decimal as D, localcontext, FloatOperation\npayload=json.load(sys.stdin)\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('float_operation_nonmember_ascending',(1,2,0.1),D(0)),('float_operation_nonmember_descending',(1,0,-0.1),D(2))]\nfor name,args,query in cases:\n for operation in ('contains','index'):\n  if payload['case_filter']!=[name,operation]:continue\n  try:\n   instance=cls(*args)\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':False,'constructor_exception':type(error).__name__}));continue\n  try:\n   with localcontext() as context:\n    context.traps[FloatOperation]=True\n    actual=(query in instance) if operation=='contains' else instance.index(query)\n   print(json.dumps({'case':name,'operation':operation,'passed':actual is False if operation=='contains' else False,'value':repr(actual),'expected':'False' if operation=='contains' else 'ValueError'}))\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':operation=='index' and isinstance(error,ValueError),'exception':type(error).__name__,'message':str(error),'expected':'False' if operation=='contains' else 'ValueError'}))\n`;\nconst names=['float_operation_nonmember_ascending','float_operation_nonmember_descending'];\nconst queries=names.flatMap(n=>['contains','index'].map(op=>[n,op]));\nconst gitSource=ref=>cp.execFileSync('git',['show',ref+':more_itertools/more.py'],{cwd:p.join(root,'repos/more-itertools'),encoding:'utf8'});\nconst versions=[{version:'parent',source:gitSource('2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10')},{version:'upstream_reference',source:gitSource('dc2664b4a7c66209485c9f5e359137bf4b365eb3')},...progress.completed.map(r=>{const trial=p.dirname(r.result_file).replace(/\\/results\\/.+$/,'');return{version:r.cell+'-r'+r.repetition,cell:r.cell,run:r.repetition,source:fs.readFileSync(p.join(trial,'runs',r.task,r.cell+'-r'+r.repetition,'more_itertools/more.py'),'utf8')};})];\nconst start=new Date().toISOString(),results=versions.map(({source,...meta})=>({...meta,source_sha256:crypto.createHash('sha256').update(source).digest('hex'),cases:queries.map(case_filter=>{const started_at=new Date().toISOString();const r=cp.spawnSync(p.join(root,'venvs/more-itertools/bin/python'),['-B','-c',program],{input:JSON.stringify({source,support:p.join(root,'validation/more-itertools-1247/checkout'),case_filter}),encoding:'utf8',timeout:10000,env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});if(r.error||r.status!==0)return{case:case_filter[0],operation:case_filter[1],passed:false,started_at,finished_at:new Date().toISOString(),exit:r.status,timed_out:r.error?.code==='ETIMEDOUT',error:String(r.error?.code||r.stderr).slice(-800)};return{...JSON.parse(r.stdout),started_at,finished_at:new Date().toISOString(),exit:r.status};})}));\nconst data={kind:'Posthoc4FloatOperation compatibilityqueries for supported intstart/floatstep ranges and baselinelegal Decimal nonmembers, discovered by actualcandidateR2 source inspection after modelstart; not part of original42predeclaredchecks. Uniform all8versions only after all6measuredcalls closed. No modelreruns or artifactedits.',started_at:start,finished_at:new Date().toISOString(),pause,timeout_ms_per_case:10000,task:'more-itertools-1247',python_program:program,controller_source:fs.readFileSync(__filename,'utf8'),results};\nfs.writeFileSync(p.join(root,'posthoc-compatibility-probes.json'),JSON.stringify(data,null,2)+'\\n');\nconsole.log(JSON.stringify(results.map(r=>({version:r.version,passed:r.cases.filter(c=>c.passed).length,total:r.cases.length}))));\n",
+  "results": [
+    {
+      "version": "parent",
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:40.693Z",
+          "finished_at": "2026-10-18T19:53:40.732Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:40.732Z",
+          "finished_at": "2026-10-18T19:53:40.769Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:40.769Z",
+          "finished_at": "2026-10-18T19:53:40.808Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "2 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:40.808Z",
+          "finished_at": "2026-10-18T19:53:40.846Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "upstream_reference",
+      "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:40.846Z",
+          "finished_at": "2026-10-18T19:53:40.885Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:40.885Z",
+          "finished_at": "2026-10-18T19:53:40.923Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:40.923Z",
+          "finished_at": "2026-10-18T19:53:40.961Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "2 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:40.961Z",
+          "finished_at": "2026-10-18T19:53:40.999Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r1",
+      "cell": "gpt-cew",
+      "run": 1,
+      "source_sha256": "f591a09748ece766c6ef825cac5bc45069c8821d51f6affc4e2cf317db474434",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:40.999Z",
+          "finished_at": "2026-10-18T19:53:41.037Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.037Z",
+          "finished_at": "2026-10-18T19:53:41.075Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:41.075Z",
+          "finished_at": "2026-10-18T19:53:41.113Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.113Z",
+          "finished_at": "2026-10-18T19:53:41.152Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "source_sha256": "108a65f4ba5a905d0069b904acff2ed7ac150a5c20c13a5cacfec09afe9b869e",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:41.152Z",
+          "finished_at": "2026-10-18T19:53:41.191Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.191Z",
+          "finished_at": "2026-10-18T19:53:41.230Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:41.230Z",
+          "finished_at": "2026-10-18T19:53:41.269Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.269Z",
+          "finished_at": "2026-10-18T19:53:41.310Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r1",
+      "cell": "gpt-trim",
+      "run": 1,
+      "source_sha256": "58e47b5349d4ac820cb80e0342fb823b81b54a94873da7441be3b6d43a1c4567",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:41.310Z",
+          "finished_at": "2026-10-18T19:53:41.351Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.351Z",
+          "finished_at": "2026-10-18T19:53:41.396Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:41.396Z",
+          "finished_at": "2026-10-18T19:53:41.440Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.440Z",
+          "finished_at": "2026-10-18T19:53:41.483Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r2",
+      "cell": "gpt-trim",
+      "run": 2,
+      "source_sha256": "3a90c172f81367e7300715bbc7ca757bc6e327ec2f7a1bcf99945125117cf5b1",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:41.483Z",
+          "finished_at": "2026-10-18T19:53:41.524Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.525Z",
+          "finished_at": "2026-10-18T19:53:41.566Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:41.566Z",
+          "finished_at": "2026-10-18T19:53:41.607Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.607Z",
+          "finished_at": "2026-10-18T19:53:41.649Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r2",
+      "cell": "gpt-cew",
+      "run": 2,
+      "source_sha256": "ce2e93030baa682b23bd0a24d58dd24db1288059353dd2841b6a3cd9399140c1",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:41.649Z",
+          "finished_at": "2026-10-18T19:53:41.691Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "0 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.691Z",
+          "finished_at": "2026-10-18T19:53:41.732Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": true,
+          "value": "False",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:41.732Z",
+          "finished_at": "2026-10-18T19:53:41.773Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "2 is not in numeric range",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.773Z",
+          "finished_at": "2026-10-18T19:53:41.814Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "source_sha256": "a2b8c71762c31cc92c758afc4b6dd91bc66c729003adec2327bd15b87d64cb37",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:41.814Z",
+          "finished_at": "2026-10-18T19:53:41.857Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.857Z",
+          "finished_at": "2026-10-18T19:53:41.897Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "False",
+          "started_at": "2026-10-18T19:53:41.897Z",
+          "finished_at": "2026-10-18T19:53:41.937Z",
+          "exit": 0
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "exception": "FloatOperation",
+          "message": "[<class 'decimal.FloatOperation'>]",
+          "expected": "ValueError",
+          "started_at": "2026-10-18T19:53:41.937Z",
+          "finished_at": "2026-10-18T19:53:41.976Z",
+          "exit": 0
+        }
+      ]
+    }
+  ]
+}

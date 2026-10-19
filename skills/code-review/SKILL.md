@@ -32,7 +32,7 @@ or confidence. State the selected mode and reason briefly.
 | Mode | Trigger | Execution |
 | --- | --- | --- |
 | self | Clear requirements, local and reversible low-risk changes, with direct checks or relevant tests covering the result; no unresolved risk or repeated unexpected failures | The implementing agent checks the diff against requirements and relevant rules, then provides verification evidence; no review subagent |
-| independent | Cross-module behavior, complex dependencies, hidden constraints, insufficient verification, repeated unexpected failures, or an explicit request for independent review | One fresh read-only subagent checks Standards and Spec against the same package |
+| independent | Cross-module behavior, complex dependencies, hidden constraints, numeric search/correction algorithm rewrites (including precision-sensitive boundaries and arithmetic contexts), insufficient verification, repeated unexpected failures, or an explicit request for independent review | One fresh read-only subagent checks Standards and Spec against the same package |
 | dual | High-risk changes such as authorization, persistent data, destructive operations or public contracts, or an explicit request for two isolated axes | Spawn two parallel subagents: separate Standards and Spec reviewers |
 
 `--mode self|independent|dual` may request a mode, but cannot weaken the review required by the scope or
@@ -45,8 +45,10 @@ The implementing agent cannot serve as its own independent reviewer.
 
 For independent or dual review, load `references/standards-reviewer-prompt.md` and
 `references/spec-reviewer-prompt.md` only for the reviewer that needs them. Repository standards override
-smell heuristics. Each independent context receives only the frozen package, relevant rules, confirmed
-scope and verification evidence. Reviewers are read-only and must not influence each other.
+smell heuristics. Each independent context receives only the frozen package, confirmed scope, verification
+evidence and resolved paths to relevant rules, including applicable specialty checks. Load those rules;
+batch required rule/prompt reads that have no dependencies. Reviewers are read-only and must not influence each other.
+Use `fork_turns="none"` or the host's equivalent fresh context; pass the fixed package, not the full exploration history.
 
 When independent or dual review is selected, lack of agent capacity is never a reason to downgrade to
 self. If parallelism is unavailable, run dual axes sequentially in fresh isolated contexts. If no

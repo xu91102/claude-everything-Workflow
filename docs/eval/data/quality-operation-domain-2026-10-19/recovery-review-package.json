@@ -1,0 +1,433 @@
+{
+  "kind": "Immutable post-timeout collection-only recovery; all failed first6 retained, original54 programs and model conditions fixed. This is not a Fast Path quality/performance PASS.",
+  "root": "<BENCH_ROOT>",
+  "base_source": "05a2569677746e935cd2b3daaa4d7f17d322c98d",
+  "scope_source": "User asks same seven tasks, token/time/quality results updated PR62, AGENTS no additions, no merge; frozen protocol requires all42 collected once even critical quality fails.",
+  "review_skill": {
+    "path": "<BENCH_ROOT>/sources/optimized/skills/code-review/SKILL.md",
+    "sha256": "ce8f298cc3b8bedadea506692bc191f8e2787a6b5d65bee8332e8b1ec9f871ab"
+  },
+  "prompts": [
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/skills/code-review/references/standards-reviewer-prompt.md",
+      "sha256": "cf73a1f372e9cacc59c0fa17532bda30e98859514688665cb7ecaef3ba96be33"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/skills/code-review/references/spec-reviewer-prompt.md",
+      "sha256": "f9a3bbf8ccff053ce9006a8e432c455b3492185ea0e1d5763373cc98cdde3be0"
+    }
+  ],
+  "rules": [
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/01-base.md",
+      "sha256": "0d10b2ce8f6c4cae51560b739174ffb7b37885fda84d6b3375629053e859b98c"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/02-implementation.md",
+      "sha256": "700331676ad40d65acdeb469a67cf802cddff78ebf0861ec5e4427b5a3d23620"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/07-forbidden.md",
+      "sha256": "925a8a1e3df9a734522d570f967912ca7b6f69a83aceb8499bda3e292dcd16a5"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/09-first-principles-adversarial-testing.md",
+      "sha256": "182ab761713451fd9b04c290a070e0235a52833f52cbaf695f065363675faf2f"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/testing.md",
+      "sha256": "21b25bc65754993668baad758098a36d8b80a22f0e520b24de1053578d0d1b50"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/harness-engineering.md",
+      "sha256": "9247631278f21f200dc9231ad6c9a2608824f8382acbe136721db042d1626ad4"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/performance.md",
+      "sha256": "451a91bf7f92e747785e56d2e669ef14bca344bcddd3fa8ee0c6b2daf9aa0036"
+    }
+  ],
+  "files": [
+    {
+      "path": "<BENCH_ROOT>/recovery/process-audit.cjs",
+      "sha256": "3f53f9d1d87b55ca78dc9d2d7b82ed239c9e842755a6bbab57c843817705b859"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/account-usage.cjs",
+      "sha256": "36183b8026f394723ebb6f18f2d896f179c3e8c750468aa4f30c9da392051e4e"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/resume-remaining.cjs",
+      "sha256": "05811ddebb448d458b5bc34627a9f40f6439e2eede5b246442db7c1094236cb7"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/launch-remaining.cjs",
+      "sha256": "08d9781df192765f1a79fc3baebf74bad73f307d2db3c04aa70b854dfbfc762a"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/run-phase.cjs",
+      "sha256": "f95997f99d3102ebee57457a6aaec5fce3fb4a6db6b173363689932da45c02a3"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/summarize.cjs",
+      "sha256": "f53d6ef1dd52676963fd35ac109f3664e0744bff109742a2352a52522acd2912"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/trace-diagnose.cjs",
+      "sha256": "d854a344376553a19bedf749ffe567b2d4509cde316e3b6161d5f07ac53be55a"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/make-diagnosis.cjs",
+      "sha256": "23a74e9eb694ed21234c1bf5471f40a62b8dbb654bccc72bc6dc00cc94b71638"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/export-evidence.cjs",
+      "sha256": "84f127a0d50aeb45421f983593a60dfb25d1225719223032e58e64fbb8f7a32b"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/write-report.cjs",
+      "sha256": "c962fefaac1f12f04737f952cb4bfdb1096221215e6117b7be84c4a42b1acfe4"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/make-review-package.cjs",
+      "sha256": "296ad699480bc1d0ab1cd6411f471c6fb26b4fb5fada4df502a7a873d3ad5338"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/shortcircuit-probes.cjs",
+      "sha256": "23333c8cf7fde352906176a03ba4a0fe5e7ab7fe6a60e8d6a9f5ad25fa5bae36"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/floatstop-probes.cjs",
+      "sha256": "bcefc0279c548976beec67c29d79fa8a222711379bed37912fc39bd2d1bbab8e"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/infinite-stop-probes.cjs",
+      "sha256": "363b93462631272585f4a23f5f672684c2d8f78ab24f2c27124108b34fab3386"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/build.cjs",
+      "sha256": "4fd1a5033bf017787c2afd4028cc751ee147ef81b541f8a8648781d16d02f68b"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/build-result.json",
+      "sha256": "2e41303a7a54e9362c0ed6261c2817e7a8392a3a00b7be7c16e875b9efaa1607"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/accounting-replay.json",
+      "sha256": "2c1fb7094c1235546cdf49c5965b11884dc3ce95201784fb3199a48b5ca9dd40"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/audit-correction.json",
+      "sha256": "48b31af4f2638a27534841f54023effcc764d6f6d6bba3057026d833f802525a"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/positive-audit-control-v2.json",
+      "sha256": "9f6fb88cee46be96dea39b021e145e265be47332840e7bc7d3e0164f307ccb3e"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/6-process-audit.json",
+      "sha256": "7b5ce2165c4575806b25e8c8033303cd6eba00b3fa0ffe48d9236f1d6b2ebdf8"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/critical-gate.json",
+      "sha256": "d73efecff168fb89078fdc8cddc4c5a914990dc9979a1b15af6f84a64fed54be"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/first6-progress.json",
+      "sha256": "92eefb3d88f074c412242328fcc29cfc0100383267e7f495d329bb044a81abd2"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/first6-experiment.json",
+      "sha256": "484c426b0d55a24970ecb735d20ca847e0bf4869c69059e2ac3d8c3d7438407f"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/first6-original-driver-exit.json",
+      "sha256": "88ee4d049484933aec1e72e1781f827b08f4e93b3511a64cd8d1d4431683dfa9"
+    },
+    {
+      "path": "<BENCH_ROOT>/recovery/first6-original-postprocess-result.json",
+      "sha256": "d2923046f21c8eb4493a2f205def36c055047025eff9ff6183a7af900d09049a"
+    },
+    {
+      "path": "<BENCH_ROOT>/run-final-benchmark.cjs",
+      "sha256": "53275d5e603cc0df7983b9c4baae1a6117ae390f415c08f18565e0418523489b"
+    },
+    {
+      "path": "<BENCH_ROOT>/account-usage.cjs",
+      "sha256": "4668e9dd1a425f35eb09f32f0760aec8acb680c7198da0ab7c0d7d1cd89ab334"
+    },
+    {
+      "path": "<BENCH_ROOT>/quality-probes.cjs",
+      "sha256": "ae0aa64c7cd51853ba5f85a412ef2983f3086b240b3dce9fd58bfe4198b3fb11"
+    },
+    {
+      "path": "<BENCH_ROOT>/cost-probes.cjs",
+      "sha256": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262"
+    },
+    {
+      "path": "<BENCH_ROOT>/context-probes.cjs",
+      "sha256": "e8bb0dbd5e07ea6f80ed1dfa031c098a71ebf263494736435d3c530cfc39519b"
+    },
+    {
+      "path": "<BENCH_ROOT>/promotion-probes.cjs",
+      "sha256": "b9c24a9d58c40e90f635ea2ca15ce9d9c82925eeb3945197c9427b3cf6481786"
+    },
+    {
+      "path": "<BENCH_ROOT>/compatibility-probes.cjs",
+      "sha256": "f83e94c4f8e04c039e5edd7c810306c8c2cf04628e85e67c3a82a8e9e27aecb3"
+    },
+    {
+      "path": "<BENCH_ROOT>/i18n-probes.cjs",
+      "sha256": "5b8dc2ac5ea1142c5690930a97f386c2a9bb9f34989eb4802fe213354b1cfe55"
+    },
+    {
+      "path": "<BENCH_ROOT>/shortcircuit-probes.cjs",
+      "sha256": "d80b39aaf5ec4c054c4e7bd9ec9ace445f6f436c6344612045c8178c7793fa27"
+    },
+    {
+      "path": "<BENCH_ROOT>/floatstop-probes.cjs",
+      "sha256": "a4b43713d9507bcb59afea3a63d1bb891331be0df25be5f0b28d17bfd9ba9a01"
+    },
+    {
+      "path": "<BENCH_ROOT>/infinite-stop-probes.cjs",
+      "sha256": "716e5311387ff0b5ee6edddd8fdcd00efe86fd61eb25f04013826b22a616a28d"
+    },
+    {
+      "path": "<BENCH_ROOT>/summarize.cjs",
+      "sha256": "67a5c2abf4f04a6aa575437c967f254bd62175d8b90c5f57707603c82c7a8ae2"
+    },
+    {
+      "path": "<BENCH_ROOT>/trace-diagnose.cjs",
+      "sha256": "92540817af24da5f72a8ec7de48945ddb81568ffc6a2efa679c0fc4b5adea4ec"
+    },
+    {
+      "path": "<BENCH_ROOT>/make-diagnosis.cjs",
+      "sha256": "81a30552242916170dabdb1c22ba0342fd0f5c52c9deb46c036bcd5dd8f80382"
+    },
+    {
+      "path": "<BENCH_ROOT>/export-evidence.cjs",
+      "sha256": "fc0d8474421ee4ab76e52416b9b5f382202c383ec0abafe923f92e31617a3e22"
+    },
+    {
+      "path": "<BENCH_ROOT>/write-report.cjs",
+      "sha256": "605541469c9db9b9e23ba3466f56b5cd07b9decf63ba17107ba7f5591c6dca1e"
+    },
+    {
+      "path": "<BENCH_ROOT>/make-review-package.cjs",
+      "sha256": "3a60298218eea94c59083c5533fa584a634c4c10ea9c02d221cee3d2e9d10397"
+    },
+    {
+      "path": "<BENCH_ROOT>/protocol/protocol.json",
+      "sha256": "9e5562126b08c310de9bc46be8d7ebbc58d181e5a18df2ba062d1d4945dda27d"
+    },
+    {
+      "path": "<BENCH_ROOT>/protocol/installed-sources.json",
+      "sha256": "45f25d026812d3b47adc2e1230fd8b924bb2f057bded3f07db1605e9ff72a7fa"
+    },
+    {
+      "path": "<BENCH_ROOT>/controller-review-package.json",
+      "sha256": "81134837d9f78dc4ef22da003768be5922b954c96df0746f02dccbfc2f79a89b"
+    },
+    {
+      "path": "<BENCH_ROOT>/controller-independent-review.json",
+      "sha256": "93fa4efa586ef9e25a4225e036a27b5ee45c36249ff7b9c1e2bc0893052eb51c"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/results/more-itertools-1247/gpt-cew-r1/result.json",
+      "sha256": "c48f433b63ca98f42cf4a81c3d5e17c63db9892d9ef164e333c5d43be21398e3"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/receipt.json",
+      "sha256": "dfaaf5681f482fd9b0c07369b738023593e738b33c46bd15483bcb8ab747b9f2"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/change.patch",
+      "sha256": "9164f380b4d33316cebe1c2590408d98c7bd706df097c73779130887d3ffa0d5"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/results/more-itertools-1247/gpt-cew-r1/base-full.xml",
+      "sha256": "77f470569aef99aa1edef2a099c1b2e1506cf51dfafc88e2e369d3ecb79cbc05"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/results/more-itertools-1247/gpt-cew-r1/target.xml",
+      "sha256": "c773722ab43d7cd13b098e82f31968909287d31a7094e03e00f5a8499c43df0b"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r1/results/more-itertools-1247/gpt-cew-r1/after-full.xml",
+      "sha256": "2bafe621ef5b782f5308537f7edf0c8daf53fd807191c8c26236c156e999a4d2"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/results/more-itertools-1247/gpt-trim-r1/result.json",
+      "sha256": "6948f3ce0163ba316afea3cca62ca1dcb5c4be1d5d2909bfaecf3bf719619d1e"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/receipt.json",
+      "sha256": "d6c3e3879856f36567e65aa47796eddf0bb691f35b4b8ce4f601323836b6a012"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/change.patch",
+      "sha256": "b0fc6be8d504dd21c063f6171eaf1efdf4fb7842e8c11ef211425e07912bc1f8"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/results/more-itertools-1247/gpt-trim-r1/base-full.xml",
+      "sha256": "99b8c9a88831fd3442b91709ddb685ddbc0d64262462fc1ff3c3ea550d94f3a2"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/results/more-itertools-1247/gpt-trim-r1/target.xml",
+      "sha256": "c8ec8a0689204722140b2eb10869b72f58a98e738ca446dad621013e5546a69f"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r1/results/more-itertools-1247/gpt-trim-r1/after-full.xml",
+      "sha256": "f65f0f601dc63ada606ed0c58f972ee9114a17f5cc56293a7869d8d5392a9ce4"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/results/more-itertools-1247/gpt-fixed-r2/result.json",
+      "sha256": "07224baf848cf7bd5c40c8a27cd28cc39e3016085acdfce746237d619c381f6e"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/receipt.json",
+      "sha256": "ac39323d5d6012f21ea585b95e19a371d47c4c8d53e9ed6f7baad33563ee1988"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/change.patch",
+      "sha256": "a9a6a19c68f78acd9f2bbc33b62191cd3a8e2f7793817d19c85568a7b9166e7d"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/results/more-itertools-1247/gpt-fixed-r2/base-full.xml",
+      "sha256": "bb163aef3fbd1fca51dc1dae85c41725802814cae15ce10a9ec6ecc4ea41b17d"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/results/more-itertools-1247/gpt-fixed-r2/target.xml",
+      "sha256": "06b12d6ba29f80c4d02c72a9a0d9e685d6b780deb5174a05b91030f4c397126c"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r2/results/more-itertools-1247/gpt-fixed-r2/after-full.xml",
+      "sha256": "6b82a7899b958203afc6c475dd5816d490b00bc91310a55438967daff3c0fefc"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/result.json",
+      "sha256": "84f05751122ceb6f184513dd2c768a717b04af479a29dbdb90ebb6ef892b35d5"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/receipt.json",
+      "sha256": "46dab6be213ea89908e553fcee31d062f138afe22083f4c1239277b2f9795441"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/change.patch",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/base-full.xml",
+      "sha256": "16a88bd64f9ebadc1550ed6ee24ad9d117a1316cca6a001d367013252b8f9449"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/target.xml",
+      "sha256": "442331cc19dbbf19d53ba6b31613a73c9c45288760f9f1bdffd6cdbd645bf657"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-trim--r2/results/more-itertools-1247/gpt-trim-r2/after-full.xml",
+      "sha256": "c9f3f0217202f7fd4555cf2b2ac4dbada806de6cb64ac0b9c90a085bc372a61b"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/results/more-itertools-1247/gpt-cew-r2/result.json",
+      "sha256": "842e96e640ac1b518cf05b5f5c888bc8f1c77043bd4c522f8679247a0725fd80"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/receipt.json",
+      "sha256": "19ca9a70de43419e59651c6b7a0444f113f65cf598b04d3bd71541eef6b3f39d"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/change.patch",
+      "sha256": "6bbec3bd4735e98630b0b11f158fe79c926bad0125e2d52a446531661ee0ce26"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/results/more-itertools-1247/gpt-cew-r2/base-full.xml",
+      "sha256": "e807cf3e3ff96cc741c9d8b86d96d4eb8b2b11703fbcd216a8d59970bb9583e8"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/results/more-itertools-1247/gpt-cew-r2/target.xml",
+      "sha256": "29767e8baf089234693a12d714afc5b421fb8e57e7f8a83b6caea0e16012a214"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-cew--r2/results/more-itertools-1247/gpt-cew-r2/after-full.xml",
+      "sha256": "d8859f52956e2bd4ccc9a6bf68abd518f70764e2e78f8cf737c85fbe57f08901"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/results/more-itertools-1247/gpt-fixed-r1/result.json",
+      "sha256": "a7dfb40d81dba9a7a7d378c81f6bbe7a4375c33279fdf7ebb3fd5a3b5d91a1c3"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/receipt.json",
+      "sha256": "b26e45e801db0a7023b1be661b09b6cdc52d3972c9d7fda83ba35a7fa5c5263b"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/change.patch",
+      "sha256": "fa36f7459e437e6682fc900d4ac7349e9d3bcb656d277c4020483d55d9285fc3"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/results/more-itertools-1247/gpt-fixed-r1/base-full.xml",
+      "sha256": "0cf747a54954f74952e9fb8b27f343e1765bcd18ec724cf1a5bfa7c4ab895abb"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/results/more-itertools-1247/gpt-fixed-r1/target.xml",
+      "sha256": "7f7d2d248c82ff9f0084236bc28e64e94726ee958cd86e8eda9d6eb086d7e0eb"
+    },
+    {
+      "path": "<BENCH_ROOT>/trials/more-itertools-1247--gpt-fixed--r1/results/more-itertools-1247/gpt-fixed-r1/after-full.xml",
+      "sha256": "e26301650a6d4cce8508eccd46ea9a1ea14a388b4e22b4a1e159dd8849b1863d"
+    },
+    {
+      "path": "<BENCH_ROOT>/critical-quality-probes.json",
+      "sha256": "49af325d5de511e06f343ac21462040db89d1df9ce551b62408ccc484999e6a8"
+    },
+    {
+      "path": "<BENCH_ROOT>/critical-cost-probes.json",
+      "sha256": "6d7e46a086d91fdc3ebbe83b4a39d2dff86709c1236b8b599671724813d9b08c"
+    },
+    {
+      "path": "<BENCH_ROOT>/critical-context-probes.json",
+      "sha256": "077f6992bfe221a476c70d48c906d44ee27645461d639e5b2320fb6834c837fd"
+    },
+    {
+      "path": "<BENCH_ROOT>/critical-promotion-probes.json",
+      "sha256": "7f9dbb72faa29b174466bc1e4106a11e7d4f9dbf5a2355dd72d66e4b3d894385"
+    },
+    {
+      "path": "<BENCH_ROOT>/critical-compatibility-probes.json",
+      "sha256": "08466777243904d13981722f70fa2a21284765a9dc29a0b94153b117aba4ec8e"
+    },
+    {
+      "path": "<BENCH_ROOT>/critical-shortcircuit-probes.json",
+      "sha256": "e99667d81fa4dc32a97fa2b82402e22af54da8de14de21043e922ccb6794adcc"
+    },
+    {
+      "path": "<BENCH_ROOT>/critical-floatstop-probes.json",
+      "sha256": "f952be095641943c021237696ddab21eeb047bf2ecd3caac3484453da3ece6fb"
+    },
+    {
+      "path": "<BENCH_ROOT>/critical-infinite-stop-probes.json",
+      "sha256": "6a1671bde770ef175313844869eb7fdfdf3530e108e88596b842fc3c65db7c23"
+    }
+  ],
+  "requirements": "Keep original first6 receipts/results/patches/JUnit/session snapshots unchanged. First driver stopped after actual timeout guard; preserve that error. Only36 never-started original plan outcomes continue once. Same trial()/stage() function bytes, HOME/venv/profile/model/effort/prompt/720s/rotation/concurrency and strict grader. Original54 Python programs/inputs/oracles unchanged; explicit no-live-owned-trial-process audit permits ONLY the three frozen wrappers timeout guard exception after phase closure. Frozen root sources remain unchanged; actual executed wrapper source/provenance explicit. Model timeout and provider capacity failures remain unresolved and cannot pass quality. Failed raw CLI zero is not zero use: independently sum same unique actual provider metadata, accept absent CLI total ONLY an explicitly nonzero-exit unresolved frozen-public-collector record with matching computed family. Valid completed CLI mismatch still fails; no billing/unfinished-request estimate. Source/install/public JS/AGENTS unchanged. Whole-batch tokenANDmean gate unchanged and never interpreted as speed for incomplete work.",
+  "validation": {
+    "actual_failed_trace_replays": {
+      "path": "<BENCH_ROOT>/recovery/accounting-replay.json",
+      "sha256": "2c1fb7094c1235546cdf49c5965b11884dc3ce95201784fb3199a48b5ca9dd40"
+    },
+    "live_owned_process_positive_control": {
+      "path": "<BENCH_ROOT>/recovery/positive-audit-control-v2.json",
+      "sha256": "9f6fb88cee46be96dea39b021e145e265be47332840e7bc7d3e0164f307ccb3e"
+    },
+    "closed6_zero_process_audit": {
+      "path": "<BENCH_ROOT>/recovery/6-process-audit.json",
+      "sha256": "7b5ce2165c4575806b25e8c8033303cd6eba00b3fa0ffe48d9236f1d6b2ebdf8"
+    },
+    "all54_actual_critical_gate": {
+      "path": "<BENCH_ROOT>/recovery/critical-gate.json",
+      "sha256": "d73efecff168fb89078fdc8cddc4c5a914990dc9979a1b15af6f84a64fed54be"
+    },
+    "no_new_model_runs_since_original_six": true
+  },
+  "constraints": "Read-only, only write recovery/independent-review.json. No model/probe/test execution, input edits, auth values, hidden reasoning/encrypted bodies, subagents or messages. Inspect actual current/old helper diffs, exact function/program identity, real failed trace verdicts and preserved evidence. Do not rerun known54 or full prior audits. Return package_sha256, separate Standards/Spec status/findings, hash counts and checks not run. Actual remaining36 and full quality/performance NOT RUN; this review only permits faithful collection recovery."
+}

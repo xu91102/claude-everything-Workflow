@@ -1,0 +1,15 @@
+{
+  "stopped_at": "2026-10-18T19:54:18.016Z",
+  "pid": 10960,
+  "paused_at": "2026-10-18T19:52:51.543Z",
+  "root_driver_signal": "SIGKILL",
+  "measured_models_interrupted": 0,
+  "ordinary_model_calls_started": 0,
+  "original_metadata_sha256": "c661190247acc51b7aa372723d4cede3bc0bf065bea772dc91f7c7dfe59afe16",
+  "original_frozen42_gate": "Driver paused before completion of its4controller phase; exactunchanged controllers will be uniformly run afterstop andreportedseparately. Do not call the new4predeclared or fabricateoriginalgateevent.",
+  "planned": 42,
+  "executed": 6,
+  "not_run": 36,
+  "wholeperformance": "NOT RUN",
+  "posthoc_quality": "FAIL0/2"
+}

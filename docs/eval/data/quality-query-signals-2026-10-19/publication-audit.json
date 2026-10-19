@@ -1,0 +1,10 @@
+{
+  "checked_at": "2026-10-18T21:11:22.203Z",
+  "actual_auth_copies_removed": 9,
+  "scope": "Only eighth attempt three templates and six trials; original user authentication and other attempts untouched",
+  "public_files_credential_match": false,
+  "review_source_sha256": "5e1da8f7ddc68dca84b36b9f7b390c4e2abe89875e35cfa4531280555725dcab",
+  "original_model_and_probe_outputs_changed": false,
+  "report_change": "Expected independent-review marker and README latest pointer only; measurements unchanged",
+  "probe_environment_repair": "Original368 NOTRUN launch records separately preserved; exact link repair and unchanged programs/inputs/oracles, actual same46 results separate"
+}

@@ -1,0 +1,384 @@
+{
+  "tasks": [
+    {
+      "task": "humanize-346",
+      "repo": "humanize",
+      "cells": {
+        "gpt-base": {
+          "n": 2,
+          "ok": 2,
+          "in": 310052,
+          "unc": 27748,
+          "cmds": 10.5,
+          "sec": 68.8,
+          "src": 3.5,
+          "nf": 0
+        },
+        "gpt-cew": {
+          "n": 1,
+          "ok": 1,
+          "in": 807317,
+          "unc": 53397,
+          "cmds": 32.0,
+          "sec": 136.6,
+          "src": 3.0,
+          "nf": 0
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "ok": 2,
+          "in": 236410,
+          "unc": 27322,
+          "cmds": 8.5,
+          "sec": 57.1,
+          "src": 3.0,
+          "nf": 0
+        }
+      },
+      "ratio": 0.76,
+      "ratio_pairs": [
+        0.6,
+        0.68,
+        0.89,
+        1.01
+      ],
+      "cmd_delta": -2.0
+    },
+    {
+      "task": "humanize-381",
+      "repo": "humanize",
+      "cells": {
+        "gpt-base": {
+          "n": 2,
+          "ok": 2,
+          "in": 218926,
+          "unc": 41390,
+          "cmds": 10.5,
+          "sec": 65.5,
+          "src": 8.0,
+          "nf": 0
+        },
+        "gpt-cew": {
+          "n": 1,
+          "ok": 1,
+          "in": 412645,
+          "unc": 61541,
+          "cmds": 16.0,
+          "sec": 113.4,
+          "src": 8.0,
+          "nf": 0
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "ok": 2,
+          "in": 191986,
+          "unc": 20082,
+          "cmds": 7.0,
+          "sec": 57.1,
+          "src": 8.0,
+          "nf": 0
+        }
+      },
+      "ratio": 0.88,
+      "ratio_pairs": [
+        0.76,
+        0.76,
+        1.03,
+        1.04
+      ],
+      "cmd_delta": -3.5
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repo": "itsdangerous",
+      "cells": {
+        "gpt-base": {
+          "n": 2,
+          "ok": 2,
+          "in": 162504,
+          "unc": 16904,
+          "cmds": 9.0,
+          "sec": 64.2,
+          "src": 12.5,
+          "nf": 0
+        },
+        "gpt-cew": {
+          "n": 1,
+          "ok": 1,
+          "in": 268048,
+          "unc": 22288,
+          "cmds": 15.0,
+          "sec": 93.0,
+          "src": 12.0,
+          "nf": 0
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "ok": 2,
+          "in": 142611,
+          "unc": 27411,
+          "cmds": 7.0,
+          "sec": 59.9,
+          "src": 11.0,
+          "nf": 0
+        }
+      },
+      "ratio": 0.88,
+      "ratio_pairs": [
+        0.75,
+        0.85,
+        0.91,
+        1.04
+      ],
+      "cmd_delta": -2.0
+    },
+    {
+      "task": "more-itertools-1247",
+      "repo": "more-itertools",
+      "cells": {
+        "gpt-base": {
+          "n": 2,
+          "ok": 2,
+          "in": 314828,
+          "unc": 31372,
+          "cmds": 11.0,
+          "sec": 153.8,
+          "src": 66.0,
+          "nf": 0
+        },
+        "gpt-cew": {
+          "n": 2,
+          "ok": 2,
+          "in": 394202,
+          "unc": 36378,
+          "cmds": 17.0,
+          "sec": 186.6,
+          "src": 48.0,
+          "nf": 0
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "ok": 2,
+          "in": 185346,
+          "unc": 19522,
+          "cmds": 6.0,
+          "sec": 155.6,
+          "src": 56.0,
+          "nf": 0
+        }
+      },
+      "ratio": 0.59,
+      "ratio_pairs": [
+        0.48,
+        0.52,
+        0.69,
+        0.75
+      ],
+      "cmd_delta": -5.0
+    },
+    {
+      "task": "more-itertools-1284",
+      "repo": "more-itertools",
+      "cells": {
+        "gpt-base": {
+          "n": 2,
+          "ok": 2,
+          "in": 146486,
+          "unc": 15542,
+          "cmds": 7.5,
+          "sec": 61.8,
+          "src": 4.0,
+          "nf": 0
+        },
+        "gpt-cew": {
+          "n": 1,
+          "ok": 1,
+          "in": 204253,
+          "unc": 24157,
+          "cmds": 15.0,
+          "sec": 73.0,
+          "src": 4.0,
+          "nf": 0
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "ok": 2,
+          "in": 119850,
+          "unc": 15978,
+          "cmds": 7.0,
+          "sec": 45.5,
+          "src": 4.0,
+          "nf": 0
+        }
+      },
+      "ratio": 0.82,
+      "ratio_pairs": [
+        0.81,
+        0.82,
+        0.82,
+        0.83
+      ],
+      "cmd_delta": -0.5
+    },
+    {
+      "task": "slugify-194",
+      "repo": "python-slugify",
+      "cells": {
+        "gpt-base": {
+          "n": 2,
+          "ok": 2,
+          "in": 312232,
+          "unc": 30120,
+          "cmds": 9.5,
+          "sec": 71.8,
+          "src": 9.0,
+          "nf": 0
+        },
+        "gpt-cew": {
+          "n": 1,
+          "ok": 1,
+          "in": 674001,
+          "unc": 42833,
+          "cmds": 20.0,
+          "sec": 173.4,
+          "src": 10.0,
+          "nf": 0
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "ok": 2,
+          "in": 179166,
+          "unc": 24414,
+          "cmds": 6.5,
+          "sec": 41.6,
+          "src": 8.5,
+          "nf": 0
+        }
+      },
+      "ratio": 0.57,
+      "ratio_pairs": [
+        0.38,
+        0.41,
+        1.01,
+        1.09
+      ],
+      "cmd_delta": -3.0
+    },
+    {
+      "task": "slugify-200",
+      "repo": "python-slugify",
+      "cells": {
+        "gpt-base": {
+          "n": 2,
+          "ok": 2,
+          "in": 238380,
+          "unc": 34988,
+          "cmds": 9.0,
+          "sec": 68.9,
+          "src": 12.5,
+          "nf": 0
+        },
+        "gpt-cew": {
+          "n": 1,
+          "ok": 1,
+          "in": 372959,
+          "unc": 46303,
+          "cmds": 19.0,
+          "sec": 76.2,
+          "src": 15.0,
+          "nf": 0
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "ok": 2,
+          "in": 243146,
+          "unc": 36938,
+          "cmds": 6.5,
+          "sec": 63.3,
+          "src": 13.0,
+          "nf": 0
+        }
+      },
+      "ratio": 1.02,
+      "ratio_pairs": [
+        0.77,
+        0.98,
+        1.05,
+        1.34
+      ],
+      "cmd_delta": -2.5
+    }
+  ],
+  "totals": {
+    "gpt-base": {
+      "n": 14,
+      "ok": 14,
+      "in": 243344,
+      "unc": 28295,
+      "out": 2071,
+      "cmds": 9.6,
+      "sec": 79,
+      "src": 16.5,
+      "nf": 0,
+      "tests_mod": 1
+    },
+    "gpt-cew": {
+      "n": 8,
+      "ok": 8,
+      "in": 440954,
+      "unc": 40410,
+      "out": 3830,
+      "cmds": 18.9,
+      "sec": 130,
+      "src": 18.5,
+      "nf": 0,
+      "tests_mod": 1
+    },
+    "gpt-fixed": {
+      "n": 14,
+      "ok": 14,
+      "in": 185502,
+      "unc": 24524,
+      "out": 1604,
+      "cmds": 6.9,
+      "sec": 69,
+      "src": 14.8,
+      "nf": 0,
+      "tests_mod": 0
+    }
+  },
+  "delta": {
+    "gpt-cew": {
+      "in_pct": 81.2,
+      "unc_pct": 42.8,
+      "out_pct": 84.9,
+      "cmds_pct": 96.9,
+      "sec_pct": 64.6,
+      "median_ratio": 1.5,
+      "min_ratio": 1.4,
+      "max_ratio": 3.25
+    },
+    "gpt-fixed": {
+      "in_pct": -23.8,
+      "unc_pct": -13.3,
+      "out_pct": -22.5,
+      "cmds_pct": -28.1,
+      "sec_pct": -12.7,
+      "median_ratio": 0.82,
+      "min_ratio": 0.57,
+      "max_ratio": 1.02
+    }
+  },
+  "noise": {
+    "baseline_repeat_ratio": [
+      1.5,
+      1.36,
+      1.22,
+      1.44,
+      1.01,
+      2.66,
+      1.27
+    ],
+    "baseline_repeat_median": 1.36
+  }
+}

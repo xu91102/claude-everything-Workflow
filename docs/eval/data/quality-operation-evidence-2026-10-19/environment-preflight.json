@@ -1,0 +1,300 @@
+{
+  "status": "PASS",
+  "started_at": "2026-10-18T21:05:51.838Z",
+  "finished_at": "2026-10-18T21:06:07.290Z",
+  "kind": "Infrastructure preflight on six already-closed eighth artifacts only. Identical five frozen controllers and all46 prior inputs/oracles; parent positive controls16/12/4 and known candidate FloatOperation negative controls0/4 both reproduced. No ninth model/artifact quality claim.",
+  "environments": [
+    {
+      "repo": "python-slugify",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/python-slugify/bin/python"
+    },
+    {
+      "repo": "humanize",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/humanize/bin/python"
+    },
+    {
+      "repo": "more-itertools",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/more-itertools/bin/python"
+    },
+    {
+      "repo": "itsdangerous",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/itsdangerous/bin/python"
+    }
+  ],
+  "launches": [
+    {
+      "controller": "cost-probes.cjs",
+      "exit": 0
+    },
+    {
+      "controller": "quality-probes.cjs",
+      "exit": 0
+    },
+    {
+      "controller": "context-probes.cjs",
+      "exit": 0
+    },
+    {
+      "controller": "promotion-probes.cjs",
+      "exit": 0
+    },
+    {
+      "controller": "compatibility-probes.cjs",
+      "exit": 0
+    }
+  ],
+  "reports": [
+    {
+      "controller": "quality-probes.cjs",
+      "file": "<BENCH_ROOT>/preflight-previous6/quality-probes.json",
+      "sha256": "92b74494b21adae1e057093313e0f8616ff9b6cb93e0020e43b901323556483a",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 0,
+          "total": 16
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 0,
+          "total": 16
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 8,
+          "total": 16
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 16,
+          "total": 16
+        }
+      ]
+    },
+    {
+      "controller": "cost-probes.cjs",
+      "file": "<BENCH_ROOT>/preflight-previous6/cost-probes.json",
+      "sha256": "70a39c5b194d64232f58a717ad03b7f0baefff3770357c38b03394c71c5045c7",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 4,
+          "total": 4
+        }
+      ]
+    },
+    {
+      "controller": "context-probes.cjs",
+      "file": "<BENCH_ROOT>/preflight-previous6/context-probes.json",
+      "sha256": "5ee3be66ca1688dcbcd92777bd22cc8a9804f62a27efb5360262875f1a078744",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 12
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 12
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 8,
+          "total": 12
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 12,
+          "total": 12
+        }
+      ]
+    },
+    {
+      "controller": "promotion-probes.cjs",
+      "file": "<BENCH_ROOT>/preflight-previous6/promotion-probes.json",
+      "sha256": "bb9e1f680453db8b8b8f07cf2a3f4c27b4c1ade63f798f7ac558d7e7c06360ff",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 10
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 10
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 8,
+          "total": 10
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 10,
+          "total": 10
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 10,
+          "total": 10
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 10,
+          "total": 10
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 10
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 10,
+          "total": 10
+        }
+      ]
+    },
+    {
+      "controller": "compatibility-probes.cjs",
+      "file": "<BENCH_ROOT>/preflight-previous6/compatibility-probes.json",
+      "sha256": "df1727168d15832c76fb2468e29e1b0885d8646bef05bdf435d6f210a15d94ec",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 0,
+          "total": 4
+        }
+      ]
+    }
+  ],
+  "controllers_sha256": {
+    "quality-probes.cjs": "ae0aa64c7cd51853ba5f85a412ef2983f3086b240b3dce9fd58bfe4198b3fb11",
+    "cost-probes.cjs": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262",
+    "context-probes.cjs": "e8bb0dbd5e07ea6f80ed1dfa031c098a71ebf263494736435d3c530cfc39519b",
+    "promotion-probes.cjs": "b9c24a9d58c40e90f635ea2ca15ce9d9c82925eeb3945197c9427b3cf6481786",
+    "compatibility-probes.cjs": "f83e94c4f8e04c039e5edd7c810306c8c2cf04628e85e67c3a82a8e9e27aecb3"
+  },
+  "previous_progress_sha256": "7367233e512c47d1c09441e8adc59464eeb9b57285bd7ef77357c123147f90fd",
+  "ninth_models_executed": 0
+}

@@ -1,0 +1,12 @@
+{
+  "kind": "NOT RUN: predeclared quality stop before all ordinary tasks; no humanize artifact generated",
+  "status": "NOT RUN",
+  "amendment": {
+    "kind": "Predeclared before every model trial; same uniform translation procedure from previous round",
+    "frozen_at": "2026-10-18T20:01:16.560Z",
+    "controller_sha256": "5b8dc2ac5ea1142c5690930a97f386c2a9bb9f34989eb4802fe213354b1cfe55",
+    "artifact_count": 12,
+    "run_only_after_timed_models": true
+  },
+  "results": []
+}

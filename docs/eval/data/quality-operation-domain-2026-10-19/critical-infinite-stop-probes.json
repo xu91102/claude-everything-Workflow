@@ -1,0 +1,355 @@
+{
+  "guard_audit": {
+    "phase": 6,
+    "audit_file": "recovery/6-process-audit.json",
+    "original_controller_sha256": "716e5311387ff0b5ee6edddd8fdcd00efe86fd61eb25f04013826b22a616a28d",
+    "kind": "Post-timeout process audit exception only; Python/input/oracle/Boolean verdict/time bounds unchanged; failed model completion remains false"
+  },
+  "kind": "Two infinite-stop original-exception and bounded-cost queries frozen before every model; same actual tenth program/input/oracle, parent expectation fixed before models; critical6/final42 uniform, no artifact edits.",
+  "started_at": "2026-10-18T23:32:26.137Z",
+  "finished_at": "2026-10-18T23:32:34.700Z",
+  "declaration": {
+    "kind": "All known checks predeclared before every model; same actual tenth posthoc program, inputs and oracle",
+    "frozen_at": "2026-10-18T23:10:08.894Z",
+    "controller_sha256": "716e5311387ff0b5ee6edddd8fdcd00efe86fd61eb25f04013826b22a616a28d",
+    "python_program_sha256": "3c3135c36312e576709919e272311888bbb9a9cd94d51e4a51ea330b384fa358",
+    "per_artifact_queries": 2,
+    "previous_actual_evidence": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC/posthoc-infinite-stop-probes.json",
+    "previous_actual_evidence_sha256": "1dd9afba6830f165bf58e8a91737586d3f3455403686a13d06020836b8d9801c",
+    "program_input_oracle_unchanged": true,
+    "timeout_ms_per_case": 2000,
+    "expected_exceptions": {
+      "infinite_stop_ascending": "ValueError",
+      "infinite_stop_descending": "ValueError"
+    }
+  },
+  "timeout_ms_per_case": 2000,
+  "baseline_validation": [
+    {
+      "case": "infinite_stop_ascending",
+      "operation": "len",
+      "passed": null,
+      "exception": "ValueError",
+      "message": "cannot convert float NaN to integer",
+      "expected": null,
+      "constructor_valid": true,
+      "started_at": "2026-10-18T23:32:26.137Z",
+      "finished_at": "2026-10-18T23:32:26.175Z",
+      "exit": 0,
+      "signal": null,
+      "timed_out": false
+    },
+    {
+      "case": "infinite_stop_descending",
+      "operation": "len",
+      "passed": null,
+      "exception": "ValueError",
+      "message": "cannot convert float NaN to integer",
+      "expected": null,
+      "constructor_valid": true,
+      "started_at": "2026-10-18T23:32:26.176Z",
+      "finished_at": "2026-10-18T23:32:26.218Z",
+      "exit": 0,
+      "signal": null,
+      "timed_out": false
+    }
+  ],
+  "scored_uniform_queries": 16,
+  "total_process_launches": 18,
+  "expected_exceptions": {
+    "infinite_stop_ascending": "ValueError",
+    "infinite_stop_descending": "ValueError"
+  },
+  "python_program": "import json,sys\npayload=json.load(sys.stdin)\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('infinite_stop_ascending',(0,float('inf'),1)),('infinite_stop_descending',(0,-float('inf'),-1))]\nfor name,args in cases:\n if payload['case_filter']!=[name,'len']:continue\n try:\n  instance=cls(*args)\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':False,'constructor_exception':type(error).__name__}));continue\n print(json.dumps({'stage':'constructed','case':name,'operation':'len'}),flush=True)\n try:\n  actual=len(instance)\n  print(json.dumps({'case':name,'operation':'len','passed':None if payload['oracle_validation'] else False,'value':actual,'expected':payload['expected_exception']}))\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':None if payload['oracle_validation'] else type(error).__name__==payload['expected_exception'],'exception':type(error).__name__,'message':str(error),'expected':payload['expected_exception']}))\n",
+  "controller_source": "require(\"/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o/recovery/process-audit.cjs\").readAudit(\"/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o\");\n'use strict';\nconst fs=require('node:fs'),p=require('node:path'),cp=require('node:child_process'),c=require('node:crypto');\nconst root=\"/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o\",read=f=>JSON.parse(fs.readFileSync(p.join(root,f))),hash=b=>c.createHash('sha256').update(b).digest('hex');\nconst progress=read('progress.json');if(![6,42].includes(progress.count))throw Error('Need complete closed6 or full42 phase');\nfor(const r of progress.completed)if(JSON.parse(fs.readFileSync(r.result_file)).agent.timed_out && !require(\"/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o/recovery/process-audit.cjs\").readAudit(root))throw Error('Timeout needs manual process audit first');\nconst program=`import json,sys\npayload=json.load(sys.stdin)\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('infinite_stop_ascending',(0,float('inf'),1)),('infinite_stop_descending',(0,-float('inf'),-1))]\nfor name,args in cases:\n if payload['case_filter']!=[name,'len']:continue\n try:\n  instance=cls(*args)\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':False,'constructor_exception':type(error).__name__}));continue\n print(json.dumps({'stage':'constructed','case':name,'operation':'len'}),flush=True)\n try:\n  actual=len(instance)\n  print(json.dumps({'case':name,'operation':'len','passed':None if payload['oracle_validation'] else False,'value':actual,'expected':payload['expected_exception']}))\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':None if payload['oracle_validation'] else type(error).__name__==payload['expected_exception'],'exception':type(error).__name__,'message':str(error),'expected':payload['expected_exception']}))\n`;\nconst queries=['infinite_stop_ascending','infinite_stop_descending'].map(n=>[n,'len']);\nconst gitSource=ref=>cp.execFileSync('git',['show',ref+':more_itertools/more.py'],{cwd:p.join(root,'repos/more-itertools'),encoding:'utf8'});\nconst versions=[{version:'parent',source:gitSource('2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10')},{version:'upstream_reference',source:gitSource('dc2664b4a7c66209485c9f5e359137bf4b365eb3')},...progress.completed.filter(r=>r.task==='more-itertools-1247').map(r=>{const trial=p.dirname(r.result_file).replace(/\\/results\\/.+$/,'');return{version:r.cell+'-r'+r.repetition,cell:r.cell,run:r.repetition,source:fs.readFileSync(p.join(trial,'runs',r.task,r.cell+'-r'+r.repetition,'more_itertools/more.py'),'utf8')};})];\nfunction execute(source,case_filter,expected_exception,oracle_validation){const started_at=new Date().toISOString();const r=cp.spawnSync(p.join(root,'venvs/more-itertools/bin/python'),['-B','-c',program],{input:JSON.stringify({source,support:p.join(root,'validation/more-itertools-1247/checkout'),case_filter,expected_exception,oracle_validation}),encoding:'utf8',timeout:2000,env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});const records=(r.stdout||'').split('\\n').flatMap(s=>{try{return[JSON.parse(s)];}catch{return[];}}),construction=records.some(x=>x.stage==='constructed');if(r.error||r.status!==0)return{case:case_filter[0],operation:case_filter[1],passed:false,constructor_valid:construction,started_at,finished_at:new Date().toISOString(),exit:r.status,signal:r.signal,timed_out:r.error?.code==='ETIMEDOUT',error:String(r.error?.code||r.stderr).slice(-800),stdout:r.stdout,stderr:r.stderr,expected:expected_exception};const result=records.findLast(x=>x.operation==='len'&&x.stage===undefined);if(!result)throw Error('Missing JSON query result');return{...result,constructor_valid:construction,started_at,finished_at:new Date().toISOString(),exit:r.status,signal:r.signal,timed_out:false};}\nconst started_at=new Date().toISOString(),baseline_validation=queries.map(q=>execute(versions[0].source,q,null,true));\nfs.writeFileSync(p.join(root,'infinite-stop-oracle-validation.json'),JSON.stringify({kind:'Actual parent-only oracle validation before uniform matrix;2calls not scored as model artifact queries',started_at,finished_at:new Date().toISOString(),python_program:program,cases:baseline_validation},null,2)+'\\n');\nif(baseline_validation.some(x=>!x.constructor_valid||!['ValueError','OverflowError'].includes(x.exception)||x.exit!==0||x.timed_out))throw Error('Parent exception/constructor validation failed; do not classify matrix as quality evidence');\nconst expected=Object.fromEntries(baseline_validation.map(x=>[x.case,x.exception]));\nif(JSON.stringify(expected)!==JSON.stringify(read('protocol/infinite-stop-amendment.json').expected_exceptions))throw Error('Frozen parent exception oracle changed');\nconst results=versions.map(({source,...meta})=>({...meta,source_sha256:hash(source),cases:queries.map(q=>execute(source,q,expected[q[0]],false))}));\nconst out={guard_audit:{phase:require(\"/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o/recovery/process-audit.cjs\").readAudit(root).phase,audit_file:'recovery/'+progress.count+'-process-audit.json',original_controller_sha256:\"716e5311387ff0b5ee6edddd8fdcd00efe86fd61eb25f04013826b22a616a28d\",kind:'Post-timeout process audit exception only; Python/input/oracle/Boolean verdict/time bounds unchanged; failed model completion remains false'},kind:'Two infinite-stop original-exception and bounded-cost queries frozen before every model; same actual tenth program/input/oracle, parent expectation fixed before models; critical6/final42 uniform, no artifact edits.',started_at,finished_at:new Date().toISOString(),declaration:read('protocol/infinite-stop-amendment.json'),timeout_ms_per_case:2000,baseline_validation,scored_uniform_queries:16,total_process_launches:18,expected_exceptions:expected,python_program:program,controller_source:fs.readFileSync(__filename,'utf8'),results};fs.writeFileSync(p.join(root,'infinite-stop-probes.json'),JSON.stringify(out,null,2)+'\\n');console.log(JSON.stringify({baseline_expected:expected,results:results.map(r=>({version:r.version,passed:r.cases.filter(c=>c.passed).length,total:2,timed_out:r.cases.filter(c=>c.timed_out).length}))}));\n",
+  "results": [
+    {
+      "version": "parent",
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "case": "infinite_stop_ascending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:26.221Z",
+          "finished_at": "2026-10-18T23:32:26.262Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        {
+          "case": "infinite_stop_descending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:26.262Z",
+          "finished_at": "2026-10-18T23:32:26.301Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        }
+      ]
+    },
+    {
+      "version": "upstream_reference",
+      "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+      "cases": [
+        {
+          "case": "infinite_stop_ascending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:26.301Z",
+          "finished_at": "2026-10-18T23:32:26.339Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        {
+          "case": "infinite_stop_descending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:26.339Z",
+          "finished_at": "2026-10-18T23:32:26.377Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r1",
+      "cell": "gpt-cew",
+      "run": 1,
+      "source_sha256": "f031b1148a0339230c248ca48d0a3d97dad005eaf759ac29aabeebce6e7f7342",
+      "cases": [
+        {
+          "case": "infinite_stop_ascending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:26.377Z",
+          "finished_at": "2026-10-18T23:32:26.415Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        {
+          "case": "infinite_stop_descending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:26.415Z",
+          "finished_at": "2026-10-18T23:32:26.454Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r1",
+      "cell": "gpt-trim",
+      "run": 1,
+      "source_sha256": "e226e07028706ff1ff3abab65f9b0e1cbf4c83588054228bd7d16026679563ca",
+      "cases": [
+        {
+          "case": "infinite_stop_ascending",
+          "operation": "len",
+          "passed": false,
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:26.454Z",
+          "finished_at": "2026-10-18T23:32:28.457Z",
+          "exit": null,
+          "signal": "SIGTERM",
+          "timed_out": true,
+          "error": "ETIMEDOUT",
+          "stdout": "{\"stage\": \"constructed\", \"case\": \"infinite_stop_ascending\", \"operation\": \"len\"}\n",
+          "stderr": "",
+          "expected": "ValueError"
+        },
+        {
+          "case": "infinite_stop_descending",
+          "operation": "len",
+          "passed": false,
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:28.457Z",
+          "finished_at": "2026-10-18T23:32:30.461Z",
+          "exit": null,
+          "signal": "SIGTERM",
+          "timed_out": true,
+          "error": "ETIMEDOUT",
+          "stdout": "{\"stage\": \"constructed\", \"case\": \"infinite_stop_descending\", \"operation\": \"len\"}\n",
+          "stderr": "",
+          "expected": "ValueError"
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "source_sha256": "f33f6fb858c0cc22080f26d7b6f0a241be124579151fab64d95ae955b5abe737",
+      "cases": [
+        {
+          "case": "infinite_stop_ascending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:30.462Z",
+          "finished_at": "2026-10-18T23:32:30.501Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        {
+          "case": "infinite_stop_descending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:30.501Z",
+          "finished_at": "2026-10-18T23:32:30.541Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r2",
+      "cell": "gpt-trim",
+      "run": 2,
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "case": "infinite_stop_ascending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:30.541Z",
+          "finished_at": "2026-10-18T23:32:30.579Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        {
+          "case": "infinite_stop_descending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:30.579Z",
+          "finished_at": "2026-10-18T23:32:30.617Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r2",
+      "cell": "gpt-cew",
+      "run": 2,
+      "source_sha256": "f120436ba1810f74f04d9e217fe47c9dac62186808b759694dbd2595b2d88c78",
+      "cases": [
+        {
+          "case": "infinite_stop_ascending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:30.617Z",
+          "finished_at": "2026-10-18T23:32:30.656Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        {
+          "case": "infinite_stop_descending",
+          "operation": "len",
+          "passed": true,
+          "exception": "ValueError",
+          "message": "cannot convert float NaN to integer",
+          "expected": "ValueError",
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:30.656Z",
+          "finished_at": "2026-10-18T23:32:30.694Z",
+          "exit": 0,
+          "signal": null,
+          "timed_out": false
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "source_sha256": "46382c6407fb1ff708cd253f795662483fde641b3a086c85dc9b8466426c3487",
+      "cases": [
+        {
+          "case": "infinite_stop_ascending",
+          "operation": "len",
+          "passed": false,
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:30.694Z",
+          "finished_at": "2026-10-18T23:32:32.697Z",
+          "exit": null,
+          "signal": "SIGTERM",
+          "timed_out": true,
+          "error": "ETIMEDOUT",
+          "stdout": "{\"stage\": \"constructed\", \"case\": \"infinite_stop_ascending\", \"operation\": \"len\"}\n",
+          "stderr": "",
+          "expected": "ValueError"
+        },
+        {
+          "case": "infinite_stop_descending",
+          "operation": "len",
+          "passed": false,
+          "constructor_valid": true,
+          "started_at": "2026-10-18T23:32:32.697Z",
+          "finished_at": "2026-10-18T23:32:34.700Z",
+          "exit": null,
+          "signal": "SIGTERM",
+          "timed_out": true,
+          "error": "ETIMEDOUT",
+          "stdout": "{\"stage\": \"constructed\", \"case\": \"infinite_stop_descending\", \"operation\": \"len\"}\n",
+          "stderr": "",
+          "expected": "ValueError"
+        }
+      ]
+    }
+  ]
+}

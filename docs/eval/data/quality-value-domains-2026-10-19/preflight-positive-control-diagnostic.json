@@ -1,0 +1,27 @@
+{
+  "at": "2026-10-19T00:16:51.137Z",
+  "kind": "Single exact infrastructure positive-control diagnostic after static preparation jobs closed; not a model rerun or candidate acceptance sample",
+  "source_sha256": "46382c6407fb1ff708cd253f795662483fde641b3a086c85dc9b8466426c3487",
+  "python_program_sha256": "6c7e8c50fc7f84217395a404493d784d15eadd848a200fc1a0e9824a75ebc081",
+  "case": "mixed_promotion_positive",
+  "operation": "sequence",
+  "input_parameters": {
+    "kind": "mixed_promotion",
+    "direction": 1,
+    "operation": "sequence",
+    "support": "<BENCH_ROOT>/preflight-previous6/validation/more-itertools-1247/checkout"
+  },
+  "cwd": "<BENCH_ROOT>/preflight-previous6",
+  "timeout_ms": 10000,
+  "exit": 0,
+  "timed_out": false,
+  "duration_ms": 39,
+  "raw_stdout": "{\"passed\": true, \"value\": \"'[9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0]'\"}\n",
+  "stderr": "",
+  "actual": {
+    "passed": true,
+    "value": "'[9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0]'"
+  },
+  "original_failed_control_preserved": true,
+  "causal_attribution": "NOT ESTABLISHED; scheduling/import/resource versus implementation not inferred from one timeout alone"
+}

@@ -1,0 +1,150 @@
+{
+  "kind": "POSTHOC four additional legal-shortcircuit checks, not part of frozen46",
+  "amended_at": "2026-10-18T22:47:54.971Z",
+  "hypothesis_proposed_at": "2026-10-18T22:22:13.809Z",
+  "models_started_at": "2026-10-18T21:59:43.700Z",
+  "models_finished_at": "2026-10-18T22:43:48.763Z",
+  "actual_probes_started_at": "2026-10-18T22:46:01.866Z",
+  "actual_probes_finished_at": "2026-10-18T22:46:03.241Z",
+  "per_numeric_artifact": 4,
+  "versions": 8,
+  "actual_queries": 32,
+  "parent_control": "4/4",
+  "controller_sha256": "3526e5366993e2e21deb1d051a83365eed6f75d6c699e2f6c541423b4829932d",
+  "original46_programs_inputs_oracles_changed": false,
+  "model_or_artifact_reruns": false,
+  "original_receipts_and_metrics_changed": false,
+  "predeclared_quality_summary": [
+    {
+      "cell": "gpt-cew",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 12,
+      "predeclared_boundary_failures": 2,
+      "additional_numeric_failures": 2,
+      "additional_context_failures": 2,
+      "compatibility_failures": 0,
+      "promotion_failures": 2,
+      "translation_checks": 4,
+      "translation_checks_passed": 4
+    },
+    {
+      "cell": "gpt-trim",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 14,
+      "predeclared_boundary_failures": 0,
+      "additional_numeric_failures": 0,
+      "additional_context_failures": 0,
+      "compatibility_failures": 0,
+      "promotion_failures": 0,
+      "translation_checks": 4,
+      "translation_checks_passed": 4
+    },
+    {
+      "cell": "gpt-fixed",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 14,
+      "predeclared_boundary_failures": 0,
+      "additional_numeric_failures": 0,
+      "additional_context_failures": 0,
+      "compatibility_failures": 0,
+      "promotion_failures": 0,
+      "translation_checks": 4,
+      "translation_checks_passed": 4
+    }
+  ],
+  "all_executed_quality_summary": [
+    {
+      "cell": "gpt-cew",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 12,
+      "predeclared_boundary_failures": 2,
+      "additional_numeric_failures": 2,
+      "additional_context_failures": 2,
+      "compatibility_failures": 0,
+      "promotion_failures": 2,
+      "translation_checks": 4,
+      "translation_checks_passed": 4,
+      "predeclared_all_executed_checks_passed": 12,
+      "posthoc_shortcircuit_failures": 0
+    },
+    {
+      "cell": "gpt-trim",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 14,
+      "predeclared_boundary_failures": 0,
+      "additional_numeric_failures": 0,
+      "additional_context_failures": 0,
+      "compatibility_failures": 0,
+      "promotion_failures": 0,
+      "translation_checks": 4,
+      "translation_checks_passed": 4,
+      "predeclared_all_executed_checks_passed": 14,
+      "posthoc_shortcircuit_failures": 0
+    },
+    {
+      "cell": "gpt-fixed",
+      "original_suite_resolved": 14,
+      "all_executed_checks_passed": 13,
+      "predeclared_boundary_failures": 0,
+      "additional_numeric_failures": 0,
+      "additional_context_failures": 0,
+      "compatibility_failures": 0,
+      "promotion_failures": 0,
+      "translation_checks": 4,
+      "translation_checks_passed": 4,
+      "predeclared_all_executed_checks_passed": 14,
+      "posthoc_shortcircuit_failures": 1
+    }
+  ],
+  "version_results": [
+    {
+      "version": "parent",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "version": "upstream_reference",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "version": "gpt-cew-r1",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "version": "gpt-trim-r1",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "passed": 0,
+      "total": 4
+    },
+    {
+      "version": "gpt-trim-r2",
+      "passed": 4,
+      "total": 4
+    },
+    {
+      "version": "gpt-cew-r2",
+      "passed": 4,
+      "total": 4
+    }
+  ],
+  "original_published_hashes": {
+    "analysis.json": "8c47b706eabcf4afd3c23727f62716b08863af381ac9cb1da37124a2ea243815",
+    "experiment.json": "f277c4898cb3288733f397fb35e1676321f35e9553f1ab84564d23d463ccae78",
+    "trials.jsonl": "42adcea4737a6da4c86dbbe5cc5b41da2f7546852ce6360cdb319e8370310583",
+    "trials.csv": "78fa8f185f286323382b0cad63640b68cc72fda9599db642571747dec5c8bc01",
+    "report.md": "c5a1165412d9af072639ff3327dc4daf74fbeffceb164c15921e1ff3147746d4",
+    "full-review-package.json": "d38072ee8c44bdf6b9311660dda38133d86deabc164997d8636fadd9daa3b511"
+  },
+  "procedure_source": "'use strict';\nconst fs=require('node:fs'),p=require('node:path'),c=require('node:crypto');\nconst root=fs.realpathSync(__dirname),repo='<CEW_SOURCE>',dir=p.join(repo,'docs/eval/data/quality-type-interactions-2026-10-19');\nconst hash=b=>c.createHash('sha256').update(b).digest('hex'),read=f=>JSON.parse(fs.readFileSync(p.join(root,f)));\nif(fs.existsSync(p.join(root,'posthoc-amendment.json')))throw Error('Never repeat amendment');\nconst e=read('experiment.json'),progress=read('progress.json'),post=read('postprocess-result.json'),h=read('shortcircuit-hypothesis.json'),probe=read('posthoc-shortcircuit-probes.json');\nif(e.status!=='COMPLETED_ALL_42'||progress.count!==42||post.status!=='PASS')throw Error('All42 and original postprocessing must close');\nif(hash(fs.readFileSync(p.join(root,'shortcircuit-probes.cjs')))!==h.controller_sha256)throw Error('Proposed controller drift');\nif(Date.parse(probe.started_at)<=Date.parse(e.finished_at)||Date.parse(h.proposed_at)<=Date.parse(e.started_at))throw Error('Must distinguish post-start hypothesis and post-model execution');\nif(probe.results.length!==8||probe.results.some(r=>r.cases.length!==4||new Set(r.cases.map(c=>c.case+'/'+c.operation)).size!==4||r.cases.some(c=>c.exit!==0||c.timed_out||c.constructor_exception)))throw Error('Require32 actual well-formed launches and valid constructors');\nconst parent=probe.results.find(r=>r.version==='parent');if(!parent||!parent.cases.every(c=>c.passed))throw Error('Parent positive control failed; new oracle must not count as quality evidence');\nconst oldProbe=read('compatibility-probes.json');for(const row of probe.results)if(oldProbe.results.find(r=>r.version===row.version)?.source_sha256!==row.source_sha256)throw Error('Frozen numeric source drift');\nconst backup=p.join(root,'before-posthoc-shortcircuit');fs.mkdirSync(backup);\nfor(const f of ['analysis.json','experiment.json','trials.jsonl','trials.csv'])fs.copyFileSync(p.join(dir,f),p.join(backup,f));\nconst report=p.join(repo,'docs/eval/fast-path-type-interactions-2026-10-19.md');fs.copyFileSync(report,p.join(backup,'report.md'));fs.copyFileSync(p.join(root,'full-review-package.json'),p.join(backup,'full-review-package.json'));\nconst a=JSON.parse(fs.readFileSync(p.join(dir,'analysis.json'))),summaryBefore=JSON.stringify(a.summary),before=JSON.parse(JSON.stringify(a.supplemental_quality_summary)),arms=['gpt-cew','gpt-trim','gpt-fixed'];\nconst rows=fs.readFileSync(p.join(dir,'trials.jsonl'),'utf8').trim().split('\\n').map(s=>JSON.parse(s));\nfor(const row of rows){if('predeclared_checks_passed'in row)throw Error('Already amended row');row.predeclared_checks_passed=row.all_executed_checks_passed;const x=row.task==='more-itertools-1247'?probe.results.find(x=>x.cell===row.cell&&x.run===row.run):null;if(row.task==='more-itertools-1247'&&!x)throw Error('Missing uniform result');row.posthoc_shortcircuit_quality=x;row.all_executed_checks_passed=row.predeclared_checks_passed&&(!x||x.cases.every(c=>c.passed));}\na.predeclared_quality_summary=before;\na.supplemental_quality_summary=a.supplemental_quality_summary.map(row=>{const rs=rows.filter(r=>r.cell===row.cell);return{...row,predeclared_all_executed_checks_passed:row.all_executed_checks_passed,all_executed_checks_passed:rs.filter(r=>r.all_executed_checks_passed).length,posthoc_shortcircuit_failures:rs.filter(r=>r.posthoc_shortcircuit_quality?.cases.some(c=>!c.passed)).length};});\nif(JSON.stringify(a.summary)!==summaryBefore)throw Error('Token/time summary changed');\nconst counts=probe.results.map(r=>({version:r.version,passed:r.cases.filter(c=>c.passed).length,total:4}));\nconst amendment={kind:'POSTHOC four additional legal-shortcircuit checks, not part of frozen46',amended_at:new Date().toISOString(),hypothesis_proposed_at:h.proposed_at,models_started_at:e.started_at,models_finished_at:e.finished_at,actual_probes_started_at:probe.started_at,actual_probes_finished_at:probe.finished_at,per_numeric_artifact:4,versions:8,actual_queries:32,parent_control:'4/4',controller_sha256:h.controller_sha256,original46_programs_inputs_oracles_changed:false,model_or_artifact_reruns:false,original_receipts_and_metrics_changed:false,predeclared_quality_summary:before,all_executed_quality_summary:a.supplemental_quality_summary,version_results:counts,original_published_hashes:Object.fromEntries(['analysis.json','experiment.json','trials.jsonl','trials.csv','report.md','full-review-package.json'].map(f=>[f,hash(fs.readFileSync(p.join(backup,f)))])),procedure_source:fs.readFileSync(__filename,'utf8')};\na.posthoc_quality_amendment={kind:amendment.kind,controller_sha256:h.controller_sha256,model_reruns:false,old46_outcomes_preserved:true,actual_new_queries:32};\nconst normalize=v=>JSON.parse(JSON.stringify(v).replaceAll(root,'<BENCH_ROOT>').replaceAll('<BENCH_ROOT>','<BENCH_ROOT>').replaceAll(repo,'<CEW_SOURCE>'));\nconst save=(name,value)=>fs.writeFileSync(p.join(dir,name),JSON.stringify(normalize(value),null,2)+'\\n');\nsave('analysis.json',a);save('posthoc-shortcircuit-probes.json',probe);save('posthoc-shortcircuit-hypothesis.json',h);save('posthoc-quality-amendment.json',amendment);\nconst exp=JSON.parse(fs.readFileSync(p.join(dir,'experiment.json')));exp.posthoc_quality_amendment=normalize({...a.posthoc_quality_amendment,hypothesis_proposed_at:h.proposed_at,actual_probes_started_at:probe.started_at});save('experiment.json',exp);\nfs.writeFileSync(p.join(dir,'trials.jsonl'),rows.map(r=>JSON.stringify(normalize(r))).join('\\n')+'\\n');\nconst csv=fs.readFileSync(p.join(backup,'trials.csv'),'utf8').trimEnd().split('\\n').map(s=>s.split(',')),head=csv[0],i=head.indexOf('all_executed_checks_passed');if(i<0)throw Error('CSV score column missing');head.push('predeclared_checks_passed','posthoc_shortcircuit_passed');for(const values of csv.slice(1)){const r=rows.find(r=>r.task===values[0]&&r.cell===values[1]&&String(r.run)===values[2]);if(!r)throw Error('CSV identity mismatch');values[i]=String(r.all_executed_checks_passed);values.push(String(r.predeclared_checks_passed),r.posthoc_shortcircuit_quality?String(r.posthoc_shortcircuit_quality.cases.every(c=>c.passed)):'');}fs.writeFileSync(p.join(dir,'trials.csv'),csv.map(row=>row.join(',')).join('\\n')+'\\n');\nlet text=fs.readFileSync(report,'utf8');if(text.split('INDEPENDENT_REVIEW_PENDING').length!==2)throw Error('Expected original unreviewed report marker');\nconst by=Object.fromEntries(a.supplemental_quality_summary.map(r=>[r.cell,r]));\nconst lead='事后新增4项合法短路检查后，候选综合通过 **'+by['gpt-fixed'].all_executed_checks_passed+'/14**；该发现不属于模型前冻结46项，原分数保留，不能以原46项通过宣称全部质量修复。';\nconst anchor='实际产物的独立审查另列，有限检查不能穷尽质量。';if(text.split(anchor).length!==2)throw Error('Report intro anchor drift');text=text.replace(anchor,anchor+'\\n'+lead);\nconst tableLine=text.split('\\n').find(s=>s.startsWith('| 原有及全部适用冻结质量检查 |'));if(!tableLine)throw Error('Original46 table row missing');text=text.replace(tableLine,tableLine+'\\n| 加事后4项后的综合检查 | '+arms.map(c=>by[c].all_executed_checks_passed+'/14').join(' | ')+' |');\nconst section=['## 事后发现：新增求值破坏原有合法短路','',`静态假设提出于UTC ${h.proposed_at}，晚于模型启动；全部42次模型于 ${e.finished_at} 结束后，才于 ${probe.started_at} 至 ${probe.finished_at} 对parent、参考和6份原数值产物执行相同4项检查。程序、输入、输出和时间见[原始检查](data/quality-type-interactions-2026-10-19/posthoc-shortcircuit-probes.json)及[分数修订](data/quality-type-interactions-2026-10-19/posthoc-quality-amendment.json)。`,\n'正反向空范围使用有限大整数起点与浮点步长，查询整数0。原版构造和两种局部查询均合法：contains为False，index为ValueError。这里未调用迭代，也不声称原版能合法生成首个值。新增提升若先于原边界短路，会把这些合法查询变成OverflowError。类型组合本身受支持，新增操作的可表示取值范围仍须核对。','',\n'| numeric_range版本 | 事后4项合法短路 |','| --- | ---: |',...counts.map(r=>'| '+r.version+' | '+r.passed+'/'+r.total+' |'),'',\n'原46项、原14份严格套件分数、原补丁/receipt及全部token/时间均未改变；公开行同时保留predeclared_checks_passed和加事后检查后的结果。新4项是本轮事后质量发现，不冒充模型前冻结检查。',''];\ntext=text.replace('INDEPENDENT_REVIEW_PENDING',section.join('\\n')+'\\nINDEPENDENT_REVIEW_PENDING');fs.writeFileSync(report,text);\nfs.writeFileSync(p.join(root,'posthoc-amendment.json'),JSON.stringify(amendment,null,2)+'\\n');\nconsole.log(JSON.stringify({status:'AMENDED_WITH_ACTUAL_POSTHOC_EVIDENCE',parent:'4/4',predeclared_quality:before.map(r=>({cell:r.cell,n:r.all_executed_checks_passed})),all_executed:a.supplemental_quality_summary.map(r=>({cell:r.cell,n:r.all_executed_checks_passed})),version_results:counts,metrics_changed:false}));\n"
+}

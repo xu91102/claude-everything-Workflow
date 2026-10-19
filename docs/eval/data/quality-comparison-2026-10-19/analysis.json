@@ -1,0 +1,282 @@
+{
+  "completed": 6,
+  "summary": [
+    {
+      "cell": "gpt-cew",
+      "n": 2,
+      "resolved": 2,
+      "tests_preserved_accepted": 2,
+      "duration_total_s": 242.8,
+      "duration_mean_s": 121.4,
+      "duration_median_s": 121.4,
+      "trial_duration_total_s": 275.036,
+      "trial_duration_mean_s": 137.518,
+      "input_tokens": 697322,
+      "cached_input_tokens": 631808,
+      "uncached_input_tokens": 65514,
+      "output_tokens": 10261,
+      "total_tokens": 707583,
+      "total_tokens_mean": 353791.5,
+      "raw_cli_total_tokens": 707583,
+      "descendant_sessions": 0,
+      "new_failures": 0,
+      "tests_modified": 0,
+      "packages_changed": 0,
+      "overclaims": 0,
+      "timeouts": 0
+    },
+    {
+      "cell": "gpt-trim",
+      "n": 2,
+      "resolved": 2,
+      "tests_preserved_accepted": 2,
+      "duration_total_s": 706.5999999999999,
+      "duration_mean_s": 353.29999999999995,
+      "duration_median_s": 353.29999999999995,
+      "trial_duration_total_s": 738.9559999999999,
+      "trial_duration_mean_s": 369.47799999999995,
+      "input_tokens": 3025429,
+      "cached_input_tokens": 2846720,
+      "uncached_input_tokens": 178709,
+      "output_tokens": 43255,
+      "total_tokens": 3068684,
+      "total_tokens_mean": 1534342,
+      "raw_cli_total_tokens": 1553595,
+      "descendant_sessions": 2,
+      "new_failures": 0,
+      "tests_modified": 0,
+      "packages_changed": 0,
+      "overclaims": 0,
+      "timeouts": 0
+    },
+    {
+      "cell": "gpt-fixed",
+      "n": 2,
+      "resolved": 2,
+      "tests_preserved_accepted": 2,
+      "duration_total_s": 735.3,
+      "duration_mean_s": 367.65,
+      "duration_median_s": 367.65,
+      "trial_duration_total_s": 767.152,
+      "trial_duration_mean_s": 383.576,
+      "input_tokens": 2316747,
+      "cached_input_tokens": 2196736,
+      "uncached_input_tokens": 120011,
+      "output_tokens": 39502,
+      "total_tokens": 2356249,
+      "total_tokens_mean": 1178124.5,
+      "raw_cli_total_tokens": 1268245,
+      "descendant_sessions": 2,
+      "new_failures": 0,
+      "tests_modified": 0,
+      "packages_changed": 0,
+      "overclaims": 0,
+      "timeouts": 0
+    }
+  ],
+  "tasks": [
+    {
+      "task": "more-itertools-1247",
+      "arms": {
+        "gpt-cew": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 348661,
+          "total_tokens_mean": 353791.5,
+          "duration_mean_s": 121.4,
+          "durations": [
+            112.4,
+            130.4
+          ],
+          "tokens": [
+            323067,
+            384516
+          ]
+        },
+        "gpt-trim": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 1512714.5,
+          "total_tokens_mean": 1534342,
+          "duration_mean_s": 353.29999999999995,
+          "durations": [
+            424.7,
+            281.9
+          ],
+          "tokens": [
+            1762498,
+            1306186
+          ]
+        },
+        "gpt-fixed": {
+          "n": 2,
+          "resolved": 2,
+          "input_mean": 1158373.5,
+          "total_tokens_mean": 1178124.5,
+          "duration_mean_s": 367.65,
+          "durations": [
+            393.4,
+            341.9
+          ],
+          "tokens": [
+            1554442,
+            801807
+          ]
+        }
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "task": "more-itertools-1247",
+      "run": 2,
+      "token_ratio_to_main": 4.042593806239532,
+      "duration_ratio_to_main": 3.0168711656441713,
+      "token_ratio_to_quality_reference": 1.1900617523078643,
+      "duration_ratio_to_quality_reference": 1.3955303299042214
+    },
+    {
+      "task": "more-itertools-1247",
+      "run": 1,
+      "token_ratio_to_main": 2.4818597999795706,
+      "duration_ratio_to_main": 3.041814946619217,
+      "token_ratio_to_quality_reference": 0.4549264736754311,
+      "duration_ratio_to_quality_reference": 0.8050388509536143
+    }
+  ],
+  "noise": [
+    {
+      "cell": "gpt-cew",
+      "task_pairs": 1,
+      "token_repeat_ratio_median": 1.1902051277289232,
+      "duration_repeat_ratio_median": 1.1601423487544484
+    },
+    {
+      "cell": "gpt-trim",
+      "task_pairs": 1,
+      "token_repeat_ratio_median": 1.3493468770910115,
+      "duration_repeat_ratio_median": 1.5065626108549133
+    },
+    {
+      "cell": "gpt-fixed",
+      "task_pairs": 1,
+      "token_repeat_ratio_median": 1.9386735211840256,
+      "duration_repeat_ratio_median": 1.1506288388417667
+    }
+  ],
+  "diagnostic_risk_groups": {
+    "kind": "Post-run cost diagnosis for the predeclared critical stage and every remaining task; overall acceptance is unchanged, no causal ablation",
+    "groups": [
+      {
+        "group": "more-itertools-1247",
+        "definition": "Predeclared critical numeric task",
+        "arms": [
+          {
+            "cell": "gpt-cew",
+            "n": 2,
+            "total_tokens": 707583,
+            "duration_total_s": 242.8,
+            "duration_mean_s": 121.4,
+            "requests": 21,
+            "descendant_sessions": 0,
+            "descendant_tokens": 0
+          },
+          {
+            "cell": "gpt-trim",
+            "n": 2,
+            "total_tokens": 3068684,
+            "duration_total_s": 706.5999999999999,
+            "duration_mean_s": 353.29999999999995,
+            "requests": 78,
+            "descendant_sessions": 2,
+            "descendant_tokens": 1515089
+          },
+          {
+            "cell": "gpt-fixed",
+            "n": 2,
+            "total_tokens": 2356249,
+            "duration_total_s": 735.3,
+            "duration_mean_s": 367.65,
+            "requests": 61,
+            "descendant_sessions": 2,
+            "descendant_tokens": 1088004
+          }
+        ]
+      },
+      {
+        "group": "remaining-six-tasks",
+        "definition": "All other six tasks; no exclusions within this group",
+        "arms": [
+          {
+            "cell": "gpt-cew",
+            "n": 0,
+            "total_tokens": 0,
+            "duration_total_s": 0,
+            "duration_mean_s": null,
+            "requests": 0,
+            "descendant_sessions": 0,
+            "descendant_tokens": 0
+          },
+          {
+            "cell": "gpt-trim",
+            "n": 0,
+            "total_tokens": 0,
+            "duration_total_s": 0,
+            "duration_mean_s": null,
+            "requests": 0,
+            "descendant_sessions": 0,
+            "descendant_tokens": 0
+          },
+          {
+            "cell": "gpt-fixed",
+            "n": 0,
+            "total_tokens": 0,
+            "duration_total_s": 0,
+            "duration_mean_s": null,
+            "requests": 0,
+            "descendant_sessions": 0,
+            "descendant_tokens": 0
+          }
+        ]
+      }
+    ]
+  },
+  "supplemental_quality_summary": [
+    {
+      "cell": "gpt-cew",
+      "original_suite_resolved": 2,
+      "all_executed_checks_passed": 0,
+      "predeclared_boundary_failures": 2,
+      "additional_numeric_failures": 2,
+      "additional_context_failures": 2,
+      "compatibility_failures": 0,
+      "promotion_failures": 2,
+      "translation_checks": 0,
+      "translation_checks_passed": 0
+    },
+    {
+      "cell": "gpt-trim",
+      "original_suite_resolved": 2,
+      "all_executed_checks_passed": 0,
+      "predeclared_boundary_failures": 0,
+      "additional_numeric_failures": 0,
+      "additional_context_failures": 0,
+      "compatibility_failures": 2,
+      "promotion_failures": 0,
+      "translation_checks": 0,
+      "translation_checks_passed": 0
+    },
+    {
+      "cell": "gpt-fixed",
+      "original_suite_resolved": 2,
+      "all_executed_checks_passed": 0,
+      "predeclared_boundary_failures": 0,
+      "additional_numeric_failures": 0,
+      "additional_context_failures": 0,
+      "compatibility_failures": 2,
+      "promotion_failures": 0,
+      "translation_checks": 0,
+      "translation_checks_passed": 0
+    }
+  ]
+}

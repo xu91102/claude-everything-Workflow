@@ -1,0 +1,16 @@
+{
+  "kind": "SOURCE_CONTRACT_SCOPE_DECISION",
+  "at": "2026-10-18T23:51:37.481Z",
+  "status": "NOT_RUN_UNSUPPORTED_ORACLE",
+  "source_hypothesis_sha256": "49957a2a8b2e71c674a5fed05a31119c6440e90afa4d21ad98152ec1f69e050c",
+  "contract_source": "<BENCH_ROOT>/validation/more-itertools-1247/checkout/more_itertools/more.py",
+  "contract_source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+  "contract_lines": "2248-2250",
+  "contract": "arguments can be any orderable numeric type",
+  "decision": "NaN is an unordered value. Task asks for len/membership consistency with produced items, so a parent ValueError versus candidate0 alone cannot establish a regression for this unspecified input. No source/test guarantee for NaN refusal was found. Do not turn this source hypothesis into acceptance failures or expand the known54.",
+  "models": 0,
+  "probes": 0,
+  "quality_gate_unchanged": 54,
+  "unexecuted_controller": "/tmp/cew-pr62-posthoc-nan-unexecuted.cjs",
+  "unexecuted_controller_sha256": "c8f9d22dc0b1bb5d9c58beaa6a743d701380a86dbb3da00fc7e038486fe8832d"
+}

@@ -1,0 +1,1322 @@
+{
+  "kind": "Post-run factual cost and known-quality diagnosis; no new model, test, behavioral probe or artifact edits",
+  "produced_at": "2026-10-18T21:50:17.820Z",
+  "actual_source": "1770cc0d0588a37b31a753965752b476abb0bc49",
+  "critical_quality_gate": false,
+  "collection_policy": "PREDECLARED_COLLECT_ALL42_EVEN_IF_CRITICAL_QUALITY_FAILS",
+  "whole_batch_summary": [
+    {
+      "cell": "gpt-cew",
+      "n": 14,
+      "resolved": 14,
+      "tests_preserved_accepted": 14,
+      "duration_total_s": 975.8,
+      "duration_mean_s": 69.7,
+      "duration_median_s": 52.849999999999994,
+      "trial_duration_total_s": 1116.5590000000002,
+      "trial_duration_mean_s": 79.7542142857143,
+      "input_tokens": 3789531,
+      "cached_input_tokens": 3280384,
+      "uncached_input_tokens": 509147,
+      "output_tokens": 42876,
+      "total_tokens": 3832407,
+      "total_tokens_mean": 273743.35714285716,
+      "raw_cli_total_tokens": 3832407,
+      "descendant_sessions": 0,
+      "new_failures": 0,
+      "tests_modified": 0,
+      "packages_changed": 1,
+      "overclaims": 0,
+      "timeouts": 0
+    },
+    {
+      "cell": "gpt-trim",
+      "n": 14,
+      "resolved": 14,
+      "tests_preserved_accepted": 14,
+      "duration_total_s": 1441.6,
+      "duration_mean_s": 102.97142857142856,
+      "duration_median_s": 53.45,
+      "trial_duration_total_s": 1586.5320000000004,
+      "trial_duration_mean_s": 113.32371428571432,
+      "input_tokens": 4940059,
+      "cached_input_tokens": 4425472,
+      "uncached_input_tokens": 514587,
+      "output_tokens": 67251,
+      "total_tokens": 5007310,
+      "total_tokens_mean": 357665,
+      "raw_cli_total_tokens": 3984632,
+      "descendant_sessions": 2,
+      "new_failures": 0,
+      "tests_modified": 0,
+      "packages_changed": 0,
+      "overclaims": 0,
+      "timeouts": 0
+    },
+    {
+      "cell": "gpt-fixed",
+      "n": 14,
+      "resolved": 14,
+      "tests_preserved_accepted": 14,
+      "duration_total_s": 1570.4999999999998,
+      "duration_mean_s": 112.17857142857142,
+      "duration_median_s": 52.3,
+      "trial_duration_total_s": 1713.3530000000003,
+      "trial_duration_mean_s": 122.38235714285716,
+      "input_tokens": 6620991,
+      "cached_input_tokens": 6049152,
+      "uncached_input_tokens": 571839,
+      "output_tokens": 78171,
+      "total_tokens": 6699162,
+      "total_tokens_mean": 478511.5714285714,
+      "raw_cli_total_tokens": 4961875,
+      "descendant_sessions": 3,
+      "new_failures": 0,
+      "tests_modified": 0,
+      "packages_changed": 0,
+      "overclaims": 0,
+      "timeouts": 0
+    }
+  ],
+  "risk_groups": {
+    "kind": "Post-run cost diagnosis for the predeclared critical stage and every remaining task; overall acceptance is unchanged, no causal ablation",
+    "groups": [
+      {
+        "group": "more-itertools-1247",
+        "definition": "Predeclared critical numeric task",
+        "arms": [
+          {
+            "cell": "gpt-cew",
+            "n": 2,
+            "total_tokens": 832460,
+            "duration_total_s": 354.6,
+            "duration_mean_s": 177.3,
+            "requests": 23,
+            "descendant_sessions": 0,
+            "descendant_tokens": 0
+          },
+          {
+            "cell": "gpt-trim",
+            "n": 2,
+            "total_tokens": 2559810,
+            "duration_total_s": 824.0999999999999,
+            "duration_mean_s": 412.04999999999995,
+            "requests": 68,
+            "descendant_sessions": 2,
+            "descendant_tokens": 1022678
+          },
+          {
+            "cell": "gpt-fixed",
+            "n": 2,
+            "total_tokens": 4025719,
+            "duration_total_s": 915.6999999999999,
+            "duration_mean_s": 457.84999999999997,
+            "requests": 94,
+            "descendant_sessions": 2,
+            "descendant_tokens": 1580167
+          }
+        ]
+      },
+      {
+        "group": "remaining-six-tasks",
+        "definition": "All other six tasks; no exclusions within this group",
+        "arms": [
+          {
+            "cell": "gpt-cew",
+            "n": 12,
+            "total_tokens": 2999947,
+            "duration_total_s": 621.2,
+            "duration_mean_s": 51.76666666666667,
+            "requests": 97,
+            "descendant_sessions": 0,
+            "descendant_tokens": 0
+          },
+          {
+            "cell": "gpt-trim",
+            "n": 12,
+            "total_tokens": 2447500,
+            "duration_total_s": 617.4999999999999,
+            "duration_mean_s": 51.45833333333332,
+            "requests": 83,
+            "descendant_sessions": 0,
+            "descendant_tokens": 0
+          },
+          {
+            "cell": "gpt-fixed",
+            "n": 12,
+            "total_tokens": 2673443,
+            "duration_total_s": 654.8000000000001,
+            "duration_mean_s": 54.56666666666667,
+            "requests": 91,
+            "descendant_sessions": 1,
+            "descendant_tokens": 157120
+          }
+        ]
+      }
+    ]
+  },
+  "rows": [
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-cew",
+      "run": 1,
+      "requests": 13,
+      "sessions": 1,
+      "root_commands": 20,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 479930,
+        "cached_input_tokens": 440576,
+        "output_tokens": 10028,
+        "reasoning_output_tokens": 4869
+      },
+      "root_thread_id": "01a150da-d906-78f0-a1f2-c5b1abcf44d7"
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "requests": 35,
+      "sessions": 2,
+      "root_commands": 19,
+      "child_commands": 12,
+      "descendant_usage": {
+        "input_tokens": 581389,
+        "cached_input_tokens": 530048,
+        "output_tokens": 7193,
+        "reasoning_output_tokens": 3446
+      },
+      "full_family_usage": {
+        "input_tokens": 1336265,
+        "cached_input_tokens": 1239552,
+        "output_tokens": 22230,
+        "reasoning_output_tokens": 10318
+      },
+      "root_thread_id": "01a150da-d906-7ee2-bb22-6febe13e8f41"
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-trim",
+      "run": 1,
+      "requests": 29,
+      "sessions": 2,
+      "root_commands": 15,
+      "child_commands": 18,
+      "descendant_usage": {
+        "input_tokens": 441196,
+        "cached_input_tokens": 413184,
+        "output_tokens": 6022,
+        "reasoning_output_tokens": 2162
+      },
+      "full_family_usage": {
+        "input_tokens": 998864,
+        "cached_input_tokens": 933376,
+        "output_tokens": 18443,
+        "reasoning_output_tokens": 9542
+      },
+      "root_thread_id": "01a150de-78d8-76d0-9e61-2cf37ba1ce82"
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-trim",
+      "run": 2,
+      "requests": 39,
+      "sessions": 2,
+      "root_commands": 15,
+      "child_commands": 14,
+      "descendant_usage": {
+        "input_tokens": 567624,
+        "cached_input_tokens": 535680,
+        "output_tokens": 7836,
+        "reasoning_output_tokens": 2990
+      },
+      "full_family_usage": {
+        "input_tokens": 1519660,
+        "cached_input_tokens": 1436672,
+        "output_tokens": 22843,
+        "reasoning_output_tokens": 11155
+      },
+      "root_thread_id": "01a150e1-1d78-7573-baf1-4f97594e05e1"
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-cew",
+      "run": 2,
+      "requests": 10,
+      "sessions": 1,
+      "root_commands": 18,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 335102,
+        "cached_input_tokens": 301312,
+        "output_tokens": 7400,
+        "reasoning_output_tokens": 3521
+      },
+      "root_thread_id": "01a150e8-206a-75e3-a73e-bc37034a9748"
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "requests": 59,
+      "sessions": 2,
+      "root_commands": 21,
+      "child_commands": 15,
+      "descendant_usage": {
+        "input_tokens": 982495,
+        "cached_input_tokens": 912640,
+        "output_tokens": 9090,
+        "reasoning_output_tokens": 3072
+      },
+      "full_family_usage": {
+        "input_tokens": 2639181,
+        "cached_input_tokens": 2514048,
+        "output_tokens": 28043,
+        "reasoning_output_tokens": 11670
+      },
+      "root_thread_id": "01a150e4-893a-73e3-a4c1-fb404f4e4e39"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-trim",
+      "run": 1,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 9,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 220245,
+        "cached_input_tokens": 187264,
+        "output_tokens": 2141,
+        "reasoning_output_tokens": 516
+      },
+      "root_thread_id": "01a150ed-0010-7663-adf1-8965cd242523"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-cew",
+      "run": 1,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 15,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 245584,
+        "cached_input_tokens": 193024,
+        "output_tokens": 2286,
+        "reasoning_output_tokens": 513
+      },
+      "root_thread_id": "01a150ec-fede-7c12-8ee7-5e220000267d"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "requests": 8,
+      "sessions": 1,
+      "root_commands": 11,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 287567,
+        "cached_input_tokens": 251904,
+        "output_tokens": 2021,
+        "reasoning_output_tokens": 323
+      },
+      "root_thread_id": "01a150ed-be71-7702-a446-bfd4aa4e058e"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-trim",
+      "run": 1,
+      "requests": 8,
+      "sessions": 1,
+      "root_commands": 9,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 282112,
+        "cached_input_tokens": 235008,
+        "output_tokens": 2444,
+        "reasoning_output_tokens": 714
+      },
+      "root_thread_id": "01a150ed-d9cd-79c0-b4e8-8b723c5b8deb"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-cew",
+      "run": 1,
+      "requests": 8,
+      "sessions": 1,
+      "root_commands": 14,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 253449,
+        "cached_input_tokens": 223616,
+        "output_tokens": 2156,
+        "reasoning_output_tokens": 308
+      },
+      "root_thread_id": "01a150ee-ad9d-7a71-8a7c-a4c0aee38704"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 9,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 219405,
+        "cached_input_tokens": 189696,
+        "output_tokens": 2295,
+        "reasoning_output_tokens": 673
+      },
+      "root_thread_id": "01a150ee-c5d1-7b73-8253-cb1d1a2d91ea"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-cew",
+      "run": 1,
+      "requests": 8,
+      "sessions": 1,
+      "root_commands": 11,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 243390,
+        "cached_input_tokens": 200576,
+        "output_tokens": 1788,
+        "reasoning_output_tokens": 334
+      },
+      "root_thread_id": "01a150ef-ae52-7f72-82ec-68048a6f1994"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "requests": 8,
+      "sessions": 1,
+      "root_commands": 9,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 239973,
+        "cached_input_tokens": 209408,
+        "output_tokens": 2834,
+        "reasoning_output_tokens": 1213
+      },
+      "root_thread_id": "01a150ef-99dd-7963-8b1c-a63dca149ffe"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-trim",
+      "run": 1,
+      "requests": 6,
+      "sessions": 1,
+      "root_commands": 8,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 151553,
+        "cached_input_tokens": 123904,
+        "output_tokens": 1698,
+        "reasoning_output_tokens": 297
+      },
+      "root_thread_id": "01a150f0-9fc5-7771-aa0e-3c18d8e837d7"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-cew",
+      "run": 1,
+      "requests": 9,
+      "sessions": 1,
+      "root_commands": 14,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 294775,
+        "cached_input_tokens": 233344,
+        "output_tokens": 3040,
+        "reasoning_output_tokens": 575
+      },
+      "root_thread_id": "01a150f0-d369-7e30-92fc-923c9055b20d"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 9,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 192614,
+        "cached_input_tokens": 163200,
+        "output_tokens": 1772,
+        "reasoning_output_tokens": 391
+      },
+      "root_thread_id": "01a150f1-7beb-7050-a59f-b3fcbf93f700"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-trim",
+      "run": 1,
+      "requests": 8,
+      "sessions": 1,
+      "root_commands": 10,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 243964,
+        "cached_input_tokens": 213376,
+        "output_tokens": 2654,
+        "reasoning_output_tokens": 815
+      },
+      "root_thread_id": "01a150f2-0ba3-7fd3-90f2-7a3de4d73474"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-trim",
+      "run": 1,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 8,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 176050,
+        "cached_input_tokens": 156800,
+        "output_tokens": 2064,
+        "reasoning_output_tokens": 468
+      },
+      "root_thread_id": "01a150f2-7d36-7b70-9a94-c226961f246c"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "requests": 5,
+      "sessions": 1,
+      "root_commands": 8,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 119789,
+        "cached_input_tokens": 100224,
+        "output_tokens": 1474,
+        "reasoning_output_tokens": 285
+      },
+      "root_thread_id": "01a150f3-5369-7e10-953c-51a5312f1a62"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 8,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 173146,
+        "cached_input_tokens": 148864,
+        "output_tokens": 1924,
+        "reasoning_output_tokens": 468
+      },
+      "root_thread_id": "01a150f3-81b5-7862-ba77-74f8e5c94ff4"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-cew",
+      "run": 1,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 10,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 179711,
+        "cached_input_tokens": 158720,
+        "output_tokens": 1592,
+        "reasoning_output_tokens": 216
+      },
+      "root_thread_id": "01a150f3-eca4-78c0-9baf-17fbf6e6c41d"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-trim",
+      "run": 1,
+      "requests": 6,
+      "sessions": 1,
+      "root_commands": 11,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 163713,
+        "cached_input_tokens": 140928,
+        "output_tokens": 1899,
+        "reasoning_output_tokens": 393
+      },
+      "root_thread_id": "01a150f4-9a67-7aa0-93ef-8f25e2b0c3fd"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-cew",
+      "run": 1,
+      "requests": 9,
+      "sessions": 1,
+      "root_commands": 13,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 242329,
+        "cached_input_tokens": 220288,
+        "output_tokens": 2351,
+        "reasoning_output_tokens": 847
+      },
+      "root_thread_id": "01a150f4-6e68-71c1-b82d-e5ad09627c2a"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 10,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 232203,
+        "cached_input_tokens": 193536,
+        "output_tokens": 2062,
+        "reasoning_output_tokens": 516
+      },
+      "root_thread_id": "01a150f5-51ad-7722-b1d0-1e258b448b0c"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-cew",
+      "run": 2,
+      "requests": 8,
+      "sessions": 1,
+      "root_commands": 12,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 253842,
+        "cached_input_tokens": 220544,
+        "output_tokens": 1668,
+        "reasoning_output_tokens": 181
+      },
+      "root_thread_id": "01a150f5-8193-7273-b200-7e7518f54c09"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-trim",
+      "run": 2,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 12,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 232472,
+        "cached_input_tokens": 198016,
+        "output_tokens": 1723,
+        "reasoning_output_tokens": 339
+      },
+      "root_thread_id": "01a150f6-3dff-7271-976d-3b84318f349f"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "requests": 6,
+      "sessions": 1,
+      "root_commands": 10,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 148940,
+        "cached_input_tokens": 130176,
+        "output_tokens": 2208,
+        "reasoning_output_tokens": 542
+      },
+      "root_thread_id": "01a150f6-3ffb-7671-9ead-c5d5fae3758f"
+    },
+    {
+      "task": "slugify-200",
+      "cell": "gpt-cew",
+      "run": 2,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 13,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 250895,
+        "cached_input_tokens": 207616,
+        "output_tokens": 1892,
+        "reasoning_output_tokens": 275
+      },
+      "root_thread_id": "01a150f6-fa83-7b01-97ce-f2ab4a1a1ee2"
+    },
+    {
+      "task": "slugify-194",
+      "cell": "gpt-trim",
+      "run": 2,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 9,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 228441,
+        "cached_input_tokens": 193792,
+        "output_tokens": 1942,
+        "reasoning_output_tokens": 373
+      },
+      "root_thread_id": "01a150f7-009c-7a41-beb6-a2898c7ffeae"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 9,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 195497,
+        "cached_input_tokens": 169216,
+        "output_tokens": 1860,
+        "reasoning_output_tokens": 425
+      },
+      "root_thread_id": "01a150f7-d982-70b3-baa6-894f5f20b58f"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-trim",
+      "run": 2,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 9,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 203412,
+        "cached_input_tokens": 171776,
+        "output_tokens": 3272,
+        "reasoning_output_tokens": 1022
+      },
+      "root_thread_id": "01a150f7-d768-75f2-9ec4-2ed5cd85b6a5"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-trim",
+      "run": 2,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 10,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 193627,
+        "cached_input_tokens": 166272,
+        "output_tokens": 2296,
+        "reasoning_output_tokens": 624
+      },
+      "root_thread_id": "01a150f8-ed96-7891-b2a5-750a2e8930c2"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-cew",
+      "run": 2,
+      "requests": 10,
+      "sessions": 1,
+      "root_commands": 14,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 328015,
+        "cached_input_tokens": 293120,
+        "output_tokens": 2741,
+        "reasoning_output_tokens": 725
+      },
+      "root_thread_id": "01a150f9-16d9-71d1-a673-1638637fe20c"
+    },
+    {
+      "task": "humanize-381",
+      "cell": "gpt-cew",
+      "run": 2,
+      "requests": 9,
+      "sessions": 1,
+      "root_commands": 13,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 295091,
+        "cached_input_tokens": 252288,
+        "output_tokens": 2099,
+        "reasoning_output_tokens": 283
+      },
+      "root_thread_id": "01a150fa-105d-7301-9a55-fee965b4628c"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-cew",
+      "run": 2,
+      "requests": 8,
+      "sessions": 1,
+      "root_commands": 12,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 212546,
+        "cached_input_tokens": 180352,
+        "output_tokens": 2240,
+        "reasoning_output_tokens": 504
+      },
+      "root_thread_id": "01a150fb-1746-75a1-a583-97de737f63ef"
+    },
+    {
+      "task": "humanize-346",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "requests": 16,
+      "sessions": 2,
+      "root_commands": 10,
+      "child_commands": 6,
+      "descendant_usage": {
+        "input_tokens": 154934,
+        "cached_input_tokens": 138496,
+        "output_tokens": 2186,
+        "reasoning_output_tokens": 264
+      },
+      "full_family_usage": {
+        "input_tokens": 500205,
+        "cached_input_tokens": 449024,
+        "output_tokens": 5647,
+        "reasoning_output_tokens": 1307
+      },
+      "root_thread_id": "01a150fa-5c11-7783-b9f7-55e8183777b0"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-trim",
+      "run": 2,
+      "requests": 5,
+      "sessions": 1,
+      "root_commands": 8,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 118781,
+        "cached_input_tokens": 99712,
+        "output_tokens": 1347,
+        "reasoning_output_tokens": 213
+      },
+      "root_thread_id": "01a150fc-1e86-7751-a3c2-53c4ccb16d21"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 9,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 173771,
+        "cached_input_tokens": 151168,
+        "output_tokens": 2093,
+        "reasoning_output_tokens": 683
+      },
+      "root_thread_id": "01a150fc-2f01-7032-87cf-a541deef9e8b"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-cew",
+      "run": 2,
+      "requests": 7,
+      "sessions": 1,
+      "root_commands": 10,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 174872,
+        "cached_input_tokens": 155008,
+        "output_tokens": 1595,
+        "reasoning_output_tokens": 241
+      },
+      "root_thread_id": "01a150fc-ab39-7203-b465-c213c958bde9"
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "requests": 6,
+      "sessions": 1,
+      "root_commands": 10,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 162435,
+        "cached_input_tokens": 139136,
+        "output_tokens": 1708,
+        "reasoning_output_tokens": 131
+      },
+      "root_thread_id": "01a150fd-4d99-7692-b060-701fa16f3208"
+    },
+    {
+      "task": "more-itertools-1284",
+      "cell": "gpt-trim",
+      "run": 2,
+      "requests": 8,
+      "sessions": 1,
+      "root_commands": 12,
+      "child_commands": 0,
+      "descendant_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 207165,
+        "cached_input_tokens": 168576,
+        "output_tokens": 2485,
+        "reasoning_output_tokens": 1089
+      },
+      "root_thread_id": "01a150fd-2f2d-72c1-9ef1-2d323b3c88e3"
+    }
+  ],
+  "known_checks": [
+    {
+      "file": "quality-probes.json",
+      "sha256": "606d6e585b268970a83b7e39f415017ba08c22a035664d136b440edb38fd3d57",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 0,
+          "total": 16
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 8,
+          "total": 16
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 0,
+          "total": 16
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 16,
+          "total": 16
+        }
+      ]
+    },
+    {
+      "file": "cost-probes.json",
+      "sha256": "1a41e63427448a938e376e706327731bd1b151271ffc2868bd4018d8db263e01",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 4,
+          "total": 4
+        }
+      ]
+    },
+    {
+      "file": "context-probes.json",
+      "sha256": "de38944c8bc53208278b2d6c964e5aa9054c653cb7313df71b8e601c6243671f",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 12
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 12
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 12
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 12,
+          "total": 12
+        }
+      ]
+    },
+    {
+      "file": "promotion-probes.json",
+      "sha256": "ef05509452191428685aade67666a7f6cfe588293bfc8d2e163872e9e8324d06",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 10
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 10
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 4,
+          "total": 10
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 10,
+          "total": 10
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 10,
+          "total": 10
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 10,
+          "total": 10
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 8,
+          "total": 10
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 10,
+          "total": 10
+        }
+      ]
+    },
+    {
+      "file": "compatibility-probes.json",
+      "sha256": "acdf3bcfea919fbcb7b21e2c4b5e5dd8b81c67b602014ebe70402f89319a8257",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 0,
+          "total": 4
+        }
+      ]
+    }
+  ],
+  "previous_diagnosis": {
+    "source": "eb104fd2a0ec8c5f1e86d92a996982f8362a84be",
+    "evidence": "/tmp/cew-pr62-quality-query-signals-20261019-HeNYUs/closed-r2-static-observation.json",
+    "claim": "Prior closed R2 checked all-enabled signals on old exact paths and floated inputs separately in default context; no evidence of the interaction on the new comparison path. Confirmed by identical repaired46 checks: both artifacts42PASS but4FloatOperationFAIL. This motivated existing Spec-evidence item change; it is historical evidence, not the current artifact result."
+  },
+  "interpretation_limits": "Task groups and root/descendant usage describe cost distribution, not a causal ablation. Added checks, waits and tool actions are part of model elapsedtime; independent post-run evidence audit is excluded. No assertion that a generic policy guarantees quality. All42 metrics and any failures preserved; partial group improvement never substitutes for predeclared whole-batch token and mean-time acceptance."
+}

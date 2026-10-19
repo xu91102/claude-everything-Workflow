@@ -1,0 +1,74 @@
+{
+  "kind": "fresh_independent_read_only_evaluator_source_integration_review",
+  "mode": "independent",
+  "package_sha256": "0b4c02be65e8f1f423c11fe49cd8809e9ba06196fb92f73b919f8c95884bee25",
+  "reviewer_model": "gpt-6-sol",
+  "base": "05a2569677746e935cd2b3daaa4d7f17d322c98d",
+  "candidate": "2f44deaf5220f0f146b7ff69fb56fd4e97dcc00e",
+  "scope": "Evaluator and source integration before any twelfth-round model trial; actual artifact quality and performance excluded.",
+  "Standards": {
+    "status": "PASS",
+    "findings": [],
+    "evidence": [
+      "Pinned code-review SKILL and both reviewer prompts and eight relevant rules read; no hard-rule violation or concrete maintainability smell in this integration.",
+      "Only rules/common/testing.md differs from previous candidate among inspected policy/public-runner files: existing inventory first clause grows by 24 characters/72 UTF-8 bytes; AGENTS, Fast Path, code-review, run-trial.js and codex-usage.js bytes match previous.",
+      "Existing quality controller and process-audit owners are reused; old failed-response accounting is the prior independently reviewed recovery source, with cause-preserving failed-run semantics.",
+      "Fresh source checks show eight exit=0, 29 CLI tests pass, and production pack/install/verify exit=0; unchanged seven task prevalidations and 43 historic accounting families are explicitly reused."
+    ]
+  },
+  "Spec": {
+    "status": "PASS",
+    "findings": [],
+    "evidence": [
+      "Fixed package and all 125 referenced file pins match; three installed profiles have identical config and byte-identical AGENTS.md, and installed policy files match their source snapshots.",
+      "Seven validated task identities, two repeats, three arms, high effort, 720-second model limit, concurrency two, arm rotation, original runner and collector are retained in the frozen driver/source; no new model trial has run.",
+      "The original five numeric probe controllers plus i18n are byte-identical to the previous complete round. The additional three controllers have exact Python-program equality and matching program hashes to prior actual posthoc evidence; 16+4+12+10+4+4+2+2=54 queries.",
+      "Closed prior six-artifact serial preflight reproduces positive and negative scores, including candidate R1 infinite-stop 0/2 and R2 2/2. Phase-42 replay repeats extra eight controls. Phase-six and phase-42 zero-owned-live audits retain R2 timeout and previous-arm capacity failure as failed outcomes.",
+      "The first parallel positive-control 10-second timeout and later identical 39-ms single diagnostic are both preserved. Exact stall cause is unestablished. Final supplemental observer groups run serially outside model timing with original programs, Boolean oracles and 2-second/10-second case limits.",
+      "Predeclared driver collects all 42 once even on critical quality failure; no resampling or gate relaxation. Finalizer requires actual artifact Spec PASS, known quality 14/14, main and candidate normal completion 14/14, and both whole-14 token total and mean model time below contemporary main before WholePerformance PASS. Raw cost direction is reported separately.",
+      "Prior full42 independent review remains Standards PASS, EvidenceIntegrity PASS, ActualArtifactSpec FAIL, WholePerformance FAIL; prior failed artifacts and recovery evidence remain pinned rather than reclassified."
+    ]
+  },
+  "audit_counts": {
+    "pins": 125,
+    "source_checks": 8,
+    "fresh_cli_regressions": 29,
+    "reused_task_prevalidations": 7,
+    "reused_historic_accounting_families": 43,
+    "old_closed_artifacts": 42,
+    "phase6_replayed_numeric_artifacts": 6,
+    "numeric_queries_per_artifact": 54,
+    "phase42_extra_queries": 8,
+    "prior_failed_family_accounting_replays": 6,
+    "model_runs": 0,
+    "probe_runs_by_reviewer": 0,
+    "test_runs_by_reviewer": 0
+  },
+  "checks_not_run": [
+    {
+      "check": "Twelfth-round 42 model trials, fresh strict/JUnit and supplemental scores, actual artifact review",
+      "status": "NOT RUN",
+      "reason": "This is the pre-model evaluator integration review."
+    },
+    {
+      "check": "Whole-14 quality-gated token and mean model-time acceptance",
+      "status": "NOT RUN",
+      "reason": "No twelfth-round model outcomes exist."
+    },
+    {
+      "check": "Independent recomputation of git-archive byte hashes",
+      "status": "NOT RUN",
+      "reason": "Review constraints prohibit Git commands; installed source and policy snapshot pins were checked instead."
+    },
+    {
+      "check": "Any model, probe or test rerun by this reviewer",
+      "status": "NOT RUN",
+      "reason": "Explicit read-only review constraint; existing pinned outputs were inspected."
+    }
+  ],
+  "limitations": [
+    "Source/evaluator PASS does not establish candidate quality, completion, token savings or speed.",
+    "A single preflight timeout followed by a fast identical diagnostic does not establish its cause.",
+    "The old immutable review package captured its report before publication normalization; the old final verdict was independently verified and remains FAIL on artifact Spec and performance."
+  ]
+}

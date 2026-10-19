@@ -38,6 +38,9 @@ jobs:
       - name: Test continuation and authorization contracts
         run: npm run test:continuation
 
+      - name: Test evaluator scoring and credential handling
+        run: npm run test:eval
+
       - name: Test rule installation and migration
         run: npm run test:install-rules
 

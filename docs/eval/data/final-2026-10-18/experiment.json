@@ -1,0 +1,337 @@
+{
+  "started_at": "2026-10-18T07:22:11.970Z",
+  "candidate_sha": "f2f0d2773d001348b84a6d8a1457161b249f8117",
+  "main_sha": "e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5",
+  "runner_sha256": "8071d48f1f679ea5b5e362ba5cf42a77becba85c36f9f5e1093a5f008007f53c",
+  "manifest_sha256": "ababbf67a5a9bc6923f76f55d7c71886ab7eb4488f3c9a18dd55cf717461fafe",
+  "cli": "codex-cli 0.160.1",
+  "node": "v22.23.2",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "timeout_s": 720,
+  "concurrency": 2,
+  "trials_planned": 42,
+  "plan": [
+    {
+      "task": "slugify-200",
+      "repetition": 1,
+      "order": [
+        "gpt-base",
+        "gpt-cew",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "slugify-194",
+      "repetition": 1,
+      "order": [
+        "gpt-cew",
+        "gpt-fixed",
+        "gpt-base"
+      ]
+    },
+    {
+      "task": "humanize-346",
+      "repetition": 1,
+      "order": [
+        "gpt-fixed",
+        "gpt-base",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "humanize-381",
+      "repetition": 1,
+      "order": [
+        "gpt-base",
+        "gpt-cew",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "more-itertools-1284",
+      "repetition": 1,
+      "order": [
+        "gpt-cew",
+        "gpt-fixed",
+        "gpt-base"
+      ]
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repetition": 1,
+      "order": [
+        "gpt-fixed",
+        "gpt-base",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "more-itertools-1247",
+      "repetition": 1,
+      "order": [
+        "gpt-base",
+        "gpt-cew",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "slugify-200",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-cew",
+        "gpt-base"
+      ]
+    },
+    {
+      "task": "slugify-194",
+      "repetition": 2,
+      "order": [
+        "gpt-base",
+        "gpt-fixed",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "humanize-346",
+      "repetition": 2,
+      "order": [
+        "gpt-cew",
+        "gpt-base",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "humanize-381",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-cew",
+        "gpt-base"
+      ]
+    },
+    {
+      "task": "more-itertools-1284",
+      "repetition": 2,
+      "order": [
+        "gpt-base",
+        "gpt-fixed",
+        "gpt-cew"
+      ]
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repetition": 2,
+      "order": [
+        "gpt-cew",
+        "gpt-base",
+        "gpt-fixed"
+      ]
+    },
+    {
+      "task": "more-itertools-1247",
+      "repetition": 2,
+      "order": [
+        "gpt-fixed",
+        "gpt-cew",
+        "gpt-base"
+      ]
+    }
+  ],
+  "isolation": "Fresh checkout, HOME, Codex state, and private virtualenv per trial; reference refs removed; same provisioned auth and model config in every arm.",
+  "fixture_note": "Same source fix and parent as upstream 7f4dcf8; replaces internal _lazy_sha1 import with digest behavior and adds subprocess import/sign/unsign without hashlib.sha1.",
+  "finished_at": "2026-10-18T08:02:02.069Z",
+  "end_runner_sha256": "8071d48f1f679ea5b5e362ba5cf42a77becba85c36f9f5e1093a5f008007f53c",
+  "end_manifest_sha256": "ababbf67a5a9bc6923f76f55d7c71886ab7eb4488f3c9a18dd55cf717461fafe",
+  "configs": [
+    {
+      "arm": "codex-base",
+      "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+      "agents_sha256": null
+    },
+    {
+      "arm": "cew-home",
+      "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+      "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd"
+    },
+    {
+      "arm": "cew-fixed",
+      "config_sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90",
+      "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd"
+    }
+  ],
+  "config_public_fields": {
+    "model": "gpt-6.1-sol",
+    "model_reasoning_effort": "high",
+    "approval_policy": "never",
+    "sandbox_mode": "workspace-write",
+    "suppress_unstable_features_warning": true
+  },
+  "execution_override": "Every arm uses the same existing runner flag --dangerously-bypass-approvals-and-sandbox; isolation is a process convention, not an OS security boundary.",
+  "environment_audit": {
+    "trials": 42,
+    "initial_snapshot_matches": 42,
+    "final_snapshot_matches": 42,
+    "package_baselines": [
+      {
+        "repo": "python-slugify",
+        "python_version": "Python 3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+        "sha256": "9aab6083f8984c7ca35bfc17d614ceb1146328eed5c24ae4934b566545ea20ea",
+        "packages": [
+          "iniconfig==2.3.1",
+          "packaging==26.3",
+          "pluggy==1.7.0",
+          "Pygments==2.21.0",
+          "pytest==9.1.1",
+          "-e git+https://github.com/un33k/python-slugify.git@35aca63fc2672cba2c739ff6dff685a4f26a4f9a#egg=python_slugify",
+          "text-unidecode==1.3"
+        ]
+      },
+      {
+        "repo": "humanize",
+        "python_version": "Python 3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+        "sha256": "2e1661fed52320e6591c41b9eaf8791ce0c143f4fb5596ceeca9f8d91316b074",
+        "packages": [
+          "freezegun==1.5.5",
+          "-e git+https://github.com/python-humanize/humanize.git@785e5dcc0d0308ad0dff3f6cc0faa7085ad0375b#egg=humanize",
+          "iniconfig==2.3.1",
+          "packaging==26.3",
+          "pluggy==1.7.0",
+          "py-cpuinfo2==10.1.1",
+          "Pygments==2.21.0",
+          "pytest==9.1.1",
+          "pytest-benchmark==5.3.0",
+          "python-dateutil==2.9.0.post0",
+          "six==1.17.0"
+        ]
+      },
+      {
+        "repo": "more-itertools",
+        "python_version": "Python 3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+        "sha256": "a4284340a85b3a311682d023a48691c95a009a9fd59beb85d8685e34dcb0243b",
+        "packages": [
+          "hypothesis==6.170.1",
+          "iniconfig==2.3.1",
+          "-e git+https://github.com/more-itertools/more-itertools.git@4aeb4338ae1407d8da9723e86da99efeb446f719#egg=more_itertools",
+          "packaging==26.3",
+          "pluggy==1.7.0",
+          "Pygments==2.21.0",
+          "pytest==9.1.1",
+          "sortedcontainers==2.4.0"
+        ]
+      },
+      {
+        "repo": "itsdangerous",
+        "python_version": "Python 3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+        "sha256": "824afbbaf43045f0daedbde265ab30589b43743bcb270210ad8debe2400dec8f",
+        "packages": [
+          "freezegun==1.5.5",
+          "iniconfig==2.3.1",
+          "-e git+https://github.com/pallets/itsdangerous.git@672971d66a2ef9f85151e53283113f33d642dabd#egg=itsdangerous",
+          "packaging==26.3",
+          "pluggy==1.7.0",
+          "Pygments==2.21.0",
+          "pytest==9.1.1",
+          "python-dateutil==2.9.0.post0",
+          "six==1.17.0"
+        ]
+      }
+    ],
+    "package_changes": [
+      {
+        "task": "slugify-200",
+        "cell": "gpt-fixed",
+        "run": 1,
+        "added": [
+          "pycodestyle==2.15.0"
+        ],
+        "removed": []
+      },
+      {
+        "task": "more-itertools-1247",
+        "cell": "gpt-cew",
+        "run": 1,
+        "added": [
+          "ruff==0.17.1"
+        ],
+        "removed": []
+      },
+      {
+        "task": "more-itertools-1247",
+        "cell": "gpt-fixed",
+        "run": 1,
+        "added": [
+          "ruff==0.17.1"
+        ],
+        "removed": []
+      },
+      {
+        "task": "humanize-346",
+        "cell": "gpt-fixed",
+        "run": 2,
+        "added": [
+          "black==26.10.1",
+          "click==8.5.0",
+          "mypy_extensions==1.1.0",
+          "pathspec==1.1.1",
+          "platformdirs==4.13.4",
+          "pytokens==0.4.1",
+          "ruff==0.17.1"
+        ],
+        "removed": []
+      },
+      {
+        "task": "more-itertools-1247",
+        "cell": "gpt-fixed",
+        "run": 2,
+        "added": [
+          "ast_serialize==0.13.1",
+          "certifi==2026.7.22",
+          "charset-normalizer==3.5.2",
+          "docutils==0.23",
+          "flit==4.1.0",
+          "flit_core==4.1.0",
+          "id==1.6.1",
+          "idna==3.20",
+          "jaraco.classes==3.4.0",
+          "jaraco.context==6.1.2",
+          "jaraco.functools==4.6.0",
+          "keyring==25.7.0",
+          "librt==0.16.0",
+          "markdown-it-py==4.2.0",
+          "mdurl==0.1.2",
+          "mypy==2.4.0",
+          "mypy_extensions==1.1.0",
+          "nh3==0.3.7",
+          "pathspec==1.1.1",
+          "readme_renderer==46.0",
+          "requests==2.34.2",
+          "requests-toolbelt==1.0.0",
+          "rfc3986==2.0.0",
+          "rich==15.0.0",
+          "ruff==0.17.1",
+          "tomli_w==1.2.0",
+          "twine==7.0.0",
+          "typing_extensions==4.16.0",
+          "urllib3==2.8.0"
+        ],
+        "removed": []
+      }
+    ]
+  },
+  "config_audit": {
+    "trials": 42,
+    "byte_identical_to_template": 0,
+    "execution_fields_unchanged": 42,
+    "only_checkout_trust_added": 42,
+    "audited_execution_fields": [
+      "model",
+      "model_reasoning_effort",
+      "approval_policy",
+      "sandbox_mode",
+      "suppress_unstable_features_warning"
+    ],
+    "explanation": "Codex CLI adds one projects.<real checkout path>.trust_level = trusted entry per isolated checkout. All five provisioned execution fields are byte-for-byte preserved; the path-specific trust section alone changes the whole-file hash."
+  }
+}

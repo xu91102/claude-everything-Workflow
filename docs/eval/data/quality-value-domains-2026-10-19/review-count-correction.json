@@ -1,0 +1,82 @@
+{
+  "kind": "independent_review_count_correction",
+  "frozen_package_sha256": "65e510075b6378337e21e76b63ef85b9d062834105ae1ac81baab3abbfa0c9f6",
+  "original_review": {
+    "path": "<BENCH_ROOT>/full-independent-review-v1.json",
+    "sha256": "7ca959e1fa742a257ad386ab218d5f5b4422bad991048e8cbf103bbb397b68d7"
+  },
+  "cause": "First review counted only session-diagnosis.json rows[].commands, which represents the 42 root CLI sessions. Five native descendant sessions were present in usage_accounting.sessions and omitted from plaintext_commands.",
+  "method": "For each of 47 pinned session JSONL files, verified its SHA256 and independently counted only event_msg/item_completed/CommandExecution records; checked every count against session-diagnosis.json usage_accounting.sessions[].commands and root inventory. Did not inspect hidden reasoning, encrypted messages or auth.",
+  "counts": {
+    "session_total": 47,
+    "root_sessions": 42,
+    "descendant_sessions": 5,
+    "root_commands": 488,
+    "descendant_commands": 67,
+    "plaintext_commands_total": 555,
+    "by_cell": {
+      "gpt-cew": {
+        "root": 198,
+        "root_sessions": 14
+      },
+      "gpt-fixed": {
+        "root": 147,
+        "root_sessions": 14,
+        "descendant": 36,
+        "descendant_sessions": 2
+      },
+      "gpt-trim": {
+        "root": 143,
+        "root_sessions": 14,
+        "descendant": 31,
+        "descendant_sessions": 3
+      }
+    }
+  },
+  "descendant_sessions": [
+    {
+      "trial": "more-itertools-1247--gpt-fixed--r2",
+      "thread_id": "01a151bd-1a34-7d11-a9df-e444e23a78ff",
+      "plaintext_commands": 17,
+      "nonzero_command_exits": 0,
+      "file_change_events": 0
+    },
+    {
+      "trial": "more-itertools-1247--gpt-trim--r1",
+      "thread_id": "01a151bf-678f-7752-bc27-59603d62e509",
+      "plaintext_commands": 13,
+      "nonzero_command_exits": 0,
+      "file_change_events": 0
+    },
+    {
+      "trial": "more-itertools-1247--gpt-trim--r2",
+      "thread_id": "01a151c5-5f65-7600-926d-653e7753bef8",
+      "plaintext_commands": 11,
+      "nonzero_command_exits": 1,
+      "file_change_events": 0
+    },
+    {
+      "trial": "more-itertools-1247--gpt-fixed--r1",
+      "thread_id": "01a151c7-ed95-7af1-9c0e-95c22dd83398",
+      "plaintext_commands": 19,
+      "nonzero_command_exits": 1,
+      "file_change_events": 0
+    },
+    {
+      "trial": "humanize-346--gpt-trim--r1",
+      "thread_id": "01a151d7-c0a0-72c2-abd5-d7385ac732c9",
+      "plaintext_commands": 7,
+      "nonzero_command_exits": 1,
+      "file_change_events": 0
+    }
+  ],
+  "nonzero_descendant_command_exits": 3,
+  "nonzero_review": "Two numeric child commands first failed because an ad-hoc baseline exec namespace lacked __name__; later checks succeeded. One previous-arm humanize exploratory assertion failed before the final patch; it does not change candidate or main trial outcomes. No child FileChange events.",
+  "axis_impact": {
+    "Standards": "unchanged PASS",
+    "ActualArtifactSpec": "unchanged FAIL: numeric candidate timeout and two explicit service capacity failures remain; child command evidence neither completes them nor establishes a new candidate artifact defect",
+    "EvidenceIntegrity": "unchanged PASS after correcting the inventory: all 47 session hashes and 555 command event counts agree with pinned accounting",
+    "WholePerformance": "unchanged FAIL: recorded-response family tokens already included native descendants; full numeric candidate command activity is 77 versus main 41, descriptive only; no causal shortcut established"
+  },
+  "model_probe_test_reruns": 0
+}

@@ -1,0 +1,14 @@
+{
+  "proposed_at": "2026-10-18T22:46:57.902Z",
+  "status": "NOT RUN",
+  "kind": "Static post-model hypothesis from closedR2 _len stopfloat dispatch and unbounded binary search on integral values",
+  "source": "5ae9d13344fb7d96a69461d3616c220e29b3d796",
+  "hypothesis": "A float infinite stop with integral start/step can keep every generated item before the endpoint, leaving exponential search unbounded. Parent constructor and actual len exception must be validated first, then require same exception and bounded time uniformly; do not assume its exact exception type.",
+  "cases": 2,
+  "oracle_validation_calls": 2,
+  "uniform_versions": 8,
+  "uniform_queries": 16,
+  "timeout_ms": 2000,
+  "controller_sha256": "91714c9bb02a9a2eba8fcf19fdc9a9d00e541268a675e8b0122d807c4b66ee65",
+  "model_or_original46_changes": false
+}

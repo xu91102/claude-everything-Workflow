@@ -1,0 +1,95 @@
+{
+  "kind": "Observed early policy-read and repeated-edit chronology, root plaintext CommandExecution/FileChange metadata only; no causal proof of future proposal improvement",
+  "at": "2026-10-18T23:57:39.581Z",
+  "rows": [
+    {
+      "run": 2,
+      "testing_read_before_first_patch": true,
+      "fastpath_read_before_first_patch": true,
+      "patch_events": 7,
+      "events": [
+        {
+          "at": "2026-10-18T23:10:30.059Z",
+          "kind": "ReadTesting",
+          "exit": 0,
+          "output_bytes": 19969
+        },
+        {
+          "at": "2026-10-18T23:10:30.097Z",
+          "kind": "ReadFastPath",
+          "exit": 0,
+          "output_bytes": 16296
+        },
+        {
+          "at": "2026-10-18T23:13:15.890Z",
+          "kind": "FileChange"
+        },
+        {
+          "at": "2026-10-18T23:13:55.023Z",
+          "kind": "FileChange"
+        },
+        {
+          "at": "2026-10-18T23:14:52.372Z",
+          "kind": "FileChange"
+        },
+        {
+          "at": "2026-10-18T23:15:51.550Z",
+          "kind": "FileChange"
+        },
+        {
+          "at": "2026-10-18T23:18:55.372Z",
+          "kind": "FileChange"
+        },
+        {
+          "at": "2026-10-18T23:19:52.085Z",
+          "kind": "FileChange"
+        },
+        {
+          "at": "2026-10-18T23:21:03.355Z",
+          "kind": "FileChange"
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "testing_read_before_first_patch": true,
+      "fastpath_read_before_first_patch": true,
+      "patch_events": 5,
+      "events": [
+        {
+          "at": "2026-10-18T23:21:53.918Z",
+          "kind": "ReadFastPath",
+          "exit": 0,
+          "output_bytes": 10964
+        },
+        {
+          "at": "2026-10-18T23:21:59.040Z",
+          "kind": "ReadTesting",
+          "exit": 0,
+          "output_bytes": 10754
+        },
+        {
+          "at": "2026-10-18T23:24:55.494Z",
+          "kind": "FileChange"
+        },
+        {
+          "at": "2026-10-18T23:25:40.891Z",
+          "kind": "FileChange"
+        },
+        {
+          "at": "2026-10-18T23:27:41.074Z",
+          "kind": "FileChange"
+        },
+        {
+          "at": "2026-10-18T23:28:44.602Z",
+          "kind": "FileChange"
+        },
+        {
+          "at": "2026-10-18T23:30:00.535Z",
+          "kind": "FileChange"
+        }
+      ]
+    }
+  ],
+  "new_model_or_probe_runs": 0
+}

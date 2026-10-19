@@ -1,0 +1,261 @@
+{
+  "kind": "Two POSTHOC stop-only-float length queries after static inspection of closedR1 and original Issue1247scope. Not in frozen46 or modelprompt. Generated values and exact float endpoint equal integer builtinrange oracle; no enumeration. All42models closed, parent/reference/all6 uniform, no modelrerun/artifactedits.",
+  "started_at": "2026-10-18T22:46:01.866Z",
+  "finished_at": "2026-10-18T22:46:02.616Z",
+  "declaration": {
+    "proposed_at": "2026-10-18T22:41:55.723Z",
+    "status": "NOT RUN",
+    "kind": "Post-start static target-not-fully-fixed hypothesis; run only after all42 models close",
+    "source": "5ae9d13344fb7d96a69461d3616c220e29b3d796",
+    "location": "closed candidateR1 _len dispatch depends on start/step float but distance also depends on stop",
+    "scope": "Actual Issue1247 requires len/contains/index consistent with generated items, not only float start or step",
+    "hypothesis": "Integral start/step generate exact integer items; a precisely representable large float stop can make existing subtraction lose one unit. A start/step-only guard leaves this original target length discrepancy unfixed.",
+    "cases": 2,
+    "versions": 8,
+    "oracle": "builtin integer range with exactsame integral values and exact float stop converted to its identical integer, 64bit len within bound; no enumeration. Parent may fail expected targetbug; upstream reference positive control required.",
+    "controller_sha256": "256fcc74b6dfc3f256793fb36f9abc4153826caa56c45307cb92fa9a1eb91320",
+    "model_or_original46_changes": false
+  },
+  "timeout_ms_per_case": 10000,
+  "task": "more-itertools-1247",
+  "python_program": "import json,sys\npayload=json.load(sys.stdin)\nassert sys.maxsize >= 2**54, 'oracle requires 64-bit sequence length'\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('stop_only_float_ascending',(1,float(2**54),1),len(range(1,2**54,1))),('stop_only_float_descending',(-1,-float(2**54),-1),len(range(-1,-2**54,-1)))]\nfor name,args,expected in cases:\n if payload['case_filter']!=[name,'len']:continue\n try:\n  instance=cls(*args)\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':False,'constructor_exception':type(error).__name__}));continue\n try:\n  actual=len(instance)\n  print(json.dumps({'case':name,'operation':'len','passed':actual==expected,'value':actual,'expected':expected,'oracle':'builtin range over identical integral generated values and exact representable float boundary; no enumeration'}))\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':False,'exception':type(error).__name__,'message':str(error),'expected':expected}))\n",
+  "controller_source": "'use strict';\nconst fs=require('node:fs'),p=require('node:path'),cp=require('node:child_process'),crypto=require('node:crypto');\nconst root=__dirname,progress=JSON.parse(fs.readFileSync(p.join(root,'progress.json')));\nif(progress.count!==42||JSON.parse(fs.readFileSync(p.join(root,'experiment.json'))).status!=='COMPLETED_ALL_42')throw Error('All42 models mustclose before new posthoc behavior checks');for(const r of progress.completed)if(JSON.parse(fs.readFileSync(r.result_file)).agent.timed_out)throw Error('Timeout requires manual live-process audit before new probes');\nif(fs.existsSync(p.join(root,'posthoc-floatstop-probes.json')))throw Error('Never overwrite completed new-probe evidence');\nconst program=\"import json,sys\\npayload=json.load(sys.stdin)\\nassert sys.maxsize >= 2**54, 'oracle requires 64-bit sequence length'\\nsys.path.insert(0,payload['support'])\\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\\ncls=namespace['numeric_range']\\ncases=[('stop_only_float_ascending',(1,float(2**54),1),len(range(1,2**54,1))),('stop_only_float_descending',(-1,-float(2**54),-1),len(range(-1,-2**54,-1)))]\\nfor name,args,expected in cases:\\n if payload['case_filter']!=[name,'len']:continue\\n try:\\n  instance=cls(*args)\\n except Exception as error:\\n  print(json.dumps({'case':name,'operation':'len','passed':False,'constructor_exception':type(error).__name__}));continue\\n try:\\n  actual=len(instance)\\n  print(json.dumps({'case':name,'operation':'len','passed':actual==expected,'value':actual,'expected':expected,'oracle':'builtin range over identical integral generated values and exact representable float boundary; no enumeration'}))\\n except Exception as error:\\n  print(json.dumps({'case':name,'operation':'len','passed':False,'exception':type(error).__name__,'message':str(error),'expected':expected}))\\n\";\nconst names=['stop_only_float_ascending','stop_only_float_descending'];\nconst queries=names.map(n=>[n,'len']);\nconst gitSource=ref=>cp.execFileSync('git',['show',ref+':more_itertools/more.py'],{cwd:p.join(root,'repos/more-itertools'),encoding:'utf8'});\nconst versions=[{version:'parent',source:gitSource('2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10')},{version:'upstream_reference',source:gitSource('dc2664b4a7c66209485c9f5e359137bf4b365eb3')},...progress.completed.filter(r=>r.task==='more-itertools-1247').map(r=>{const trial=p.dirname(r.result_file).replace(/\\/results\\/.+$/,'');return{version:r.cell+'-r'+r.repetition,cell:r.cell,run:r.repetition,source:fs.readFileSync(p.join(trial,'runs',r.task,r.cell+'-r'+r.repetition,'more_itertools/more.py'),'utf8')};})];\nconst start=new Date().toISOString(),results=versions.map(({source,...meta})=>({...meta,source_sha256:crypto.createHash('sha256').update(source).digest('hex'),cases:queries.map(case_filter=>{const started_at=new Date().toISOString();const r=cp.spawnSync(p.join(root,'venvs/more-itertools/bin/python'),['-B','-c',program],{input:JSON.stringify({source,support:p.join(root,'validation/more-itertools-1247/checkout'),case_filter}),encoding:'utf8',timeout:10000,env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});if(r.error||r.status!==0)return{case:case_filter[0],operation:case_filter[1],passed:false,started_at,finished_at:new Date().toISOString(),exit:r.status,timed_out:r.error?.code==='ETIMEDOUT',error:String(r.error?.code||r.stderr).slice(-800)};return{...JSON.parse(r.stdout),started_at,finished_at:new Date().toISOString(),exit:r.status};})}));\nconst data={kind:'Two POSTHOC stop-only-float length queries after static inspection of closedR1 and original Issue1247scope. Not in frozen46 or modelprompt. Generated values and exact float endpoint equal integer builtinrange oracle; no enumeration. All42models closed, parent/reference/all6 uniform, no modelrerun/artifactedits.',started_at:start,finished_at:new Date().toISOString(),declaration:JSON.parse(fs.readFileSync(p.join(root,'floatstop-hypothesis.json'))),timeout_ms_per_case:10000,task:'more-itertools-1247',python_program:program,controller_source:fs.readFileSync(__filename,'utf8'),results};\nfs.writeFileSync(p.join(root,'posthoc-floatstop-probes.json'),JSON.stringify(data,null,2)+'\\n');\nconsole.log(JSON.stringify(results.map(r=>({version:r.version,passed:r.cases.filter(c=>c.passed).length,total:r.cases.length}))));\n",
+  "results": [
+    {
+      "version": "parent",
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "case": "stop_only_float_ascending",
+          "operation": "len",
+          "passed": false,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:01.867Z",
+          "finished_at": "2026-10-18T22:46:01.909Z",
+          "exit": 0
+        },
+        {
+          "case": "stop_only_float_descending",
+          "operation": "len",
+          "passed": false,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:01.909Z",
+          "finished_at": "2026-10-18T22:46:02.001Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "upstream_reference",
+      "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+      "cases": [
+        {
+          "case": "stop_only_float_ascending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.001Z",
+          "finished_at": "2026-10-18T22:46:02.076Z",
+          "exit": 0
+        },
+        {
+          "case": "stop_only_float_descending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.076Z",
+          "finished_at": "2026-10-18T22:46:02.134Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r1",
+      "cell": "gpt-cew",
+      "run": 1,
+      "source_sha256": "cbfa2765c20fde0eb3ce034c67f623f00c67e38cb062a4ce3ed2b63f42a30801",
+      "cases": [
+        {
+          "case": "stop_only_float_ascending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.134Z",
+          "finished_at": "2026-10-18T22:46:02.179Z",
+          "exit": 0
+        },
+        {
+          "case": "stop_only_float_descending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.179Z",
+          "finished_at": "2026-10-18T22:46:02.219Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "source_sha256": "628e158c1257fb0e6116d0050ceb6dbb457e16d6e7c3e0cf2bb0f4963148f4b9",
+      "cases": [
+        {
+          "case": "stop_only_float_ascending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.219Z",
+          "finished_at": "2026-10-18T22:46:02.259Z",
+          "exit": 0
+        },
+        {
+          "case": "stop_only_float_descending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.259Z",
+          "finished_at": "2026-10-18T22:46:02.300Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r1",
+      "cell": "gpt-trim",
+      "run": 1,
+      "source_sha256": "4fc31b321152e7be54f52451b37b85eef54add52fa136f7454a5fe3ba6501f65",
+      "cases": [
+        {
+          "case": "stop_only_float_ascending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.300Z",
+          "finished_at": "2026-10-18T22:46:02.339Z",
+          "exit": 0
+        },
+        {
+          "case": "stop_only_float_descending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.340Z",
+          "finished_at": "2026-10-18T22:46:02.380Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "source_sha256": "cb81831d3017b809afb0bd5cf33dc2a74d808a0ecac491b27566c786253eafe4",
+      "cases": [
+        {
+          "case": "stop_only_float_ascending",
+          "operation": "len",
+          "passed": false,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.380Z",
+          "finished_at": "2026-10-18T22:46:02.419Z",
+          "exit": 0
+        },
+        {
+          "case": "stop_only_float_descending",
+          "operation": "len",
+          "passed": false,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.419Z",
+          "finished_at": "2026-10-18T22:46:02.458Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r2",
+      "cell": "gpt-trim",
+      "run": 2,
+      "source_sha256": "aad45cc623859c6afed06dfb5855ceb81e6601b315aa6e9ac8c6e792fc36527c",
+      "cases": [
+        {
+          "case": "stop_only_float_ascending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.458Z",
+          "finished_at": "2026-10-18T22:46:02.498Z",
+          "exit": 0
+        },
+        {
+          "case": "stop_only_float_descending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.498Z",
+          "finished_at": "2026-10-18T22:46:02.539Z",
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r2",
+      "cell": "gpt-cew",
+      "run": 2,
+      "source_sha256": "370725287f6fbb80ef27b9fdba7e257efdb2e3bd33c4f7b09f6bb2254c4560d9",
+      "cases": [
+        {
+          "case": "stop_only_float_ascending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.539Z",
+          "finished_at": "2026-10-18T22:46:02.577Z",
+          "exit": 0
+        },
+        {
+          "case": "stop_only_float_descending",
+          "operation": "len",
+          "passed": true,
+          "value": 18014398509481984,
+          "expected": 18014398509481984,
+          "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+          "started_at": "2026-10-18T22:46:02.577Z",
+          "finished_at": "2026-10-18T22:46:02.616Z",
+          "exit": 0
+        }
+      ]
+    }
+  ]
+}

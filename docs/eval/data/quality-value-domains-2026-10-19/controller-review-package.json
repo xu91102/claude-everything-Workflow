@@ -1,0 +1,566 @@
+{
+  "kind": "Fixed twelfth evaluator integration only, no model quality/performance claim",
+  "root": "<BENCH_ROOT>",
+  "repo": "/Users/xu/project/worktrees/cew-fast-path",
+  "base": "05a2569677746e935cd2b3daaa4d7f17d322c98d",
+  "candidate": "2f44deaf5220f0f146b7ff69fb56fd4e97dcc00e",
+  "model_runs": 0,
+  "known_checks": 54,
+  "scope_source": "Direct user request: fix remaining quality while preserving Fast Path speed direction; same7 tasks, token/time/quality to PR62; no AGENTS additions, no merge. Source-only approved existing testing inventory clause adds original behavior/value domains/refusals and finite/nonfinite numeric values. Everything else stays unchanged.",
+  "source_review": {
+    "path": "<BENCH_ROOT>/source-review/review-result.json",
+    "sha256": "2d4a11e7a58fdd46710b473874df83e8f7fcac0b3aa56173a042ff6cbdd7cffd"
+  },
+  "source_proposal": {
+    "path": "<BENCH_ROOT>/source-review/package.json",
+    "sha256": "449d8f7b449a5f94738a6fc3c23e96ed657fa5e8d29bf3b8ccf5a1ef0f52d7d3"
+  },
+  "review_skill": {
+    "path": "<BENCH_ROOT>/sources/optimized/skills/code-review/SKILL.md",
+    "sha256": "ce8f298cc3b8bedadea506692bc191f8e2787a6b5d65bee8332e8b1ec9f871ab"
+  },
+  "review_prompts": [
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/skills/code-review/references/standards-reviewer-prompt.md",
+      "sha256": "cf73a1f372e9cacc59c0fa17532bda30e98859514688665cb7ecaef3ba96be33"
+    },
+    {
+      "path": "<BENCH_ROOT>/sources/optimized/skills/code-review/references/spec-reviewer-prompt.md",
+      "sha256": "f9a3bbf8ccff053ce9006a8e432c455b3492185ea0e1d5763373cc98cdde3be0"
+    }
+  ],
+  "rules": [
+    {
+      "repo_path": "rules/01-base.md",
+      "path": "<BENCH_ROOT>/sources/optimized/rules/01-base.md",
+      "sha256": "0d10b2ce8f6c4cae51560b739174ffb7b37885fda84d6b3375629053e859b98c"
+    },
+    {
+      "repo_path": "rules/02-implementation.md",
+      "path": "<BENCH_ROOT>/sources/optimized/rules/02-implementation.md",
+      "sha256": "700331676ad40d65acdeb469a67cf802cddff78ebf0861ec5e4427b5a3d23620"
+    },
+    {
+      "repo_path": "rules/07-forbidden.md",
+      "path": "<BENCH_ROOT>/sources/optimized/rules/07-forbidden.md",
+      "sha256": "925a8a1e3df9a734522d570f967912ca7b6f69a83aceb8499bda3e292dcd16a5"
+    },
+    {
+      "repo_path": "rules/09-first-principles-adversarial-testing.md",
+      "path": "<BENCH_ROOT>/sources/optimized/rules/09-first-principles-adversarial-testing.md",
+      "sha256": "182ab761713451fd9b04c290a070e0235a52833f52cbaf695f065363675faf2f"
+    },
+    {
+      "repo_path": "rules/common/testing.md",
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/testing.md",
+      "sha256": "e0e0762e5ff8324bd93d90859f907145647f5d8354a1f39fc8f60224c6915bbb"
+    },
+    {
+      "repo_path": "rules/common/harness-engineering.md",
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/harness-engineering.md",
+      "sha256": "9247631278f21f200dc9231ad6c9a2608824f8382acbe136721db042d1626ad4"
+    },
+    {
+      "repo_path": "rules/common/performance.md",
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/performance.md",
+      "sha256": "451a91bf7f92e747785e56d2e669ef14bca344bcddd3fa8ee0c6b2daf9aa0036"
+    },
+    {
+      "repo_path": "rules/common/context-hygiene.md",
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/context-hygiene.md",
+      "sha256": "65bc9a40aa4f79f0e882853a6c355e4109c46468073ba617cdced00a8ed3ced4"
+    }
+  ],
+  "source_files": [
+    {
+      "repo_path": "rules/common/testing.md",
+      "path": "<BENCH_ROOT>/sources/optimized/rules/common/testing.md",
+      "sha256": "e0e0762e5ff8324bd93d90859f907145647f5d8354a1f39fc8f60224c6915bbb"
+    },
+    {
+      "repo_path": "skills/using-superpowers/references/fast-path.md",
+      "path": "<BENCH_ROOT>/sources/optimized/skills/using-superpowers/references/fast-path.md",
+      "sha256": "1851558619c7e2e6313b8fbda2dbd68ffa9c635d91a2bd4b68222491ca1564c7"
+    },
+    {
+      "repo_path": "skills/code-review/SKILL.md",
+      "path": "<BENCH_ROOT>/sources/optimized/skills/code-review/SKILL.md",
+      "sha256": "ce8f298cc3b8bedadea506692bc191f8e2787a6b5d65bee8332e8b1ec9f871ab"
+    },
+    {
+      "repo_path": "skills/code-review/references/spec-reviewer-prompt.md",
+      "path": "<BENCH_ROOT>/sources/optimized/skills/code-review/references/spec-reviewer-prompt.md",
+      "sha256": "f9a3bbf8ccff053ce9006a8e432c455b3492185ea0e1d5763373cc98cdde3be0"
+    },
+    {
+      "repo_path": "docs/eval/tools/run-trial.js",
+      "path": "<BENCH_ROOT>/sources/optimized/docs/eval/tools/run-trial.js",
+      "sha256": "99deae2fd88616645e89a03754b20594ab9e7f6e91bfccb0aff8dc62b48507cc"
+    },
+    {
+      "repo_path": "docs/eval/tools/run-trial.test.js",
+      "path": "<BENCH_ROOT>/sources/optimized/docs/eval/tools/run-trial.test.js",
+      "sha256": "e4aa68083487fdc0c5d95e66db154596eb533aaf6b439d31e41a9b8aa3fa12e8"
+    },
+    {
+      "repo_path": "docs/eval/tools/codex-usage.js",
+      "path": "<BENCH_ROOT>/sources/optimized/docs/eval/tools/codex-usage.js",
+      "sha256": "c96e966575b7d1145a04196f173855c9e282640b253552ce5bd5c9a3cc7b2033"
+    }
+  ],
+  "files": [
+    {
+      "path": "<BENCH_ROOT>/preparation.json",
+      "sha256": "bf5a14e2a2ef6e0cff0145137f2ffa3ac34b5858a236aed6cdab0bce0d3a6c24"
+    },
+    {
+      "path": "<BENCH_ROOT>/adaptation.json",
+      "sha256": "323caf22320d910d526e0df6597c0e4541d2dc846e1b55715f1856cbb3a9ec0b"
+    },
+    {
+      "path": "<BENCH_ROOT>/setup.cjs",
+      "sha256": "5f29ded393e3c3dbab18c81dfea643e3bbbbd51d673857f25a3772e4308c7dee"
+    },
+    {
+      "path": "<BENCH_ROOT>/check-source.cjs",
+      "sha256": "796ac3407a29a6427aa15faade80d7d488e17c10cd5427d4dc7a48e2e8da23f8"
+    },
+    {
+      "path": "<BENCH_ROOT>/source-check-results.json",
+      "sha256": "1b436d03c881370770a311933c1d7353b2bfdbcf3f06e43c5d184430aa9a7e4b"
+    },
+    {
+      "path": "<BENCH_ROOT>/verify-production.cjs",
+      "sha256": "886549af78a7cfb8ac4696f6e34c872a9f5962072fa5f71b0ce4cafc4b95fcfc"
+    },
+    {
+      "path": "<BENCH_ROOT>/production-validation.json",
+      "sha256": "fe42ad78ea343119d8f6c8e8c12e50e9cbe59b3beccfa73e7ccada68c3e367d4"
+    },
+    {
+      "path": "<BENCH_ROOT>/protocol/installed-sources.json",
+      "sha256": "96ab22c8e81390b220e92ad8b9c9335c0a1ccf34e694334b7de032b77eb38668"
+    },
+    {
+      "path": "<BENCH_ROOT>/run-final-benchmark.cjs",
+      "sha256": "99d05531c6f13a9a45d35742fbb459fd27d2f4fc5732bc7d2bd78ac2d6244459"
+    },
+    {
+      "path": "<BENCH_ROOT>/launch-once.cjs",
+      "sha256": "53112a99633c6d853848c82236f1206b73e92be3705b2ae301af089377f04678"
+    },
+    {
+      "path": "<BENCH_ROOT>/after-benchmark.cjs",
+      "sha256": "89520fcc43390bd4dac77c9e654cdce500d93848dfe14fa6d3a68a9c2b6f249f"
+    },
+    {
+      "path": "<BENCH_ROOT>/process-audit.cjs",
+      "sha256": "b0e8ee75661326b1ac63c9b8f19f128e68580fade41852ffe7a2ee8aebe8b526"
+    },
+    {
+      "path": "<BENCH_ROOT>/freeze-protocol.cjs",
+      "sha256": "419fe353c98faf4988b1ff85d2d92422552135adbbb95114076499d6b1e8ace0"
+    },
+    {
+      "path": "<BENCH_ROOT>/finalize-publication.cjs",
+      "sha256": "1360855903f1901f2a006950f75c039902520d702fb0a238176bbf1d6d50876c"
+    },
+    {
+      "path": "<BENCH_ROOT>/account-usage.cjs",
+      "sha256": "36183b8026f394723ebb6f18f2d896f179c3e8c750468aa4f30c9da392051e4e"
+    },
+    {
+      "path": "<BENCH_ROOT>/export-evidence.cjs",
+      "sha256": "77e458134726eb608ad12a8877feb0aeae3ae9ce76cde79495ec79008ae1e7bd"
+    },
+    {
+      "path": "<BENCH_ROOT>/summarize.cjs",
+      "sha256": "67a5c2abf4f04a6aa575437c967f254bd62175d8b90c5f57707603c82c7a8ae2"
+    },
+    {
+      "path": "<BENCH_ROOT>/trace-diagnose.cjs",
+      "sha256": "92540817af24da5f72a8ec7de48945ddb81568ffc6a2efa679c0fc4b5adea4ec"
+    },
+    {
+      "path": "<BENCH_ROOT>/make-diagnosis.cjs",
+      "sha256": "abd6668664ea6a68812d091f2bf52f758418f3460ffc8d2a0eb2215099ff62c8"
+    },
+    {
+      "path": "<BENCH_ROOT>/write-report.cjs",
+      "sha256": "79425d24c7ab684baa3662b7dc9790356d40df65dca9680765017a51c73c35a7"
+    },
+    {
+      "path": "<BENCH_ROOT>/make-review-package.cjs",
+      "sha256": "3a8eaa0d41b79cc2b417f48b7a7d6fdc46fa0d920fc45fc728563fc33634d041"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-environment.cjs",
+      "sha256": "0de7da27251985ef2cb4d88f6a69157319af532b4d126ec8abdbacf2016a9e8e"
+    },
+    {
+      "path": "<BENCH_ROOT>/environment-preflight.json",
+      "sha256": "705b361fc06d5a3bad892c60d789f272f24f1eaf68b61d0bad13e9336818aad6"
+    },
+    {
+      "path": "<BENCH_ROOT>/tasks.validated.json",
+      "sha256": "dc08f7afa2c1274473b789e27ad5cdab473edf086268cc38cf4d26c66b08adc7"
+    },
+    {
+      "path": "<BENCH_ROOT>/validation-reuse.json",
+      "sha256": "b0eb8e9ffd87989d6be7c5edd5c4398cae1e57eaeaded3fa182c991e460b1345"
+    },
+    {
+      "path": "<BENCH_ROOT>/accounting-real43-replay.json",
+      "sha256": "95adf349983d08f4b888adedb06ca8d73939bcdcb9179db4150bfde786d47150"
+    },
+    {
+      "path": "<BENCH_ROOT>/accounting-29.log",
+      "sha256": "cb95ab4a810a2400e5d7e0ee9e851e66ecbbd4948e451e7f1d041b4408aeeb69"
+    },
+    {
+      "path": "<BENCH_ROOT>/prior-failed-accounting-replay.json",
+      "sha256": "2c1fb7094c1235546cdf49c5965b11884dc3ce95201784fb3199a48b5ca9dd40"
+    },
+    {
+      "path": "<BENCH_ROOT>/prior-positive-process-control.json",
+      "sha256": "9f6fb88cee46be96dea39b021e145e265be47332840e7bc7d3e0164f307ccb3e"
+    },
+    {
+      "path": "<BENCH_ROOT>/prior-empty-failed-patch-replay.json",
+      "sha256": "7f731692c60f4aeb25b126d40a528ac336d574f0c64bb5b9cd22679cdee8bb20"
+    },
+    {
+      "path": "<BENCH_ROOT>/prior-empty-failed-patch-normal-controls.json",
+      "sha256": "4e556246f52ca6e111f947bbea81d12923332561265d0cb752bc7b5187bb968d"
+    },
+    {
+      "path": "<BENCH_ROOT>/quality-probes.cjs",
+      "sha256": "ae0aa64c7cd51853ba5f85a412ef2983f3086b240b3dce9fd58bfe4198b3fb11"
+    },
+    {
+      "path": "<BENCH_ROOT>/cost-probes.cjs",
+      "sha256": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262"
+    },
+    {
+      "path": "<BENCH_ROOT>/context-probes.cjs",
+      "sha256": "e8bb0dbd5e07ea6f80ed1dfa031c098a71ebf263494736435d3c530cfc39519b"
+    },
+    {
+      "path": "<BENCH_ROOT>/promotion-probes.cjs",
+      "sha256": "b9c24a9d58c40e90f635ea2ca15ce9d9c82925eeb3945197c9427b3cf6481786"
+    },
+    {
+      "path": "<BENCH_ROOT>/compatibility-probes.cjs",
+      "sha256": "f83e94c4f8e04c039e5edd7c810306c8c2cf04628e85e67c3a82a8e9e27aecb3"
+    },
+    {
+      "path": "<BENCH_ROOT>/shortcircuit-probes.cjs",
+      "sha256": "9a3e1c6b3d8dbd24568812569dbde78cd570ae0aded09c2fbd408b0172a86fd5"
+    },
+    {
+      "path": "<BENCH_ROOT>/floatstop-probes.cjs",
+      "sha256": "ae444d0acec5e98a78bb423ecfc66c3878832b553e2a70f6c4f73a2f4197660a"
+    },
+    {
+      "path": "<BENCH_ROOT>/infinite-stop-probes.cjs",
+      "sha256": "9ff60e82c9cfba1ae4011fea3e0b18f8a565093e7311bd7da881f6222956e36e"
+    },
+    {
+      "path": "<BENCH_ROOT>/i18n-probes.cjs",
+      "sha256": "5b8dc2ac5ea1142c5690930a97f386c2a9bb9f34989eb4802fe213354b1cfe55"
+    },
+    {
+      "path": "<BENCH_ROOT>/protocol/shortcircuit-amendment.json",
+      "sha256": "25c4a702af7fadb3b78f6af32d5ee8bfdc7205cef0607cf62cd4c27de216ff4e"
+    },
+    {
+      "path": "<BENCH_ROOT>/protocol/floatstop-amendment.json",
+      "sha256": "78bdfe990178b5bb1d15ecde2a2af15d4f5394292f4043f4df403751055d3215"
+    },
+    {
+      "path": "<BENCH_ROOT>/protocol/infinite-stop-amendment.json",
+      "sha256": "818430566e1f15f234f03e9d2e481828a26261bda938eecb32b39a505053a8e8"
+    },
+    {
+      "path": "<BENCH_ROOT>/check-verify.log",
+      "sha256": "985e1792ba49629bbf4c7c6ba1306b5b4224451675f10bd6dd676946e8a4b9b7"
+    },
+    {
+      "path": "<BENCH_ROOT>/check-test-manifest.log",
+      "sha256": "814b0265852f31c9d2b8b79e2d06b14876a5d49c8bcce24e961bbfe025b5e86c"
+    },
+    {
+      "path": "<BENCH_ROOT>/check-test-invocation.log",
+      "sha256": "2494e1dcd36c8ad981258bb7f1ec1ea713530cddc3e02c844c82368959aa6fc7"
+    },
+    {
+      "path": "<BENCH_ROOT>/check-test-continuation.log",
+      "sha256": "41b11175141b62bd719117fa23fd4aa5e93472545e55927a282b3a89380f56d9"
+    },
+    {
+      "path": "<BENCH_ROOT>/check-test-install-rules.log",
+      "sha256": "b1a50561a46ad8473a41d1036a64f057ba913a690a9e812203ed42cd25cd5f80"
+    },
+    {
+      "path": "<BENCH_ROOT>/check-test-plugins.log",
+      "sha256": "e9a809538f49df6bd509db07fa712e95740d27bdf0c867578de30750e36ea53f"
+    },
+    {
+      "path": "<BENCH_ROOT>/check-test-eval.log",
+      "sha256": "cb95ab4a810a2400e5d7e0ee9e851e66ecbbd4948e451e7f1d041b4408aeeb69"
+    },
+    {
+      "path": "<BENCH_ROOT>/check-pack-dry-run.log",
+      "sha256": "32f7135d3fdf4bcc9d5231e6666224c8efc78b37dfcd6046d724e2950131b30e"
+    },
+    {
+      "path": "<BENCH_ROOT>/production-pack.log",
+      "sha256": "235fd2f4abf25a8fc5ddb7662486cb608ca816fd53061401135a4ca0573f42c9"
+    },
+    {
+      "path": "<BENCH_ROOT>/production-install.log",
+      "sha256": "3e109b2e2be3d6b3e13c0cd01f9005d6a371e5a64bda8fc4ff88287a036e2fd3"
+    },
+    {
+      "path": "<BENCH_ROOT>/production-verify.log",
+      "sha256": "d08f0e51d3aa195dd7de5069736edb065d000c13779b66becc0901d516af278e"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-environment-v2.cjs",
+      "sha256": "d8c680b167f85dcbe0df07d849d0cd8bc85bd603c2e8a368a814ddbbd0f1025d"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-serial-amendment.json",
+      "sha256": "6859ce078dea840f48adbe9c713a0aceb1b9db98ebf9e666a26c7a7c4d55e2f8"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-positive-control-diagnostic.json",
+      "sha256": "127210b3a4f143be7577ab2bf930d1e986cffaffcd1467f2938a1244d0f1cfc0"
+    },
+    {
+      "path": "<BENCH_ROOT>/environment-preflight-error.json",
+      "sha256": "9c561127ce20ebdced25b4ac4e691772b204b87d93a1f56558078112db189380"
+    },
+    {
+      "path": "<BENCH_ROOT>/after-benchmark-before-serial.cjs",
+      "sha256": "39f30304b6a67eef3a40bf92368379f2844a7fc0120a3940396fd1944989e8e2"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/compatibility-probes.json",
+      "sha256": "70788286a6f79f8575c52c48f117aee3176739bbbe95d2f5d5ee3c88ee971410"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/context-probes.json",
+      "sha256": "182d0ba735580bde2d6e676d16050c9d402b30ff1f9bf9d9145df59dd061a332"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/cost-probes.json",
+      "sha256": "cb1a384401fd0d60615f8a381498e384b3fe495755f2fa6969947551fdea6612"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/floatstop-probes.json",
+      "sha256": "4f214eb88257599585800700277474f39179cfe095f1393478482878e2350aac"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/infinite-stop-oracle-validation.json",
+      "sha256": "1129dc9ff2566c75608805b938756d23382881a494595ba99201e18ad005dcf6"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/infinite-stop-probes.json",
+      "sha256": "57d4c3a7c13f1879964a6783e5dbe43e7601d80fe5c9dc1b093e9d5138a40189"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/process-audit.cjs",
+      "sha256": "b0e8ee75661326b1ac63c9b8f19f128e68580fade41852ffe7a2ee8aebe8b526"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/progress.json",
+      "sha256": "e3bf10ddc9fd2469c1e71eec40abd569f5e161d6686afcbdfb9b752408d848f8"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/promotion-probes.json",
+      "sha256": "8c2a5bb3803af4c3e47ad79d178aca08235cdd44ba41fd9af0f2719fd4c93409"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/quality-probes.json",
+      "sha256": "49af325d5de511e06f343ac21462040db89d1df9ce551b62408ccc484999e6a8"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/shortcircuit-probes.json",
+      "sha256": "be72623cdb51dd1aa44044c7c619fe70c2a0f1e8d172183f1841eb0f6ff6baac"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-previous6/audits/6-process-audit.json",
+      "sha256": "ad3fa6eccf134306436eb05f05d0031c5286e6dd92dc634c7a702ccba1fadb24"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/compatibility-probes.json",
+      "sha256": "f353da7bde6a4676dd1f9ff64637328c8342bad32abf439ac24d3f9040322de4"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/context-probes.json",
+      "sha256": "9a5e307e1547f2be2b6cc62419acec56819e98cf648ec45cdf9e78b970be1dea"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/cost-probes.json",
+      "sha256": "3e9c47371bd50e33e591ce7b2e2017e83ee617ca795b9ef8f123d4c6f959e09f"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/floatstop-probes.json",
+      "sha256": "b994d6ea9636bac1981919f2519bd4d7099c976da3df47ce5a0d07b1d27bfebd"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/infinite-stop-oracle-validation.json",
+      "sha256": "5538fe3e23f9ef90dfa3415151544acc8d6986a45c788297576c20455baf2682"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/infinite-stop-probes.json",
+      "sha256": "3c79b44b2f4dc34b99363c9fad3e903795f71c4453bd87322e931906599eebd2"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/process-audit.cjs",
+      "sha256": "b0e8ee75661326b1ac63c9b8f19f128e68580fade41852ffe7a2ee8aebe8b526"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/progress.json",
+      "sha256": "e3bf10ddc9fd2469c1e71eec40abd569f5e161d6686afcbdfb9b752408d848f8"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/promotion-probes.json",
+      "sha256": "bfead251889eed0a2e6a74c97cf19fdea74ced4b15c1b3a128502ec4f374d767"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/quality-probes.json",
+      "sha256": "49af325d5de511e06f343ac21462040db89d1df9ce551b62408ccc484999e6a8"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/shortcircuit-probes.json",
+      "sha256": "b4a0f2805da4f6727b9ba8e8c569c8455dc94eb0490c47a7d99dc9373a5b7f25"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified6/audits/6-process-audit.json",
+      "sha256": "fbec418ff32b85cfec319800c0761805e32241613bf4191ca28af0db27ff4f4e"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified42/floatstop-probes.json",
+      "sha256": "88f2a9d2d80a97afc765e4e68a4ebb779cc0a51933f72f4c625ce65315c8a00e"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified42/infinite-stop-oracle-validation.json",
+      "sha256": "1e70f74a861ca9f7641d4a7833e5297ecf18eab339fb80badda4e6e9261a6afb"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified42/infinite-stop-probes.json",
+      "sha256": "93c99d1f98dfd8614472c73362b1f3a70a778d11ed78542f110ae5e652bec960"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified42/process-audit.cjs",
+      "sha256": "b0e8ee75661326b1ac63c9b8f19f128e68580fade41852ffe7a2ee8aebe8b526"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified42/progress.json",
+      "sha256": "4d43ddd428ce185cb50026c1d6cf484db20f3429fa9df0656783436181f5f38d"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified42/shortcircuit-probes.json",
+      "sha256": "70110709514f89ebeb8a8dddceb7aa0c518e0653c5a8a48eff74f336485f15a8"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified42/audits/42-process-audit.json",
+      "sha256": "12c36f30899d9d312bbfcc5ae8e92132f628d025a0b8d541730ce41a5b8e9da7"
+    },
+    {
+      "path": "<BENCH_ROOT>/preflight-verified42/audits/6-process-audit.json",
+      "sha256": "fbec418ff32b85cfec319800c0761805e32241613bf4191ca28af0db27ff4f4e"
+    }
+  ],
+  "profiles": [
+    {
+      "cell": "gpt-cew",
+      "sha": "e57aa53bb4b1ba8c065be5714c23e451bf6a6ad5",
+      "home": "cew-home",
+      "version": "main",
+      "config": {
+        "path": "<BENCH_ROOT>/templates/cew-home/.codex/config.toml",
+        "sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90"
+      },
+      "agents": {
+        "path": "<BENCH_ROOT>/templates/cew-home/.codex/AGENTS.md",
+        "sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd"
+      }
+    },
+    {
+      "cell": "gpt-trim",
+      "sha": "05a2569677746e935cd2b3daaa4d7f17d322c98d",
+      "home": "cew-trim",
+      "version": "previous-candidate",
+      "config": {
+        "path": "<BENCH_ROOT>/templates/cew-trim/.codex/config.toml",
+        "sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90"
+      },
+      "agents": {
+        "path": "<BENCH_ROOT>/templates/cew-trim/.codex/AGENTS.md",
+        "sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd"
+      }
+    },
+    {
+      "cell": "gpt-fixed",
+      "sha": "2f44deaf5220f0f146b7ff69fb56fd4e97dcc00e",
+      "home": "cew-fixed",
+      "version": "optimized",
+      "config": {
+        "path": "<BENCH_ROOT>/templates/cew-fixed/.codex/config.toml",
+        "sha256": "fb95b44d04a5811b36128fee45f01be83c5317d026cdda8ae686f2ef0b067f90"
+      },
+      "agents": {
+        "path": "<BENCH_ROOT>/templates/cew-fixed/.codex/AGENTS.md",
+        "sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd"
+      }
+    }
+  ],
+  "actual_prior": {
+    "full_review": {
+      "path": "/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o/full-independent-review.json",
+      "sha256": "e1fefd3b6a65fec90de8d3b2604f6a36d881718a99a894d195bae767225d0a49"
+    },
+    "full_package": {
+      "path": "/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o/full-review-package.json",
+      "sha256": "f71619dd51242b16d184703e1a276d96c92333b5869cc73373c33cb060eb252e"
+    },
+    "original_driver": {
+      "path": "/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o/run-final-benchmark.cjs",
+      "sha256": "53275d5e603cc0df7983b9c4baae1a6117ae390f415c08f18565e0418523489b"
+    },
+    "recovery_review": {
+      "path": "/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o/recovery/independent-review.json",
+      "sha256": "580ad063bce16a67f031faedbd76d8947b58e8ebef7dff485e09630f63e7e5b3"
+    },
+    "recovery_process_audit": {
+      "path": "/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o/recovery/process-audit.cjs",
+      "sha256": "3f53f9d1d87b55ca78dc9d2d7b82ed239c9e842755a6bbab57c843817705b859"
+    },
+    "actual_failed_accounting": {
+      "path": "/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o/recovery/account-usage.cjs",
+      "sha256": "36183b8026f394723ebb6f18f2d896f179c3e8c750468aa4f30c9da392051e4e"
+    },
+    "actual_export_v2": {
+      "path": "/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o/recovery/export-evidence-v2.cjs",
+      "sha256": "6aa9cf972cac05441183c9e6c3159ab840545c56efca15fed5c91052426a2c52"
+    },
+    "excluded_nan_scope": {
+      "path": "/private/tmp/cew-pr62-quality-operation-domain-20261019-x02E0o/nan-scope-decision.json",
+      "sha256": "aa10b63ff940db780cc218cf9246c66a2b8a147b8857b42f0c3829feb5758631"
+    },
+    "scope": "Read only relevant prior method/provenance. Prior source05a complete42 has timeout/capacity/actual quality and performance failures, preserved; no historical metrics substitute current. NaN was NOT RUN because no defined supported refusal oracle; known54 unchanged."
+  },
+  "requirements": {
+    "tasks": "Exact original7 x2 repeats x3 arms, e57 main /05a previous /candidate, gpt-6.1-sol high,720s, concurrency2, unchanged prompts/grader/rotation/isolated HOME/venv. Public JS remains104.",
+    "controls": "Same54 Python programs/inputs/oracles/Boolean verdict/time limits and i18n. Original46/i18n controller bytes unchanged. Only extra8 outer audit guard adapted before models. Actual closed11 positive/negative artifacts fresh-tested at6 and extra8 at42, failures retain verdict not unstable exception text; no new12 models yet. Original parallel preflight had one known-positive bounded17-item sequence timeout10s; identical single diagnostic then passed39ms, exact stall cause NOT established. Original failure/source/reports remain. Full fresh serial preflight must match all old verdicts before launch. Supplemental observer groups after all timed models are also serial, retaining exact programs/input/oracles and2s/10s limits. Critical observer groups were already serial. Model timing unchanged; no causal speed claim from observer scheduling.",
+    "collection": "Predeclared zero-owned-live process audit after closed6 and42, original audit algorithm unchanged except root and audit-path binding. Failed normal completion remains false. Continue all42 once if critical quality fails; no resampling.",
+    "accounting": "All unique recorded provider response_id input+output across root/descendants; raw CLI separate, cached/reasoning included. Prior reviewed actual failed-CLI-aware accounting copied exact. Fresh six old actual family replays incl timeout and capacity. Empty patch allowed only exact unchanged nonzero-exit unresolved failed attempt with empty SHA; normal/complete mismatch stays rejected. No bills/unfinished usage estimated.",
+    "acceptance": "Actual quality requires normal completion+strict original+all applicable54+i18n+independent actual artifact review no Important. WholePerformance PASS requires candidate ActualArtifactSpec PASS and all-known quality14/14, both main and candidate normal completion14/14, and whole14 total recorded-family input+output AND mean model time lower than contemporary main; raw cost direction alone is not accepted speed; failed/incomplete work cannot establish completed-task speed, no subgroup/median/history replacement. Source/evaluator PASS does not establish these outcomes.",
+    "verification": "Fresh8 repo checks, fresh29 CLI regressions, production package/install and official3profile install on committed source. Seven unchanged prevalidations and43historic accounting replays explicitly reused; each future trial grader fresh.",
+    "prohibited": "No AGENTS additions, no quality gate relaxation, no task/answer injection, no model/effort/timeout changes, no merge/release, no unapproved product scope."
+  },
+  "review_constraints": "Fresh independent read-only Standards/Spec for evaluator/source integration only. No models, tests or probes rerun; actual preflight logs/outputs inspected only. No sources/artifacts modified, hidden reasoning/encrypted bodies/auth values, subagents or messages/Git/PR. Only write controller-independent-review.json. Verify fixed pins, source archive/install/config/AGENTS, original trial/stage function bytes, program identity, meaningful real old positive/negative controls and failure accounting, original failures preserved, report/acceptance boundaries. Report PASS/FAIL separately plus findings, checks_not_run, package_sha256. Actual candidate quality/speed remain NOT RUN."
+}

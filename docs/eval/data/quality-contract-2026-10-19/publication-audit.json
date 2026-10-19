@@ -1,0 +1,9 @@
+{
+  "checked_at": "2026-10-18T20:08:01.239Z",
+  "actual_auth_copies_removed": 9,
+  "scope": "Only sixth attempt three templates and six trials; original user auth and other attempts untouched",
+  "public_files_credential_match": false,
+  "review_source_sha256": "7e96235a0b76225731afbc0fc42a04384972b8da7ff533d22f2691e5bb42a7fd",
+  "original_model_and_probe_outputs_changed": false,
+  "report_change": "Expected review placeholder replaced after review; README latest pointer only; no measurement change"
+}

@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-19T00:00:12.418Z",
+  "actual_completed_nonempty_reverse_apply_exit": 0,
+  "empty_input_under_completed_strict_check_exit": 128,
+  "completed_record_allow_empty": false,
+  "model_or_patch_changed": false,
+  "new_model_or_probe_runs": 0
+}

@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-19T00:17:38.779Z",
+  "kind": "Pre-model infrastructure scheduling mitigation only, not model/source quality claim",
+  "original_preflight_source": "<BENCH_ROOT>/preflight-environment.cjs",
+  "original_preflight_sha256": "0de7da27251985ef2cb4d88f6a69157319af532b4d126ec8abdbacf2016a9e8e",
+  "original_failed_control": "<BENCH_ROOT>/environment-preflight-error.json",
+  "original_failed_reports": "<BENCH_ROOT>/preflight-previous6",
+  "single_exact_positive_diagnostic": "<BENCH_ROOT>/preflight-positive-control-diagnostic.json",
+  "actual_preflight_source": "<BENCH_ROOT>/preflight-environment-v2.cjs",
+  "actual_preflight_sha256": "d8c680b167f85dcbe0df07d849d0cd8bc85bd603c2e8a368a814ddbbd0f1025d",
+  "original_final_observer_source": "<BENCH_ROOT>/after-benchmark-before-serial.cjs",
+  "original_final_observer_sha256": "39f30304b6a67eef3a40bf92368379f2844a7fc0120a3940396fd1944989e8e2",
+  "serial_final_observer_sha256": "89520fcc43390bd4dac77c9e654cdce500d93848dfe14fa6d3a68a9c2b6f249f",
+  "programs_inputs_oracles_verdicts_time_limits_changed": false,
+  "models_executed": 0,
+  "reason": "Bounded17-item known-positive query timed out once at10s then completed in39ms with identical source/program/input. Exact stall cause unestablished; serialize observer groups and require full fresh control verification before any new model."
+}

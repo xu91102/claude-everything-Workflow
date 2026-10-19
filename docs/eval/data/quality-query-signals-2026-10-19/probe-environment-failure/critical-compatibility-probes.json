@@ -1,0 +1,399 @@
+{
+  "kind": "Four FloatOperation compatibilityqueries frozenbeforeanymodel inthisround; identical actual sixthposthoc4inputs/oracles. Parent/reference/all6artifacts uniform; modelsclosedwithinphase. No modelreruns/artifactedits.",
+  "started_at": "2026-10-18T20:53:56.963Z",
+  "finished_at": "2026-10-18T20:53:56.980Z",
+  "declaration": {
+    "kind": "All4FloatOperation supportedrange/nonmemberqueries frozen beforeeverymodel; exact inputs/oracles from actualsixthposthoc; unsupported8v1excluded NOTRUN",
+    "frozen_at": "2026-10-18T20:26:07.366Z",
+    "controller_sha256": "f83e94c4f8e04c039e5edd7c810306c8c2cf04628e85e67c3a82a8e9e27aecb3",
+    "per_artifact_queries": 4,
+    "previous_evidence_sha256": "5604dd40dff90c0c2e09cf37b72bbc48d7d367461f9c3dc6273d43a5d891f84f",
+    "parent_validation": "4/4actualsixthattempt"
+  },
+  "timeout_ms_per_case": 10000,
+  "task": "more-itertools-1247",
+  "python_program": "import json,sys\nfrom decimal import Decimal as D, localcontext, FloatOperation\npayload=json.load(sys.stdin)\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('float_operation_nonmember_ascending',(1,2,0.1),D(0)),('float_operation_nonmember_descending',(1,0,-0.1),D(2))]\nfor name,args,query in cases:\n for operation in ('contains','index'):\n  if payload['case_filter']!=[name,operation]:continue\n  try:\n   instance=cls(*args)\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':False,'constructor_exception':type(error).__name__}));continue\n  try:\n   with localcontext() as context:\n    context.traps[FloatOperation]=True\n    actual=(query in instance) if operation=='contains' else instance.index(query)\n   print(json.dumps({'case':name,'operation':operation,'passed':actual is False if operation=='contains' else False,'value':repr(actual),'expected':'False' if operation=='contains' else 'ValueError'}))\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':operation=='index' and isinstance(error,ValueError),'exception':type(error).__name__,'message':str(error),'expected':'False' if operation=='contains' else 'ValueError'}))\n",
+  "controller_source": "'use strict';\nconst fs=require('node:fs'),p=require('node:path'),cp=require('node:child_process'),crypto=require('node:crypto');\nconst root=__dirname,progress=JSON.parse(fs.readFileSync(p.join(root,'progress.json')));\nif(![6,42].includes(progress.count))throw Error('Need critical6orcomplete42 closedphase beforequeries');\nconst program=`import json,sys\nfrom decimal import Decimal as D, localcontext, FloatOperation\npayload=json.load(sys.stdin)\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('float_operation_nonmember_ascending',(1,2,0.1),D(0)),('float_operation_nonmember_descending',(1,0,-0.1),D(2))]\nfor name,args,query in cases:\n for operation in ('contains','index'):\n  if payload['case_filter']!=[name,operation]:continue\n  try:\n   instance=cls(*args)\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':False,'constructor_exception':type(error).__name__}));continue\n  try:\n   with localcontext() as context:\n    context.traps[FloatOperation]=True\n    actual=(query in instance) if operation=='contains' else instance.index(query)\n   print(json.dumps({'case':name,'operation':operation,'passed':actual is False if operation=='contains' else False,'value':repr(actual),'expected':'False' if operation=='contains' else 'ValueError'}))\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':operation=='index' and isinstance(error,ValueError),'exception':type(error).__name__,'message':str(error),'expected':'False' if operation=='contains' else 'ValueError'}))\n`;\nconst names=['float_operation_nonmember_ascending','float_operation_nonmember_descending'];\nconst queries=names.flatMap(n=>['contains','index'].map(op=>[n,op]));\nconst gitSource=ref=>cp.execFileSync('git',['show',ref+':more_itertools/more.py'],{cwd:p.join(root,'repos/more-itertools'),encoding:'utf8'});\nconst versions=[{version:'parent',source:gitSource('2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10')},{version:'upstream_reference',source:gitSource('dc2664b4a7c66209485c9f5e359137bf4b365eb3')},...progress.completed.filter(r=>r.task==='more-itertools-1247').map(r=>{const trial=p.dirname(r.result_file).replace(/\\/results\\/.+$/,'');return{version:r.cell+'-r'+r.repetition,cell:r.cell,run:r.repetition,source:fs.readFileSync(p.join(trial,'runs',r.task,r.cell+'-r'+r.repetition,'more_itertools/more.py'),'utf8')};})];\nconst start=new Date().toISOString(),results=versions.map(({source,...meta})=>({...meta,source_sha256:crypto.createHash('sha256').update(source).digest('hex'),cases:queries.map(case_filter=>{const started_at=new Date().toISOString();const r=cp.spawnSync(p.join(root,'venvs/more-itertools/bin/python'),['-B','-c',program],{input:JSON.stringify({source,support:p.join(root,'validation/more-itertools-1247/checkout'),case_filter}),encoding:'utf8',timeout:10000,env:{...process.env,PYTHONDONTWRITEBYTECODE:'1'}});if(r.error||r.status!==0)return{case:case_filter[0],operation:case_filter[1],passed:false,started_at,finished_at:new Date().toISOString(),exit:r.status,timed_out:r.error?.code==='ETIMEDOUT',error:String(r.error?.code||r.stderr).slice(-800)};return{...JSON.parse(r.stdout),started_at,finished_at:new Date().toISOString(),exit:r.status};})}));\nconst data={kind:'Four FloatOperation compatibilityqueries frozenbeforeanymodel inthisround; identical actual sixthposthoc4inputs/oracles. Parent/reference/all6artifacts uniform; modelsclosedwithinphase. No modelreruns/artifactedits.',started_at:start,finished_at:new Date().toISOString(),declaration:JSON.parse(fs.readFileSync(p.join(root,\"protocol/compatibility-amendment.json\"))),timeout_ms_per_case:10000,task:'more-itertools-1247',python_program:program,controller_source:fs.readFileSync(__filename,'utf8'),results};\nfs.writeFileSync(p.join(root,'compatibility-probes.json'),JSON.stringify(data,null,2)+'\\n');\nconsole.log(JSON.stringify(results.map(r=>({version:r.version,passed:r.cases.filter(c=>c.passed).length,total:r.cases.length}))));\n",
+  "results": [
+    {
+      "version": "parent",
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.964Z",
+          "finished_at": "2026-10-18T20:53:56.964Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.964Z",
+          "finished_at": "2026-10-18T20:53:56.965Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.965Z",
+          "finished_at": "2026-10-18T20:53:56.966Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.966Z",
+          "finished_at": "2026-10-18T20:53:56.966Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        }
+      ]
+    },
+    {
+      "version": "upstream_reference",
+      "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.966Z",
+          "finished_at": "2026-10-18T20:53:56.967Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.967Z",
+          "finished_at": "2026-10-18T20:53:56.967Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.967Z",
+          "finished_at": "2026-10-18T20:53:56.968Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.968Z",
+          "finished_at": "2026-10-18T20:53:56.968Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r1",
+      "cell": "gpt-cew",
+      "run": 1,
+      "source_sha256": "33814de1b8409172ba72d7132b872956ea76f7fb4627d6ef860234a8a5c44855",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.968Z",
+          "finished_at": "2026-10-18T20:53:56.969Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.969Z",
+          "finished_at": "2026-10-18T20:53:56.969Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.969Z",
+          "finished_at": "2026-10-18T20:53:56.970Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.970Z",
+          "finished_at": "2026-10-18T20:53:56.970Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "source_sha256": "272facbd9163168e7686223568c2d66d8baf4196e22df2b4327afb9390e1529b",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.971Z",
+          "finished_at": "2026-10-18T20:53:56.971Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.971Z",
+          "finished_at": "2026-10-18T20:53:56.972Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.972Z",
+          "finished_at": "2026-10-18T20:53:56.972Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.972Z",
+          "finished_at": "2026-10-18T20:53:56.972Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r1",
+      "cell": "gpt-trim",
+      "run": 1,
+      "source_sha256": "3ae5903ddeedb61b6c353795ed785ca9b4dd923fe20de00ce059aa0f45cf4dbd",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.973Z",
+          "finished_at": "2026-10-18T20:53:56.973Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.973Z",
+          "finished_at": "2026-10-18T20:53:56.973Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.973Z",
+          "finished_at": "2026-10-18T20:53:56.974Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.974Z",
+          "finished_at": "2026-10-18T20:53:56.974Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r2",
+      "cell": "gpt-trim",
+      "run": 2,
+      "source_sha256": "49d302fc33e52f849290ecd8ed0609a8ad55a9ad02cd1cdb3eca30207da53d61",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.974Z",
+          "finished_at": "2026-10-18T20:53:56.975Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.975Z",
+          "finished_at": "2026-10-18T20:53:56.975Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.975Z",
+          "finished_at": "2026-10-18T20:53:56.976Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.976Z",
+          "finished_at": "2026-10-18T20:53:56.976Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r2",
+      "cell": "gpt-cew",
+      "run": 2,
+      "source_sha256": "2d1c3c18db263a60df1ff50b463cd82c552e5429fbfbbf253d6969251bb825a2",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.976Z",
+          "finished_at": "2026-10-18T20:53:56.977Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.977Z",
+          "finished_at": "2026-10-18T20:53:56.977Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.977Z",
+          "finished_at": "2026-10-18T20:53:56.978Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.978Z",
+          "finished_at": "2026-10-18T20:53:56.978Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "source_sha256": "09d164a76cb8ea56f6f41f665c9b3dfc403c256b1f4c63ac7e512a3fcb414745",
+      "cases": [
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.978Z",
+          "finished_at": "2026-10-18T20:53:56.979Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_ascending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.979Z",
+          "finished_at": "2026-10-18T20:53:56.979Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "contains",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.979Z",
+          "finished_at": "2026-10-18T20:53:56.980Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        },
+        {
+          "case": "float_operation_nonmember_descending",
+          "operation": "index",
+          "passed": false,
+          "started_at": "2026-10-18T20:53:56.980Z",
+          "finished_at": "2026-10-18T20:53:56.980Z",
+          "exit": null,
+          "timed_out": false,
+          "error": "ENOENT"
+        }
+      ]
+    }
+  ]
+}

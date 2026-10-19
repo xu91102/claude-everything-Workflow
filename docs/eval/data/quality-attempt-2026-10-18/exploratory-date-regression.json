@@ -1,0 +1,38 @@
+{
+  "kind": "Exploratory diagnosis during measured trials after static inspection; original artifact unchanged, no new model, does not replace final uniform probes",
+  "recorded_at": "2026-10-18T15:26:41.455Z",
+  "program": "import json,sys\nfrom datetime import datetime,timedelta\nd=json.load(sys.stdin)\nsys.path.insert(0,d[\"support\"])\nns={\"__name__\":\"more_itertools.more\",\"__package__\":\"more_itertools\",\"__file__\":\"<frozen-source>\"}\nexec(compile(d[\"source\"],\"<frozen-source>\",\"exec\"),ns)\nrows=[]\nfor start,stop,step in [(datetime.max-timedelta(days=1),datetime.max,timedelta(days=2)),(datetime.min+timedelta(days=1),datetime.min,-timedelta(days=2))]:\n    try:\n        n=len(ns[\"numeric_range\"](start,stop,step))\n        rows.append({\"passed\":n==1,\"length\":n})\n    except Exception as e:\n        rows.append({\"passed\":False,\"exception\":type(e).__name__,\"message\":str(e)})\nprint(json.dumps(rows))\n",
+  "source": "\"use strict\";\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst cp = require(\"node:child_process\");\nconst crypto = require(\"node:crypto\");\nconst root = __dirname;\nconst program = `import json,sys\nfrom datetime import datetime,timedelta\nd=json.load(sys.stdin)\nsys.path.insert(0,d[\"support\"])\nns={\"__name__\":\"more_itertools.more\",\"__package__\":\"more_itertools\",\"__file__\":\"<frozen-source>\"}\nexec(compile(d[\"source\"],\"<frozen-source>\",\"exec\"),ns)\nrows=[]\nfor start,stop,step in [(datetime.max-timedelta(days=1),datetime.max,timedelta(days=2)),(datetime.min+timedelta(days=1),datetime.min,-timedelta(days=2))]:\n    try:\n        n=len(ns[\"numeric_range\"](start,stop,step))\n        rows.append({\"passed\":n==1,\"length\":n})\n    except Exception as e:\n        rows.append({\"passed\":False,\"exception\":type(e).__name__,\"message\":str(e)})\nprint(json.dumps(rows))\n`;\nconst parent = cp.execFileSync(\"git\", [\"show\", \"2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10:more_itertools/more.py\"], { cwd: path.join(root, \"repos/more-itertools\"), encoding: \"utf8\" });\nconst candidate = fs.readFileSync(path.join(root, \"trials/more-itertools-1247--gpt-fixed--r1/runs/more-itertools-1247/gpt-fixed-r1/more_itertools/more.py\"), \"utf8\");\nconst results = [{ version: \"parent\", source: parent }, { version: \"582ab48-r1\", source: candidate }].map(({ version, source }) => {\n  const p = cp.spawnSync(path.join(root, \"venvs/more-itertools/bin/python\"), [\"-B\", \"-c\", program], { input: JSON.stringify({ source, support: path.join(root, \"validation/more-itertools-1247/checkout\") }), encoding: \"utf8\", timeout: 2000, env: { ...process.env, PYTHONDONTWRITEBYTECODE: \"1\" } });\n  if (p.status !== 0) throw new Error(p.stderr || String(p.error));\n  return { version, source_sha256: crypto.createHash(\"sha256\").update(source).digest(\"hex\"), cases: JSON.parse(p.stdout) };\n});\nconst report = { kind: \"Exploratory diagnosis during measured trials after static inspection; original artifact unchanged, no new model, does not replace final uniform probes\", recorded_at: new Date().toISOString(), program, source: fs.readFileSync(__filename, \"utf8\"), results };\nfs.writeFileSync(path.join(root, \"exploratory-date-regression.json\"), JSON.stringify(report, null, 2));\nconsole.log(JSON.stringify(results));\n",
+  "results": [
+    {
+      "version": "parent",
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "passed": true,
+          "length": 1
+        },
+        {
+          "passed": true,
+          "length": 1
+        }
+      ]
+    },
+    {
+      "version": "582ab48-r1",
+      "source_sha256": "b51035e957b4289a8fe5eb36c7058e2c0083e6eae878730993e9ff7de117a0ce",
+      "cases": [
+        {
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        },
+        {
+          "passed": false,
+          "exception": "OverflowError",
+          "message": "date value out of range"
+        }
+      ]
+    }
+  ]
+}
