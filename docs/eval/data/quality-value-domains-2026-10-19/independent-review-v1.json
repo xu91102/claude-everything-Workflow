@@ -1,0 +1,86 @@
+{
+  "package": {
+    "path": "<BENCH_ROOT>/full-review-package.json",
+    "sha256": "65e510075b6378337e21e76b63ef85b9d062834105ae1ac81baab3abbfa0c9f6"
+  },
+  "reviewer_model": "gpt-6-sol",
+  "mode": "independent read-only review of frozen measured 2f44deaf5220f0f146b7ff69fb56fd4e97dcc00e against 05a2569677746e935cd2b3daaa4d7f17d322c98d",
+  "axes": {
+    "Standards": {
+      "status": "PASS",
+      "findings": [],
+      "evidence": [
+        "Final source diff changes one existing clause in rules/common/testing.md; it adds parameter and query value domains, rejection behavior, and finite/nonfinite distinction without deleting the operation, signal, bounded-cost or equivalence requirements.",
+        "Read pinned review skill, both prompts and eight relevant rules. No documented rule violation or concrete Important maintainability issue established in the source change or inspected artifact patches. The two numeric candidate patches are substantial; their acceptance is judged on behavior and completion below."
+      ]
+    },
+    "ActualArtifactSpec": {
+      "status": "FAIL",
+      "findings": [
+        {
+          "severity": "Important",
+          "kind": "incomplete measured candidate",
+          "evidence": "trials/more-itertools-1247--gpt-fixed--r1/receipt.json and result.json: model exit -9, timed_out=true, duration_s=720, resolved=false. Both candidate numeric patches score 54/54 on frozen numeric checks, but R1 did not finish its model run; its later patch cannot count as normally completed."
+        },
+        {
+          "severity": "Important",
+          "kind": "capacity failures preserved as incomplete work",
+          "evidence": "humanize-381--gpt-fixed--r1 and itsdangerous-sha1--gpt-fixed--r2 agent logs explicitly report Selected model is at capacity; both have exit=1, no patch, unchanged baseline failures. This is a recorded external service failure, not evidence that the proposed testing clause damaged those artifacts. Candidate normal completion and accepted strict result are 11/14 versus main 14/14."
+        }
+      ],
+      "evidence": [
+        "All 42 trial receipts and patch hashes checked; 126 fresh JUnit files parsed. Resolved runs have passing target/after-full reports, no new failures and no test modification.",
+        "Eight frozen numeric families have 16+4+12+10+4+4+2+2=54 queries each on parent, upstream reference and all six numeric artifacts. Candidate numeric R1 and R2 each score 54/54; uniform i18n procedure returns 12/12 passing runs. A passing i18n baseline on an incomplete no-patch run does not resolve its task.",
+        "No additional concrete Important artifact defect outside the 54 executed numeric queries was established from the inspected patches and source contracts."
+      ]
+    },
+    "EvidenceIntegrity": {
+      "status": "PASS",
+      "findings": [],
+      "evidence": [
+        "Frozen package SHA256 and all 63 referenced SHA256 pins match. 42 receipt patch hashes match, with exactly 42 unique trial directories and 126 parseable JUnit files.",
+        "Visible usage accounting has 47 unique parent/native-child sessions and 455 unique recorded responses across 42 runs; per-run response counts match. Plaintext command inventory contains 488 commands. Failed-run raw CLI scopes remain incomplete_failed_run and are accounted from recorded responses; parent-only raw CLI figures are not substituted for whole-family totals.",
+        "Phase-six and phase-42 process audits both PASS with zero owned live trial processes; their failed-run lists retain R1 timeout and the later three exit=1 failures. The 10-second initial parallel preflight timeout and same-input 39-ms serial diagnostic are both preserved; exact stall cause is unknown. Fresh serial controls PASS before models.",
+        "The slugify-200 base XML contains seven failure elements inside two failing testcases; the runner reports two failing testcases by design. After-full reports have no such mismatch.",
+        "Source/install/config/venv fixture evidence, eight fresh source checks, 29 CLI regressions and production pack/install/verify are recorded as passing; seven identity-unchanged task prevalidations and 43 historic accounting families are explicit reuse, not fresh execution."
+      ]
+    },
+    "WholePerformance": {
+      "status": "FAIL",
+      "findings": [
+        {
+          "severity": "Important",
+          "kind": "quality-gated completion and cost regression",
+          "evidence": "Main 14/14 normal completion, 4,220,535 complete-family tokens and 86.143-second mean model duration. Candidate 11/14 normal completion, 5,758,706 recorded-response family tokens and 147.029-second mean, 36.4% more tokens and 70.7% longer; both strict completion and both cost thresholds fail. Failed work is included as cost, not counted as accepted speed."
+        }
+      ],
+      "evidence": [
+        "The predeclared numeric critical task accounts for candidate 3,405,768 tokens and 1,282.5 model seconds across two runs versus main 1,037,978 tokens and 382.4 seconds; remaining six tasks total candidate 2,352,938 versus main 3,182,557 tokens, with 64.66 versus 68.63 mean model seconds. These are descriptive totals, not causal ablation.",
+        "For numeric candidate R1 the visible record has 44 responses, 23 plaintext commands, one descendant session, five test commands and a 720-second cap; R2 has 36 responses, 18 commands, one descendant session and 562.5 seconds. Main numeric runs have 28 total responses, no descendants and 382.4 seconds combined. Repeated full-suite and bounded probe activity is visible, but the record does not establish which step was unnecessary or the latency cause.",
+        "Previous arm is 13/14 completion, 5,899,139 family tokens and 129.271-second mean; it is separately reported and cannot replace contemporary main in the acceptance gate."
+      ]
+    }
+  },
+  "audit_counts": {
+    "trials": 42,
+    "junit": 126,
+    "sessions": 47,
+    "unique_responses": 455,
+    "plaintext_commands": 488,
+    "numeric_query_families": 8,
+    "numeric_queries_per_artifact": 54,
+    "numeric_artifacts": 8,
+    "i18n_runs": 12,
+    "hash_pins_checked": 63
+  },
+  "new_important_findings_outside_all_executed54": 0,
+  "checks_not_run": [
+    "No model, known54, probe, JUnit, source-check or installation command rerun by reviewer; frozen outputs and plaintext metadata were inspected read-only.",
+    "No bounded new query added because no concrete outside54 Important source-contract defect and trigger was established.",
+    "No hidden reasoning, encrypted message/body or authentication data inspected; no source, artifact, history, PR or measured run modified."
+  ],
+  "limitations": [
+    "Aggregate cost and command distributions identify where regression occurred, but cannot establish a causal effect of the new wording or prove a safe shortcut.",
+    "A timed-out artifact can pass post-run probes while still failing the required normal-completion gate. The two explicit capacity failures are external service outcomes and remain failed work in the measured batch."
+  ]
+}

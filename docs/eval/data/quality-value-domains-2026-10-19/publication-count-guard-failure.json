@@ -1,0 +1,28 @@
+{
+  "at": "2026-10-19T02:14:05.732Z",
+  "status": "FAIL collection/publication count guard, not model rerun",
+  "review_sha256": "7ca959e1fa742a257ad386ab218d5f5b4422bad991048e8cbf103bbb397b68d7",
+  "reported": {
+    "trials": 42,
+    "junit": 126,
+    "sessions": 47,
+    "unique_responses": 455,
+    "plaintext_commands": 488,
+    "numeric_query_families": 8,
+    "numeric_queries_per_artifact": 54,
+    "numeric_artifacts": 8,
+    "i18n_runs": 12,
+    "hash_pins_checked": 63
+  },
+  "independent_trace_recalculation": {
+    "trials": 42,
+    "sessions": 47,
+    "unique_responses": 455,
+    "root_commands": 488,
+    "child_commands": 67,
+    "all_session_commands": 555
+  },
+  "guard_error": "Review trace count mismatch plaintext_commands",
+  "public_report_changed": false,
+  "auth_cleanup_executed": false
+}

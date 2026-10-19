@@ -1,0 +1,864 @@
+{
+  "actual_controller_source": "'use strict';\nconst fs=require('node:fs'),p=require('node:path'),cp=require('node:child_process'),c=require('node:crypto');\nconst root=fs.realpathSync(__dirname),preparation=JSON.parse(fs.readFileSync(p.join(root,'preparation.json'))),prior=preparation.previous,hash=b=>c.createHash('sha256').update(b).digest('hex');\nconst read=(r,f)=>JSON.parse(fs.readFileSync(p.join(r,f))),groups=[['quality',16],['cost',4],['context',12],['promotion',10],['compatibility',4],['shortcircuit',4],['floatstop',2],['infinite-stop',2]],extra=groups.slice(5);\nif(['experiment.json','trials','environment-preflight.json','preflight-verified6','preflight-verified42'].some(f=>fs.existsSync(p.join(root,f))))throw Error('One actual infrastructure preflight only');\nconst started_at=new Date().toISOString(),previous=read(prior,'progress.json');\nif(previous.count!==42||read(prior,'experiment.json').status!=='COMPLETED_ALL_42'||read(prior,'recovery/42-process-audit.json').status!=='PASS')throw Error('Previous42 must be fully closed and zero-owned-live audited');\nconst before=Object.fromEntries(groups.map(([n])=>[n,read(prior,n+'-probes.json')]));\nconst program=s=>{const marker=s.indexOf('const program'),equals=s.indexOf('=',marker),tail=s.slice(equals+1).trimStart(),quote=tail.charCodeAt(0);if(marker<0||equals<0)throw Error('Missing program');if(quote===96)return tail.slice(1,tail.indexOf(String.fromCharCode(96),1));if(quote===34){let i=1,escaped=false;for(;i<tail.length;i++){if(escaped){escaped=false;continue;}if(tail.charCodeAt(i)===92){escaped=true;continue;}if(tail.charCodeAt(i)===34)break;}return JSON.parse(tail.slice(0,i+1));}throw Error('Missing literal program');};\nfor(const[n]of groups)if(program(fs.readFileSync(p.join(root,n+'-probes.cjs'),'utf8'))!==before[n].python_program)throw Error('Actual program drift '+n);\nfor(const n of ['quality','cost','context','promotion','compatibility','i18n'])if(!fs.readFileSync(p.join(root,n+'-probes.cjs')).equals(fs.readFileSync(p.join(prior,n+'-probes.cjs'))))throw Error('Original46/i18n bytes drift '+n);\nconst environments=[];for(const repo of new Set(read(root,'tasks.validated.json').map(t=>t.repo))){const python=p.join(root,'venvs',repo,'bin/python');fs.accessSync(python,fs.constants.X_OK);const r=cp.spawnSync(python,['-B','-c','import sys,json;print(json.dumps({\"version\":sys.version,\"executable\":sys.executable}))'],{encoding:'utf8'});if(r.error||r.status!==0)throw Error('Interpreter failed '+repo);environments.push({repo,python:fs.realpathSync(python),...JSON.parse(r.stdout)});}\nfunction prepare(count){const sub=p.join(root,'preflight-verified'+count);fs.mkdirSync(sub);fs.mkdirSync(p.join(sub,'protocol'));fs.mkdirSync(p.join(sub,'audits'));for(const n of ['repos','validation','venvs'])fs.symlinkSync(fs.realpathSync(p.join(root,n)),p.join(sub,n));fs.symlinkSync(p.join(prior,'trials'),p.join(sub,'trials'));const completed=count===6?previous.completed.filter(r=>r.task==='more-itertools-1247'):previous.completed;if(completed.length!==count)throw Error('Previous phase count');fs.writeFileSync(p.join(sub,'progress.json'),JSON.stringify({count,planned:42,completed}));fs.writeFileSync(p.join(sub,'protocol/protocol.json'),JSON.stringify({kind:'Infrastructure preflight old artifacts only; not new model protocol',source_progress_sha256:hash(fs.readFileSync(p.join(prior,'progress.json')))}));for(const n of ['cost','context','promotion','compatibility'])fs.copyFileSync(p.join(prior,'protocol',n+'-amendment.json'),p.join(sub,'protocol',n+'-amendment.json'));for(const[n]of extra)fs.copyFileSync(p.join(root,'protocol',n+'-amendment.json'),p.join(sub,'protocol',n+'-amendment.json'));for(const[n]of groups)fs.copyFileSync(p.join(root,n+'-probes.cjs'),p.join(sub,n+'-probes.cjs'));fs.copyFileSync(p.join(root,'process-audit.cjs'),p.join(sub,'process-audit.cjs'));if(count===42)fs.copyFileSync(p.join(root,'preflight-verified6/audits/6-process-audit.json'),p.join(sub,'audits/6-process-audit.json'));return sub;}\nasync function launch(sub,name){const file=name==='audit'?'process-audit.cjs':name+'-probes.cjs',fd=fs.openSync(p.join(sub,file+'.log'),'wx'),child=cp.spawn(process.execPath,[p.join(sub,file)],{cwd:sub,stdio:['ignore',fd,fd]});fs.closeSync(fd);const exit=await new Promise((res,rej)=>{child.once('error',rej);child.once('close',res);});if(exit!==0)throw Error('Infrastructure failed '+file+' exit '+exit);return {file,exit,phase:read(sub,'progress.json').count};}\nfunction compare(sub,name,n){const bytes=fs.readFileSync(p.join(sub,name+'-probes.json')),actual=JSON.parse(bytes),old=before[name],project=c=>({key:(c.case||'')+'/'+c.operation,passed:c.passed===true});if(actual.python_program!==old.python_program||actual.results.length!==8)throw Error('Program/row drift '+name);for(const row of actual.results){const previous=old.results.find(x=>x.version===row.version);if(!previous||row.source_sha256!==previous.source_sha256||row.cases.length!==n||JSON.stringify(row.cases.map(project))!==JSON.stringify(previous.cases.map(project)))throw Error('Actual positive/negative control drift '+name+' '+row.version);}if(JSON.stringify(actual.results).includes('ENOENT'))throw Error('Environment did not launch');return{name,sha256:hash(bytes),python_program_sha256:hash(actual.python_program),rows:actual.results.map(r=>({version:r.version,passed:r.cases.filter(x=>x.passed).length,total:r.cases.length,timed_out:r.cases.filter(x=>x.timed_out).length}))};}\n(async()=>{const s6=prepare(6),launches=[await launch(s6,'audit'),await launch(s6,'cost')];for(const[n]of groups.filter(([n])=>n!=='cost'))launches.push(await launch(s6,n));const reports=groups.map(([n,k])=>compare(s6,n,k)),s42=prepare(42);launches.push(await launch(s42,'audit'));for(const[n]of extra)launches.push(await launch(s42,n));const phase42reports=extra.map(([n,k])=>compare(s42,n,k));\nconst scores=Object.fromEntries(reports.map(r=>[r.name,r.rows.filter(x=>x.version.startsWith('gpt-fixed')).sort((a,b)=>a.version.localeCompare(b.version)).map(x=>x.passed)]));for(const[n,want]of Object.entries({quality:[16,16],cost:[4,4],context:[12,12],promotion:[10,10],compatibility:[4,4],shortcircuit:[4,4],floatstop:[2,2],'infinite-stop':[0,2]}))if(JSON.stringify(scores[n])!==JSON.stringify(want))throw Error('Known11 negative/positive controls '+n);\nconst accounting=[];const {accountUsage}=require('./account-usage.cjs');for(const receipt of previous.completed.filter(r=>r.task==='more-itertools-1247')){const trial=p.dirname(receipt.result_file).replace(/\\/results\\/.+$/,''),result=JSON.parse(fs.readFileSync(receipt.result_file)),home={'gpt-cew':'cew-home','gpt-trim':'cew-trim','gpt-fixed':'cew-fixed'}[receipt.cell],usage=accountUsage(trial,home,result.raw_cli_usage??result.usage,result.usage_accounting.root_thread_id);for(const k of ['input_tokens','cached_input_tokens','output_tokens','reasoning_output_tokens'])if(usage.usage[k]!==result.usage[k])throw Error('Actual recorded-response replay mismatch '+k);accounting.push({task:receipt.task,cell:receipt.cell,repetition:receipt.repetition,model_exit:result.agent.exit,timed_out:result.agent.timed_out,resolved:result.resolved,raw_cli_scope:usage.raw_cli_scope,requests:usage.requests,usage:usage.usage,source_sha256:hash(fs.readFileSync(p.join(root,'account-usage.cjs')))});}\nconst out={actual_controller_source:fs.readFileSync(__filename,'utf8'),controller_kind:'V2 serial all old controls after static setup closed; original failed parallel control and exact isolated diagnostic retained, no attribution of exact stall cause',initial_failure_file:p.join(root,'environment-preflight-error.json'),initial_failure_sha256:hash(fs.readFileSync(p.join(root,'environment-preflight-error.json'))),isolated_diagnostic_file:p.join(root,'preflight-positive-control-diagnostic.json'),isolated_diagnostic_sha256:hash(fs.readFileSync(p.join(root,'preflight-positive-control-diagnostic.json'))),status:'PASS',started_at,finished_at:new Date().toISOString(),kind:'Fresh actual closed11 artifacts: all54 at6, new8 at42; same Python/input/oracle/pass-fail and original46/i18n bytes. Two recorded failed traces and six family-accounting replays. Zero-owned-live phase audits. No new candidate quality claim.',environments,launches,reports,phase42reports,failed_accounting_replay:accounting,first6_candidate_scores:scores,previous_progress_sha256:hash(fs.readFileSync(p.join(prior,'progress.json'))),controllers_sha256:Object.fromEntries(groups.map(([n])=>[n+'-probes.cjs',hash(fs.readFileSync(p.join(root,n+'-probes.cjs')))])),twelfth_models_executed:0};fs.writeFileSync(p.join(root,'environment-preflight.json'),JSON.stringify(out,null,2)+'\\n');console.log(JSON.stringify({status:'PASS',models_executed:0,candidate_scores:scores,accounting_replays:accounting.length}));})().catch(e=>{fs.writeFileSync(p.join(root,'environment-preflight-v2-error.json'),JSON.stringify({status:'FAIL',at:new Date().toISOString(),error:String(e),twelfth_models_executed:0},null,2)+'\\n');console.error(e.stack);process.exitCode=1;});\n",
+  "controller_kind": "V2 serial all old controls after static setup closed; original failed parallel control and exact isolated diagnostic retained, no attribution of exact stall cause",
+  "initial_failure_file": "<BENCH_ROOT>/environment-preflight-error.json",
+  "initial_failure_sha256": "9c561127ce20ebdced25b4ac4e691772b204b87d93a1f56558078112db189380",
+  "isolated_diagnostic_file": "<BENCH_ROOT>/preflight-positive-control-diagnostic.json",
+  "isolated_diagnostic_sha256": "127210b3a4f143be7577ab2bf930d1e986cffaffcd1467f2938a1244d0f1cfc0",
+  "status": "PASS",
+  "started_at": "2026-10-19T00:17:39.364Z",
+  "finished_at": "2026-10-19T00:18:23.323Z",
+  "kind": "Fresh actual closed11 artifacts: all54 at6, new8 at42; same Python/input/oracle/pass-fail and original46/i18n bytes. Two recorded failed traces and six family-accounting replays. Zero-owned-live phase audits. No new candidate quality claim.",
+  "environments": [
+    {
+      "repo": "python-slugify",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/python-slugify/bin/python"
+    },
+    {
+      "repo": "humanize",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/humanize/bin/python"
+    },
+    {
+      "repo": "more-itertools",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/more-itertools/bin/python"
+    },
+    {
+      "repo": "itsdangerous",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/itsdangerous/bin/python"
+    }
+  ],
+  "launches": [
+    {
+      "file": "process-audit.cjs",
+      "exit": 0,
+      "phase": 6
+    },
+    {
+      "file": "cost-probes.cjs",
+      "exit": 0,
+      "phase": 6
+    },
+    {
+      "file": "quality-probes.cjs",
+      "exit": 0,
+      "phase": 6
+    },
+    {
+      "file": "context-probes.cjs",
+      "exit": 0,
+      "phase": 6
+    },
+    {
+      "file": "promotion-probes.cjs",
+      "exit": 0,
+      "phase": 6
+    },
+    {
+      "file": "compatibility-probes.cjs",
+      "exit": 0,
+      "phase": 6
+    },
+    {
+      "file": "shortcircuit-probes.cjs",
+      "exit": 0,
+      "phase": 6
+    },
+    {
+      "file": "floatstop-probes.cjs",
+      "exit": 0,
+      "phase": 6
+    },
+    {
+      "file": "infinite-stop-probes.cjs",
+      "exit": 0,
+      "phase": 6
+    },
+    {
+      "file": "process-audit.cjs",
+      "exit": 0,
+      "phase": 42
+    },
+    {
+      "file": "shortcircuit-probes.cjs",
+      "exit": 0,
+      "phase": 42
+    },
+    {
+      "file": "floatstop-probes.cjs",
+      "exit": 0,
+      "phase": 42
+    },
+    {
+      "file": "infinite-stop-probes.cjs",
+      "exit": 0,
+      "phase": 42
+    }
+  ],
+  "reports": [
+    {
+      "name": "quality",
+      "sha256": "49af325d5de511e06f343ac21462040db89d1df9ce551b62408ccc484999e6a8",
+      "python_program_sha256": "904323afe80315f8517fd7ce254ff3632866656ae4893478dcb1cf005c3293d0",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 16,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 0,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 8,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 16,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 16,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 16,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 8,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 16,
+          "total": 16,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "cost",
+      "sha256": "3e9c47371bd50e33e591ce7b2e2017e83ee617ca795b9ef8f123d4c6f959e09f",
+      "python_program_sha256": "6d2a8be75b93fd25a2f2e5630ea0027fc3c726d5672fdf476d8a6766b9cfc3be",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 2
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 2
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "context",
+      "sha256": "9a5e307e1547f2be2b6cc62419acec56819e98cf648ec45cdf9e78b970be1dea",
+      "python_program_sha256": "d9631c856f48a2ed9792bdae7d7dcc4516c7fa3b5afa0e75097f6aafbee3a348",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 12,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 12,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 12,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 12,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 12,
+          "total": 12,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "promotion",
+      "sha256": "bfead251889eed0a2e6a74c97cf19fdea74ced4b15c1b3a128502ec4f374d767",
+      "python_program_sha256": "6c7e8c50fc7f84217395a404493d784d15eadd848a200fc1a0e9824a75ebc081",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 8,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 10,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 10,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 10,
+          "total": 10,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "compatibility",
+      "sha256": "f353da7bde6a4676dd1f9ff64637328c8342bad32abf439ac24d3f9040322de4",
+      "python_program_sha256": "ce9305ce9dd026d781ca9e28f7f1faa3abae809a50c9e3e9b21961649a06b4ac",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "shortcircuit",
+      "sha256": "b4a0f2805da4f6727b9ba8e8c569c8455dc94eb0490c47a7d99dc9373a5b7f25",
+      "python_program_sha256": "a36cccdd3d3acc6bced0859e113f92f48d29c977ca42935d25fb198207d71e89",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "floatstop",
+      "sha256": "b994d6ea9636bac1981919f2519bd4d7099c976da3df47ce5a0d07b1d27bfebd",
+      "python_program_sha256": "4b82642b8dc0cac154ef858eb3b71e10b41f920bf39169fe360e5cb400c90446",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "infinite-stop",
+      "sha256": "3c79b44b2f4dc34b99363c9fad3e903795f71c4453bd87322e931906599eebd2",
+      "python_program_sha256": "3c3135c36312e576709919e272311888bbb9a9cd94d51e4a51ea330b384fa358",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 2
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 2
+        }
+      ]
+    }
+  ],
+  "phase42reports": [
+    {
+      "name": "shortcircuit",
+      "sha256": "70110709514f89ebeb8a8dddceb7aa0c518e0653c5a8a48eff74f336485f15a8",
+      "python_program_sha256": "a36cccdd3d3acc6bced0859e113f92f48d29c977ca42935d25fb198207d71e89",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "floatstop",
+      "sha256": "88f2a9d2d80a97afc765e4e68a4ebb779cc0a51933f72f4c625ce65315c8a00e",
+      "python_program_sha256": "4b82642b8dc0cac154ef858eb3b71e10b41f920bf39169fe360e5cb400c90446",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "infinite-stop",
+      "sha256": "93c99d1f98dfd8614472c73362b1f3a70a778d11ed78542f110ae5e652bec960",
+      "python_program_sha256": "3c3135c36312e576709919e272311888bbb9a9cd94d51e4a51ea330b384fa358",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 2
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 2
+        }
+      ]
+    }
+  ],
+  "failed_accounting_replay": [
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-cew",
+      "repetition": 1,
+      "model_exit": 0,
+      "timed_out": false,
+      "resolved": true,
+      "raw_cli_scope": "whole_session_family",
+      "requests": 14,
+      "usage": {
+        "input_tokens": 537194,
+        "cached_input_tokens": 496256,
+        "output_tokens": 10244,
+        "reasoning_output_tokens": 6204
+      },
+      "source_sha256": "36183b8026f394723ebb6f18f2d896f179c3e8c750468aa4f30c9da392051e4e"
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-trim",
+      "repetition": 1,
+      "model_exit": 0,
+      "timed_out": false,
+      "resolved": true,
+      "raw_cli_scope": "parent_thread_only",
+      "requests": 38,
+      "usage": {
+        "input_tokens": 1500855,
+        "cached_input_tokens": 1418240,
+        "output_tokens": 25769,
+        "reasoning_output_tokens": 12503
+      },
+      "source_sha256": "36183b8026f394723ebb6f18f2d896f179c3e8c750468aa4f30c9da392051e4e"
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-fixed",
+      "repetition": 2,
+      "model_exit": -9,
+      "timed_out": true,
+      "resolved": false,
+      "raw_cli_scope": "incomplete_failed_run",
+      "requests": 59,
+      "usage": {
+        "input_tokens": 2801789,
+        "cached_input_tokens": 2647680,
+        "output_tokens": 39906,
+        "reasoning_output_tokens": 24016
+      },
+      "source_sha256": "36183b8026f394723ebb6f18f2d896f179c3e8c750468aa4f30c9da392051e4e"
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-trim",
+      "repetition": 2,
+      "model_exit": 1,
+      "timed_out": false,
+      "resolved": false,
+      "raw_cli_scope": "incomplete_failed_run",
+      "requests": 4,
+      "usage": {
+        "input_tokens": 91330,
+        "cached_input_tokens": 68224,
+        "output_tokens": 1464,
+        "reasoning_output_tokens": 524
+      },
+      "source_sha256": "36183b8026f394723ebb6f18f2d896f179c3e8c750468aa4f30c9da392051e4e"
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-cew",
+      "repetition": 2,
+      "model_exit": 0,
+      "timed_out": false,
+      "resolved": true,
+      "raw_cli_scope": "whole_session_family",
+      "requests": 15,
+      "usage": {
+        "input_tokens": 539105,
+        "cached_input_tokens": 503424,
+        "output_tokens": 5796,
+        "reasoning_output_tokens": 2366
+      },
+      "source_sha256": "36183b8026f394723ebb6f18f2d896f179c3e8c750468aa4f30c9da392051e4e"
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-fixed",
+      "repetition": 1,
+      "model_exit": 0,
+      "timed_out": false,
+      "resolved": true,
+      "raw_cli_scope": "parent_thread_only",
+      "requests": 57,
+      "usage": {
+        "input_tokens": 2519380,
+        "cached_input_tokens": 2382080,
+        "output_tokens": 37736,
+        "reasoning_output_tokens": 20946
+      },
+      "source_sha256": "36183b8026f394723ebb6f18f2d896f179c3e8c750468aa4f30c9da392051e4e"
+    }
+  ],
+  "first6_candidate_scores": {
+    "quality": [
+      16,
+      16
+    ],
+    "cost": [
+      4,
+      4
+    ],
+    "context": [
+      12,
+      12
+    ],
+    "promotion": [
+      10,
+      10
+    ],
+    "compatibility": [
+      4,
+      4
+    ],
+    "shortcircuit": [
+      4,
+      4
+    ],
+    "floatstop": [
+      2,
+      2
+    ],
+    "infinite-stop": [
+      0,
+      2
+    ]
+  },
+  "previous_progress_sha256": "30f5852293a471a8a953768583643dff13cdcde8c359a04120169ed537d5633f",
+  "controllers_sha256": {
+    "quality-probes.cjs": "ae0aa64c7cd51853ba5f85a412ef2983f3086b240b3dce9fd58bfe4198b3fb11",
+    "cost-probes.cjs": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262",
+    "context-probes.cjs": "e8bb0dbd5e07ea6f80ed1dfa031c098a71ebf263494736435d3c530cfc39519b",
+    "promotion-probes.cjs": "b9c24a9d58c40e90f635ea2ca15ce9d9c82925eeb3945197c9427b3cf6481786",
+    "compatibility-probes.cjs": "f83e94c4f8e04c039e5edd7c810306c8c2cf04628e85e67c3a82a8e9e27aecb3",
+    "shortcircuit-probes.cjs": "9a3e1c6b3d8dbd24568812569dbde78cd570ae0aded09c2fbd408b0172a86fd5",
+    "floatstop-probes.cjs": "ae444d0acec5e98a78bb423ecfc66c3878832b553e2a70f6c4f73a2f4197660a",
+    "infinite-stop-probes.cjs": "9ff60e82c9cfba1ae4011fea3e0b18f8a565093e7311bd7da881f6222956e36e"
+  },
+  "twelfth_models_executed": 0
+}
