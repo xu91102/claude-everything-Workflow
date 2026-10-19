@@ -1,0 +1,315 @@
+{
+  "mode": "independent",
+  "review_kind": "independent same-base re-review of v2 output-fidelity change; unaffected immutable v1 Standards/Spec evidence reused under code-review follow-up rule",
+  "reviewed_at": "2026-10-18T23:09:52.567364+00:00",
+  "package_path": "<BENCH_ROOT>/controller-review-package.json",
+  "package_sha256": "81134837d9f78dc4ef22da003768be5922b954c96df0746f02dccbfc2f79a89b",
+  "base": "/private/tmp/cew-pr62-quality-type-interactions-20261019-O96feC",
+  "source": "05a2569677746e935cd2b3daaa4d7f17d322c98d",
+  "scope_source": {
+    "path": "<BENCH_ROOT>/controller-review-package.json",
+    "fields": [
+      "requirements",
+      "review_boundary",
+      "constraints"
+    ]
+  },
+  "scope": "Controller/protocol/driver/export/scoring/report integration for same7 x2 x3 scheduled42 and predeclared54; v2 additionally preserves exact floatstop successful Python stdout and decimal strings. New model artifacts/performance remain outside this pre-model review.",
+  "Standards": {
+    "status": "PASS",
+    "findings": [],
+    "hard_rule_findings": [],
+    "smell_findings": [],
+    "severity_counts": {
+      "Critical": 0,
+      "Important": 0,
+      "Minor": 0
+    },
+    "evidence": [
+      {
+        "locations": [
+          "freeze-protocol.cjs:37-41",
+          "launch-once.cjs:7-13",
+          "after-benchmark.cjs:7-14",
+          "export-evidence.cjs:54,118-119,145-146,196-197"
+        ],
+        "rules": [
+          "rules/01-base.md:4-6",
+          "rules/02-implementation.md:7-17",
+          "rules/07-forbidden.md:11",
+          "rules/common/harness-engineering.md:11-19"
+        ],
+        "assessment": "新增组沿用原有阶段、独立进程、错误处理和哈希边界；声明、采集、质量接受分开。未改变正式通过断言或以失败降级为成功。"
+      },
+      {
+        "locations": [
+          "preflight-environment.cjs:10,15-16",
+          "environment-preflight-initial-failure.json",
+          "environment-preflight.json"
+        ],
+        "rules": [
+          "rules/02-implementation.md:15-17",
+          "rules/common/testing.md:5-8,15",
+          "rules/09-first-principles-adversarial-testing.md:19,24-25"
+        ],
+        "assessment": "初次比较器将两个既有失败从超时变为异常视作漂移；初次错误、原比较器及8份原始输出哈希均保留。只调整旧产物比较投影为相同用例和通过/失败；全部源程序、输入和预期仍相同，正式评分条件未变。11份实际报告独立回读核对。"
+      },
+      {
+        "locations": [
+          "write-report.cjs:15-21,27,36-37,41-46",
+          "make-review-package.cjs:10",
+          "freeze-protocol.cjs:55-56"
+        ],
+        "rules": [
+          "rules/common/testing.md:5-8,15",
+          "rules/common/performance.md:7",
+          "skills/code-review/SKILL.md:59-65"
+        ],
+        "assessment": "报告区分源码/评估器审查、严格测试与冻结检查、最终独立产物审查和性能。沿用验证明确标识；最终审查留为待完成项，未把本次静态PASS写成实际质量或提速PASS。"
+      },
+      {
+        "locations": [
+          "floatstop-probes.cjs:10",
+          "write-report.cjs:36",
+          "environment-preflight.json:serialization_amendment",
+          "preflight-raw-stdout/floatstop-probes.json",
+          "preflight-raw-stdout/execution.json"
+        ],
+        "rules": [
+          "rules/01-base.md:4-6",
+          "rules/02-implementation.md:10-17",
+          "rules/common/testing.md:5-8,48-53",
+          "rules/07-forbidden.md:11"
+        ],
+        "assessment": "只给成功返回的既有Python结果附加raw_stdout、value_exact_decimal和expected_exact_decimal；不改变既有字段、Python布尔评分、错误分支、超时或阶段限制。原整数先经JSON.parse形成的Number字段继续兼容保留，字符串直接从解析前stdout抓取，因此不会从已经舍入的Number伪造精度。报告明确精确比较使用字符串或原stdout。新16条旧产物控制单独保存，原预检与首次比较器失败未覆盖。"
+      }
+    ]
+  },
+  "Spec": {
+    "status": "PASS",
+    "findings": [],
+    "severity_counts": {
+      "Critical": 0,
+      "Important": 0,
+      "Minor": 0
+    },
+    "evidence": [
+      {
+        "requirement": "requirements: Same original7 tasks x2 x3 all42 once; model high/gpt-6.1-sol,720s,rotation/concurrent blocks,prompt/strictgrader/accounting unchanged",
+        "locations": [
+          "tasks.validated.json",
+          "setup.cjs:9-14,24-43",
+          "run-final-benchmark.cjs:9-25,42-43,55-60,91-110,114-125"
+        ],
+        "assessment": "7题清单与上一轮字节相同；两次、三组、两任务块并发和第二轮反转轮换保留。运行器、其测试和用量收集器在current/middle/previous-round三份快照的哈希各自相同。无重采样或模型提示/严格判分变更。"
+      },
+      {
+        "requirement": "requirements: original46+i18n byte-identical; added8 actual prior Python/input/oracle unchanged; critical6 and final42 uniformly parent/reference/all6",
+        "locations": [
+          "quality-probes.cjs:65-99",
+          "cost-probes.cjs:8-16,38-56",
+          "context-probes.cjs:51-60",
+          "promotion-probes.cjs:12-18",
+          "compatibility-probes.cjs:28-34",
+          "shortcircuit-probes.cjs:4-12",
+          "floatstop-probes.cjs:4-12",
+          "infinite-stop-probes.cjs:4-5,26-36",
+          "run-final-benchmark.cjs:125-154",
+          "after-benchmark.cjs:11-14"
+        ],
+        "assessment": "16+4+12+10+4+4+2+2=54。原46与i18n的6个控制器字节相同，新增3个Python程序与上一轮实际报告逐字相同；父版、上游参考及三组各两份数值产物统一应用。新增无限终点oracle仍固定为原父版两项ValueError，另行记录2次父版确认，不混入16项均匀评分。"
+      },
+      {
+        "requirement": "constraints: verify all54 enforced by critical gate AND exporter; freeze includes extra controllers and oracle declaration BEFORE launch",
+        "locations": [
+          "freeze-protocol.cjs:37-42,45-61",
+          "launch-once.cjs:4-15",
+          "run-final-benchmark.cjs:142-167",
+          "after-benchmark.cjs:7-14",
+          "export-evidence.cjs:120-146,185-197,215-223,255-268"
+        ],
+        "assessment": "冻结生成器要求本次Standards/Spec PASS并匹配固定包哈希和全部pin，随后声明新组程序、控制器、数量、超时和固定oracle；启动器校验冻结驱动器/全部控制器/预检/审查哈希。关键门对两份候选产物要求strict且54项全部通过。关键质量FAIL仍进入剩余36次，收集完以exit2保留失败，后处理接受0/2。最终每条数值记录的通过条件保留strict、原46、全部新增8的AND，humanize仍接相应i18n；独立产物审查是最终质量接受的另一个必要条件。"
+      },
+      {
+        "requirement": "review_boundary: old-artifact positive/negative preflight actual; preserve initial too-strict comparison failure; seed is not model freeze",
+        "locations": [
+          "preflight-environment.cjs:4-16",
+          "environment-preflight.json",
+          "environment-preflight-initial-failure.json",
+          "controller-review-inputs/shortcircuit-preparation-seed.json",
+          "controller-review-inputs/floatstop-preparation-seed.json",
+          "controller-review-inputs/infinite-stop-preparation-seed.json",
+          "freeze-protocol.cjs:17,37-42"
+        ],
+        "assessment": "独立读取11份实际旧产物报告，核对88行、496条评分记录，程序/实际源文件哈希/用例和通过失败均一致。关键6预检432项评分明确复用首次已完成输出；42阶段只执行新增64项评分。候选旧R1短路0/4、长度0/2，旧R2无限终点0/2均保留；父版短路4/4、无限终点2/2及参考长度2/2为阳性控制。两处旧失败的超时/异常差异都仍为false。正式protocol.json尚不存在，3份seed只供准备和旧产物预检，不能宣称已完成模型前冻结。"
+      },
+      {
+        "requirement": "requirements: whole14 full-family token AND mean below contemporary main; AGENTS exactmain zero additions; actual source/artifact/performance axes separate",
+        "locations": [
+          "account-usage.cjs:18-27,40-52",
+          "summarize.cjs:19-36,61-76",
+          "freeze-protocol.cjs:48-56",
+          "write-report.cjs:8,15-17,24,27,42-46",
+          "setup.cjs:33-43"
+        ],
+        "assessment": "account-usage、summarize和trace-diagnose与base_root字节相同。唯一response_id去重后累计全部主子会话输入加输出，raw CLI另存；整批14条候选记录的token总量与模型均时都须严格低于同期main，两项AND未被分组/中位数或历史替换。三组源AGENTS字节相同，三个已安装AGENTS匹配固定main哈希，新增0；三个执行配置哈希一致。未执行PR变更或合并。"
+      },
+      {
+        "requirement": "v2 requirements/changes_since_initial_review: preserve exact successful Python stdout and value/expected decimal strings; unchanged program/input/oracle/Boolean score/timeout/phase guards; historical Number limits disclosed, old outputs not replaced",
+        "locations": [
+          "floatstop-probes.cjs:4-10",
+          "write-report.cjs:36",
+          "controller-review-inputs/floatstop-preparation-seed-v2.json",
+          "preflight-raw-stdout/floatstop-probes.json",
+          "preflight-raw-stdout/execution.json",
+          "environment-preflight.json:serialization_amendment"
+        ],
+        "assessment": "从v1原始报告内已固定控制器源码重建差异，只有第10行成功记录增加3个保真字段；所有其他行及Python程序逐字相同。删除write-report新增单行说明后哈希精确回到v1。逐条用Python的整数JSON解码已保存的raw_stdout核对16项：expected字符串均为18014398509481983，四个失败值为18014398509481984，其余十二个通过值为18014398509481983；字段与原stdout一致，源哈希、用例、Python布尔评分和旧第十轮/初审预检完全一致。执行回执exit0、空stderr、开始时间与控制器开始时间一致，结束时间覆盖该报告；回执汇总与矩阵一致。这是旧产物附加输出控制，不是本轮模型质量。"
+      },
+      {
+        "requirement": "constraints: both affected axes rechecked on same base/new fixed package; all54 critical+final, freeze-before-models, full-family token AND mean-time gates preserved",
+        "locations": [
+          "controller-review-package.json:files,changes_since_initial_review",
+          "controller-review-package-v1.json",
+          "controller-independent-review-v1.json",
+          "freeze-protocol.cjs:37-41,55-58",
+          "run-final-benchmark.cjs:125-167",
+          "after-benchmark.cjs:7-14",
+          "export-evidence.cjs:145-146,196-197",
+          "write-report.cjs:8"
+        ],
+        "assessment": "驱动器、冻结器、启动器、评分导出器、42次继续收集策略、原46+i18n控制器和全部计量文件的pin与v1相同，继承初审对54项AND、i18n、最终独立产物审查及整批token AND均时门的结论；浮点终点控制器将由原样冻结器按新哈希重新声明。环境文件只更新该控制器哈希并附独立serialization_amendment，旧11份报告引用、原失败和原始结果不变。正式protocol.json及本轮模型运行目录仍不存在；v2 seed仍不当作正式冻结。"
+      }
+    ]
+  },
+  "integrity": {
+    "status": "PASS",
+    "hash_algorithm": "SHA-256",
+    "package_pins_verified": 1,
+    "file_pins_expected": 54,
+    "file_pins_verified": 54,
+    "file_pins_passed": 54,
+    "file_pins_failed": 0,
+    "unique_file_pin_paths": 54,
+    "review_skill_pins_verified": 1,
+    "review_prompt_pins_verified": 2,
+    "rule_pins_verified": 8,
+    "total_input_pins_verified": 65,
+    "total_input_pins_failed": 0,
+    "all_input_pins_rechecked_before_output": true,
+    "base_and_source_refs_resolved_with_read_only_git": true,
+    "unchanged_original46_and_i18n_controllers": 6,
+    "unchanged_accounting_summary_trace_controllers": 3,
+    "unchanged_public_js_files": 3,
+    "public_js_snapshot_copies_compared": 9,
+    "added_python_programs_byte_equal_to_prior_actual": 3,
+    "added_queries_per_artifact": 8,
+    "total_numeric_queries_per_artifact": 54,
+    "tasks_manifest_byte_equal_to_previous": true,
+    "tasks": 7,
+    "planned_repetitions": 2,
+    "planned_arms": 3,
+    "planned_trials": 42,
+    "installed_policy_records_verified": 14,
+    "source_and_template_policy_copies_verified": 28,
+    "installed_agents_pins_verified": 3,
+    "source_agents_versions_byte_equal": 3,
+    "execution_config_pins_verified": 3,
+    "old_preflight_report_hashes_verified": 12,
+    "old_preflight_source_rows_reconciled": 96,
+    "old_preflight_scored_cases_reconciled": 512,
+    "old_preflight_actual_source_identities_verified": 8,
+    "old_preflight_case_or_verdict_mismatches": 0,
+    "initial_failure_original_controller_hash_verified": true,
+    "initial_failure_raw_report_hashes_verified": 8,
+    "old_failure_mode_differences_preserved": [
+      {
+        "group": "quality",
+        "version": "gpt-cew-r1",
+        "case": "finite_float_nonstart/index",
+        "previous": "timed out; passed=false",
+        "preflight": "OverflowError; passed=false"
+      },
+      {
+        "group": "context",
+        "version": "upstream_reference",
+        "case": "inexact_trap_negative/contains",
+        "previous": "timed out; passed=false",
+        "preflight": "InvalidOperation; passed=false"
+      }
+    ],
+    "current_model_run_paths_absent": [
+      "experiment.json",
+      "trials",
+      "benchmark.log",
+      "driver-exit.json"
+    ],
+    "formal_protocol_exists_at_review": false,
+    "review_output_only_mutation": "<BENCH_ROOT>/controller-independent-review.json",
+    "inspection_note": "v2只静态读包、源码和已保存控制记录；未执行JavaScript、Python探针或测试。初审既有读取与核验过程保留在不可变-v1审查文件。",
+    "total_input_pin_records_including_duplicate_references_verified": 67,
+    "unique_verified_pin_paths": 65,
+    "v1_inputs_unchanged": 45,
+    "v1_inputs_changed_current_files": 3,
+    "v2_added_file_pins": 6,
+    "removed_v1_input_pins": 0,
+    "v1_package_review_environment_preserved_with_hashes": 3,
+    "v2_added_output_fidelity_report_versions": 8,
+    "v2_added_output_fidelity_scored_queries": 16,
+    "v2_raw_stdout_records_decoded_without_running_program": 16,
+    "v2_decimal_string_pairs_verified": 16,
+    "v2_python_boolean_verdicts_unchanged": 16,
+    "v2_actual_source_identities_equal_to_prior": 8,
+    "v2_exact_expected_decimal": "18014398509481983",
+    "v2_exact_value_equal_to_expected_true_records": 12,
+    "v2_exact_value_one_greater_false_records": 4,
+    "v2_reviewed_controller_equals_recorded_executed_controller": true,
+    "v2_program_equals_actual_tenth_and_v1_program": true,
+    "v2_wrapper_diff_only_success_record_fields": true,
+    "v2_report_single_disclosure_removal_reconstructs_v1_hash": true,
+    "v2_execution_exit": 0,
+    "v2_execution_stderr_empty": true,
+    "v2_execution_time_and_summary_match_report": true,
+    "v2_environment_changes_only": [
+      "controllers_sha256.floatstop-probes.cjs",
+      "serialization_amendment"
+    ]
+  },
+  "actual_new_model_quality": "NOT RUN",
+  "actual_new_model_performance": "NOT RUN",
+  "formal_model_freeze_execution": "NOT RUN",
+  "checks_not_run": [
+    "未运行任何模型、数值探针、测试、lint、构建或生产安装；v2新增16项控制由控制者先前实际执行，本审查只读取保留的原始输出与回执。已有源码/计量/生产检查沿用初审证据。",
+    "未执行freeze-protocol、launch-once或任何控制器；正式模型前冻结应在本审查后由固定生成器实际完成，并在启动前核验。",
+    "未验收新的42次模型产物、126份JUnit、54项当前产物结果、12份当前i18n结果、完整用量或性能；最终独立产物审查尚未发生。",
+    "未重跑初审11份预检、历史模型或新增16项旧产物控制；只静态核对不可变v1证据以及v2新增报告的源码身份、程序、输入预期、精确字符串、评分和执行回执。",
+    "未读取认证值、隐藏推理或加密body；未委派、发送消息、修改源/产物/历史、提交、推送或合并。"
+  ],
+  "remaining_boundaries": [
+    "本次PASS只证明静态评估器集成在所审固定包内符合Standards与Spec，不证明实际模型质量已修复，也不证明Fast Path提速。",
+    "正式冻结时间与所有新模型、质量、计量和最终独立产物审查证据必须在后续执行后另行核对；准备seed不能替代这些证据。",
+    "Number兼容字段仍受JavaScript整数精度限制；后续精确值审计必须用raw_stdout或十进制字符串，旧丢失表示不作精确值证据。"
+  ],
+  "package_revision": 2,
+  "initial_review_reused": {
+    "path": "<BENCH_ROOT>/controller-independent-review-v1.json",
+    "sha256": "ebf83d18fe00d8bf557e09afb419571f9a34e3061a775754ee94900d6e5764c2",
+    "package_path": "<BENCH_ROOT>/controller-review-package-v1.json",
+    "package_sha256": "fc1353388d0ddfe982db00af33700aa1d7158114863c0dc51d4b7102ce661a5d",
+    "Standards": "PASS",
+    "Spec": "PASS",
+    "basis": "同base，v1的48个输入中只有3个当前文件变化；45个未变化pin及skill/prompts/rules重新全部核对，复用未受影响分析；受影响Standards与Spec均重新检查。",
+    "changed_current_files": [
+      "floatstop-probes.cjs",
+      "write-report.cjs",
+      "environment-preflight.json"
+    ],
+    "no_removed_v1_pins": true
+  },
+  "output_fidelity_boundary": {
+    "historical_number_fields": "旧第十轮及初审JSON的兼容Number字段已有舍入，继续原样保留，不能从它们重建精确整数；附加旧产物控制是独立证据，没有替换历史。",
+    "current_exact_evidence": "本轮控制器成功记录保存原Python stdout和十进制字符串；Python passed布尔值仍是唯一原评分，不从Number或字符串重新判分。",
+    "actual_current_model_results": "NOT RUN"
+  },
+  "review_output_only_mutation": "<BENCH_ROOT>/controller-independent-review.json"
+}

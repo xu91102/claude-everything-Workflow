@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "at": "2026-10-18T23:27:51.166Z",
+  "kind": "Actual closed timeout and provider-capacity-error traces only; no model/probe rerun, same unique-response arithmetic. Normal CLI missing total still rejected; complete actual normal record unchanged.",
+  "failed_actual_replays": [
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "original_red": "CLI usage matches neither parent nor complete session family",
+      "recovered_recorded_usage": {
+        "input_tokens": 2801789,
+        "cached_input_tokens": 2647680,
+        "output_tokens": 39906,
+        "reasoning_output_tokens": 24016
+      },
+      "requests": 59,
+      "raw_cli_scope": "incomplete_failed_run",
+      "completion_stays_failed": true
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-trim",
+      "run": 2,
+      "original_red": "CLI usage matches neither parent nor complete session family",
+      "recovered_recorded_usage": {
+        "input_tokens": 91330,
+        "cached_input_tokens": 68224,
+        "output_tokens": 1464,
+        "reasoning_output_tokens": 524
+      },
+      "requests": 4,
+      "raw_cli_scope": "incomplete_failed_run",
+      "completion_stays_failed": true
+    }
+  ],
+  "normal_actual_replay_unchanged": true,
+  "normal_missing_cli_rejected": true,
+  "source_original_sha256": "4668e9dd1a425f35eb09f32f0760aec8acb680c7198da0ab7c0d7d1cd89ab334",
+  "source_adapted_sha256": "36183b8026f394723ebb6f18f2d896f179c3e8c750468aa4f30c9da392051e4e",
+  "new_models": 0
+}

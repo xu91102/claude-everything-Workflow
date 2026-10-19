@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-10-19T01:11:25.544Z",
+  "overall": "FAIL",
+  "quality": 12,
+  "predeclared_checks_per_numeric_artifact": 54,
+  "posthoc_checks_per_numeric_artifact": 0,
+  "all_executed_checks_per_numeric_artifact": 54,
+  "performance": "FAIL",
+  "reviewed_pins": 95,
+  "counts": {
+    "trials": 42,
+    "junit": 126,
+    "sessions": 47,
+    "unique_responses": 470,
+    "plaintext_commands": 570
+  },
+  "actual_auth_copies_removed": 45,
+  "scope": "Only eleventh three templates and42trials; original user auth and all other roots untouched",
+  "public_files_credential_match": false,
+  "review_source_sha256": "e1fefd3b6a65fec90de8d3b2604f6a36d881718a99a894d195bae767225d0a49",
+  "original_model_and_probe_outputs_changed": false,
+  "report_changes": "Independent-review marker and README latest pointer; measurements unchanged"
+}

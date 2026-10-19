@@ -1,0 +1,719 @@
+{
+  "status": "PASS",
+  "started_at": "2026-10-18T23:00:29.854Z",
+  "finished_at": "2026-10-18T23:00:34.609Z",
+  "kind": "Only old closed tenth artifacts: original46 unchanged plus actual prior8; all54 at critical6 and new8 phase42 wrapper checks. Exact old source/program/input/oracle/pass-fail identities, meaningful positive and known negative controls; original failing checks can reach exceptions rather than timeout within10sec, retained as actual failed outcomes; no eleventh model quality claim.",
+  "environments": [
+    {
+      "repo": "python-slugify",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/python-slugify/bin/python"
+    },
+    {
+      "repo": "humanize",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/humanize/bin/python"
+    },
+    {
+      "repo": "more-itertools",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/more-itertools/bin/python"
+    },
+    {
+      "repo": "itsdangerous",
+      "python": "/Users/xu/.workbuddy/binaries/python/versions/3.13.12/bin/python3.13",
+      "version": "3.13.12 (main, Feb  4 2026, 00:05:32) [Clang 21.1.4 ]",
+      "executable": "<BENCH_ROOT>/venvs/itsdangerous/bin/python"
+    }
+  ],
+  "launches": [
+    {
+      "phase": 6,
+      "reused_actual_completed_probe_outputs": true,
+      "reason": "Only infrastructure comparison corrected; no input/program/source/oracle/model changed"
+    },
+    {
+      "controller": "shortcircuit-probes.cjs",
+      "exit": 0,
+      "phase": 42
+    },
+    {
+      "controller": "floatstop-probes.cjs",
+      "exit": 0,
+      "phase": 42
+    },
+    {
+      "controller": "infinite-stop-probes.cjs",
+      "exit": 0,
+      "phase": 42
+    }
+  ],
+  "reports": [
+    {
+      "name": "quality",
+      "file": "<BENCH_ROOT>/preflight-previous6/quality-probes.json",
+      "sha256": "976e39b01feb62e4ec3d5d6714d7e574cf48d48ecaaa2bdd331e902a6e9dd449",
+      "python_program_sha256": "904323afe80315f8517fd7ce254ff3632866656ae4893478dcb1cf005c3293d0",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 16,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 0,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 0,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 16,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 16,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 16,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 16,
+          "total": 16,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 8,
+          "total": 16,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "cost",
+      "file": "<BENCH_ROOT>/preflight-previous6/cost-probes.json",
+      "sha256": "3196009f83d7a1350e8ec13d3737fbcd68b71312769c9eccd6fa07846a6c24ae",
+      "python_program_sha256": "6d2a8be75b93fd25a2f2e5630ea0027fc3c726d5672fdf476d8a6766b9cfc3be",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 2
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 2
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 2
+        }
+      ]
+    },
+    {
+      "name": "context",
+      "file": "<BENCH_ROOT>/preflight-previous6/context-probes.json",
+      "sha256": "fe61a2bf7afec3a605d95fe3a3de64f0aa62c127c8929fce72589977e2e8fb1c",
+      "python_program_sha256": "d9631c856f48a2ed9792bdae7d7dcc4516c7fa3b5afa0e75097f6aafbee3a348",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 12,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 12,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 12,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 12,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 12,
+          "total": 12,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 6,
+          "total": 12,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "promotion",
+      "file": "<BENCH_ROOT>/preflight-previous6/promotion-probes.json",
+      "sha256": "e45836c27ffd7406c73aa0bfcec14f51f8a7f13491a458b58e647a758a0c67f1",
+      "python_program_sha256": "6c7e8c50fc7f84217395a404493d784d15eadd848a200fc1a0e9824a75ebc081",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 4,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 10,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 10,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 10,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 10,
+          "total": 10,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 10,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "compatibility",
+      "file": "<BENCH_ROOT>/preflight-previous6/compatibility-probes.json",
+      "sha256": "de4d2e0ef92bfc5aeca277fcbbba7a464a511347bfece7db4a1621bbc5cb14b7",
+      "python_program_sha256": "ce9305ce9dd026d781ca9e28f7f1faa3abae809a50c9e3e9b21961649a06b4ac",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "shortcircuit",
+      "file": "<BENCH_ROOT>/preflight-previous6/shortcircuit-probes.json",
+      "sha256": "eb846092de157d01e3f1a182891415b26f5c747736ef97ac9b785be4234bf117",
+      "python_program_sha256": "a36cccdd3d3acc6bced0859e113f92f48d29c977ca42935d25fb198207d71e89",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "floatstop",
+      "file": "<BENCH_ROOT>/preflight-previous6/floatstop-probes.json",
+      "sha256": "e559d7d2436b6531d1c5e44d97ab189bf50acfaa58e966d3189d35e2fffa40f2",
+      "python_program_sha256": "4b82642b8dc0cac154ef858eb3b71e10b41f920bf39169fe360e5cb400c90446",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "infinite-stop",
+      "file": "<BENCH_ROOT>/preflight-previous6/infinite-stop-probes.json",
+      "sha256": "6a4181d9f45fb771b8f98d681859c847bf1b20cb2ea55cdd1104e41030a8abfc",
+      "python_program_sha256": "3c3135c36312e576709919e272311888bbb9a9cd94d51e4a51ea330b384fa358",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 2
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        }
+      ]
+    }
+  ],
+  "phase42reports": [
+    {
+      "name": "shortcircuit",
+      "file": "<BENCH_ROOT>/preflight-previous42/shortcircuit-probes.json",
+      "sha256": "ab8db8f4c631cab841e86dd143a9916f7653e33b8e8179371c92118bfac7712c",
+      "python_program_sha256": "a36cccdd3d3acc6bced0859e113f92f48d29c977ca42935d25fb198207d71e89",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 0,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 4,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "floatstop",
+      "file": "<BENCH_ROOT>/preflight-previous42/floatstop-probes.json",
+      "sha256": "c5783f21bf27df5e60e98b65f72049b3178062fc54452472ce27aea1b562b055",
+      "python_program_sha256": "4b82642b8dc0cac154ef858eb3b71e10b41f920bf39169fe360e5cb400c90446",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        }
+      ]
+    },
+    {
+      "name": "infinite-stop",
+      "file": "<BENCH_ROOT>/preflight-previous42/infinite-stop-probes.json",
+      "sha256": "c2e9c001186aaab9fabdff36f49aee1292d20038d03aab1c95cd0bd0725cf95a",
+      "python_program_sha256": "3c3135c36312e576709919e272311888bbb9a9cd94d51e4a51ea330b384fa358",
+      "rows": [
+        {
+          "version": "parent",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 0,
+          "total": 2,
+          "timed_out": 2
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 2,
+          "timed_out": 0
+        }
+      ]
+    }
+  ],
+  "initial_comparison_failure": {
+    "error": {
+      "status": "FAIL",
+      "at": "2026-10-18T22:59:57.383Z",
+      "error": "Error: Actual prior positive/negative control drift quality gpt-cew-r1",
+      "eleventh_models_executed": 0
+    },
+    "controller_sha256": "31fe467b249bf22d61a94c9708ab3d6bef662553b056caefc0d27b33f245013e",
+    "kind": "Infrastructure comparison was too strict for already-failing bounded checks: unchanged programs/source had same false scores but two prior ETIMEDOUT queries reached actual OverflowError/InvalidOperation within10sec. All raw results retained; no model ran or quality score changed.",
+    "raw_reports": {
+      "quality": "976e39b01feb62e4ec3d5d6714d7e574cf48d48ecaaa2bdd331e902a6e9dd449",
+      "cost": "3196009f83d7a1350e8ec13d3737fbcd68b71312769c9eccd6fa07846a6c24ae",
+      "context": "fe61a2bf7afec3a605d95fe3a3de64f0aa62c127c8929fce72589977e2e8fb1c",
+      "promotion": "e45836c27ffd7406c73aa0bfcec14f51f8a7f13491a458b58e647a758a0c67f1",
+      "compatibility": "de4d2e0ef92bfc5aeca277fcbbba7a464a511347bfece7db4a1621bbc5cb14b7",
+      "shortcircuit": "eb846092de157d01e3f1a182891415b26f5c747736ef97ac9b785be4234bf117",
+      "floatstop": "e559d7d2436b6531d1c5e44d97ab189bf50acfaa58e966d3189d35e2fffa40f2",
+      "infinite-stop": "6a4181d9f45fb771b8f98d681859c847bf1b20cb2ea55cdd1104e41030a8abfc"
+    },
+    "models_executed": 0
+  },
+  "negative_control_failure_modes_note": "Same false verdict preserved; quality/main-r1 finite_float_nonstart index formerly timed out now OverflowError; context/reference inexact_trap_negative contains formerly timed out now InvalidOperation. All raw old/current results retained. Expected-pass controls and production acceptance unchanged.",
+  "previous_progress_sha256": "c4e56032e642de46c6c15802b2970b94e9fde6921d43afa889ddb2dac341ee06",
+  "controllers_sha256": {
+    "quality-probes.cjs": "ae0aa64c7cd51853ba5f85a412ef2983f3086b240b3dce9fd58bfe4198b3fb11",
+    "cost-probes.cjs": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262",
+    "context-probes.cjs": "e8bb0dbd5e07ea6f80ed1dfa031c098a71ebf263494736435d3c530cfc39519b",
+    "promotion-probes.cjs": "b9c24a9d58c40e90f635ea2ca15ce9d9c82925eeb3945197c9427b3cf6481786",
+    "compatibility-probes.cjs": "f83e94c4f8e04c039e5edd7c810306c8c2cf04628e85e67c3a82a8e9e27aecb3",
+    "shortcircuit-probes.cjs": "d80b39aaf5ec4c054c4e7bd9ec9ace445f6f436c6344612045c8178c7793fa27",
+    "floatstop-probes.cjs": "a4b43713d9507bcb59afea3a63d1bb891331be0df25be5f0b28d17bfd9ba9a01",
+    "infinite-stop-probes.cjs": "716e5311387ff0b5ee6edddd8fdcd00efe86fd61eb25f04013826b22a616a28d"
+  },
+  "eleventh_models_executed": 0,
+  "serialization_amendment": {
+    "executed_at": "2026-10-18T23:06:58.577Z",
+    "kind": "Only output preservation added after first evaluator review; same Python/input/oracle/source/pass verdict. One16querymatrix on eight closed tenth artifacts, no new model.",
+    "previous_environment_sha256": "5e9e98b1258f7746b81a1766fe218f1e5e3ce74f8cbfc2d371ad8d43845e19c7",
+    "raw_report_path": "<BENCH_ROOT>/preflight-raw-stdout/floatstop-probes.json",
+    "raw_report_sha256": "4c86959f2a10931c78faf544242e0c15193b79ada9cd008e55d03eefd4fec377",
+    "controller_sha256": "a4b43713d9507bcb59afea3a63d1bb891331be0df25be5f0b28d17bfd9ba9a01",
+    "uniform_scored_queries": 16,
+    "expected_exact_decimal": "18014398509481983",
+    "actual_new_models": 0
+  }
+}

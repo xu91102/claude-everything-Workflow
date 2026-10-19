@@ -1,0 +1,130 @@
+{
+  "package_sha256": "5abd03209ee08a10a1d28545f0f9fb99da5c34326c3cfec411675fd41ca6f4c4",
+  "package_path": "<BENCH_ROOT>/recovery/review-package.json",
+  "mode": "independent",
+  "fresh_independent_context": true,
+  "reviewed_at": "2026-10-18T23:36:16.915921+00:00",
+  "base_source": "05a2569677746e935cd2b3daaa4d7f17d322c98d",
+  "base_resolved_with_git": true,
+  "scope_source": "User asks same seven tasks, token/time/quality results updated PR62, AGENTS no additions, no merge; frozen protocol requires all42 collected once even critical quality fails.",
+  "review_scope": "Post-timeout collection recovery only. PASS permits faithful collection of the never-started36; it is not model-quality/performance acceptance.",
+  "Standards": {
+    "status": "PASS",
+    "findings": [],
+    "hard_rule_violations": [],
+    "smell_findings": [],
+    "checks": [
+      "Frozen reviewer prompts and seven relevant rules read. Existing frozen sources and failed artifacts preserved; no new suppression of actual failure found.",
+      "Recovery controller diffs inspected against originals. Original trial()/stage() bytes are identical; wrapping/provenance/accounting adaptations stay private and bounded.",
+      "Errors remain explicit: original timeout-guard exit1 and postprocess FAIL retained, failed outcomes remain unresolved, continuation ends with exit2 when critical quality is false.",
+      "Launcher requires matching independent Standards/Spec PASS, matching immutable package, closed6 audit, source/first6 pins, original plan identity and no overwrite/resampling."
+    ],
+    "checks_not_run": [
+      "No model, test, probe, accounting replay, process inventory or benchmark command executed by this reviewer; recorded verification was inspected read-only.",
+      "Remaining36 original outcomes: NOT RUN. No continuation log, exit record or new trial directory exists.",
+      "Final full42 postprocessing, final54 uniform matrix, twelve humanize i18n outcomes and whole-batch performance: NOT RUN.",
+      "Full historical package/artifact audit and fresh CI/build/package checks: NOT RUN; outside this collection-recovery review.",
+      "No auth values, hidden reasoning, encrypted body, or final model prose inspected; no messages, subagents, commits, PR actions or merge performed."
+    ]
+  },
+  "Spec": {
+    "status": "PASS",
+    "findings": [],
+    "checks": [
+      "All100 reviewed pins match, comprising90 files plus review skill/prompts/rules. All39 phase-audit snapshots match, including three failed session files; four first6 state/exit copies are byte-identical.",
+      "Only six trial directories and six completed identities exist. Frozen plan contains7 tasks x2 repeats x3 arms, original rotation and concurrency2; remaining plan contains exactly36 unstarted identities. No models rerun.",
+      "trial() SHA256 05d0072b38f0fb72c0eefd69f6824b882fff088d9c6d9d516deeef4eeaa4326c and stage() SHA256 af60f2173f5ce30829b1f94e8f080ab776083e5cb2334d900eaa624c6baf1087 match originals byte-for-byte. HOME/venv/profile/prompt/model/effort/720s/strict grader are unchanged.",
+      "Frozen9 original probe controllers retain protocol hashes. First5 critical reports carry exact original controller source. Three actual wrappers carry their actual source and original-controller hash, the audited timeout exception, identical Python/program/input/oracle/verdict/time limits. Critical and root copies match across all8 reports.",
+      "Recorded positive live-process control detects four owned workers; closed6 phase audit records zero and is bound to exact progress hash and snapshots. Wrapper exception requires this explicit closed-phase audit. No fresh process inventory was executed in this review.",
+      "All54 query verdicts per parent/reference/six measured artifacts are retained. CandidateR1 strict suite resolved but infinite-stop ascending/descending both actually ETIMEDOUT at2s; candidateR2 timed out at720s and remains unresolved despite passing applicable probe assertions. Critical quality is false.",
+      "PreviousR2 is distinct: agent exit1, timed_out false, visible lifecycle error Selected model is at capacity. Please try a different model. This is an external service-capacity failure, not candidate success or a fabricated model timeout.",
+      "Both actual failed traces have raw CLI zero fields, nonzero model exit, resolved false, no usage_error, frozen public incomplete_failed_run scope and independently matching provider-response totals. Private accounting permits only this documented exception; completed-record CLI mismatch remains rejected. Existing failed RED/GREEN replay and complete/zero-total negative control evidence inspected, not reexecuted.",
+      "Independent metadata-only sums across9 sessions and187 unique provider responses match frozen-public result usage in all four counters for every first6 record. Recorded input/output exclude no failed attempt and do not estimate billing or unfinished requests.",
+      "Public run-trial.js/codex-usage.js match protocol, measured commit and current source. Fourteen installed policy files match both source and template; three config/AGENTS template hashes match. Candidate AGENTS.md is byte-identical to main. Current tracked rules/skills/AGENTS/tools diff against measured source is empty.",
+      "Postprocess exports retain original frozen source snapshots while adding actual wrapper/processor provenance. Quality numerator still requires resolved plus tests preserved plus all applicable54/i18n; whole14 input+output AND mean-time comparison remains intact and report explicitly disallows interpreting incomplete work as completed-task speed."
+    ],
+    "checks_not_run": [
+      "No model, test, probe, accounting replay, process inventory or benchmark command executed by this reviewer; recorded verification was inspected read-only.",
+      "Remaining36 original outcomes: NOT RUN. No continuation log, exit record or new trial directory exists.",
+      "Final full42 postprocessing, final54 uniform matrix, twelve humanize i18n outcomes and whole-batch performance: NOT RUN.",
+      "Full historical package/artifact audit and fresh CI/build/package checks: NOT RUN; outside this collection-recovery review.",
+      "No auth values, hidden reasoning, encrypted body, or final model prose inspected; no messages, subagents, commits, PR actions or merge performed."
+    ]
+  },
+  "audit_counts": {
+    "review_file_pins": 90,
+    "review_skill_prompt_rule_pins": 10,
+    "review_total_pins": 100,
+    "review_pin_mismatches": 0,
+    "phase_snapshot_pins": 39,
+    "phase_snapshot_mismatches": 0,
+    "failed_session_snapshot_pins": 3,
+    "first6_state_exit_copies": 4,
+    "trial_function_identity_checks": 2,
+    "actual_wrapper_program_identity_checks": 3,
+    "frozen_original_controller_pins": 9,
+    "source_template_policy_files_per_side": 14,
+    "source_template_policy_hash_checks": 28,
+    "profile_config_checks": 3,
+    "profile_agents_checks": 3,
+    "public_runner_collector_identity_checks": 2,
+    "closed_trials": 6,
+    "trial_directories": 6,
+    "junit_files_read": 18,
+    "current_sessions_metadata_read": 9,
+    "unique_provider_responses_summed": 187,
+    "plaintext_CommandExecution_metadata_counted": 167,
+    "numeric_report_groups": 8,
+    "numeric_report_version_rows": 64,
+    "numeric_recorded_query_verdicts": 432,
+    "known_failed_actual_trace_replay_records_read": 2,
+    "new_model_runs": 0,
+    "new_tests_or_probes": 0,
+    "remaining_not_run": 36
+  },
+  "known_failure_boundaries": {
+    "candidate_R2": {
+      "model_exit": -9,
+      "model_timed_out": true,
+      "duration_s": 720,
+      "resolved": false,
+      "recorded_requests": 59,
+      "recorded_input_tokens": 2801789,
+      "recorded_output_tokens": 39906
+    },
+    "previous_R2": {
+      "model_exit": 1,
+      "model_timed_out": false,
+      "duration_s": 82.8,
+      "resolved": false,
+      "reason": "provider capacity",
+      "recorded_requests": 4,
+      "recorded_input_tokens": 91330,
+      "recorded_output_tokens": 1464
+    },
+    "candidate_R1": {
+      "strict_resolved": true,
+      "failed_frozen_checks": [
+        "infinite_stop_ascending/len",
+        "infinite_stop_descending/len"
+      ],
+      "actual_errors": [
+        "ETIMEDOUT",
+        "ETIMEDOUT"
+      ]
+    }
+  },
+  "collection_recovery_review": "PASS",
+  "candidate_critical_quality": "FAIL",
+  "remaining36": "NOT RUN",
+  "whole42_actual_quality": "NOT RUN",
+  "whole42_performance": "NOT RUN",
+  "checks_not_run": [
+    "No model, test, probe, accounting replay, process inventory or benchmark command executed by this reviewer; recorded verification was inspected read-only.",
+    "Remaining36 original outcomes: NOT RUN. No continuation log, exit record or new trial directory exists.",
+    "Final full42 postprocessing, final54 uniform matrix, twelve humanize i18n outcomes and whole-batch performance: NOT RUN.",
+    "Full historical package/artifact audit and fresh CI/build/package checks: NOT RUN; outside this collection-recovery review.",
+    "No auth values, hidden reasoning, encrypted body, or final model prose inspected; no messages, subagents, commits, PR actions or merge performed."
+  ],
+  "conclusion": "No Critical or Important defect found in this immutable collection-only recovery package. Preserve all first6 failures and source snapshots and continue only the original unstarted36 once under the frozen conditions. This finding does not approve quality, speed, PR merge, or release."
+}

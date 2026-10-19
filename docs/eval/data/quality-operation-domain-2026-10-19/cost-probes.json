@@ -1,0 +1,369 @@
+{
+  "kind": "Four cost/first-match checks frozen before all model trials; both previous checks retained plus descending mirrors",
+  "amendment": {
+    "kind": "Predeclared before every model trial; both previous checks retained with descending mirrors, four total",
+    "frozen_at": "2026-10-18T23:10:08.894Z",
+    "controller_sha256": "c227f61f289a8a96eae1ca21c8dc81bfeb5f07021118415381fbfc7a2ccaf262",
+    "timeout_ms": 2000,
+    "per_arm_artifacts": 2,
+    "parent_and_upstream_reference": true
+  },
+  "timeout_ms_per_case": 2000,
+  "methodology": "Same two checks for parent, upstream reference and all six numeric_range artifacts. First after all critical-stage models finish, then after all 42 models; no model active during probes, frozen source in new child processes, no checkout changes or model reruns",
+  "python_program": "import json, sys\ndata = json.load(sys.stdin)\nsys.path.insert(0, data[\"support\"])\nnamespace = {\"__name__\": \"more_itertools.more\", \"__package__\": \"more_itertools\", \"__file__\": \"<frozen-source>\"}\nexec(compile(data[\"source\"], \"<frozen-source>\", \"exec\"), namespace)\ncls = namespace[\"numeric_range\"]\ndescending = data[\"operation\"].endswith(\"_descending\")\nstart, stop, step = (-1e16, -1e16 - 4, -1e-12) if descending else (1e16, 1e16 + 4, 1e-12)\nif data[\"operation\"].startswith(\"large_length\"):\n    r = cls(start, stop, step)\n    n = len(r)\n    correct = n > 0 and (start + (n - 1) * step > stop >= start + n * step if descending else start + (n - 1) * step < stop <= start + n * step)\n    print(json.dumps({\"passed\": correct, \"length\": n, \"boundary_matches_iteration_formula\": correct}))\nelse:\n    r = cls(start, stop, -0.1 if descending else 0.1)\n    items = list(iter(r))\n    query = start - 2 if descending else start + 2\n    expected = items.index(query)\n    actual = r.index(query)\n    print(json.dumps({\"passed\": actual == expected, \"index\": actual, \"expected_first_index\": expected, \"bounded_iteration_count\": len(items)}))\n",
+  "controller_source": "\"use strict\";\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst cp = require(\"node:child_process\");\nconst crypto = require(\"node:crypto\");\nconst root = __dirname;\nconst progress = JSON.parse(fs.readFileSync(path.join(root, \"progress.json\")));\nif (![6, 42].includes(progress.count) || progress.completed.filter((r) => r.task === \"more-itertools-1247\").length !== 6) throw new Error(\"Run only after the six critical trials or after all 42 measured trials\");\nconst hash = (bytes) => crypto.createHash(\"sha256\").update(bytes).digest(\"hex\");\nconst gitSource = (ref) => cp.execFileSync(\"git\", [\"show\", `${ref}:more_itertools/more.py`], { cwd: path.join(root, \"repos/more-itertools\"), encoding: \"utf8\" });\nconst versions = [\n  { version: \"parent\", source: gitSource(\"2fe1b2eeb9d75f994113fe3ac76d14b6bcd6fb10\") },\n  { version: \"upstream_reference\", source: gitSource(\"dc2664b4a7c66209485c9f5e359137bf4b365eb3\") },\n  ...progress.completed.filter((r) => r.task === \"more-itertools-1247\").map((r) => ({ version: `${r.cell}-r${r.repetition}`, cell: r.cell, run: r.repetition,\n    source: fs.readFileSync(path.join(root, \"trials\", `${r.task}--${r.cell}--r${r.repetition}`, \"runs\", r.task, `${r.cell}-r${r.repetition}`, \"more_itertools/more.py\"), \"utf8\") })),\n];\nconst program = `import json, sys\ndata = json.load(sys.stdin)\nsys.path.insert(0, data[\"support\"])\nnamespace = {\"__name__\": \"more_itertools.more\", \"__package__\": \"more_itertools\", \"__file__\": \"<frozen-source>\"}\nexec(compile(data[\"source\"], \"<frozen-source>\", \"exec\"), namespace)\ncls = namespace[\"numeric_range\"]\ndescending = data[\"operation\"].endswith(\"_descending\")\nstart, stop, step = (-1e16, -1e16 - 4, -1e-12) if descending else (1e16, 1e16 + 4, 1e-12)\nif data[\"operation\"].startswith(\"large_length\"):\n    r = cls(start, stop, step)\n    n = len(r)\n    correct = n > 0 and (start + (n - 1) * step > stop >= start + n * step if descending else start + (n - 1) * step < stop <= start + n * step)\n    print(json.dumps({\"passed\": correct, \"length\": n, \"boundary_matches_iteration_formula\": correct}))\nelse:\n    r = cls(start, stop, -0.1 if descending else 0.1)\n    items = list(iter(r))\n    query = start - 2 if descending else start + 2\n    expected = items.index(query)\n    actual = r.index(query)\n    print(json.dumps({\"passed\": actual == expected, \"index\": actual, \"expected_first_index\": expected, \"bounded_iteration_count\": len(items)}))\n`;\nconst results = versions.map(({ source, ...meta }) => {\n  const cases = [\"large_length\", \"first_repeated_index\", \"large_length_descending\", \"first_repeated_index_descending\"].map((operation) => {\n    const start = Date.now();\n    const result = cp.spawnSync(path.join(root, \"venvs/more-itertools/bin/python\"), [\"-B\", \"-c\", program], {\n      input: JSON.stringify({ source, operation, support: path.join(root, \"validation/more-itertools-1247/checkout\") }),\n      encoding: \"utf8\", timeout: 2000, env: { ...process.env, PYTHONDONTWRITEBYTECODE: \"1\" },\n    });\n    const timedOut = result.error?.code === \"ETIMEDOUT\";\n    let value;\n    try { value = JSON.parse(result.stdout); } catch { value = { passed: false, exception_tail: result.stderr?.slice(-1000) }; }\n    return { operation, ...value, passed: !timedOut && result.status === 0 && value.passed === true,\n      timed_out: timedOut, exit: result.status, duration_ms: Date.now() - start };\n  });\n  return { ...meta, source_sha256: hash(source), cases };\n});\nconst report = { kind: \"Four cost/first-match checks frozen before all model trials; both previous checks retained plus descending mirrors\",\n  amendment: JSON.parse(fs.readFileSync(path.join(root, \"protocol/cost-amendment.json\"))), timeout_ms_per_case: 2000,\n  methodology: \"Same two checks for parent, upstream reference and all six numeric_range artifacts. First after all critical-stage models finish, then after all 42 models; no model active during probes, frozen source in new child processes, no checkout changes or model reruns\",\n  python_program: program, controller_source: fs.readFileSync(__filename, \"utf8\"), results };\nfs.writeFileSync(path.join(root, \"cost-probes.json\"), JSON.stringify(report, null, 2));\nconsole.log(JSON.stringify(results.map((r) => ({ version: r.version, cases: r.cases.map((c) => ({ operation: c.operation, passed: c.passed, timeout: c.timed_out, actual: c.index ?? c.length, expected: c.expected_first_index })) }))));\n",
+  "results": [
+    {
+      "version": "parent",
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": false,
+          "length": 4000000000001,
+          "boundary_matches_iteration_formula": false,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 40
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": false,
+          "exception_tail": "Traceback (most recent call last):\n  File \"<string>\", line 19, in <module>\n    actual = r.index(query)\n  File \"<frozen-source>\", line 2458, in index\nValueError: 1.0000000000000002e+16 is not in numeric range\n",
+          "timed_out": false,
+          "exit": 1,
+          "duration_ms": 39
+        },
+        {
+          "operation": "large_length_descending",
+          "passed": false,
+          "length": 4000000000001,
+          "boundary_matches_iteration_formula": false,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 39
+        },
+        {
+          "operation": "first_repeated_index_descending",
+          "passed": false,
+          "exception_tail": "Traceback (most recent call last):\n  File \"<string>\", line 19, in <module>\n    actual = r.index(query)\n  File \"<frozen-source>\", line 2458, in index\nValueError: -1.0000000000000002e+16 is not in numeric range\n",
+          "timed_out": false,
+          "exit": 1,
+          "duration_ms": 38
+        }
+      ]
+    },
+    {
+      "version": "upstream_reference",
+      "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": false,
+          "exception_tail": "",
+          "timed_out": true,
+          "exit": null,
+          "duration_ms": 2004
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": false,
+          "index": 19,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 38
+        },
+        {
+          "operation": "large_length_descending",
+          "passed": false,
+          "exception_tail": "",
+          "timed_out": true,
+          "exit": null,
+          "duration_ms": 2003
+        },
+        {
+          "operation": "first_repeated_index_descending",
+          "passed": false,
+          "index": 19,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 39
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r1",
+      "cell": "gpt-cew",
+      "run": 1,
+      "source_sha256": "f031b1148a0339230c248ca48d0a3d97dad005eaf759ac29aabeebce6e7f7342",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 39
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 38
+        },
+        {
+          "operation": "large_length_descending",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 39
+        },
+        {
+          "operation": "first_repeated_index_descending",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 38
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r1",
+      "cell": "gpt-trim",
+      "run": 1,
+      "source_sha256": "e226e07028706ff1ff3abab65f9b0e1cbf4c83588054228bd7d16026679563ca",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 39
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 38
+        },
+        {
+          "operation": "large_length_descending",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 39
+        },
+        {
+          "operation": "first_repeated_index_descending",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 38
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "source_sha256": "f33f6fb858c0cc22080f26d7b6f0a241be124579151fab64d95ae955b5abe737",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 40
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 40
+        },
+        {
+          "operation": "large_length_descending",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 40
+        },
+        {
+          "operation": "first_repeated_index_descending",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 40
+        }
+      ]
+    },
+    {
+      "version": "gpt-trim-r2",
+      "cell": "gpt-trim",
+      "run": 2,
+      "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": false,
+          "length": 4000000000001,
+          "boundary_matches_iteration_formula": false,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 38
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": false,
+          "exception_tail": "Traceback (most recent call last):\n  File \"<string>\", line 19, in <module>\n    actual = r.index(query)\n  File \"<frozen-source>\", line 2458, in index\nValueError: 1.0000000000000002e+16 is not in numeric range\n",
+          "timed_out": false,
+          "exit": 1,
+          "duration_ms": 40
+        },
+        {
+          "operation": "large_length_descending",
+          "passed": false,
+          "length": 4000000000001,
+          "boundary_matches_iteration_formula": false,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 38
+        },
+        {
+          "operation": "first_repeated_index_descending",
+          "passed": false,
+          "exception_tail": "Traceback (most recent call last):\n  File \"<string>\", line 19, in <module>\n    actual = r.index(query)\n  File \"<frozen-source>\", line 2458, in index\nValueError: -1.0000000000000002e+16 is not in numeric range\n",
+          "timed_out": false,
+          "exit": 1,
+          "duration_ms": 39
+        }
+      ]
+    },
+    {
+      "version": "gpt-cew-r2",
+      "cell": "gpt-cew",
+      "run": 2,
+      "source_sha256": "f120436ba1810f74f04d9e217fe47c9dac62186808b759694dbd2595b2d88c78",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": false,
+          "exception_tail": "",
+          "timed_out": true,
+          "exit": null,
+          "duration_ms": 2003
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": false,
+          "index": 18,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 39
+        },
+        {
+          "operation": "large_length_descending",
+          "passed": false,
+          "exception_tail": "",
+          "timed_out": true,
+          "exit": null,
+          "duration_ms": 2002
+        },
+        {
+          "operation": "first_repeated_index_descending",
+          "passed": false,
+          "index": 18,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 38
+        }
+      ]
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "source_sha256": "46382c6407fb1ff708cd253f795662483fde641b3a086c85dc9b8466426c3487",
+      "cases": [
+        {
+          "operation": "large_length",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 38
+        },
+        {
+          "operation": "first_repeated_index",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 39
+        },
+        {
+          "operation": "large_length_descending",
+          "passed": true,
+          "length": 3000000000000,
+          "boundary_matches_iteration_formula": true,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 39
+        },
+        {
+          "operation": "first_repeated_index_descending",
+          "passed": true,
+          "index": 11,
+          "expected_first_index": 11,
+          "bounded_iteration_count": 30,
+          "timed_out": false,
+          "exit": 0,
+          "duration_ms": 39
+        }
+      ]
+    }
+  ]
+}

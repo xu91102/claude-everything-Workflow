@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-19T00:00:02.298Z",
+  "kind": "Export compatibility only; no model/probe/grader rerun and no patch/status/usage change",
+  "failed_original_source": "<BENCH_ROOT>/recovery/export-evidence.cjs",
+  "failed_original_sha256": "84f127a0d50aeb45421f983593a60dfb25d1225719223032e58e64fbb8f7a32b",
+  "failed_original_log": "<BENCH_ROOT>/recovery/final-export-evidence.log",
+  "partial_public_export_backup": "<BENCH_ROOT>/recovery/export-v1-partial",
+  "actual_source": "<BENCH_ROOT>/recovery/export-evidence-v2.cjs",
+  "actual_sha256": "6aa9cf972cac05441183c9e6c3159ab840545c56efca15fed5c91052426a2c52",
+  "replay_evidence": "<BENCH_ROOT>/recovery/empty-failed-patch-replay.json"
+}

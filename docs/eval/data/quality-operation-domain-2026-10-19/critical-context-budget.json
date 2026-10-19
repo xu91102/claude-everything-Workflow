@@ -1,0 +1,609 @@
+{
+  "kind": "Post-run numeric-task cost distribution from plaintext command metadata and response usage only",
+  "produced_at": "2026-10-18T23:58:44.003Z",
+  "source": "05a2569677746e935cd2b3daaa4d7f17d322c98d",
+  "AGENTS_identical_across_arms": true,
+  "groups": [
+    {
+      "cell": "gpt-cew",
+      "trials": 2,
+      "requests": 29,
+      "sessions": 2,
+      "root_commands": 44,
+      "child_commands": 0,
+      "first_request_inputs": [
+        15943,
+        15943
+      ],
+      "total_tokens": 1092339,
+      "parent_tokens": 1092339,
+      "child_tokens": 0,
+      "mean_model_s": 182.7
+    },
+    {
+      "cell": "gpt-trim",
+      "trials": 2,
+      "requests": 42,
+      "sessions": 3,
+      "root_commands": 26,
+      "child_commands": 18,
+      "first_request_inputs": [
+        15945,
+        15945
+      ],
+      "total_tokens": 1619418,
+      "parent_tokens": 969194,
+      "child_tokens": 650224,
+      "mean_model_s": 263.7
+    },
+    {
+      "cell": "gpt-fixed",
+      "trials": 2,
+      "requests": 116,
+      "sessions": 4,
+      "root_commands": 36,
+      "child_commands": 43,
+      "first_request_inputs": [
+        15937,
+        15937
+      ],
+      "total_tokens": 5398811,
+      "parent_tokens": 2286381,
+      "child_tokens": 3112430,
+      "mean_model_s": 643
+    }
+  ],
+  "rows": [
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-cew",
+      "run": 1,
+      "duration_s": 206.3,
+      "requests": 14,
+      "first_request_input": 15943,
+      "last_request_input": 50816,
+      "root_commands": 23,
+      "child_commands": 0,
+      "sessions": 1,
+      "parent_usage": {
+        "input_tokens": 537194,
+        "cached_input_tokens": 496256,
+        "output_tokens": 10244,
+        "reasoning_output_tokens": 6204
+      },
+      "child_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 537194,
+        "cached_input_tokens": 496256,
+        "output_tokens": 10244,
+        "reasoning_output_tokens": 6204
+      }
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-trim",
+      "run": 1,
+      "duration_s": 444.6,
+      "requests": 38,
+      "first_request_input": 15945,
+      "last_request_input": 61281,
+      "root_commands": 19,
+      "child_commands": 18,
+      "sessions": 2,
+      "parent_usage": {
+        "input_tokens": 858816,
+        "cached_input_tokens": 811648,
+        "output_tokens": 17584,
+        "reasoning_output_tokens": 9474
+      },
+      "child_usage": {
+        "input_tokens": 642039,
+        "cached_input_tokens": 606592,
+        "output_tokens": 8185,
+        "reasoning_output_tokens": 3029
+      },
+      "full_family_usage": {
+        "input_tokens": 1500855,
+        "cached_input_tokens": 1418240,
+        "output_tokens": 25769,
+        "reasoning_output_tokens": 12503
+      }
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-fixed",
+      "run": 2,
+      "duration_s": 720,
+      "requests": 59,
+      "first_request_input": 15937,
+      "last_request_input": 55362,
+      "root_commands": 19,
+      "child_commands": 23,
+      "sessions": 2,
+      "parent_usage": {
+        "input_tokens": 1056585,
+        "cached_input_tokens": 998144,
+        "output_tokens": 24626,
+        "reasoning_output_tokens": 15416
+      },
+      "child_usage": {
+        "input_tokens": 1745204,
+        "cached_input_tokens": 1649536,
+        "output_tokens": 15280,
+        "reasoning_output_tokens": 8600
+      },
+      "full_family_usage": {
+        "input_tokens": 2801789,
+        "cached_input_tokens": 2647680,
+        "output_tokens": 39906,
+        "reasoning_output_tokens": 24016
+      }
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-trim",
+      "run": 2,
+      "duration_s": 82.8,
+      "requests": 4,
+      "first_request_input": 15945,
+      "last_request_input": 34775,
+      "root_commands": 7,
+      "child_commands": 0,
+      "sessions": 1,
+      "parent_usage": {
+        "input_tokens": 91330,
+        "cached_input_tokens": 68224,
+        "output_tokens": 1464,
+        "reasoning_output_tokens": 524
+      },
+      "child_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 91330,
+        "cached_input_tokens": 68224,
+        "output_tokens": 1464,
+        "reasoning_output_tokens": 524
+      }
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-cew",
+      "run": 2,
+      "duration_s": 159.1,
+      "requests": 15,
+      "first_request_input": 15943,
+      "last_request_input": 44338,
+      "root_commands": 21,
+      "child_commands": 0,
+      "sessions": 1,
+      "parent_usage": {
+        "input_tokens": 539105,
+        "cached_input_tokens": 503424,
+        "output_tokens": 5796,
+        "reasoning_output_tokens": 2366
+      },
+      "child_usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "full_family_usage": {
+        "input_tokens": 539105,
+        "cached_input_tokens": 503424,
+        "output_tokens": 5796,
+        "reasoning_output_tokens": 2366
+      }
+    },
+    {
+      "task": "more-itertools-1247",
+      "cell": "gpt-fixed",
+      "run": 1,
+      "duration_s": 566,
+      "requests": 57,
+      "first_request_input": 15937,
+      "last_request_input": 69893,
+      "root_commands": 17,
+      "child_commands": 20,
+      "sessions": 2,
+      "parent_usage": {
+        "input_tokens": 1179394,
+        "cached_input_tokens": 1117056,
+        "output_tokens": 25776,
+        "reasoning_output_tokens": 14800
+      },
+      "child_usage": {
+        "input_tokens": 1339986,
+        "cached_input_tokens": 1265024,
+        "output_tokens": 11960,
+        "reasoning_output_tokens": 6146
+      },
+      "full_family_usage": {
+        "input_tokens": 2519380,
+        "cached_input_tokens": 2382080,
+        "output_tokens": 37736,
+        "reasoning_output_tokens": 20946
+      }
+    }
+  ],
+  "known_checks": [
+    {
+      "file": "quality-probes.json",
+      "sha256": "49af325d5de511e06f343ac21462040db89d1df9ce551b62408ccc484999e6a8",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 0,
+          "total": 16
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 8,
+          "total": 16
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 16,
+          "total": 16
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 8,
+          "total": 16
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 16,
+          "total": 16
+        }
+      ]
+    },
+    {
+      "file": "cost-probes.json",
+      "sha256": "8d18358348e5fe79aa300a20f10acb9c0873bdf8e270f0970548bf4119776513",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 4,
+          "total": 4
+        }
+      ]
+    },
+    {
+      "file": "context-probes.json",
+      "sha256": "d95e4b9105dec85fbe99499e559169e8042b63ba13f269d20e040376ab998303",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 12
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 12
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 12,
+          "total": 12
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 12
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 12,
+          "total": 12
+        }
+      ]
+    },
+    {
+      "file": "promotion-probes.json",
+      "sha256": "1fdca700b025dcb2e5330167d8aae4f6e0662d003a79edcf768e2466ca68ac87",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 10
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 10
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 8,
+          "total": 10
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 10,
+          "total": 10
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 10,
+          "total": 10
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 10
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 10
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 10,
+          "total": 10
+        }
+      ]
+    },
+    {
+      "file": "compatibility-probes.json",
+      "sha256": "fc82b760f423b17a39af51de1e572b632fd6ff8a092d37e462e71df279a7d897",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 4,
+          "total": 4
+        }
+      ]
+    },
+    {
+      "file": "shortcircuit-probes.json",
+      "sha256": "55a8ed13125fe80321bed15a91fcb01e00596bf6c7f620296a5a3fb708a6fcb1",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 0,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 4,
+          "total": 4
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 4,
+          "total": 4
+        }
+      ]
+    },
+    {
+      "file": "floatstop-probes.json",
+      "sha256": "dc8a0a0feb211f6152d32ae7dbd749b150c5de1c498117b0f80219556f87df9d",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 0,
+          "total": 2
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 2
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 2
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 2,
+          "total": 2
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 2,
+          "total": 2
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 0,
+          "total": 2
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 2
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 2,
+          "total": 2
+        }
+      ]
+    },
+    {
+      "file": "infinite-stop-probes.json",
+      "sha256": "42029eb21d56adfc9df70bb7754b048e6ebfba565222d412b8c3aa2bfda2d6af",
+      "results": [
+        {
+          "version": "parent",
+          "passed": 2,
+          "total": 2
+        },
+        {
+          "version": "upstream_reference",
+          "passed": 2,
+          "total": 2
+        },
+        {
+          "version": "gpt-cew-r1",
+          "passed": 2,
+          "total": 2
+        },
+        {
+          "version": "gpt-trim-r1",
+          "passed": 0,
+          "total": 2
+        },
+        {
+          "version": "gpt-fixed-r2",
+          "passed": 2,
+          "total": 2
+        },
+        {
+          "version": "gpt-trim-r2",
+          "passed": 2,
+          "total": 2
+        },
+        {
+          "version": "gpt-cew-r2",
+          "passed": 2,
+          "total": 2
+        },
+        {
+          "version": "gpt-fixed-r1",
+          "passed": 0,
+          "total": 2
+        }
+      ]
+    }
+  ],
+  "interpretation_limits": "Observed cost distribution only; not causal ablation. Root/child tokens and command counts do not prove removing required checks preserves quality. All42 outcomes and whole-batch token AND mean-time gate remain primary; known checks and independent review are separate."
+}
