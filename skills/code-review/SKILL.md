@@ -17,12 +17,17 @@ Review depth belongs here; callers supply the scope, base, risk and available ev
    - active worktree: `git diff <base>` includes committed changes and tracked staged and unstaged edits;
    - staged-only: `git diff --cached`.
 3. Include task-owned untracked files in full; exclude unrelated dirty files explicitly.
-4. Use an explicit Spec, the caller's direct-scope contract/approved Spec/ticket, or confirmed user
-   acceptance criteria. Only then inspect tracker references or matching durable documents if needed.
+4. Use the original user request, including user-approved Spec/ticket and scope changes, as the scope
+   authority. An implementer's plan or summary cannot broaden it. Only then inspect tracker references
+   or matching durable documents if needed.
    Do not ask again for a base or scope the caller already supplied. Never infer requirements from the diff.
 5. Missing base or required acceptance evidence is `BLOCKED`. An intentionally empty package is `NO CHANGES`.
    For a standalone review with no confirmed requirements, report the Spec axis as `NOT RUN` without
    requiring an extra user confirmation; implementation completion still requires its acceptance criteria.
+
+For local fixes touching shared logic, apply the preservation requirements in `rules/02-implementation.md`.
+Unrequested behavior changes fail the Spec axis even if all tests pass; missing required preservation
+evidence is `BLOCKED`, not `PASS`.
 
 ## Select review depth
 
