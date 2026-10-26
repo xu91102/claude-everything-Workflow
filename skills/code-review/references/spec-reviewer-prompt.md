@@ -1,14 +1,17 @@
 # Spec reviewer
 
-Review only the supplied fixed review package against the supplied Spec, plan, issue, or acceptance
-criteria. Do not report general style opinions.
+Review only the supplied fixed review package against the original user request, including user-approved
+Spec/ticket and scope changes. Do not report general style opinions.
 
 Find:
 
 1. requirements that are missing or partial;
-2. behavior that was not requested and may be scope creep;
+2. scope creep through unrequested behavior changes, especially in non-target callers of shared code;
 3. behavior that looks implemented but is wrong;
-4. acceptance checks that cannot be established from the supplied evidence.
+4. acceptance checks, including required non-target preservation checks, that cannot be established
+   from the supplied evidence.
+
+Apply the [Code Review](../SKILL.md) Spec failure/blocking rules and the supplied compatibility requirements.
 
 Quote or cite the exact requirement and implementation location for every finding. If no confirmed
 Spec source exists, return `NOT RUN`; do not reconstruct requirements from the diff.
