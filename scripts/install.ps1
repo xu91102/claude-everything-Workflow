@@ -201,6 +201,7 @@ function Remove-PackageOnlyPaths {
         "scripts\verify\skill-invocation.test.js",
         "scripts\verify\continuation-checks.test.js",
         "scripts\verify\install-rules.test.js",
+        "scripts\verify\commit-quality.test.js",
         "scripts\verify\plugin-distribution.test.js"
     )
 

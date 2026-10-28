@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * Pre-commit 质量门 Hook
+ * 提交检查 Hook；不替代目标项目的验证和安全检查
  *
  * 在 git commit 前执行质量检查:
  * - 检查 staged 文件中的 console.log / debugger
  * - 校验 commit message 格式
  * - 检测硬编码密钥模式
  *
- * 退出码: 2 = 阻止提交, 0 = 仅警告
+ * 退出码: 2 = 疑似密钥阻止提交, 0 = 继续（格式和调试代码仅警告）
  */
 
 'use strict'
@@ -24,6 +24,20 @@ const DEBUG_PATTERNS = [
     /\bdebugger\b/
 ]
 const COMMIT_MSG_REGEX = /^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?:\s.+/
+
+function diffPath(value) {
+    value = value.split('\t')[0]
+    if (value.startsWith('"')) {
+        const escapes = { a: '\x07', b: '\b', t: '\t', n: '\n', v: '\x0b', f: '\f', r: '\r', '"': '"', '\\': '\\' }
+        const parts = value.slice(1, -1).match(/\\[0-7]{1,3}|\\.|[^\\]+/g) || []
+        value = Buffer.concat(parts.map(part => {
+            if (/^\\[0-7]/.test(part)) return Buffer.from([parseInt(part.slice(1), 8)])
+            if (part.startsWith('\\')) return Buffer.from(escapes[part[1]] ?? part.slice(1))
+            return Buffer.from(part)
+        })).toString('utf8')
+    }
+    return value.startsWith('b/') ? value.slice(2) : value
+}
 
 /**
  * Hook 入口 - 支持 run-with-flags.js 直接调用
@@ -62,52 +76,59 @@ function run(raw) {
     }
 
     // 检测密钥和调试代码（通过 git diff --cached）
-    const checkPatterns = (content, filePath) => {
-        const lines = content.split('\n')
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i]
-            // 仅检查新增行
-            if (!line.startsWith('+') || line.startsWith('+++')) continue
-
-            for (const pattern of SECRET_PATTERNS) {
-                if (pattern.test(line)) {
-                    warnings.push(
-                        `[Hook] 检测到疑似密钥: ${filePath}:${i + 1}`
-                    )
-                    shouldBlock = true
-                }
+    const checkPatterns = (line, filePath, lineNumber) => {
+        const displayPath = /[\x00-\x1f]/.test(filePath) ? JSON.stringify(filePath) : filePath
+        for (const pattern of SECRET_PATTERNS) {
+            if (pattern.test(line)) {
+                warnings.push(`[Hook] 检测到疑似密钥: ${displayPath}:${lineNumber}`)
+                shouldBlock = true
             }
+        }
 
-            for (const pattern of DEBUG_PATTERNS) {
-                if (pattern.test(line)) {
-                    warnings.push(
-                        `[Hook] 检测到调试代码: ${filePath}:${i + 1} ` +
-                        `(${line.trim().substring(0, 60)})`
-                    )
-                }
+        for (const pattern of DEBUG_PATTERNS) {
+            if (pattern.test(line)) {
+                // 同一行可能包含密钥；仅报告位置，不回显源码。
+                warnings.push(`[Hook] 检测到调试代码: ${displayPath}:${lineNumber}`)
             }
         }
     }
 
     // 尝试检查 staged 内容
     try {
-        const { execSync } = require('child_process')
-        const diff = execSync('git diff --cached --unified=0', {
+        const { execFileSync } = require('child_process')
+        const diff = execFileSync('git', [
+            '-c', 'core.quotePath=false', '-c', 'diff.noprefix=false',
+            'diff', '--cached', '--unified=0', '--no-color', '--no-ext-diff', '--no-textconv',
+            '--src-prefix=a/', '--dst-prefix=b/'
+        ], {
             encoding: 'utf8',
-            timeout: 10000
+            timeout: 10000,
+            maxBuffer: 16 * 1024 * 1024
         })
 
         let currentFile = ''
+        let newLine = 0
+        let inHunk = false
         for (const line of diff.split('\n')) {
-            if (line.startsWith('diff --git')) {
-                const match = line.match(/b\/(.+)$/)
-                if (match) currentFile = match[1]
+            if (line.startsWith('diff --git ')) {
+                currentFile = ''
+                inHunk = false
+            } else if (!inHunk && line.startsWith('+++ ')) {
+                currentFile = line === '+++ /dev/null' ? '' : diffPath(line.slice(4))
+            } else if (/^@@ .* \+\d+(?:,\d+)? @@/.test(line)) {
+                newLine = Number(line.match(/ \+(\d+)(?:,\d+)? @@/)[1])
+                inHunk = true
+            } else if (inHunk && currentFile) {
+                if (line.startsWith('+')) {
+                    checkPatterns(line.slice(1), currentFile, newLine)
+                    newLine++
+                } else if (line.startsWith(' ')) {
+                    newLine++
+                }
             }
         }
-
-        checkPatterns(diff, currentFile)
     } catch {
-        // git 不可用时跳过
+        warnings.push('[Hook] 无法检查暂存区；本次密钥与调试检查未运行。')
     }
 
     if (warnings.length === 0) {
