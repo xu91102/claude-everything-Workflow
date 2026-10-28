@@ -1,0 +1,154 @@
+{
+  "pairs": 14,
+  "all_attempts_included": true,
+  "baseline_total_tokens": 4298082,
+  "candidate_total_tokens": 3394339,
+  "baseline_mean_seconds": 99.00714285714287,
+  "candidate_mean_seconds": 91.96428571428571,
+  "percent_change": {
+    "tokens": -21.026657937191516,
+    "mean_seconds": -7.113483875622261
+  },
+  "rows": [
+    {
+      "task": "more-itertools-1247",
+      "repetition": 1,
+      "baseline_tokens": 417505,
+      "candidate_tokens": 388996,
+      "token_difference": -28509,
+      "baseline_seconds": 176.1,
+      "candidate_seconds": 264,
+      "seconds_difference": 87.9
+    },
+    {
+      "task": "more-itertools-1247",
+      "repetition": 2,
+      "baseline_tokens": 450282,
+      "candidate_tokens": 358549,
+      "token_difference": -91733,
+      "baseline_seconds": 263.2,
+      "candidate_seconds": 204.1,
+      "seconds_difference": -59.099999999999994
+    },
+    {
+      "task": "slugify-200",
+      "repetition": 1,
+      "baseline_tokens": 361500,
+      "candidate_tokens": 256884,
+      "token_difference": -104616,
+      "baseline_seconds": 88.3,
+      "candidate_seconds": 94.3,
+      "seconds_difference": 6
+    },
+    {
+      "task": "slugify-194",
+      "repetition": 1,
+      "baseline_tokens": 240717,
+      "candidate_tokens": 247853,
+      "token_difference": 7136,
+      "baseline_seconds": 77.5,
+      "candidate_seconds": 91,
+      "seconds_difference": 13.5
+    },
+    {
+      "task": "humanize-346",
+      "repetition": 1,
+      "baseline_tokens": 313357,
+      "candidate_tokens": 209667,
+      "token_difference": -103690,
+      "baseline_seconds": 98.3,
+      "candidate_seconds": 74.3,
+      "seconds_difference": -24
+    },
+    {
+      "task": "humanize-381",
+      "repetition": 1,
+      "baseline_tokens": 282746,
+      "candidate_tokens": 163749,
+      "token_difference": -118997,
+      "baseline_seconds": 75.1,
+      "candidate_seconds": 63.1,
+      "seconds_difference": -11.999999999999993
+    },
+    {
+      "task": "more-itertools-1284",
+      "repetition": 1,
+      "baseline_tokens": 286807,
+      "candidate_tokens": 226542,
+      "token_difference": -60265,
+      "baseline_seconds": 93.5,
+      "candidate_seconds": 83,
+      "seconds_difference": -10.5
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repetition": 1,
+      "baseline_tokens": 206823,
+      "candidate_tokens": 186346,
+      "token_difference": -20477,
+      "baseline_seconds": 78,
+      "candidate_seconds": 55.3,
+      "seconds_difference": -22.700000000000003
+    },
+    {
+      "task": "slugify-194",
+      "repetition": 2,
+      "baseline_tokens": 233262,
+      "candidate_tokens": 185651,
+      "token_difference": -47611,
+      "baseline_seconds": 57,
+      "candidate_seconds": 55.1,
+      "seconds_difference": -1.8999999999999986
+    },
+    {
+      "task": "slugify-200",
+      "repetition": 2,
+      "baseline_tokens": 308378,
+      "candidate_tokens": 281115,
+      "token_difference": -27263,
+      "baseline_seconds": 76.6,
+      "candidate_seconds": 71,
+      "seconds_difference": -5.599999999999994
+    },
+    {
+      "task": "humanize-381",
+      "repetition": 2,
+      "baseline_tokens": 365688,
+      "candidate_tokens": 196074,
+      "token_difference": -169614,
+      "baseline_seconds": 79.9,
+      "candidate_seconds": 50.9,
+      "seconds_difference": -29.000000000000007
+    },
+    {
+      "task": "humanize-346",
+      "repetition": 2,
+      "baseline_tokens": 352835,
+      "candidate_tokens": 290044,
+      "token_difference": -62791,
+      "baseline_seconds": 86.7,
+      "candidate_seconds": 66.6,
+      "seconds_difference": -20.10000000000001
+    },
+    {
+      "task": "itsdangerous-sha1",
+      "repetition": 2,
+      "baseline_tokens": 226304,
+      "candidate_tokens": 190898,
+      "token_difference": -35406,
+      "baseline_seconds": 65.7,
+      "candidate_seconds": 51.4,
+      "seconds_difference": -14.300000000000004
+    },
+    {
+      "task": "more-itertools-1284",
+      "repetition": 2,
+      "baseline_tokens": 251878,
+      "candidate_tokens": 211971,
+      "token_difference": -39907,
+      "baseline_seconds": 70.2,
+      "candidate_seconds": 63.4,
+      "seconds_difference": -6.800000000000004
+    }
+  ]
+}

@@ -1,0 +1,407 @@
+[
+  {
+    "group": "quality",
+    "python_program": "import json, sys\nfrom decimal import Decimal, localcontext\nfrom datetime import datetime, timedelta\ndata = json.load(sys.stdin)\nsys.path.insert(0, data[\"support\"])\nnamespace = {\"__name__\": \"more_itertools.more\", \"__package__\": \"more_itertools\", \"__file__\": \"<frozen-source>\"}\nexec(compile(data[\"source\"], \"<frozen-source>\", \"exec\"), namespace)\ncls = namespace[\"numeric_range\"]\nrows = []\nwith localcontext() as context:\n    context.prec = 2\n    cases = [(\"finite_float_huge_range\", (0.0, 1e308, 1e-308), 0.0, 0), (\"decimal_precision_2\", (Decimal(0), Decimal(10), Decimal(\"0.1\")), Decimal(0), 0), (\"finite_float_nonstart\", (0.0, 1e308, 1e-308), 1e-308, 1), (\"decimal_nonstart\", (Decimal(0), Decimal(10), Decimal(\"0.1\")), Decimal(\"0.1\"), 1)]\n    for name, args, query, expected_index in cases:\n        for operation in (\"contains\", \"index\"):\n            if data.get(\"case_filter\") != [name, operation]:\n                continue\n            try:\n                instance = cls(*args)\n                value = (query in instance) if operation == \"contains\" else instance.index(query)\n                correct = (value is True) if operation == \"contains\" else (type(value) is int and value == expected_index)\n                rows.append({\"case\": name, \"operation\": operation, \"passed\": correct, \"value\": repr(value), \"expected_index\": expected_index})\n            except Exception as error:\n                rows.append({\"case\": name, \"operation\": operation, \"passed\": False, \"exception\": type(error).__name__, \"message\": str(error)})\ndate_cases = [(\"datetime_upper_bound\", (datetime.max - timedelta(days=1), datetime.max, timedelta(days=2))), (\"datetime_lower_bound\", (datetime.min + timedelta(days=1), datetime.min, -timedelta(days=2)))]\nfor name, args in date_cases:\n    for operation in (\"len\", \"first\"):\n        if data.get(\"case_filter\") != [name, operation]:\n            continue\n        try:\n            instance = cls(*args)\n            value = len(instance) if operation == \"len\" else instance[0]\n            correct = value == (1 if operation == \"len\" else args[0])\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": correct, \"value\": repr(value)})\n        except Exception as error:\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": False, \"exception\": type(error).__name__, \"message\": str(error)})\nnonmembers = [(\"datetime_upper_nonmember\", (datetime.max - timedelta(days=1), datetime.max, timedelta(days=2)), datetime.max - timedelta(hours=12)), (\"datetime_lower_nonmember\", (datetime.min + timedelta(days=1), datetime.min, -timedelta(days=2)), datetime.min + timedelta(hours=12))]\nfor name, args, query in nonmembers:\n    for operation in (\"contains\", \"index\"):\n        if data.get(\"case_filter\") != [name, operation]:\n            continue\n        try:\n            instance = cls(*args)\n        except Exception as error:\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": False, \"constructor_exception\": type(error).__name__})\n            continue\n        try:\n            value = query in instance if operation == \"contains\" else instance.index(query)\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": value is False if operation == \"contains\" else False, \"value\": repr(value)})\n        except Exception as error:\n            rows.append({\"case\": name, \"operation\": operation, \"passed\": operation == \"index\" and isinstance(error, ValueError), \"exception\": type(error).__name__, \"message\": str(error)})\nprint(json.dumps(rows))\n",
+    "python_program_sha256": "904323afe80315f8517fd7ce254ff3632866656ae4893478dcb1cf005c3293d0",
+    "original_controller_sha256": "25aae30c29ca54bb8768177c773abe1a6acd3bece6640c28364f7fd4ec9bddce",
+    "timeout_ms": 10000,
+    "inputs": [
+      {
+        "case_filter": [
+          "finite_float_huge_range",
+          "contains"
+        ]
+      },
+      {
+        "case_filter": [
+          "finite_float_huge_range",
+          "index"
+        ]
+      },
+      {
+        "case_filter": [
+          "decimal_precision_2",
+          "contains"
+        ]
+      },
+      {
+        "case_filter": [
+          "decimal_precision_2",
+          "index"
+        ]
+      },
+      {
+        "case_filter": [
+          "finite_float_nonstart",
+          "contains"
+        ]
+      },
+      {
+        "case_filter": [
+          "finite_float_nonstart",
+          "index"
+        ]
+      },
+      {
+        "case_filter": [
+          "decimal_nonstart",
+          "contains"
+        ]
+      },
+      {
+        "case_filter": [
+          "decimal_nonstart",
+          "index"
+        ]
+      },
+      {
+        "case_filter": [
+          "datetime_upper_bound",
+          "len"
+        ]
+      },
+      {
+        "case_filter": [
+          "datetime_upper_bound",
+          "first"
+        ]
+      },
+      {
+        "case_filter": [
+          "datetime_lower_bound",
+          "len"
+        ]
+      },
+      {
+        "case_filter": [
+          "datetime_lower_bound",
+          "first"
+        ]
+      },
+      {
+        "case_filter": [
+          "datetime_upper_nonmember",
+          "contains"
+        ]
+      },
+      {
+        "case_filter": [
+          "datetime_upper_nonmember",
+          "index"
+        ]
+      },
+      {
+        "case_filter": [
+          "datetime_lower_nonmember",
+          "contains"
+        ]
+      },
+      {
+        "case_filter": [
+          "datetime_lower_nonmember",
+          "index"
+        ]
+      }
+    ]
+  },
+  {
+    "group": "cost",
+    "python_program": "import json, sys\ndata = json.load(sys.stdin)\nsys.path.insert(0, data[\"support\"])\nnamespace = {\"__name__\": \"more_itertools.more\", \"__package__\": \"more_itertools\", \"__file__\": \"<frozen-source>\"}\nexec(compile(data[\"source\"], \"<frozen-source>\", \"exec\"), namespace)\ncls = namespace[\"numeric_range\"]\ndescending = data[\"operation\"].endswith(\"_descending\")\nstart, stop, step = (-1e16, -1e16 - 4, -1e-12) if descending else (1e16, 1e16 + 4, 1e-12)\nif data[\"operation\"].startswith(\"large_length\"):\n    r = cls(start, stop, step)\n    n = len(r)\n    correct = n > 0 and (start + (n - 1) * step > stop >= start + n * step if descending else start + (n - 1) * step < stop <= start + n * step)\n    print(json.dumps({\"passed\": correct, \"length\": n, \"boundary_matches_iteration_formula\": correct}))\nelse:\n    r = cls(start, stop, -0.1 if descending else 0.1)\n    items = list(iter(r))\n    query = start - 2 if descending else start + 2\n    expected = items.index(query)\n    actual = r.index(query)\n    print(json.dumps({\"passed\": actual == expected, \"index\": actual, \"expected_first_index\": expected, \"bounded_iteration_count\": len(items)}))\n",
+    "python_program_sha256": "6d2a8be75b93fd25a2f2e5630ea0027fc3c726d5672fdf476d8a6766b9cfc3be",
+    "original_controller_sha256": "7e89fad0a3e70db8d904d9605d07205a8b41b6a62b5cb42f53b35bfdc69ba691",
+    "timeout_ms": 2000,
+    "inputs": [
+      {
+        "operation": "large_length"
+      },
+      {
+        "operation": "first_repeated_index"
+      },
+      {
+        "operation": "large_length_descending"
+      },
+      {
+        "operation": "first_repeated_index_descending"
+      }
+    ]
+  },
+  {
+    "group": "context",
+    "python_program": "import json,sys\nfrom decimal import Decimal,localcontext,Overflow,Inexact\nd=json.load(sys.stdin)\nsys.path.insert(0,d[\"support\"])\nns={\"__name__\":\"more_itertools.more\",\"__package__\":\"more_itertools\",\"__file__\":\"<frozen-source>\"}\nexec(compile(d[\"source\"],\"<frozen-source>\",\"exec\"),ns)\nwith localcontext() as ctx:\n    ctx.prec=2\n    sign=d[\"direction\"]\n    bounded=d[\"context\"]==\"bounded_exponent\"\n    if bounded:\n        ctx.Emax=1\n        ctx.traps[Overflow]=True\n        args=(Decimal(0),Decimal(99*sign),Decimal(50*sign))\n        query=Decimal(75*sign)\n    else:\n        ctx.traps[Inexact]=True\n        args=(Decimal(sign),Decimal(2*sign),Decimal(\"0.001\")*sign)\n        query=args[0]\n    constructed=False\n    try:\n        r=ns[\"numeric_range\"](*args)\n        constructed=True\n        if d[\"operation\"]==\"len\":\n            v=len(r)\n            ok=type(v) is int and v==2\n        elif d[\"operation\"]==\"contains\":\n            v=query in r\n            ok=v is (False if bounded else True)\n        elif d[\"operation\"]==\"first\":\n            v=next(iter(r))\n            ok=v==args[0]\n        else:\n            v=r.index(query)\n            ok=not bounded and type(v) is int and v==0\n        row={\"passed\":ok,\"value\":repr(v)}\n    except Exception as e:\n        row={\"passed\":constructed and bounded and d[\"operation\"]==\"index\" and type(e) is ValueError,\"exception\":type(e).__name__,\"message\":str(e),\"constructor_failed\":not constructed}\nprint(json.dumps(row))\n",
+    "python_program_sha256": "d9631c856f48a2ed9792bdae7d7dcc4516c7fa3b5afa0e75097f6aafbee3a348",
+    "original_controller_sha256": "b38d3487cd96e9595ac76481ddf427197b008805ade07548dd35cb863bc6c4ee",
+    "timeout_ms": 10000,
+    "inputs": [
+      {
+        "operation": "len",
+        "context": "bounded_exponent",
+        "direction": 1
+      },
+      {
+        "operation": "contains",
+        "context": "bounded_exponent",
+        "direction": 1
+      },
+      {
+        "operation": "index",
+        "context": "bounded_exponent",
+        "direction": 1
+      },
+      {
+        "operation": "len",
+        "context": "bounded_exponent",
+        "direction": -1
+      },
+      {
+        "operation": "contains",
+        "context": "bounded_exponent",
+        "direction": -1
+      },
+      {
+        "operation": "index",
+        "context": "bounded_exponent",
+        "direction": -1
+      },
+      {
+        "operation": "contains",
+        "context": "inexact_trap",
+        "direction": 1
+      },
+      {
+        "operation": "index",
+        "context": "inexact_trap",
+        "direction": 1
+      },
+      {
+        "operation": "first",
+        "context": "inexact_trap",
+        "direction": 1
+      },
+      {
+        "operation": "contains",
+        "context": "inexact_trap",
+        "direction": -1
+      },
+      {
+        "operation": "index",
+        "context": "inexact_trap",
+        "direction": -1
+      },
+      {
+        "operation": "first",
+        "context": "inexact_trap",
+        "direction": -1
+      }
+    ]
+  },
+  {
+    "group": "promotion",
+    "python_program": "import json,sys\nfrom decimal import Decimal,localcontext,Rounded\nfrom itertools import islice\nd=json.load(sys.stdin)\nsys.path.insert(0,d[\"support\"])\nns={\"__name__\":\"more_itertools.more\",\"__package__\":\"more_itertools\",\"__file__\":\"<frozen-source>\"}\nexec(compile(d[\"source\"],\"<frozen-source>\",\"exec\"),ns)\ntry:\n    if d[\"kind\"]==\"mixed_promotion\":\n        sign=d[\"direction\"]\n        start=sign*(2**53+1)\n        stop=sign*(2**53+6)\n        step=sign*1.0\n        expected=[]\n        for i in range(16):\n            value=start+i*step\n            if value<stop if sign==1 else value>stop:\n                expected.append(value)\n            else:\n                break\n        else:\n            raise AssertionError(\"independent small enumeration did not terminate\")\n        assert len(expected)==6\n        r=ns[\"numeric_range\"](start,stop,step)\n        if d[\"operation\"]==\"sequence\":\n            actual=list(islice(iter(r),17))\n            ok=actual==expected\n            value=repr(actual)\n        elif d[\"operation\"]==\"len\":\n            value=len(r)\n            ok=type(value) is int and value==len(expected)\n        elif d[\"operation\"]==\"contains\":\n            value=expected[0] in r\n            ok=value is True\n        else:\n            value=r.index(expected[0])\n            ok=type(value) is int and value==0\n    else:\n        with localcontext() as ctx:\n            ctx.prec=2\n            ctx.traps[Rounded]=True\n            r=ns[\"numeric_range\"](Decimal(1),Decimal(2),Decimal(\".001\"))\n            if d[\"operation\"]==\"contains\":\n                value=Decimal(1) in r\n                ok=value is True\n            else:\n                value=r.index(Decimal(1))\n                ok=type(value) is int and value==0\n    row={\"passed\":ok,\"value\":repr(value)}\nexcept Exception as e:\n    row={\"passed\":False,\"exception\":type(e).__name__,\"message\":str(e)}\nprint(json.dumps(row))\n",
+    "python_program_sha256": "6c7e8c50fc7f84217395a404493d784d15eadd848a200fc1a0e9824a75ebc081",
+    "original_controller_sha256": "220f1a39892d9ba98129f7a360559d5b44117e2bc1ee5158219c402e5e60c53f",
+    "timeout_ms": 10000,
+    "inputs": [
+      {
+        "operation": "sequence",
+        "kind": "mixed_promotion",
+        "direction": 1
+      },
+      {
+        "operation": "len",
+        "kind": "mixed_promotion",
+        "direction": 1
+      },
+      {
+        "operation": "contains",
+        "kind": "mixed_promotion",
+        "direction": 1
+      },
+      {
+        "operation": "index",
+        "kind": "mixed_promotion",
+        "direction": 1
+      },
+      {
+        "operation": "sequence",
+        "kind": "mixed_promotion",
+        "direction": -1
+      },
+      {
+        "operation": "len",
+        "kind": "mixed_promotion",
+        "direction": -1
+      },
+      {
+        "operation": "contains",
+        "kind": "mixed_promotion",
+        "direction": -1
+      },
+      {
+        "operation": "index",
+        "kind": "mixed_promotion",
+        "direction": -1
+      },
+      {
+        "operation": "contains",
+        "kind": "rounded_trap",
+        "direction": 1
+      },
+      {
+        "operation": "index",
+        "kind": "rounded_trap",
+        "direction": 1
+      }
+    ]
+  },
+  {
+    "group": "compatibility",
+    "python_program": "import json,sys\nfrom decimal import Decimal as D, localcontext, FloatOperation\npayload=json.load(sys.stdin)\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('float_operation_nonmember_ascending',(1,2,0.1),D(0)),('float_operation_nonmember_descending',(1,0,-0.1),D(2))]\nfor name,args,query in cases:\n for operation in ('contains','index'):\n  if payload['case_filter']!=[name,operation]:continue\n  try:\n   instance=cls(*args)\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':False,'constructor_exception':type(error).__name__}));continue\n  try:\n   with localcontext() as context:\n    context.traps[FloatOperation]=True\n    actual=(query in instance) if operation=='contains' else instance.index(query)\n   print(json.dumps({'case':name,'operation':operation,'passed':actual is False if operation=='contains' else False,'value':repr(actual),'expected':'False' if operation=='contains' else 'ValueError'}))\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':operation=='index' and isinstance(error,ValueError),'exception':type(error).__name__,'message':str(error),'expected':'False' if operation=='contains' else 'ValueError'}))\n",
+    "python_program_sha256": "ce9305ce9dd026d781ca9e28f7f1faa3abae809a50c9e3e9b21961649a06b4ac",
+    "original_controller_sha256": "2ea0641d759d5c80f25b739dd505b8b13c48c296a7cb4dd926cb3f4700ff0914",
+    "timeout_ms": 10000,
+    "inputs": [
+      {
+        "case_filter": [
+          "float_operation_nonmember_ascending",
+          "contains"
+        ]
+      },
+      {
+        "case_filter": [
+          "float_operation_nonmember_ascending",
+          "index"
+        ]
+      },
+      {
+        "case_filter": [
+          "float_operation_nonmember_descending",
+          "contains"
+        ]
+      },
+      {
+        "case_filter": [
+          "float_operation_nonmember_descending",
+          "index"
+        ]
+      }
+    ]
+  },
+  {
+    "group": "shortcircuit",
+    "python_program": "import json,sys\npayload=json.load(sys.stdin)\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('empty_large_integer_ascending',(10**400,0,1.0),0),('empty_large_integer_descending',(-10**400,0,-1.0),0)]\nfor name,args,query in cases:\n for operation in ('contains','index'):\n  if payload['case_filter']!=[name,operation]:continue\n  try:\n   instance=cls(*args)\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':False,'constructor_exception':type(error).__name__}));continue\n  try:\n   actual=(query in instance) if operation=='contains' else instance.index(query)\n   print(json.dumps({'case':name,'operation':operation,'passed':actual is False if operation=='contains' else False,'value':repr(actual),'expected':'False' if operation=='contains' else 'ValueError'}))\n  except Exception as error:\n   print(json.dumps({'case':name,'operation':operation,'passed':operation=='index' and isinstance(error,ValueError),'exception':type(error).__name__,'message':str(error),'expected':'False' if operation=='contains' else 'ValueError'}))\n",
+    "python_program_sha256": "a36cccdd3d3acc6bced0859e113f92f48d29c977ca42935d25fb198207d71e89",
+    "original_controller_sha256": "992d7a8edb0d679a2aa28772a00fe64086c03118c7c09b46fac1d6217d526404",
+    "timeout_ms": 10000,
+    "inputs": [
+      {
+        "case_filter": [
+          "empty_large_integer_ascending",
+          "contains"
+        ]
+      },
+      {
+        "case_filter": [
+          "empty_large_integer_ascending",
+          "index"
+        ]
+      },
+      {
+        "case_filter": [
+          "empty_large_integer_descending",
+          "contains"
+        ]
+      },
+      {
+        "case_filter": [
+          "empty_large_integer_descending",
+          "index"
+        ]
+      }
+    ]
+  },
+  {
+    "group": "floatstop",
+    "python_program": "import json,sys\npayload=json.load(sys.stdin)\nassert sys.maxsize >= 2**54, 'oracle requires 64-bit sequence length'\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('stop_only_float_ascending',(1,float(2**54),1),len(range(1,2**54,1))),('stop_only_float_descending',(-1,-float(2**54),-1),len(range(-1,-2**54,-1)))]\nfor name,args,expected in cases:\n if payload['case_filter']!=[name,'len']:continue\n try:\n  instance=cls(*args)\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':False,'constructor_exception':type(error).__name__}));continue\n try:\n  actual=len(instance)\n  print(json.dumps({'case':name,'operation':'len','passed':actual==expected,'value':actual,'expected':expected,'oracle':'builtin range over identical integral generated values and exact representable float boundary; no enumeration'}))\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':False,'exception':type(error).__name__,'message':str(error),'expected':expected}))\n",
+    "python_program_sha256": "4b82642b8dc0cac154ef858eb3b71e10b41f920bf39169fe360e5cb400c90446",
+    "original_controller_sha256": "38fcf9215a76835e866725091b0c353d3ba66fb38372993a82ff6f975dc5c802",
+    "timeout_ms": 10000,
+    "inputs": [
+      {
+        "case_filter": [
+          "stop_only_float_ascending",
+          "len"
+        ]
+      },
+      {
+        "case_filter": [
+          "stop_only_float_descending",
+          "len"
+        ]
+      }
+    ]
+  },
+  {
+    "group": "infinite-stop",
+    "python_program": "import json,sys\npayload=json.load(sys.stdin)\nsys.path.insert(0,payload['support'])\nnamespace={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(payload['source'],'<frozen-source>','exec'),namespace)\ncls=namespace['numeric_range']\ncases=[('infinite_stop_ascending',(0,float('inf'),1)),('infinite_stop_descending',(0,-float('inf'),-1))]\nfor name,args in cases:\n if payload['case_filter']!=[name,'len']:continue\n try:\n  instance=cls(*args)\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':False,'constructor_exception':type(error).__name__}));continue\n print(json.dumps({'stage':'constructed','case':name,'operation':'len'}),flush=True)\n try:\n  actual=len(instance)\n  print(json.dumps({'case':name,'operation':'len','passed':None if payload['oracle_validation'] else False,'value':actual,'expected':payload['expected_exception']}))\n except Exception as error:\n  print(json.dumps({'case':name,'operation':'len','passed':None if payload['oracle_validation'] else type(error).__name__==payload['expected_exception'],'exception':type(error).__name__,'message':str(error),'expected':payload['expected_exception']}))\n",
+    "python_program_sha256": "3c3135c36312e576709919e272311888bbb9a9cd94d51e4a51ea330b384fa358",
+    "original_controller_sha256": "e7a301986f4f7cc4bff40dbd13bb0f7849cf01cd02a2dbd68b12cbfa0cdce424",
+    "timeout_ms": 2000,
+    "inputs": [
+      {
+        "case_filter": [
+          "infinite_stop_ascending",
+          "len"
+        ],
+        "expected_exception": "ValueError",
+        "oracle_validation": false
+      },
+      {
+        "case_filter": [
+          "infinite_stop_descending",
+          "len"
+        ],
+        "expected_exception": "ValueError",
+        "oracle_validation": false
+      }
+    ]
+  },
+  {
+    "group": "supplement",
+    "python_program": "import json,sys\nfrom decimal import Decimal,localcontext\nfrom itertools import islice\nd=json.load(sys.stdin)\nsys.path.insert(0,d['support'])\nns={'__name__':'more_itertools.more','__package__':'more_itertools','__file__':'<frozen-source>'}\nexec(compile(d['source'],'<frozen-source>','exec'),ns)\ncls=ns['numeric_range']\ntry:\n if d['kind']=='promoted_first_default':\n  sign=d['direction']\n  with localcontext() as ctx:\n   start=sign*(2**53+1);stop=Decimal(sign*(2**53+5));step=sign*0.5\n   expected=sign*float(2**53)\n   assert start+0*step==expected\n   r=cls(start,stop,step)\n   assert next(iter(r))==expected\n   value=(expected in r) if d['operation']=='contains' else r.index(expected)\n   ok=value is True if d['operation']=='contains' else type(value) is int and value==0\n   flags=[signal.__name__ for signal,set_ in ctx.flags.items() if set_]\n   row={'passed':ok,'value':repr(value),'diagnostic_flags':flags,'signal_contract':'default context only; no zero-flag or all-traps assertion'}\n else:\n  args=(1e16,10000000000000001,1) if d['direction']==1 else (10000000000000001,1e16,-1)\n  start,stop,step=args;expected=[]\n  for i in range(4):\n   value=start+i*step\n   if value<stop if step>0 else value>stop:expected.append(value)\n   else:break\n  else:raise AssertionError('bounded independent oracle did not terminate')\n  assert len(expected)==(2 if d['direction']==1 else 1)\n  r=cls(*args);actual=list(islice(iter(r),4))\n  value=len(r)\n  row={'passed':actual==expected and type(value) is int and value==len(expected),'value':repr(value),'sequence':repr(actual),'expected':repr(expected),'oracle':'direct start+i*step exclusive-bound enumeration, max four values'}\nexcept Exception as error:row={'passed':False,'exception':type(error).__name__,'message':str(error)}\nprint(json.dumps(row))\n",
+    "python_program_sha256": "466d4f8be3ee84c8faf13c911ead245f1dfd2ea8037a5b0fae4a0c1779158c0e",
+    "original_controller_sha256": "b8dc787803676e66651c31a3e049dbac7de86c98a4abfa6530e6a7a1603d0379",
+    "timeout_ms": 10000,
+    "inputs": [
+      {
+        "operation": "contains",
+        "kind": "promoted_first_default",
+        "direction": 1
+      },
+      {
+        "operation": "index",
+        "kind": "promoted_first_default",
+        "direction": 1
+      },
+      {
+        "operation": "contains",
+        "kind": "promoted_first_default",
+        "direction": -1
+      },
+      {
+        "operation": "index",
+        "kind": "promoted_first_default",
+        "direction": -1
+      },
+      {
+        "operation": "len",
+        "kind": "zero_distance_length",
+        "direction": 1
+      },
+      {
+        "operation": "len",
+        "kind": "zero_distance_length",
+        "direction": -1
+      }
+    ]
+  }
+]

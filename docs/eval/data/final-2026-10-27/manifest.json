@@ -1,0 +1,69 @@
+{
+  "format": 1,
+  "cohort": "generic-2026-10-27",
+  "measured_baseline": "42dda80522ba96f0c02c2c3913eadf3d1f4d92a9",
+  "measured_candidate": "817b0ec4481e1b9e995677ba2af2bb8995ca1a03",
+  "measurement_finished_utc": "2026-10-27T09:40:51.032Z",
+  "private_manifest_sha256": "ec22be0c8bfd0273433ac0701c68748feefd7dd00501e52b79b664d479984925",
+  "private_artifact_set_sha256": "1e35160f8fcc4e010e9ee19bb6547dd93f7c77fef9357784ed0843772828ef0c",
+  "private_experiment_sha256": "64abcca594c5b804f3fbc343d3e4d58eb7a84e64466191a569c0e79823a76dcb",
+  "public_export": "Allowlisted protocol, inputs, behavioral programs, patches, outcomes and aggregate counters. No raw transcripts, native session bodies, auth or provider configuration.",
+  "files": [
+    {
+      "file": "analysis.json",
+      "sha256": "9f3f97074cb8d55a4754eda8969c20cb48128d26057460b759ecb69e94497f77"
+    },
+    {
+      "file": "environment.json",
+      "sha256": "06e44a9ddf2105521131b7c0e6b5cd93ec46faa2ce770b530721ec95266ddd3f"
+    },
+    {
+      "file": "i18n-results.json",
+      "sha256": "85f313bbf9b9164469b8a1dd5801ee885211c81a591dfd4a6a823b91ae2c589d"
+    },
+    {
+      "file": "independent-review.json",
+      "sha256": "ca6fcb7259b224c0812bd7c9f4549650a653ee049528cb452538fa205a78741c"
+    },
+    {
+      "file": "numeric-programs.json",
+      "sha256": "5093d1bb4b6b13ecc52329a88b782808da6efef59e33f5fa405f464683b57ba1"
+    },
+    {
+      "file": "numeric-results.json",
+      "sha256": "d69ce7756ccf787f1f205487be03a2ce65e2460fac6e3f50fd066566a0ed0527"
+    },
+    {
+      "file": "paired-stats.json",
+      "sha256": "d6e0b7b827b75fd29ea23863f2fc13d81b5ed4198a2c7cb5cb20496e032d0c9e"
+    },
+    {
+      "file": "patches.json",
+      "sha256": "94373ffb2d5d3695df3b6a4a499845c98399fce929e8515920517fb3da17dfda"
+    },
+    {
+      "file": "prior-attempts.json",
+      "sha256": "4517ae6beff82d45c8932a49a76ec6e17db1116895abe3a24df14c5c1a072dbf"
+    },
+    {
+      "file": "replay-stability.json",
+      "sha256": "18cfe19f2227d2c8c18350133544f20585905ac87a518b2d02d157b1132d1360"
+    },
+    {
+      "file": "routing-scenarios.json",
+      "sha256": "1132f093e36b7bb609e0f6a45a5cd6d74541151522224b65898f603a5880d3da"
+    },
+    {
+      "file": "routing-summary.json",
+      "sha256": "0ab6fa4b66e46fecc19d3cc0fe42a4eec15ba8c7fd2b9c926446fc5d210fe05a"
+    },
+    {
+      "file": "tasks.json",
+      "sha256": "86b6201a304a78088d1ab20d31d58930f242de0ee3f41869a1bf5a2b43b84b29"
+    },
+    {
+      "file": "trial-outcomes.json",
+      "sha256": "92a69310754098fb378d617a61d7aced179f4ccd01ff4f3c01f0d9bcf3a1b901"
+    }
+  ]
+}

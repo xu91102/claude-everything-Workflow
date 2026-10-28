@@ -17,6 +17,8 @@
   },
   "scripts": {
     "verify": "node scripts/verify-harness.js",
+    "test:eval": "node --test docs/eval/tools/run-trial.test.js",
+    "test:evidence": "node --test docs/eval/tools/verify-evidence.test.js",
     "test:manifest": "node scripts/verify/skill-manifest-checks.test.js",
     "test:invocation": "node scripts/verify/skill-invocation.test.js",
     "test:continuation": "node scripts/verify/continuation-checks.test.js",
@@ -59,5 +61,8 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xu91102/claude-everything-Workflow.git"
+  },
+  "devDependencies": {
+    "fast-xml-parser": "5.11.2"
   }
 }

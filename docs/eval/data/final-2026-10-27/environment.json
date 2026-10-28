@@ -1,0 +1,145 @@
+{
+  "runtime": {
+    "cli": "0.160.1",
+    "node": "v22.23.2",
+    "python": "3.12.13"
+  },
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "routing": {
+    "cases": 10,
+    "repetitions": 3,
+    "arms": 2,
+    "trials": 60,
+    "timeout_s": 180
+  },
+  "real": {
+    "repetitions": 2,
+    "arms": 2,
+    "trials": 28,
+    "timeout_s": 720
+  },
+  "schedule": {
+    "concurrency": 2,
+    "route_first": true,
+    "paired_order": "For each case i, r: alternate baseline/candidate by (i+r)%2; repeated rounds reverse the prior order; two task blocks can run concurrently, arms within each block sequential.",
+    "real_critical_first": "Both repetitions of more-itertools-1247 form critical4; then all remaining24. Quality failure is retained and does not trigger selective retry; collect entire28 once unless an execution-integrity blocker makes remaining results uninterpretable."
+  },
+  "configuration": {
+    "template_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f",
+    "path_parameters": [
+      "__CEW_TRIAL_ROOT__",
+      "__CEW_AUTH_FILE__",
+      "__CEW_CHECKOUT__"
+    ],
+    "runtime_equality": "Same model/high/features/profile recipe; normalized private-path config hash must equal the frozen template in every trial.",
+    "locking": "Assert every arm template and copied trial config matches the frozen normalized recipe before model launch; recheck exact and normalized config after each trial, and include templates/recipe in end source-integrity check."
+  },
+  "source_payloads": [
+    {
+      "cell": "gpt-cew",
+      "sha": "42dda80522ba96f0c02c2c3913eadf3d1f4d92a9",
+      "archive_sha256": "0d68f7418b58bb09334d8382219e52589eec60b2674a835fb0d43c98ece50c08",
+      "config_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f",
+      "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd",
+      "policy_files": [
+        {
+          "path": "rules/01-base.md",
+          "sha256": "d44e238a2215639e89276160c3b33bfdd1eb8a4e73a9f56482d6040b926eabd2"
+        },
+        {
+          "path": "rules/02-implementation.md",
+          "sha256": "1bbe491d9b89e37a6a6d004e1b6e1ccd7478b94341e7b4c51ce8d01fad585c7f"
+        },
+        {
+          "path": "rules/05-git-workflow.md",
+          "sha256": "afbc23c1be9d19df452d42c7ade8f8e47722ad40036da953010813a7f16fd754"
+        },
+        {
+          "path": "rules/common/testing.md",
+          "sha256": "e349934f4e97c2576a68ce3d123a52471d877612e2e7967c841c0c4164560b4f"
+        },
+        {
+          "path": "skills/using-superpowers/SKILL.md",
+          "sha256": "294cf51d32aabd143bbae2b401d5b7f48d883336d1076ef2ba00af922c3e2faf"
+        },
+        {
+          "path": "skills/implement/SKILL.md",
+          "sha256": "352309427067af6c9bd5c3be51e14819173d995a959c7bae8697e821e107179b"
+        },
+        {
+          "path": "skills/test-driven-development/SKILL.md",
+          "sha256": "ab8fd600158de1624eec7b401bbcf3c0e078e7e444cfe0b3b6e1cb3f30b9e8be"
+        },
+        {
+          "path": "skills/code-review/SKILL.md",
+          "sha256": "4a50bd28a936d3a9fa788fdb0d55d1b9523bf97c14bf68c081c5c60c302dfc4c"
+        },
+        {
+          "path": "commands/verify.md",
+          "sha256": "46bcbeda8bcbfc4c92cf7f7b62c53ccd75038d8d84595641ff62248518d70326"
+        }
+      ]
+    },
+    {
+      "cell": "gpt-fixed",
+      "sha": "817b0ec4481e1b9e995677ba2af2bb8995ca1a03",
+      "archive_sha256": "97bca27c5d952fbf35a19c9f0660f5f12d0a8abbe77459fec6fb3463ce91a3a9",
+      "config_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f",
+      "agents_sha256": "f37cbac08a5c82a0a83708d7d574eb2f78ade5e1726bddb8092e2bd0ed9e7ecd",
+      "policy_files": [
+        {
+          "path": "rules/01-base.md",
+          "sha256": "d44e238a2215639e89276160c3b33bfdd1eb8a4e73a9f56482d6040b926eabd2"
+        },
+        {
+          "path": "rules/02-implementation.md",
+          "sha256": "1bbe491d9b89e37a6a6d004e1b6e1ccd7478b94341e7b4c51ce8d01fad585c7f"
+        },
+        {
+          "path": "rules/05-git-workflow.md",
+          "sha256": "349c73d962b67769cedbf6da4adf1c20191a80ea6b3c5bec82f053676c23d370"
+        },
+        {
+          "path": "rules/common/testing.md",
+          "sha256": "8fb4633020b49abaf4d8bc41bb74a11da1b283c777d8d69f37dbe63b47159764"
+        },
+        {
+          "path": "skills/using-superpowers/SKILL.md",
+          "sha256": "60c820e4ea3107006fd8662647f9af1c539415d1e470f2c380e82ea93c4041f4"
+        },
+        {
+          "path": "skills/implement/SKILL.md",
+          "sha256": "646fe5ecfa94082c00c5397403f730bdfb9614dd7c38bd2c2c841cb1a17defa9"
+        },
+        {
+          "path": "skills/test-driven-development/SKILL.md",
+          "sha256": "eaacae364fdf54770291a6241b1e9ac6d6f59dff11ec63ab57bb3af1402b5dda"
+        },
+        {
+          "path": "skills/code-review/SKILL.md",
+          "sha256": "826ada407ef2a0982776f073de582533b5feaca2646c98693b7a54f8cf521d5d"
+        },
+        {
+          "path": "skills/code-review/references/review-policy.md",
+          "sha256": "6581aea844eea014bcd5f40d3dfd03c8830f5e6aeedd92d476d3081cadfa1b11"
+        },
+        {
+          "path": "references/verification.md",
+          "sha256": "fb9f47cf3067cbdca0df5fa503b6f37f3c64e48c44cd20bbee7c2872d466af4a"
+        },
+        {
+          "path": "commands/verify.md",
+          "sha256": "d13a1abbe957adb39ca9477daacb8306c69bb9b00c1d4d31641d25dbf2cd5999"
+        }
+      ]
+    }
+  ],
+  "operational_repair": {
+    "initial_directory_error": "Dispatcher stopped after60 routing+4 real runs because audits output directory was missing",
+    "continuation": "Independently reviewed one-shot continuation retained all64 closed outcomes and ran the remaining24; no failed sample replaced",
+    "timing": "Repair scheduling gap excluded from individual agent durations; all per-agent tool/review wait remains included"
+  },
+  "source_integrity_passed": true,
+  "resume_integrity_passed": true
+}
