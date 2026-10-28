@@ -8,8 +8,9 @@ Find:
 1. requirements that are missing or partial;
 2. scope creep through unrequested behavior changes, especially in non-target callers of shared code;
 3. behavior that looks implemented but is wrong;
-4. acceptance checks, including required non-target preservation checks, that cannot be established
-   from the supplied evidence.
+4. acceptance checks required by the confirmed scope or applicable rules, including non-target
+   preservation checks, that the supplied evidence does not establish; perform a bounded read-only
+   check or report the gap instead of accepting existing tests as proof.
 
 Apply the [Code Review](../SKILL.md) Spec failure/blocking rules and the supplied compatibility requirements.
 

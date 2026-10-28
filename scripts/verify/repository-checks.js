@@ -10,22 +10,7 @@ function bindContext(context) {
 }
 
 function checkRouterAndAgentLinks() {
-  requireTokens("skills/using-superpowers/SKILL.md", [
-    "Skill Invocation Rule",
-    "Task arrives",
-    "Agent-selected Delivery Topology",
-    "delivery request in defined scope?",
-    "independent frontier tickets with no overlapping write surface?",
-    "skills/subagent-driven-development/SKILL.md",
-    "skill discovery or install request?",
-    "external skill learning or edit?",
-    "process skills before implementation skills",
-    "skills/grilling/SKILL.md",
-    "spec-gate",
-    "skills/systematic-debugging/SKILL.md",
-    "rules/common/testing.md",
-    "User instructions",
-  ]);
+  // Router routes and their negative cases have one owner in grilling-spec-gate-checks.
 
   const expected = [
     ["agents/e2e-runner.md", "skills/e2e-testing/SKILL.md"],
@@ -74,7 +59,7 @@ function checkTicketFirstDelivery() {
     "test-driven-development",
     "direct-scope contract",
     "无 ticket 范围不得 claim 或写入任何 tracker",
-    "[references/ticket-delivery.md](references/ticket-delivery.md)",
+    "skills/implement/references/ticket-delivery.md",
   ]);
   requireTokens("skills/implement/references/ticket-delivery.md", [
     "一个 fresh context",
@@ -188,13 +173,17 @@ function checkCodeReviewContracts() {
   ]);
 
   requireTokens("skills/code-review/SKILL.md", [
-    "two parallel subagents",
+    "skills/code-review/references/review-policy.md",
     "tracked staged and unstaged",
     "untracked",
     "git diff <base>",
     "standards-reviewer-prompt.md",
     "spec-reviewer-prompt.md",
     "Do not merge or rerank",
+  ]);
+  requireTokens("skills/code-review/references/review-policy.md", [
+    "self", "one fresh read-only subagent", "two parallel subagents",
+    "容量不足不构成降级理由", "NOT RUN", "BLOCKED",
   ]);
 
   requireTokens("skills/code-review/references/standards-reviewer-prompt.md", [
@@ -243,15 +232,15 @@ function checkTrackerDeliveryLifecycle() {
     "[RESOLVE → REFRESH_FRONTIER] → FINISH_DELIVERY";
 
   requireTokens("skills/implement/SKILL.md", [
-    "rules/05-git-workflow.md",
+    "references/git-workflow.md",
     "clean baseline",
     "pre-delivery base",
     "不覆盖 commit、push 或创建 PR",
     "无 ticket 范围不得 claim 或写入任何 tracker",
   ]);
   requireTokens("rules/05-git-workflow.md", [
-    "开发新功能必须使用独立 `git worktree` 和任务分支",
-    "单文件新功能也不例外",
+    "可能被覆盖的用户改动", "并行写入", "受保护分支", "高风险改动",
+    "不按文件数量或新功能标签强制创建", "不丢弃或覆盖用户已有改动",
   ]);
   requireTokens("skills/implement/references/ticket-delivery.md", [
     "## State Machine",
@@ -289,7 +278,7 @@ function checkExecutionSupportSkills() {
   requireTokens("references/git-worktrees.md", [
     "git worktree add",
     "git worktree remove",
-    "rules/05-git-workflow.md",
+    "references/git-workflow.md",
     "git status --short",
   ]);
 

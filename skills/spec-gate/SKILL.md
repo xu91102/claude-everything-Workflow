@@ -5,110 +5,81 @@ description: Create and self-review a formal Spec for explicit or costly-to-reve
 
 # Spec Gate
 
-Create an implementation-ready design artifact from resolved decisions and verified repository facts. This is a zero interview gate: it does not own clarification, user decision loops, or workflow continuation.
+Create an implementation-ready design from resolved decisions and verified facts. This is a zero interview
+gate: clarification and workflow continuation belong to `skills/using-superpowers/SKILL.md`.
 
 ## Hard Gate
 
-Do not invoke implementation skills, write implementation code, or generate tickets until the saved Spec has passed self-review and the user has explicitly approved it.
+Do not invoke implementation skills, write implementation code, or generate tickets until the saved Spec
+has passed self-review and the user has explicitly approved it.
 
-Do not ask clarifying questions. If a user-owned decision can materially change the result, return `BLOCKED_BY_UNRESOLVED_DECISION` before drafting the document.
+Use this gate for an explicitly requested formal Spec or a high-risk boundary. A typo, copy update or
+reversible configuration edit returns `NOT_APPLICABLE` to the router without recommending another Skill.
 
-## Inputs
+## Facts and Decisions
 
-Consume only:
+- Consume the goal and risk, confirmed handoff decisions and delegated defaults, verified repository
+  facts, and an optional local workflow output path. Inspect discoverable facts instead of asking the user.
+- Batch independent reads and reuse verified inputs. Read rules relevant to the design and use read-only
+  checks to establish current behavior. Identify existing public seams for repeatable acceptance.
+- Use the safest reversible default for agent-owned details. A consequential user-owned choice requires
+  a confirmed resolution or explicit delegation; a new public seam or changed contract can be such a choice.
+- A confirmed handoff is approved input. Reopen a decision only when its recorded reversal evidence or
+  an invalidated premise warrants it. An already resolved `decision_id` without changed evidence is a
+  `Spec Gate contract conflict`: stop rather than reopening it.
+- If a consequential decision remains unresolved, return `BLOCKED_BY_UNRESOLVED_DECISION` before drafting.
+  Derive a stable `decision_id` from the subject. Do not ask questions, choose for the user, generate
+  options, add `resume_target`, or invoke grilling; return the outcome to the router.
 
-- the task goal and risk classification;
-- confirmed grilling handoff decisions and delegated defaults, when present;
-- repository facts verified from current files, history, tests, or tools;
-- an optional output path under `docs/superpowers/specs/`.
+## Saved Spec
 
-Treat a confirmed handoff as approved input. Reopen a decision only when its recorded reversal evidence appears or an underlying premise is invalidated.
+Save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`, creating parents, unless the user supplies
+another ignored local workflow path. **Local-only artifact policy:** the Spec is a local workflow artifact.
+Do not stage or commit it. The ignored default path is not a team-sharing mechanism.
 
-## Preflight
-
-1. Confirm that a formal Spec is explicitly requested or that the task crosses a high-risk boundary.
-2. Inspect discoverable facts instead of turning them into questions.
-3. Build a decision inventory from the task, handoff, and repository evidence.
-4. Identify the highest stable public seams where acceptance behavior will be tested. Prefer existing
-   seams; a new seam that changes a public contract or architecture is a consequential decision.
-5. Separate agent-owned reversible details from user-owned consequential decisions.
-6. Return an outcome immediately if the task is not applicable or a consequential decision remains unresolved.
-
-Agent-owned details may use the safest reversible default. A user-owned decision may use an agent default only when the confirmed handoff explicitly delegates it.
-
-## Blocking Contract
-
-Use a stable `decision_id` derived from the decision subject, not from the current wording. Return exactly:
-
-```text
-BLOCKED_BY_UNRESOLVED_DECISION
-- decision_id
-- blocking_reason
-- known_constraints
-- evidence
-```
-
-This ends only the current Spec drafting call. Return the outcome to `skills/using-superpowers/SKILL.md`
-for continuation within the authorized task. Do not ask a question, generate options, choose for the user,
-add `resume_target`, or invoke grilling here.
-
-If the same `decision_id` already has a confirmed resolution and evidence has not changed, report a `Spec Gate contract conflict` and stop. Reopen it only when reversal evidence appears or a foundational premise becomes invalid.
-
-## Document Location
-
-Save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` unless the user provides another ignored local workflow path. Create the parent directory when necessary.
-
-**Local-only artifact policy:** Treat every generated design Spec as a local workflow artifact. Do not stage or commit it. The default `docs/superpowers/` path is ignored and is not a team-sharing mechanism.
-
-## Spec Schema
-
-Keep the document proportional to the decisions needed for implementation and review. Always cover the
-problem, intended behavior and scope, constraints, resolved implementation decisions, test seams and
-repeatable acceptance checks, and relevant risks or recovery. Combine related sections and omit sections
-that add no decision or evidence; do not fill a fixed set of empty headings.
-
-For complex or high-risk designs, read [references/spec-template.md](references/spec-template.md).
-Public-contract, authorization or persistent-data changes must cover compatibility, failure behavior,
-migration and rollback where relevant, even when headings are combined. Keep user approval and the
-outcome contract below. Do not include stale implementation snippets or present an unresolved choice as settled.
+For a bounded change, save a compact decision record covering verified facts and scope; resolved behavior,
+constraints and interfaces; repeatable acceptance checks; relevant risks and recovery. Combine related
+choices, cover every material decision, and avoid repeating facts or including stale implementation code.
+Public-contract changes cover compatibility and consumer impact; authorization covers trust, permissions
+and denial behavior; persistent data covers migration order, partial failure, recovery and rollback limits.
+An unresolved choice must not appear settled. Read [references/spec-template.md](references/spec-template.md)
+when interacting public seams or decisions need a fuller structure.
 
 ## Self-Review
 
-Before returning a review outcome:
+Apply every relevant check to the saved content, including for complex or high-risk Specs:
 
-1. Scan for `TODO`, `TBD`, placeholders, incomplete sections, and contradictions.
-2. Verify every consequential choice is resolved or explicitly delegated.
-3. Verify architecture, interfaces, failure behavior, migration, tests, acceptance, risk, and rollback agree.
-4. Verify each acceptance criterion maps to a repeatable automated or manual check.
-5. Verify the scope can produce either one coherent implementation ticket or a coherent ticket breakdown.
-6. For complex or high-risk specs, read `references/spec-document-reviewer-prompt.md` and apply its calibrated review.
+1. No `TODO`, `TBD`, placeholders, incomplete sections or contradictions.
+2. Every consequential choice resolved or explicitly delegated.
+3. Agreement among scope, architecture, interfaces, failure behavior, compatibility, migration and rollback;
+   normal, adversarial, retry and partial-state paths covered where relevant.
+4. Each acceptance criterion mapped to a repeatable automated seam or explicit manual check.
+5. One coherent implementation ticket or ticket breakdown can deliver the scope, with no unrequested
+   subsystem or speculative extension.
 
-Fix non-decision defects inline and repeat the self-review. A newly exposed consequential decision returns the blocking contract instead of entering user review.
+For interacting decisions or an uncertain readiness check, apply
+[references/spec-document-reviewer-prompt.md](references/spec-document-reviewer-prompt.md).
+Block on defects that can produce a wrong implementation or unsafe plan; wording and style are advisory.
+Fix non-decision defects and repeat self-review; a newly exposed consequential choice returns the blocking
+outcome. Reuse the verified write content after a successful save; reread if truncated, changed or not
+saved successfully. Avoid separate repeated scans or implementation verification before approval.
 
-## User Review Gate
+## User Review and Publication
 
-After self-review, show the saved path and a compact summary of decisions and non-blocking risks. Request artifact approval, not another requirements interview.
+Return the saved path, compact decisions and non-blocking risks with the approval request. Request
+artifact approval, not another interview. Requested revisions require self-review again; unresolved
+consequential choices return the blocking outcome. User approval marks the artifact as the approved source.
 
-- If the user requests document changes, revise the Spec and self-review again.
-- If revision exposes a consequential decision, return `BLOCKED_BY_UNRESOLVED_DECISION`.
-- If the user approves, mark the artifact as the approved Spec source.
+After approval, read `docs/agent-workflow/project-context.md` when it exists:
 
-### Tracker publication
+- Configured local tracker: copy the approved Spec to its feature `spec.md`, retaining the local-only policy.
+- External tracker: show the exact repository/project, title, body source and labels; publish only after
+  explicit confirmation of that external write. Apply `ready-for-agent` when the tracker contract defines it.
+- No configured tracker: keep the approved local artifact and report `tracker: not configured`.
 
-Read `docs/agent-workflow/project-context.md` when it exists:
-
-- For a configured local tracker, copy the approved Spec to its configured feature `spec.md` path,
-  preserving the local-only policy.
-- For an external tracker, show the exact repository/project, title, body source and labels; publish
-  only after explicit confirmation of that external write. Apply the configured `ready-for-agent`
-  label when the tracker contract defines it.
-- If no tracker is configured, keep the approved local artifact and report `tracker: not configured`.
-
-Record the local path and optional tracker reference together so `to-tickets` can consume one canonical
-approved source. Publication does not authorize tickets, implementation, commit or PR creation.
-
-After approval/publication, return control to `skills/using-superpowers/SKILL.md`; do not invoke
-planning directly.
+Record the local path and optional tracker reference as one canonical approved source. Publication does
+not authorize tickets, implementation, commit or PR creation. Return to `skills/using-superpowers/SKILL.md`
+after approval/publication; do not invoke planning directly.
 
 ## Outcomes
 
@@ -130,10 +101,5 @@ NOT_APPLICABLE
 - reason
 ```
 
-`READY_FOR_USER_REVIEW` does not mean approved. `NOT_APPLICABLE` returns routing responsibility without recommending another Skill.
-
-## Examples
-
-- A clear breaking public API migration goes directly to Spec drafting and user review.
-- An API migration with an unresolved compatibility policy returns the blocking contract before writing the document.
-- A typo, copy update, or reversible configuration edit returns `NOT_APPLICABLE`.
+`READY_FOR_USER_REVIEW` does not mean approved. A clear breaking public API migration goes directly to
+Spec drafting and user review; unresolved compatibility policy blocks before the document is written.

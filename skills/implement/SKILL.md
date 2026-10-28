@@ -5,44 +5,32 @@ description: Deliver one authorized scope through implementation, review, and ve
 
 # Implement
 
-执行 router 选定的一个连贯交付范围。Origin: `mattpocock/skills@2ab9580`，适配本项目授权与审查边界。
+交付原始用户请求、获批 Spec 或 ticket 所定义的一个范围（direct-scope contract）。实现摘要不能扩大授权。
+普通交付使用当前会话，不为满足流程创建 Spec、tracker 或新上下文；无 ticket 范围不得 claim 或写入任何 tracker。
+仅有 ticket 时读 [ticket-delivery](references/ticket-delivery.md)。未决实质用户决策或尚未批准的高风险边界返回路由。
 
-## 入口
+## 基线与隔离
 
-- direct scope：明确、低风险的用户交付请求。原始请求、目标行为、范围边界和相称验证组成
-  `direct-scope contract`；咨询不等于交付授权。
-- approved Spec scope：已获用户批准的 Spec 是范围与验收来源。
-- ticket：仅此路径先读取 [references/ticket-delivery.md](references/ticket-delivery.md)，核实 frontier，
-  再按该引用与下方共用步骤交付。无 ticket 范围不得 claim 或写入任何 tracker。
+检查 branch、staged/unstaged/untracked，记录 pre-delivery base 和 task-owned 改动，保留无关用户改动。
+按[Git 与授权规则](../../references/git-workflow.md)判断是否隔离，复用本任务已有合适工作区，不嵌套创建。
+只做必要 setup 和基线检查。clean baseline 指输入与环境已辨明；已确认属于目标问题的测试失败就是回归证据，
+不要求先修到绿色才能实施。非目标失败单列处理，不能当作预期 RED 或伪装通过。
 
-缺少可复核验收、存在实质用户决策或命中尚未批准的 formal Spec/高风险边界时，返回 router，不能猜测或实施。
-普通范围使用当前会话，不为满足流程创建新的上下文或 tracker。
+## 实施、验证、审查
 
-## 隔离与基线
-
-检查 branch、worktree、staged、unstaged 和 untracked，记录 `git rev-parse HEAD` 为 pre-delivery base，
-并记录 task-owned 改动。已有无关改动必须排除，不能回滚。
-
-是否创建 worktree 及具体操作按 `rules/05-git-workflow.md` 执行，不嵌套创建。
-只做必要 setup 与相关 baseline tests。
-只有 clean baseline 才进入实施；失败时记录命令、失败与工作区状态，返回 router 处理，不能伪装通过。
-
-## 实施、审查与验证
-
-1. 以当前范围合同实施最小完整改动，不再生成逐文件、逐步骤的实施计划。行为变化按
-   `test-driven-development` 的垂直切片推进；纯文档或没有可测试行为的整理运行对应校验。
-   已确认失败原因正确的预期 TDD RED 继续 GREEN，不触发调试。其他失败按
-   `systematic-debugging` 的分级入口处理，不跳过真实失败。
-2. 用 pre-delivery base 冻结包含 task-owned committed、staged、unstaged、untracked 的完整审查包，
-   范围合同作为 Spec source，按 `skills/code-review/SKILL.md` 选择相称的 review 模式。
-   满足该 Skill 的低风险与验证条件时可自审；需要独立审查却无法启动时不得降级。
-   修复 Critical/Important findings 后复核受影响的验收与审查项，不把部分完成报告为交付完成。
-3. 逐条核对验收，按 `rules/common/testing.md` 运行 fresh commands。已在当前阶段运行且仍对应
-   最终改动的证据可以复用；新改动、失败或未决风险才触发重跑。记录实际结果、未运行项和剩余风险。
+1. 修改前确认目标行为、受影响调用方和需保留的契约，再做最小修复。已有能证明问题的失败测试直接复用；需要新增或修改
+   行为断言、或用户要求测试先行时才读取 [test-driven-development](../test-driven-development/SKILL.md)。
+   原因明确的普通失败直接修复；未知根因或重复失败才读取调试流程，正确的 TDD RED 不触发重路由。
+2. 按项目/用户验证合同选最小充分检查；没有适用规则时用[随包验证契约](../../references/verification.md)。
+   证据已覆盖最终状态且相关输入未变时直接复用；新改动、失败或未决风险才重跑受影响检查。
+3. 按[审查分级](../code-review/references/review-policy.md)选择强度。self 直接核对用户要求、完整实际差异及证据，
+   不加载独立审查提示。需要 independent/dual 时读取完整 [code-review](../code-review/SKILL.md)，
+   使用固定基点、原始需求和完整 task-owned 差异；必要独立审查不能因缺少容量降级或写成通过。
+4. 修复重要发现后复核受影响项；已验证且输入未变的其他证据继续复用。验收、必要审查和适用质量门均满足才完成。
 
 ## 收尾与授权
 
-- 无 ticket：选定的 review 与 fresh verification 均通过后报告范围、证据和风险；到此结束，不查询或刷新 frontier。
-- ticket：验收、review 和 verification 全部通过后，回到 ticket 引用完成 resolve 与后续处理。
-- 本地交付授权不覆盖 commit、push 或创建 PR，也不扩张产品范围。用户已明确授权的后续动作按授权继续，
-  不重复索要同一批准；PR 仍须通过 `/verify pre-pr`。外部写入、merge 和 cleanup 遵循 Git 规则与用户授权。
+报告实际改动、已运行命令/结果、未运行项及剩余风险；部分完成不得写成全部交付。
+无 ticket 到此结束；ticket 依其引用继续 resolve/refresh，不能自行关闭外部 Issue。
+本地交付不覆盖 commit、push 或创建 PR；已有明确授权直接沿用，不重复索要批准。
+PR 前按 [verify](../../commands/verify.md) 复用并补齐适用证据；不因进入 pre-pr 自动重跑同一检查。

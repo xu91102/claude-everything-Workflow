@@ -3,7 +3,7 @@
 Use when one interface choice will materially affect callers, testability or long-term locality.
 
 1. Frame constraints, dependencies, current coupling and the behavior that must stay stable.
-2. Generate at least three materially different interface designs:
+2. Compare two materially different interface designs; add another if unresolved:
    - minimum surface and maximum leverage;
    - maximum flexibility;
    - simplest common caller;

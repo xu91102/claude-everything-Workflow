@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const commonmark = require("commonmark");
 
 const MANAGED_ROOTS = [
   "README.md",
@@ -59,8 +60,34 @@ function createTokenChecker({ exists, read, fail }) {
     }
 
     const body = read(file);
+    const localText = body.replace(/\b[a-z][a-z0-9+.-]*:\/\/[^\s)]+/gi, "");
+    let links;
+    let resourceLiterals;
     for (const token of tokens) {
-      if (!body.includes(token)) fail(`${file} should include ${token}`);
+      if (/^(?:skills|rules|references|agents|commands|scripts|harness)\//.test(token)) {
+        if (!links) {
+          links = new Set();
+          const literals = [];
+          const walker = new commonmark.Parser().parse(body).walker();
+          let linkDepth = 0;
+          let event;
+          while ((event = walker.next())) {
+            if (event.node.type !== "link") {
+              if (event.entering && linkDepth === 0 && event.node.literal) literals.push(event.node.literal);
+              continue;
+            }
+            linkDepth += event.entering ? 1 : -1;
+            if (!event.entering) continue;
+            const destination = event.node.destination.split(/[?#]/)[0];
+            if (!destination || /^(?:[a-z][a-z0-9+.-]*:|\/)/i.test(destination)) continue;
+            const target = path.posix.normalize(path.posix.join(path.posix.dirname(file), destination));
+            if (!target.startsWith("../") && exists(target)) links.add(target);
+          }
+          resourceLiterals = literals.join("\n").replace(/\b[a-z][a-z0-9+.-]*:\/\/[^\s)]+/gi, "");
+        }
+        if (links.has(token) || resourceLiterals.includes(token)) continue;
+      } else if (localText.includes(token)) continue;
+      fail(`${file} should include ${token}`);
     }
   };
 }
@@ -89,4 +116,4 @@ function createHarnessContext(root) {
   };
 }
 
-module.exports = { createHarnessContext };
+module.exports = { createHarnessContext, createTokenChecker };

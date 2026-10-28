@@ -2,6 +2,10 @@
 
 const assert = require("assert");
 const { validateManifest } = require("./skill-manifest-checks");
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
+const { createHarnessContext } = require("./core");
 
 function run() {
   const valid = {
@@ -129,7 +133,33 @@ function run() {
     read: () => "---\nname: demo-skill\ndescription: demo\nversion: 2.0.0\n---\n",
   }).join("\n"), /version does not match frontmatter/);
 
-  console.log("skill manifest checks tests passed");
+  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), "cew-resource-links-"));
+  try {
+    fs.mkdirSync(path.join(fixture, "skills/router"), { recursive: true });
+    fs.mkdirSync(path.join(fixture, "skills/implement"));
+    fs.writeFileSync(path.join(fixture, "skills/implement/SKILL.md"), "# Implementation\n");
+    const entry = "skills/router/SKILL.md";
+    const checkLink = body => {
+      fs.writeFileSync(path.join(fixture, entry), body);
+      const context = createHarnessContext(fixture);
+      context.requireTokens(entry, ["skills/implement/SKILL.md"]);
+      return context.errors;
+    };
+    assert.deepEqual(checkLink("[Deliver](../implement/SKILL.md#scope)\n"), [],
+      "resource contracts must follow real relative links rather than require a display label");
+    assert.ok(checkLink("[Deliver](https://example.invalid/skills/implement/SKILL.md)\n").length);
+    assert.ok(checkLink("[skills/implement/SKILL.md](../missing/SKILL.md)\n").length,
+      "a correct display path must not hide a missing destination");
+    assert.ok(checkLink("[skills/implement/SKILL.md](https://example.invalid/skills/implement/SKILL.md)\n").length,
+      "a correct display path must not hide an external destination");
+    assert.ok(checkLink("[Deliver](../../../implement/SKILL.md)\n").length);
+    fs.rmSync(path.join(fixture, "skills/implement/SKILL.md"));
+    assert.ok(checkLink("[Deliver](../implement/SKILL.md)\n").length);
+  } finally {
+    fs.rmSync(fixture, { recursive: true, force: true });
+  }
+
+  console.log("skill manifest checks tests passed (including relative resource contracts)");
 }
 
 run();

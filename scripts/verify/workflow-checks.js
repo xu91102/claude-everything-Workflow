@@ -4,6 +4,7 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 const { runGrillingSpecGateChecks } = require("./grilling-spec-gate-checks");
 const { runWorkflowOwnershipChecks } = require("./workflow-ownership");
+const { syncVerificationReference } = require("../sync-verification-reference");
 
 let root;
 let exists;
@@ -63,9 +64,18 @@ function checkSuperpowersDevLoop() {
   ]);
 
   requireTokens("commands/pr.md", [
-    "PR Gate",
-    "`/verify` 或等价验证结果",
-    "先回到验证和修复阶段",
+    "/verify",
+    "references/verification.md",
+    "references/pr-automation.md",
+    "references/git-workflow.md",
+    "FAIL / BLOCKED / NOT RUN",
+    "获准继续不等于通过",
+  ]);
+  requireTokens("rules/common/pr-automation.md", [
+    "必需的失败检查不得跳过",
+    "不能宣称 ready 或可以合并",
+    "用户明确授权",
+    "草稿不代表验收完成",
   ]);
 }
 
@@ -157,14 +167,6 @@ function checkGrillingCoreContracts() {
     "Do not re-ask them",
     "recorded reversal evidence appears",
   ]);
-  requireTokens("skills/using-superpowers/SKILL.md", [
-    "discoverable fact",
-    "user-owned decision",
-    "skills/grilling/SKILL.md",
-    "shortest applicable path",
-    "explicit formal Spec",
-    "high-risk boundary",
-  ]);
 }
 
 function checkRouteOrdering() {
@@ -193,13 +195,10 @@ function checkRouteOrdering() {
 }
 
 function checkWorkflowDocuments() {
+  if (!syncVerificationReference({ root, check: true })) {
+    fail("generated workflow references are stale; run node scripts/sync-verification-reference.js");
+  }
   runWorkflowOwnershipChecks({ read, fail, managedFiles });
-  requireTokens("skills/using-superpowers/SKILL.md", [
-    "shortest applicable path",
-    "File count, new features, and ordinary complexity affect",
-    "verification intensity, not the lane",
-    "A high-risk boundary",
-  ]);
   requireTokens("rules/01-base.md", [
     "rules/common/testing.md",
     "skills/using-superpowers/SKILL.md",
@@ -339,30 +338,7 @@ function checkCapabilitySupportDependencies(manifest, manifestPath) {
 }
 
 function checkCapabilityRouting() {
-  requireTokens("skills/using-superpowers/SKILL.md", [
-    "explicit workflow advice?",
-    "workflow advice mode",
-    "explicit TDD request?",
-    "explicit E2E or Playwright request?",
-    "skills/e2e-testing/SKILL.md",
-    "agents/e2e-runner.md",
-    "explicit harness audit?",
-    "agents/harness-optimizer.md",
-    "Agent-selected Delivery Topology",
-    "delivery request in defined scope?",
-    "independent frontier tickets with no overlapping write surface?",
-    "skills/implement/SKILL.md",
-    "skills/subagent-driven-development/SKILL.md",
-    "explicit prototype or runnable design question?",
-    "skills/prototype/SKILL.md",
-    "external engineering fact or documentation question?",
-    "skills/to-tickets/SKILL.md",
-    "merge or rebase conflict?",
-    "skills/resolving-merge-conflicts/SKILL.md",
-    "fresh session or prototype branch?",
-    "skills/handoff/SKILL.md",
-  ]);
-
+  // Resource closure and route actions are checked together by the router contract guard.
   const router = read("skills/using-superpowers/SKILL.md");
   for (const staleGate of [
     "User-invoked Delivery Gates",

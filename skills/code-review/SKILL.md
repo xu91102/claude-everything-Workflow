@@ -25,37 +25,22 @@ Review depth belongs here; callers supply the scope, base, risk and available ev
    For a standalone review with no confirmed requirements, report the Spec axis as `NOT RUN` without
    requiring an extra user confirmation; implementation completion still requires its acceptance criteria.
 
-For local fixes touching shared logic, apply the preservation requirements in `rules/02-implementation.md`.
+For local fixes touching shared logic, apply the preservation requirements in [架构与兼容规则](../../rules/02-implementation.md).
 Unrequested behavior changes fail the Spec axis even if all tests pass; missing required preservation
 evidence is `BLOCKED`, not `PASS`.
 
 ## Select review depth
 
-`--mode auto` is the default. Select by risk and verification evidence, not file count, model generation
-or confidence. State the selected mode and reason briefly.
+Review depth is owned by [review-policy](references/review-policy.md). Select self, independent or dual
+from that policy; a direct delivery label is not proof of low risk. Self-review needs only requirements,
+the actual diff and applicable evidence, without independent prompts or subagents.
 
-| Mode | Trigger | Execution |
-| --- | --- | --- |
-| self | Clear requirements, local and reversible low-risk changes, with direct checks or relevant tests covering the result; no unresolved risk or repeated unexpected failures | The implementing agent checks the diff against requirements and relevant rules, then provides verification evidence; no review subagent |
-| independent | Cross-module behavior, complex dependencies, hidden constraints, insufficient verification, repeated unexpected failures, or an explicit request for independent review | One fresh read-only subagent checks Standards and Spec against the same package |
-| dual | High-risk changes such as authorization, persistent data, destructive operations or public contracts, or an explicit request for two isolated axes | Spawn two parallel subagents: separate Standards and Spec reviewers |
-
-`--mode self|independent|dual` may request a mode, but cannot weaken the review required by the scope or
-project. Self-review requires every self condition above; otherwise use independent, or dual for high
-risk. Reassess if the scope grows or verification exposes a gap. Review never replaces required tests.
-
-For self-review, keep the result concise and use relevant existing checks or direct inspection; do not
-load the independent-review prompts, invent low-value tests, or write a long checklist just for ceremony.
-The implementing agent cannot serve as its own independent reviewer.
-
-For independent or dual review, load `references/standards-reviewer-prompt.md` and
-`references/spec-reviewer-prompt.md` only for the reviewer that needs them. Repository standards override
-smell heuristics. Each independent context receives only the frozen package, relevant rules, confirmed
-scope and verification evidence. Reviewers are read-only and must not influence each other.
-
-When independent or dual review is selected, lack of agent capacity is never a reason to downgrade to
-self. If parallelism is unavailable, run dual axes sequentially in fresh isolated contexts. If no
-independent context is available, return `BLOCKED`, mark review `NOT RUN`, and do not claim completion.
+Independent reviewers receive only the fixed package, confirmed scope, evidence and relevant rule paths
+in a fresh read-only context (`fork_turns="none"` or host equivalent). Load only the needed
+`references/standards-reviewer-prompt.md` or `references/spec-reviewer-prompt.md`; repository rules override heuristics.
+Batch independent reads/checks, retain each exit code and failure, and keep dependent actions sequential.
+Return findings together in one report per package; use commentary for routine progress instead of message
+round trips. The caller fixes findings before sending the updated package for recheck. Reviewers must not influence each other.
 
 ## Report and follow-up
 
