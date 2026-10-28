@@ -44,6 +44,9 @@ jobs:
       - name: Test plugin distribution
         run: npm run test:plugins
 
+      - name: Test commit-quality hook
+        run: npm run test:hooks
+
       - name: Validate npm package
         run: npm run pack:dry-run
 

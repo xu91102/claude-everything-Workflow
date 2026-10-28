@@ -23,7 +23,8 @@
     "test:install-rules": "node scripts/verify/install-rules.test.js",
     "test:plugins": "node --test scripts/verify/plugin-distribution.test.js",
     "verify:upstream": "node scripts/verify-upstream-capability-map.js",
-    "pack:dry-run": "npm pack --dry-run"
+    "pack:dry-run": "npm pack --dry-run",
+    "test:hooks": "node --test scripts/verify/commit-quality.test.js"
   },
   "dependencies": {
     "commonmark": "0.31.2",
