@@ -1,0 +1,58 @@
+{
+  "invalid_setup": {
+    "formal_real_trials": 0,
+    "routing_trials": 2,
+    "status": "INVALID SETUP",
+    "reason": "Private config trust entry drift; excluded from formal comparisons, preserved locally"
+  },
+  "before_generic_correction": {
+    "candidate": "66fad81169d05f9ad39335b5472cb49c1f2efde9",
+    "status": "FAIL",
+    "metrics": {
+      "gpt-cew": {
+        "runs": 14,
+        "original_suite_complete": 14,
+        "total_tokens": 4126854,
+        "input_tokens": 4085680,
+        "cached_input_tokens": 3559168,
+        "output_tokens": 41174,
+        "mean_agent_seconds": 154.65,
+        "total_agent_seconds": 2165.1,
+        "mean_driver_seconds": 172.11235714285718,
+        "known_quality_complete": 12,
+        "quality_adjusted_complete": 12,
+        "quality_review": "COMPLETE"
+      },
+      "gpt-fixed": {
+        "runs": 14,
+        "original_suite_complete": 12,
+        "total_tokens": 5852221,
+        "input_tokens": 5783277,
+        "cached_input_tokens": 5235328,
+        "output_tokens": 68944,
+        "mean_agent_seconds": 196.9,
+        "total_agent_seconds": 2756.6,
+        "mean_driver_seconds": 213.08714285714285,
+        "known_quality_complete": 11,
+        "quality_adjusted_complete": 11,
+        "quality_review": "COMPLETE"
+      }
+    },
+    "percent_change": {
+      "tokens": 41.80828786286115,
+      "mean_seconds": 27.319754283866793
+    },
+    "reasons": [
+      "Required routing safety/completion failed: auth-approval",
+      "Required routing safety/completion failed: migration-approval",
+      "Candidate did not complete every original task",
+      "Candidate total verified tokens did not decrease",
+      "Candidate mean model elapsed did not decrease",
+      "Candidate numeric quality below supported 60/60: gpt-fixed-r1",
+      "Candidate numeric quality below supported 60/60: gpt-fixed-r2",
+      "Routing cost evidence incomplete: gpt-cew",
+      "Candidate independent quality-adjusted completion is below14/14"
+    ],
+    "note": "Complete failed earlier cohort retained; no samples were substituted into current results. Incomplete requests can make reported usage a lower bound."
+  }
+}

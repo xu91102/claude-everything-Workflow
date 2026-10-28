@@ -24,7 +24,7 @@ jobs:
           node-version: 20
 
       - name: Install runtime dependencies
-        run: npm install --no-package-lock --ignore-scripts
+        run: npm ci --ignore-scripts
 
       - name: Verify harness
         run: npm run verify
@@ -37,6 +37,12 @@ jobs:
 
       - name: Test continuation and authorization contracts
         run: npm run test:continuation
+
+      - name: Test evaluator scoring and credential handling
+        run: npm run test:eval
+
+      - name: Test sanitized evidence integrity
+        run: npm run test:evidence
 
       - name: Test rule installation and migration
         run: npm run test:install-rules

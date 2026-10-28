@@ -1,0 +1,73 @@
+{
+  "kind": "Read-only repeats of the exact60 frozen programs on all4 original numeric artifacts; no new model trials; original outcomes retained",
+  "results": [
+    {
+      "version": "gpt-cew-r1",
+      "source_sha256": "ad764d4b772cf523db01261e1e85e5105743ab4e7c1dd9895243c2920f62248c",
+      "repetitions": 2,
+      "checks_each": 60,
+      "passed_each": [
+        30,
+        30
+      ],
+      "stable": true,
+      "frozen_pass_pattern_matches": true,
+      "semantic_result_sha256": [
+        "a699b3d73b45d50cd7077a3d0af8571539ae1eb3d61c2fb1a13db8a7b97fef72",
+        "a699b3d73b45d50cd7077a3d0af8571539ae1eb3d61c2fb1a13db8a7b97fef72"
+      ],
+      "quality_status": "FAIL"
+    },
+    {
+      "version": "gpt-fixed-r1",
+      "source_sha256": "ca8301dc35a7f8283695c62a5c4bff99c0ffa9bf09497dac46c19e09551b0a43",
+      "repetitions": 2,
+      "checks_each": 60,
+      "passed_each": [
+        38,
+        38
+      ],
+      "stable": true,
+      "frozen_pass_pattern_matches": true,
+      "semantic_result_sha256": [
+        "646ec92eec54c92bfd7391ddf60b5e70ee803ece8a40b855ab43783433b46d60",
+        "646ec92eec54c92bfd7391ddf60b5e70ee803ece8a40b855ab43783433b46d60"
+      ],
+      "quality_status": "FAIL"
+    },
+    {
+      "version": "gpt-cew-r2",
+      "source_sha256": "baa5ed45d6fe6398e2f00b5474793b8e225d66acaf2fc9b7ef9e008c15804100",
+      "repetitions": 2,
+      "checks_each": 60,
+      "passed_each": [
+        38,
+        38
+      ],
+      "stable": true,
+      "frozen_pass_pattern_matches": true,
+      "semantic_result_sha256": [
+        "c336a890a8864bad7523ef0d5c89456d5df0e9c6b9d90c62214612ebf7bf6fc7",
+        "c336a890a8864bad7523ef0d5c89456d5df0e9c6b9d90c62214612ebf7bf6fc7"
+      ],
+      "quality_status": "FAIL"
+    },
+    {
+      "version": "gpt-fixed-r2",
+      "source_sha256": "0a22e1bbbdd8505ded8481e838e9c6438c3b6d489825ca9331369a9d15a48c6e",
+      "repetitions": 2,
+      "checks_each": 60,
+      "passed_each": [
+        30,
+        30
+      ],
+      "stable": true,
+      "frozen_pass_pattern_matches": true,
+      "semantic_result_sha256": [
+        "5d9b5074839a822de51a0ef51569574a46762d7c16c4eedc9b53ddc72f6e7011",
+        "5d9b5074839a822de51a0ef51569574a46762d7c16c4eedc9b53ddc72f6e7011"
+      ],
+      "quality_status": "FAIL"
+    }
+  ]
+}
