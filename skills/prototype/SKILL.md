@@ -12,8 +12,8 @@ A prototype answers one question. It is not a production shortcut.
 ## Select the Branch
 
 - Logic, state transition, data shape or API feel → read `references/logic.md`.
-- Visual hierarchy, layout or interaction shape → read `references/ui.md`; use
-  `skills/visual-companion/SKILL.md` when useful for the comparison and the user consents.
+- Visual hierarchy, layout or interaction shape → read `references/ui.md` and
+  `skills/visual-companion/SKILL.md`.
 
 If the branch is ambiguous and the user is unavailable, use surrounding code as evidence: backend
 or state code defaults to logic; page/component work defaults to UI. State the assumption.
