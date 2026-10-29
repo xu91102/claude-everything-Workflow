@@ -1,0 +1,34 @@
+<!-- Generated from rules/05-git-workflow.md; update with node scripts/sync-verification-reference.js. -->
+
+# Git 提交规范
+
+需要创建、复用或清理 worktree 的具体命令时，按需读取 [references/git-worktrees.md](git-worktrees.md)；隔离条件和授权边界仍以本规则为准。
+
+## Worktree 分支开发 (CRITICAL)
+
+- 存在可能被覆盖的用户改动、并行写入、受保护分支上的实现或高风险改动时，使用独立 `git worktree` 和任务分支；已有属于本任务且基线正确的 worktree 直接复用。
+- 干净任务分支上的普通新功能、修复、文档或配置整理，不按文件数量或新功能标签强制创建；本任务已记录的 task-owned 改动不单独触发新的隔离。
+- 创建 worktree 前必须检查当前仓库状态，确认基础分支、当前分支和未提交改动。
+- 为新任务新建 worktree 时，除非用户明确指定其他基础分支，必须先拉取最新远端 `main`，再从最新 `origin/main` 创建工作区和任务分支；不得以过期的本地 `main` 或其他功能分支作为基础。仓库不存在 `main` 时，先查远端默认分支和项目约定；仍有实际用户决策才询问。复用正在执行本任务的 worktree 时保留已记录的基线，不因远端推进重置进行中的工作。
+- 需要隔离时，实现、验证、审查、提交都在任务 worktree 内完成，不改原始 checkout。
+- 不创建嵌套 worktree，不丢弃或覆盖用户已有改动。
+
+## 提交格式 (CRITICAL)
+
+使用 `<type>(<scope>): <subject>`：`feat` 新功能、`fix` 修复、`docs` 文档、`style` 不影响逻辑的格式调整、`refactor` 重构、`perf` 性能、`test` 测试、`chore` 构建或工具。提交信息必须描述实际改动，例如 `feat(user): 添加用户登录功能`。
+
+## 提交检查清单
+
+提交前确认：提交信息符合规范；代码已通过 lint；只暂存本次任务相关文件；PR 前验证结果已记录。代码与安全禁止项统一见 [rules/07-forbidden.md](../rules/07-forbidden.md)。
+
+## Superpowers 本地工件
+
+- Superpowers 生成的 Spec 和本地 tickets 仅用于本地工作流，无论保存位置都不得暂存或提交。
+- 默认目录 `docs/superpowers/` 由 `.gitignore` 保留在本地；PR 只包含实现、测试和长期维护文档。
+
+## PR 授权边界
+
+- 不在 `main`、`master`、`prod` 等受保护分支直接提交。
+- 用户明确要求推送分支或创建 PR 时，可在同一任务与授权范围内直接执行，无需重复确认。未获明确授权、授权不清，或范围/风险发生实质变化时，先向用户确认。
+- 创建 PR 的授权不覆盖合并 PR 或发布；合并和发布必须分别获得用户对该动作的明确授权，同一范围内已有授权不重复索要。
+- 用户要求提交、推送、创建 PR 时，读取 `commands/pr.md` 和 [rules/common/pr-automation.md](pr-automation.md)；后者只维护 PR 的 CI、制品和描述，不重复本文件的 Git 与授权规则。

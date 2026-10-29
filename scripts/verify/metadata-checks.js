@@ -16,6 +16,7 @@ const PACKAGE_ONLY_PATHS = [
   "scripts/install.sh",
   "scripts/install.ps1",
   "scripts/install-rules.js",
+  "scripts/sync-verification-reference.js",
   "scripts/legacy-common-rule-hashes.json",
   "scripts/verify-harness.js",
   "scripts/verify/core.js",

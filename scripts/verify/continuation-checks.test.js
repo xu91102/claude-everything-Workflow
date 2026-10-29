@@ -3,25 +3,21 @@
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
-const { createHarnessContext } = require("./core");
+const { createHarnessContext, createTokenChecker } = require("./core");
 const { runGrillingSpecGateChecks } = require("./grilling-spec-gate-checks");
 
 const root = path.resolve(__dirname, "../..");
 const domain = "skills/domain-modeling/SKILL.md";
 const outcomes = "skills/using-superpowers/references/process-outcomes.md";
 const spec = "skills/spec-gate/SKILL.md";
+const router = "skills/using-superpowers/SKILL.md";
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 
 // Inject regressions in memory so tests exercise the real gates without changing the working tree.
 function verify(overrides = {}) {
   const context = createHarnessContext(root);
   context.read = (file) => overrides[file] ?? read(file);
-  context.requireTokens = (file, tokens) => {
-    if (!context.exists(file)) return context.fail(`${file} is missing`);
-    for (const token of tokens) {
-      if (!context.read(file).includes(token)) context.fail(`${file} should include ${token}`);
-    }
-  };
+  context.requireTokens = createTokenChecker(context);
   runGrillingSpecGateChecks(context);
   return context.errors;
 }
@@ -91,6 +87,30 @@ const regressions = [
     file: spec,
     body: read(spec).replace("the user has explicitly approved it", "the agent considers it ready"),
     error: /should include the user has explicitly approved it/,
+  },
+  {
+    name: "ordinary document edit starts the heavy chain",
+    file: router,
+    body: read(router).replace("不生成 Spec/ticket 或加载完整实现/TDD/审查链", "生成 Spec/ticket 并加载完整实现/TDD/审查链"),
+    error: /route .*无行为变化.*missing action/,
+  },
+  {
+    name: "a single decision triggers a full interview",
+    file: router,
+    body: read(router).replace("不为单问题加载访谈流程", "为单问题加载访谈流程"),
+    error: /route .*unresolved user-owned decision.*missing action/,
+  },
+  {
+    name: "high risk implementation before approval",
+    file: router,
+    body: read(router).replace("批准后才实施", "直接实施后补批准"),
+    error: /route .*high-risk boundary.*missing action/,
+  },
+  {
+    name: "verification creates acceptance infrastructure by default",
+    file: router,
+    body: read(router).replace("普通完成验证不触发工具建设", "普通完成验证先建设工具"),
+    error: /route .*explicit project verification.*missing action/,
   },
 ];
 

@@ -5,110 +5,63 @@ description: Route engineering delivery and explicitly requested engineering wor
 
 # Using Superpowers
 
-Own routing and continuation. Skills return outcomes here instead of selecting one another.
-
-## Applicability
-
-用于工程交付（实现、调试、测试、审查）及用户明确请求的工程工作流，并接续这些流程的返回结果。
-普通问答、翻译、总结和一般资料检索直接处理；复杂度本身不触发本路由。
-
-## Priority
-
-User instructions, `AGENTS.md`, `CLAUDE.md`, and repository rules take precedence over Skills,
-commands, agents, and hooks, which take precedence over default behavior.
-
-## Skill Invocation Rule
-
-Classify intent, discoverable facts, user-owned decisions, and risk; select the shortest applicable path
-below and read only its Skill. Briefly announce the selection, then act. Do not load a chain of Skills
-in anticipation of later stages. Reuse a Skill already read in this task unless it changed or context
-was lost; returning here means applying the routing decision, not reading this file again.
-
-Expected TDD RED stays in the current implementation loop. Do not reroute it as a reported bug.
-An explicit request may use ordinary language or a native `/name` or `$name` invocation.
-For handoff, triage and improve-codebase-architecture,
-require the corresponding user request; complexity or a router match alone is insufficient.
-Do not ask users to repeat an already clear request using command syntax. Skill selection never
-expands authorization for publishing, external writes, or other consequential actions.
+Own routing and continuation. Choose the shortest applicable path; do not preload a chain of Skills.
+用户、项目及已生效 Rules 优先于本包默认值。下列相对链接属于当前分发包，不要求向目标项目安装规则。
+普通问答、翻译与资料总结直接处理。工程任务先识别原始需求、可查事实、真实用户决策和风险。
 
 ## Three Lanes
 
-The three lanes are: direct (clear low-risk task), needs-decision (grilling inline), and formal-spec
-(explicit formal Spec or high-risk boundary). File count, new features, and ordinary complexity affect
-verification intensity, not the lane. Resolve only consequential user decisions that tools cannot discover.
+The three lanes are: direct (clear low-risk task), needs-decision, and formal-spec.
+File count, new features, and ordinary complexity affect verification intensity, not the lane.
+A high-risk boundary is a costly-to-reverse architecture/service decision, breaking public contract,
+authorization, persistent data/schema migration, or irreversible side effect. 按既有契约修复公开函数不自动改变公共契约。
 
 ## Routing
 
-Use process skills before implementation skills:
+按当前决策选一个入口；高风险条件优先，用户明确指定的流程优先于默认路径。
 
-```text
-Task arrives
-  -> explicit workflow advice?                    -> workflow advice mode
-  -> explicit documented grilling request?        -> grilling explicit + domain-modeling persistent mode
-  -> explicit grilling request?                    -> grilling explicit
-  -> explicit handoff or fresh session or prototype branch?
-                                                     -> skills/handoff/SKILL.md
-  -> explicit triage request?                      -> skills/triage/SKILL.md
-  -> explicit TDD request?                         -> skills/test-driven-development/SKILL.md
-  -> explicit project verification setup/maintenance or real-flow acceptance request?
-                                                     -> skills/feature-acceptance/SKILL.md
-  -> explicit E2E or Playwright request?           -> skills/e2e-testing/SKILL.md + agents/e2e-runner.md
-  -> explicit harness audit?                       -> agents/harness-optimizer.md
-  -> explicit architecture-health audit?           -> skills/improve-codebase-architecture/SKILL.md
-  -> merge or rebase conflict?                     -> skills/resolving-merge-conflicts/SKILL.md
-  -> reported bug or unexplained/repeated failure? -> skills/systematic-debugging/SKILL.md
-  -> discoverable fact?                            -> inspect it; do not ask
-  -> external engineering fact or documentation question? -> inspect primary sources directly; cite the answer
-  -> explicit prototype or runnable design question? -> skills/prototype/SKILL.md
-  -> unresolved user-owned decision?               -> skills/grilling/SKILL.md (grilling inline)
-       high-risk or explicit formal Spec context?  -> resume_target: spec-gate
-  -> explicit formal Spec or high-risk boundary?   -> spec-gate
-  -> delivery request in defined scope?            -> select delivery topology
-       -> durable multi-session/tracker graph?     -> skills/to-tickets/SKILL.md
-       -> independent frontier tickets with no overlapping write surface?
-                                                     -> skills/subagent-driven-development/SKILL.md
-       -> otherwise                                 -> skills/implement/SKILL.md
-  -> behavior change with a test path?             -> test-driven-development
-  -> new feature or other Git-rule isolation need? -> rules/05-git-workflow.md
-  -> completion, fixed, or ready claim?            -> rules/common/testing.md
-  -> skill discovery or install request?           -> use available host tooling for the explicit request
-  -> external skill learning or edit?              -> rules/common/skills-learning.md
-  -> otherwise                                     -> shortest applicable loop
-```
+| 当前情况 | 动作 |
+| --- | --- |
+| explicit workflow advice | 只说明入口、前提和验收，不实施、不写文件或 tracker |
+| discoverable fact | 先检查文件、状态或主要来源，不反问用户 |
+| unresolved user-owned decision? | 普通任务直接问一个实质问题（grilling inline），等待答案后接续；不为单问题加载访谈流程 |
+| explicit formal Spec or high-risk boundary? | [skills/spec-gate/SKILL.md](../spec-gate/SKILL.md)；未解决用户决策时先澄清，resume_target: spec-gate；批准后才实施 |
+| explicit grilling request / explicit documented grilling request | [grilling explicit](../grilling/SKILL.md)；要求持久领域文档时才加 [domain-modeling](../domain-modeling/SKILL.md) |
+| 原因已由错误与调用链证实的普通 bug | 最小修复及原问题回归；不自动进入完整诊断 |
+| 根因不明、重复失败、flaky 或性能回归 | [systematic-debugging](../systematic-debugging/SKILL.md)；预期 TDD RED 留在实现循环 |
+| 无行为变化的文字或格式修正 | 直接修改、核对差异并运行适用校验，不生成 Spec/ticket 或加载完整实现/TDD/审查链 |
+| 清晰且获准的可逆交付范围 | [skills/implement/SKILL.md](../implement/SKILL.md) |
+| explicit TDD request，或需要新增行为断言 | [test-driven-development](../test-driven-development/SKILL.md) |
+| explicit project verification setup/maintenance 或真实流程验收 | [feature-acceptance](../feature-acceptance/SKILL.md)；普通完成验证不触发工具建设 |
+| explicit E2E / Playwright request | [e2e-testing](../e2e-testing/SKILL.md) |
+| active merge/rebase conflict | [resolving-merge-conflicts](../resolving-merge-conflicts/SKILL.md) |
+| explicit handoff、triage、architecture-health audit | 分别用 [handoff](../handoff/SKILL.md)、[triage](../triage/SKILL.md)、[improve-codebase-architecture](../improve-codebase-architecture/SKILL.md)；自然语言请求有效 |
+| explicit prototype | [prototype](../prototype/SKILL.md)，由其区分逻辑/UI 验证及视觉工具同意条件 |
+| explicit harness audit / skill discovery / external skill learning | 按请求使用 `agents/harness-optimizer.md`、宿主发现能力或 [技能维护规则](../../rules/common/skills-learning.md) |
 
-A high-risk boundary is a costly-to-reverse architecture or service boundary, public-contract compatibility, authentication or authorization boundary, persistent data/schema migration, or irreversible external side effect. Record this classification before grilling so its handoff can resume `spec-gate`.
+普通单问题直接澄清；只有显式访谈或正式流程需要其完整交接协议时才读取 grilling。
+不要要求用户改用命令或重复已有授权。相关 Skill 已读且未变化时复用；返回路由不等于重读此文件。
+批量读取当前已知且独立的状态、实现、测试与规则片段；依赖先前结果的后续动作顺序执行。
 
-### Workflow advice mode
+## Delivery Topology
 
-只返回推荐入口与原因、前置条件、需要补齐的用户决策或 Spec/tickets/map/handoff，以及直到
-审查和验证的闭环路径。不要调用下一 Skill、写文件或修改 tracker。
-
-### Agent-selected Delivery Topology
-
-用户要求完成一个定义明确的交付范围后，router 自行选择 `implement`、`to-tickets` 或
-`subagent-driven-development`；选择依据是持续性、依赖图、写入面和验证成本，而不是用户是否记得某个
-Skill 名称。开始时用一行说明所选拓扑及理由，然后继续执行。
-
-- 一个可在当前上下文完成的连贯范围，使用 `implement`。
-- 需要跨会话、tracker 或可恢复依赖图时，使用 `to-tickets`。这仍必须展示 ticket 的行为、验收标准与
-  blocker，并在发布前获得用户对 ticket contract 的批准。
-- 只有至少两张已批准、无 blocker、写入面不重叠的 frontier tickets，才使用 SDD。不能安全并行时选择
-  串行 `implement`，不要为了使用 subagent 人为拆票。
-
-用户的交付授权覆盖已批准范围内的本地实现与拓扑选择，不覆盖新的产品范围、未决用户决策、外部 tracker
-mutation、commit、push、PR 或不可逆副作用。新的 frontier 只有仍在该授权范围内时才能由 router 再次选择
-执行拓扑。
+默认在当前会话用 implement 交付一个连贯范围；开始时简述选择及原因。
+只有确需持久跨会话依赖图才进入 [to-tickets](../to-tickets/SKILL.md)，发布前批准 ticket contract。
+仅当至少两张已批准、无 blocker 且写入面独立的 frontier tickets 可安全并行时进入
+[subagent-driven-development](../subagent-driven-development/SKILL.md)；不人为拆票或为普通任务建 tracker。
+隔离按 [Git 规则](../../references/git-workflow.md)，不因任务清晰省略用户改动保护或必要隔离。
 
 ## Process Outcomes
 
-Only when processing a grilling/Spec outcome or preparing a cross-session handoff, read
-[references/process-outcomes.md](references/process-outcomes.md). Follow the matching outcome before
-continuing; a self-reviewed Spec is not user approval. Ordinary direct delivery does not load this reference.
+仅处理 grilling/Spec outcome 或跨会话交接时读
+[references/process-outcomes.md](references/process-outcomes.md)。Ordinary direct delivery does not load this reference.
+现有范围授权不扩张到新的产品范围、未决用户决策、tracker、commit、push、PR、merge 或发布；已有相应授权直接沿用。
 
 ## Compatibility Alias
 
-For one release cycle, interpret a user explicitly asking for the old name `brainstorming` as a formal Spec request. Explain that the entry moved to `/to-spec`; route through the same optional grilling and `spec-gate` path. Do not expose an old Skill shim or a second protocol source.
+For one release cycle, interpret the old name `brainstorming` as `/to-spec`；不恢复旧入口或第二套协议。
 
 ## Completion
 
-Before saying work is complete, fixed, passing, or ready, apply `rules/common/testing.md` and report fresh evidence, skipped checks, and remaining risk.
+按[审查分级](../code-review/references/review-policy.md)和适用验证规则收尾；无项目/用户验证规则时用
+[随包验证契约](../../references/verification.md)。同一最终状态的有效证据复用，不为完成或提交重复跑检查。

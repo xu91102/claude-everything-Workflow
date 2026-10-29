@@ -137,9 +137,21 @@ function checkRouterContract({ exists, read, fail, requireTokens }) {
   const file = "skills/using-superpowers/SKILL.md";
   requireTokens(file, [
     "three lanes",
+    "shortest applicable path",
+    "verification intensity, not the lane",
+    "用户、项目及已生效 Rules 优先",
     "[references/process-outcomes.md](references/process-outcomes.md)",
     "Ordinary direct delivery does not load this reference",
-    "spec-gate",
+    "skills/spec-gate/SKILL.md", "skills/implement/SKILL.md",
+    "skills/grilling/SKILL.md", "skills/systematic-debugging/SKILL.md",
+    "skills/test-driven-development/SKILL.md", "skills/feature-acceptance/SKILL.md",
+    "skills/e2e-testing/SKILL.md", "skills/resolving-merge-conflicts/SKILL.md",
+    "skills/handoff/SKILL.md", "skills/triage/SKILL.md",
+    "skills/improve-codebase-architecture/SKILL.md", "skills/prototype/SKILL.md",
+    "skills/to-tickets/SKILL.md", "skills/subagent-driven-development/SKILL.md",
+    "references/verification.md", "skills/code-review/references/review-policy.md",
+    "agents/harness-optimizer.md", "rules/common/skills-learning.md",
+    "至少两张已批准、无 blocker 且写入面独立", "不人为拆票",
   ]);
   requireTokens(PROCESS_OUTCOMES, [
     "BLOCKED_BY_UNRESOLVED_DECISION",
@@ -156,6 +168,28 @@ function checkRouterContract({ exists, read, fail, requireTokens }) {
     "spec-gate",
   ]);
   if (!exists(file) || !exists(PROCESS_OUTCOMES)) return;
+
+  // Check each action in its own route, so a mention elsewhere cannot hide a lost gate.
+  const rows = read(file).split("\n").filter((line) => line.startsWith("|"))
+    .map((line) => line.split("|").slice(1, -1).map((cell) => cell.trim()));
+  for (const [condition, actions] of [
+    [/explicit workflow advice/, [/只说明/, /不实施/]],
+    [/discoverable fact/, [/先检查/, /不反问/]],
+    [/unresolved user-owned decision/, [/直接问一个/, /等待答案/, /不为单问题加载/]],
+    [/explicit formal Spec or high-risk boundary/, [/\.\.\/spec-gate\/SKILL\.md/, /批准后才实施/]],
+    [/根因不明/, [/systematic-debugging\/SKILL\.md/, /预期 TDD RED 留在实现循环/]],
+    [/无行为变化/, [/直接修改/, /不生成 Spec\/ticket/, /不.*加载完整实现\/TDD\/审查链/]],
+    [/清晰且获准的可逆/, [/\.\.\/implement\/SKILL\.md/]],
+    [/explicit TDD request/, [/需要新增行为断言/, /test-driven-development\/SKILL\.md/]],
+    [/explicit project verification/, [/feature-acceptance\/SKILL\.md/, /普通完成验证不触发工具建设/]],
+    [/explicit E2E/, [/e2e-testing\/SKILL\.md/]],
+  ]) {
+    const row = rows.find(([key]) => condition.test(key));
+    if (!row) fail(`router is missing route ${condition}`);
+    else for (const action of actions) {
+      if (!action.test(row.join(" | "))) fail(`router route ${condition} is missing action ${action}`);
+    }
+  }
 
   const body = read(PROCESS_OUTCOMES);
   for (const staleGate of [

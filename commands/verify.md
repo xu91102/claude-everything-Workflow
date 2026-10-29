@@ -1,89 +1,33 @@
 ---
-description: 运行全面验证检查
+description: 按改动风险验证并复用最终状态证据
 ---
 
-# /verify - 代码验证
+# /verify - 验证与证据复核
 
-`/verify` 是 Superpowers 风格闭环中的 Verify Gate。提交、推送或创建 PR 前，必须有明确验证结果：已运行检查、未运行检查及原因、失败项、剩余风险，以及是否可以进入 `/pr`。
+Verify Gate：确认哪些用户要求已经有证据、哪些检查仍缺失，以及是否可以进入 `/pr`。
+优先遵守项目和用户验收规则；缺省用[随包验证契约](../references/verification.md)。
 
-对当前代码库运行全面验证。
+## 模式
 
-## 使用方式
+- `/verify`：按实际改动和风险选择最小充分验证。
+- `/verify quick`：仅运行覆盖当前反馈需要的检查，不代替其他必要质量门。
+- `/verify full`：用户明确要求的完整适用检查；没有对应配置的层级说明不适用。
+- `/verify pre-commit`：复核提交范围与适用证据，不自动做发布验证。
+- `/verify pre-pr`：复核 PR 所需证据、制品和风险；遵守项目/用户 PR 合同，
+  缺省读 [rules/common/pr-automation.md](../references/pr-automation.md)。
 
-```
-/verify          # 完整检查
-/verify quick    # 仅构建+类型
-/verify pre-pr   # PR 前全面检查
-```
+## 执行
 
-## 验证流程
+1. 复用已查明的项目命令、改动范围和约束；仅未知时读取 package/workspace/CI 配置。
+2. 先对照现有证据及其相关输入。检查已覆盖最终状态时直接引用，不因换阶段重复运行。
+3. 对证据缺口运行最窄充分检查；按受影响依赖、风险、项目合同或明确 full 要求扩展。
+   只有影响真实流程或项目质量门要求时才跑 E2E；不因发现 Playwright 自动执行全部用例。
+4. 保存实际退出码和关键失败，定位可安全修复的问题；修复后仅重跑受影响检查。
+   必需检查失败或未运行不能标为通过。失败报告缺失、无有效断言或测试被跳过都不是 PASS。
+5. 本仓库 Harness 的声明/链接/分发检查复用 `npm run verify`，不向其他项目强塞本仓库命令。
 
-`quick` 只执行项目识别和构建/类型检查；`full` 执行完整流程；`pre-pr` 在 `full` 基础上补充 PR 风险、制品和描述建议。
+## 报告
 
-按以下顺序执行；层级遵循 `rules/common/testing.md` 的验证分层，此处只列出具体执行动作：
-
-1. **项目识别**
-   - 读取 `package.json`、workspace 配置、CI 配置和 README
-   - 确认包管理器、monorepo package、已有脚本
-
-2. **仓库卫生**
-    - 检查临时文件、备份文件、调试残留
-    - 检查 hooks / command / agent 配置引用是否存在
-    - 对本仓库 Harness 配置运行 `node scripts/verify-harness.js`
-
-3. **Lint 检查**
-   - 运行代码检查器
-   - 报告警告和错误
-
-4. **测试套件**
-   - 优先运行相关单测
-   - PR 前运行仓库规定的 server/web/package 测试
-   - 报告通过/失败数量
-   - 报告覆盖率（如项目已配置）
-
-5. **构建与类型**
-   - 运行项目构建命令；失败则报告错误并停止
-   - 运行 TypeScript 类型检查并报告所有错误（文件:行号）
-
-6. **E2E 检查**
-   - 若项目已配置 Playwright，运行 E2E（如 `npx playwright test` 或 `package.json` 中的脚本）
-   - 失败时报告 trace、screenshot、HTML report、test-results 路径
-
-7. **Console.log 审计**
-   - 搜索源文件中的 console.log
-   - 报告位置
-
-8. **Git 状态**
-   - 显示未提交的更改
-   - 显示自上次提交后修改的文件
-
-## 输出格式
-
-```
-验证结果: [通过/失败]
-
-构建:    [OK/失败]
-类型:    [OK/X 错误]
-Lint:    [OK/X 问题]
-测试:    [X/Y 通过, Z% 覆盖率]
-E2E:     [OK/失败/未配置]
-日志:    [OK/X 个 console.log]
-
-可提交 PR: [是/否]
-```
-
-## 参数
-
-- `quick` - 仅构建 + 类型
-- `full` - 所有检查（默认）
-- `pre-commit` - 提交相关检查
-- `pre-pr` - 完整检查 + 安全扫描
-
-## PR 前补充
-
-`pre-pr` 模式需要读取 `rules/common/pr-automation.md`，并输出：
-
-- 已运行命令和结果
-- 未运行检查及原因
-- 失败制品路径
-- 剩余风险和建议的 PR 描述
+给出已运行检查及结果、复用证据及适用范围、未运行检查及原因、失败制品和剩余风险。
+结论用 PASS / FAIL / BLOCKED / NOT RUN；说明是否可以进入 `/pr`，不要用总测试数替代验收。
+已获准创建草稿不改变失败状态，也不等于可以合并。没有发布或外部写授权时，验证结束不自动提交、推送或发布。

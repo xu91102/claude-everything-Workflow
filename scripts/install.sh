@@ -155,6 +155,7 @@ remove_package_only_paths() {
         "scripts/install.sh" \
         "scripts/install.ps1" \
         "scripts/install-rules.js" \
+        "scripts/sync-verification-reference.js" \
         "scripts/legacy-common-rule-hashes.json" \
         "scripts/verify-harness.js" \
         "scripts/verify/core.js" \
