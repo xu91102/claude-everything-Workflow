@@ -141,11 +141,14 @@ npm run test:manifest
 npm run test:invocation
 npm run test:continuation
 npm run test:install-rules
+npm run test:diagnostics
 npm run verify:upstream
 npm run pack:dry-run
 ```
 
 `verify:upstream` 检查已登记的上游能力映射，不代表与最新上游完全一致。`npx claude-everything-workflow verify` 检查已发布的分发包，而不是当前业务项目。两者都不能证明 Agent 的真实任务效果。
+
+[实际能力诊断与五类加载采样](docs/capability-diagnostics.md)：`cew doctor --host codex` / `cew loading --trace FILE --case small-fix`。
 
 提交贡献时说明问题与预期行为，保持改动范围集中，并列出实际运行的检查。具体要求见 [Git 规则](rules/05-git-workflow.md)。
 

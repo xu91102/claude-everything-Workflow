@@ -14,6 +14,16 @@ function main() {
     process.exit(0);
   }
 
+  if (command === "loading") {
+    require("../scripts/diagnostics/loading").main(args);
+    return;
+  }
+
+  if (command === "doctor") {
+    require("../scripts/diagnostics/capabilities").main(args);
+    return;
+  }
+
   if (command === "install") {
     runInstall(args);
     return;
@@ -95,6 +105,8 @@ function printHelp() {
 Usage:
   cew install [--claude-only|--codex-only] [--dry-run]
   cew verify
+  cew doctor [--host all|codex|claude] [--json]
+  cew loading --trace FILE --case ID [--root DIR] [--json]
 
 Examples:
   npx claude-everything-workflow install

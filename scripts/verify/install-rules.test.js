@@ -251,6 +251,10 @@ function checkInstallerEntrypoint() {
       "安装不应保留仅供包内验证的续接测试");
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/plugin-distribution.test.js")), false,
       "安装不应保留仅供包内验证的插件分发测试");
+    for (const file of ["capabilities.js", "loading.js", "sample-loading.js", "capabilities.test.js", "loading.test.js", "sample-loading.test.js"]) {
+      assert.equal(fs.existsSync(path.join(profile, host, "scripts/diagnostics", file)), false,
+        "诊断 CLI 及采样属于分发包，不应复制到用户运行目录");
+    }
     assert.match(read(path.join(profile, host, "skills/handoff/agents/openai.yaml")),
       /allow_implicit_invocation: true/);
   }

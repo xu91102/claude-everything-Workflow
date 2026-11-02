@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "description": "Natural-language sampling cases, not a second routing policy. Assertions observe reads only; successful routing and behavior still need transcript review.",
+  "cases": [
+    {
+      "id": "question",
+      "label": "普通问答",
+      "prompt": "解释一下 JavaScript 的 Array.map 与 Array.forEach 的区别，给一个简短例子。",
+      "forbidden": ["skills/"],
+      "review": "直接回答；不因普通问答进入工程交付。"
+    },
+    {
+      "id": "small-fix",
+      "label": "小修复",
+      "prompt": "修复 src/total.js：total([]) 应返回 0，现在会抛错。补相称回归验证，只完成这个本地修复，不提交。",
+      "forbidden": ["skills/spec-gate/", "skills/to-tickets/", "skills/implement/references/ticket-delivery.md", "skills/feature-acceptance/references/project-verification.md"],
+      "review": "修复和回归验证完成；审查、测试与范围要求仍生效。"
+    },
+    {
+      "id": "formal-design",
+      "label": "正式设计",
+      "prompt": "为 total(values) 增加可选的 round 参数，写一份正式 Spec，先不实现。已决定默认不舍入，传 0 到 6 的整数时对最终结果舍入到对应小数位，其他值抛 RangeError；保留现有调用方式，不增加依赖。",
+      "forbidden": ["skills/to-tickets/", "skills/implement/references/ticket-delivery.md", "skills/feature-acceptance/references/project-verification.md"],
+      "review": "形成可审核 Spec，停在用户批准关口；不实施、不拆票。"
+    },
+    {
+      "id": "acceptance-run",
+      "label": "执行验收",
+      "prompt": "按项目现有验收入口验收 total 功能，沿用功能地图，仅报告真实命令和结果，不建立或维护验收基础设施。",
+      "forbidden": ["skills/spec-gate/", "skills/to-tickets/", "skills/implement/references/ticket-delivery.md", "skills/feature-acceptance/references/project-verification.md"],
+      "review": "复用现有入口；PASS/FAIL/BLOCKED/NOT RUN 与真实结果一致。"
+    },
+    {
+      "id": "acceptance-setup",
+      "label": "建立验收能力",
+      "prompt": "为这个小型 Node 项目建立最小的项目验收入口与功能地图，覆盖 total 的正常输入和空数组；沿用 node --test，不增加依赖或服务，不提交。",
+      "forbidden": ["skills/spec-gate/", "skills/to-tickets/", "skills/implement/references/ticket-delivery.md"],
+      "review": "建立并执行可重复验收，功能地图引用真实入口和证据。"
+    }
+  ]
+}

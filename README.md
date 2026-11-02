@@ -141,11 +141,14 @@ npm run test:manifest
 npm run test:invocation
 npm run test:continuation
 npm run test:install-rules
+npm run test:diagnostics
 npm run verify:upstream
 npm run pack:dry-run
 ```
 
 `verify:upstream` checks the recorded capability mapping; it does not establish parity with the latest upstream version. `npx claude-everything-workflow verify` validates the published distribution rather than your local project. Neither command proves an agent's effectiveness on real tasks.
+
+[Installed capability diagnosis and five-case loading samples](docs/capability-diagnostics.md): `cew doctor --host codex` / `cew loading --trace FILE --case small-fix`.
 
 For contributions, describe the problem and expected behavior, keep the change focused, and include the checks you actually ran. See the [Git rules](rules/05-git-workflow.md).
 
