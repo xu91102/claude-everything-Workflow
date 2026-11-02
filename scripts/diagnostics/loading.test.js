@@ -74,3 +74,23 @@ test("a longer installed variant does not count its reference-body substring a s
   assert.equal(report.summary.reads, 1);
   assert.equal(report.summary.observedCharacters, personal.length);
 });
+
+for (const directory of [".agents/skills", ".claude/skills"]) {
+  test(`project skills in ${directory} use logical paths for forbidden reads`, (t) => {
+    const { trace } = run(t, [], "question");
+    const project = path.join(path.dirname(trace), "project");
+    const file = path.join(project, directory, "personal/SKILL.md");
+    const body = `# Project-only skill\nUnique personal instructions from ${directory}.\n`;
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, body);
+    fs.writeFileSync(trace, [output(body), { type: "turn.completed" }].map(JSON.stringify).join("\n"));
+    const result = spawnSync(process.execPath, [cli, "loading", "--trace", trace, "--case", "question", "--root", project, "--json"], { encoding: "utf8" });
+    const report = JSON.parse(result.stdout);
+    assert.equal(result.status, 1);
+    assert.equal(report.assessment, "VIOLATION_OBSERVED");
+    assert.deepEqual(report.violations, [{ path: "skills/personal/SKILL.md", reads: 1 }]);
+    assert.equal(report.files[0].path, "skills/personal/SKILL.md");
+    assert.deepEqual(report.files[0].candidatePaths, [file]);
+    assert.equal(report.summary.reads, 1);
+  });
+}

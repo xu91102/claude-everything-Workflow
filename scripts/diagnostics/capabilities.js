@@ -81,9 +81,9 @@ function pluginRoots(searchRoot, host, issues) {
   return found;
 }
 
-// Only concrete, distributed paths are dependencies. Project artifacts and external URLs are not.
+// Resolve concrete local references in the distribution and actual candidate without executing them.
 // A missing new relative Markdown link in a personal skill is still reported, never silently accepted.
-function references(body, relative) {
+function references(body, relative, root = source) {
   const found = new Set();
   const local = new Set();
   const add = (target, link = false) => {
@@ -91,8 +91,8 @@ function references(body, relative) {
     target = target.split("#")[0];
     let resolved;
     const sibling = path.posix.normalize(path.posix.join(path.posix.dirname(relative), target));
-    if (isFile(path.join(source, sibling))) resolved = sibling;
-    else if (isFile(path.join(source, target))) resolved = target;
+    if (isFile(path.join(root, sibling)) || isFile(path.join(source, sibling))) resolved = sibling;
+    else if (isFile(path.join(root, target)) || isFile(path.join(source, target))) resolved = target;
     else if (/^(?:skills|rules|agents|commands|scripts|hooks|harness)\//.test(target)) resolved = path.posix.normalize(target);
     else if (link || target.startsWith("references/")) resolved = sibling;
     if (!resolved) return;
@@ -136,7 +136,12 @@ function candidate(skill, root, hostRoot, project, host) {
   const actual = read(file);
   const metadata = skillMetadata(actual.body, skill.name);
   const expected = read(path.join(source, skill.path));
-  const refs = references((expected.body || "") + "\n" + (actual.body || ""), skill.path);
+  const expectedRefs = references(expected.body || "", skill.path);
+  const actualRefs = references(actual.body || "", skill.path, root.path);
+  const refs = {
+    paths: [...new Set([...expectedRefs.paths, ...actualRefs.paths])].sort(),
+    unresolved: [...new Set([...expectedRefs.unresolved, ...actualRefs.unresolved])],
+  };
   const dependencies = refs.paths.map((relative) => {
     const target = dependencyPath(relative, root.path, hostRoot, project, host);
     return { reference: relative, path: target, ...comparison(path.join(source, relative), target) };

@@ -19,7 +19,7 @@ function inventory(roots) {
     } else if (stat.isFile() && relative.endsWith(".md")) {
       const body = normalize(fs.readFileSync(file, "utf8"));
       if (!body.trim()) return;
-      const logical = relative.split(path.sep).join("/");
+      const logical = relative.split(path.sep).join("/").replace(/^\.(?:agents|claude)\/skills\//, "skills/");
       const digest = hash(body);
       const key = digest;
       const item = files.get(key) || { path: logical, sha256: digest, body, aliases: [], candidatePaths: [], reads: 0 };

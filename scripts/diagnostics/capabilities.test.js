@@ -138,3 +138,33 @@ test("router references in fenced code participate in readiness checks", (t) => 
   assert.equal(candidate.readiness, "BLOCKED");
   assert.ok(candidate.dependencies.some((dep) => dep.reference === "agents/harness-optimizer.md" && dep.status === "MISSING"));
 });
+
+test("personal scripts resolve from the installed skill directory without a distribution counterpart", (t) => {
+  const { installed, run } = fixture(t);
+  const skill = path.join(installed, "skills/visual-companion");
+  const entry = path.join(skill, "SKILL.md");
+  const script = path.join(skill, "scripts/personal-check.js");
+  const body = '"use strict";\n// Private read-only helper.\n';
+  fs.appendFileSync(entry, '\nRead `scripts/personal-check.js` before use.\n');
+  fs.writeFileSync(script, body);
+  const candidate = JSON.parse(run().stdout).hosts[0].skills.find((s) => s.name === "visual-companion").candidates[0];
+  assert.equal(candidate.readiness, "UNVERIFIED");
+  const dependency = candidate.dependencies.find((d) => d.reference.endsWith("personal-check.js"));
+  assert.equal(dependency.reference, "skills/visual-companion/scripts/personal-check.js");
+  assert.equal(dependency.path, script);
+  assert.equal(dependency.status, "NO_REFERENCE");
+  assert.equal(dependency.expectedHash, null);
+  assert.match(dependency.actualHash, /^[a-f0-9]{64}$/);
+  assert.equal(fs.readFileSync(script, "utf8"), body);
+});
+
+test("missing distributed sibling references stay blocked even if a root file has the same name", (t) => {
+  const { installed, run } = fixture(t);
+  const sibling = path.join(installed, "skills/visual-companion/scripts/start-server.sh");
+  fs.unlinkSync(sibling);
+  fs.mkdirSync(path.join(installed, "scripts"));
+  fs.writeFileSync(path.join(installed, "scripts/start-server.sh"), "root helper, not the skill's server\n");
+  const candidate = JSON.parse(run().stdout).hosts[0].skills.find((s) => s.name === "visual-companion").candidates[0];
+  assert.equal(candidate.readiness, "BLOCKED");
+  assert.ok(candidate.dependencies.some((d) => d.path === sibling && d.status === "MISSING"));
+});
