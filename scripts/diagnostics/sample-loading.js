@@ -75,7 +75,7 @@ function main() {
       cliVersion: cliVersion.stdout.trim(), fixture: root, prompt: scenario.prompt, behavioralReview: "NOT_RUN" };
     try {
       const hostRoot = process.env.CODEX_HOME || path.join(os.homedir(), ".codex");
-      report.loading = analyze({ trace, caseId: scenario.id, roots: [hostRoot, root] });
+      report.loading = analyze({ trace, caseId: scenario.id, roots: [hostRoot, path.join(os.homedir(), ".agents"), root] });
     } catch (error) { report.analysisError = error.message; }
     write(dir, "report.json", JSON.stringify(report, null, 2) + "\n");
     summary.push(report);

@@ -60,7 +60,7 @@ node scripts/diagnostics/sample-loading.js --output docs/superpowers/evidence/lo
 node scripts/diagnostics/sample-loading.js --output docs/superpowers/evidence/loading-run-2 --case small-fix
 ```
 
-这会消耗当前 Codex CLI 账号的模型额度，默认顺序启动五个独立会话，沿用当前宿主配置和技能；不会被 `verify`、诊断、测试或 CI 自动调用。它创建本次所属的临时 Git 项目，保留轨迹、错误、结果和工作成果用于复核。每次调用最多三分钟，可用 `--timeout-ms 1000..180000` 下调；模型调用失败即停止，不自动循环重试。输出目录必须尚不存在，避免覆盖历史证据。
+这会消耗当前 Codex CLI 账号的模型额度，默认顺序启动五个独立会话，沿用当前宿主配置和技能，比对清单包含宿主根目录、用户共享的 `~/.agents/skills` 及临时项目；不会被 `verify`、诊断、测试或 CI 自动调用。它创建本次所属的临时 Git 项目，保留轨迹、错误、结果和工作成果用于复核。每次调用最多三分钟，可用 `--timeout-ms 1000..180000` 下调；模型调用失败即停止，不自动循环重试。输出目录必须尚不存在，避免覆盖历史证据。
 
 采样项目只包含 Node 标准库、一个公开函数及测试；执行验收用例有现成入口，建立验收用例没有。为使完整读取可观测，项目说明要求用不截断的 `cat` 读取材料，每次最多三份，但不要求加载任何额外文件。这是受控采样，不能代表所有真实项目或桌面 App。自动报告的行为审核初始为 `NOT_RUN`，复核后另行记录，不把模型自报完成当作通过。
 
