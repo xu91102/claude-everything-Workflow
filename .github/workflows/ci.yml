@@ -44,6 +44,9 @@ jobs:
       - name: Test plugin distribution
         run: npm run test:plugins
 
+      - name: Test capability diagnosis and loading reports
+        run: npm run test:diagnostics
+
       - name: Validate npm package
         run: npm run pack:dry-run
 
