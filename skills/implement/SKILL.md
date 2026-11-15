@@ -1,11 +1,13 @@
 ---
 name: implement
-description: Deliver one authorized scope through implementation, review, and verification.
+description: Internal delivery procedure selected by using-superpowers for one authorized scope.
+disable-model-invocation: true
 ---
 
 # Implement
 
 执行 router 选定的一个连贯交付范围。Origin: `mattpocock/skills@2ab9580`，适配本项目授权与审查边界。
+如果用户直接进入此 Skill，先由 `using-superpowers` 判断是否适用，再按选定路径执行。
 
 ## 入口
 

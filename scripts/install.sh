@@ -99,7 +99,7 @@ copy_claude_settings() {
 
     backup_if_changed "$src" "$dest"
     if [ "$DRY_RUN" -eq 1 ]; then
-        echo "[dry-run] merge '$src' into '$dest' preserving existing env and mcpServers"
+        echo "[dry-run] merge '$src' into '$dest' preserving existing user hooks, env and mcpServers"
         echo "[dry-run] purge legacy hook paths while merging Claude settings"
         return
     fi

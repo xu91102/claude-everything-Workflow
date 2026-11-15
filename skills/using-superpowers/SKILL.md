@@ -24,6 +24,12 @@ below and read only its Skill. Briefly announce the selection, then act. Do not 
 in anticipation of later stages. Reuse a Skill already read in this task unless it changed or context
 was lost; returning here means applying the routing decision, not reading this file again.
 
+For delivery, infer the requested action, outcome, scope and acceptance evidence from the request and
+project. Inspect discoverable details and ask only for unresolved decisions that would change the result.
+`read-reference` means read the target as a file relative to the same distribution, without invoking it
+through a host Skill tool or asking the user to type its name. For `implement`, read
+[the delivery procedure](../implement/SKILL.md) after selecting it.
+
 Expected TDD RED stays in the current implementation loop. Do not reroute it as a reported bug.
 An explicit request may use ordinary language or a native `/name` or `$name` invocation.
 For handoff, triage and improve-codebase-architecture,
@@ -67,7 +73,7 @@ Task arrives
        -> durable multi-session/tracker graph?     -> skills/to-tickets/SKILL.md
        -> independent frontier tickets with no overlapping write surface?
                                                      -> skills/subagent-driven-development/SKILL.md
-       -> otherwise                                 -> skills/implement/SKILL.md
+       -> otherwise                                 -> read-reference skills/implement/SKILL.md
   -> behavior change with a test path?             -> test-driven-development
   -> new feature or other Git-rule isolation need? -> rules/05-git-workflow.md
   -> completion, fixed, or ready claim?            -> rules/common/testing.md

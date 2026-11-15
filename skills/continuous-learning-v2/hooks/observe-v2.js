@@ -21,14 +21,7 @@ function getConfig() {
     try {
         return JSON.parse(fs.readFileSync(configPath, 'utf8'))
     } catch {
-        return {
-            observation: {
-                enabled: true,
-                store_path: path.join(os.homedir(), '.claude', 'homunculus', 'observations.jsonl'),
-                capture_tools: ['Edit', 'Write', 'Bash', 'Read', 'Grep', 'Glob'],
-                ignore_tools: ['TodoWrite']
-            }
-        }
+        return null
     }
 }
 
@@ -76,7 +69,7 @@ async function main() {
     const phase = process.argv[2] // 'pre' or 'post'
     const config = getConfig()
 
-    if (!config.observation?.enabled) {
+    if (config?.observation?.enabled !== true) {
         process.exit(0)
     }
 

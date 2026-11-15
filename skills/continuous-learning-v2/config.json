@@ -5,7 +5,7 @@
         "legacy_root": "~/.claude/homunculus"
     },
     "observation": {
-        "enabled": true,
+        "enabled": false,
         "store_path": "~/.local/share/ecc-homunculus",
         "project_scoped": true,
         "max_file_size_mb": 10,

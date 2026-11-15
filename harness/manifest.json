@@ -108,7 +108,7 @@
         "codex"
       ],
       "allowedTools": null,
-      "invocation": "implicit"
+      "invocation": "explicit-only"
     },
     {
       "name": "improve-codebase-architecture",
