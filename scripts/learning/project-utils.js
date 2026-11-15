@@ -68,6 +68,14 @@ function ensureDir(dirPath) {
     return dirPath
 }
 
+function shouldApply(args) {
+    const apply = args.includes('--apply')
+    if (apply && args.includes('--dry-run')) {
+        throw new Error('--dry-run and --apply cannot be used together')
+    }
+    return apply
+}
+
 function runGit(args, cwd) {
     return execFileSync('git', args, {
         cwd,
@@ -210,5 +218,6 @@ module.exports = {
     readJson,
     registerProject,
     scanInstincts,
+    shouldApply,
     writeJson
 }

@@ -21,6 +21,7 @@
     "test:invocation": "node scripts/verify/skill-invocation.test.js",
     "test:continuation": "node scripts/verify/continuation-checks.test.js",
     "test:install-rules": "node scripts/verify/install-rules.test.js",
+    "test:learning": "node --test scripts/verify/learning.test.js",
     "test:plugins": "node --test scripts/verify/plugin-distribution.test.js",
     "verify:upstream": "node scripts/verify-upstream-capability-map.js",
     "pack:dry-run": "npm pack --dry-run"

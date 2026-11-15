@@ -41,6 +41,9 @@ jobs:
       - name: Test rule installation and migration
         run: npm run test:install-rules
 
+      - name: Test continuous learning behavior
+        run: npm run test:learning
+
       - name: Test plugin distribution
         run: npm run test:plugins
 

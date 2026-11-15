@@ -81,58 +81,16 @@ function Copy-ClaudeSettings {
     Backup-IfChanged -Source $Source -Destination $Destination
 
     if ($DryRun) {
-        Write-Host "[dry-run] Merge '$Source' into '$Destination' preserving existing env and mcpServers"
+        Write-Host "[dry-run] Merge '$Source' into '$Destination' preserving existing user hooks, env and mcpServers"
         Write-Host "[dry-run] Purge legacy hook paths while merging Claude settings"
         return
     }
 
     $mergeScript = Join-Path $RootDir "scripts\merge-claude-settings.cjs"
-    & node $mergeScript $Source $Destination
+    & node $mergeScript $Source $Destination --windows-paths
     if ($LASTEXITCODE -ne 0) {
         throw "Claude settings merge failed with exit code $LASTEXITCODE"
     }
-}
-
-function Convert-ClaudeSettingsHookPaths {
-    param([string]$SettingsPath)
-
-    if ($DryRun) {
-        Write-Host "[dry-run] Convert hook paths in '$SettingsPath' to Windows absolute paths"
-        return
-    }
-
-    $settings = Get-Content -LiteralPath $SettingsPath -Raw | ConvertFrom-Json
-    $claudeHome = Join-Path $HomeDir ".claude"
-
-    function Update-Commands {
-        param($Value)
-
-        if ($null -eq $Value) {
-            return
-        }
-
-        if ($Value -is [System.Array]) {
-            foreach ($item in $Value) {
-                Update-Commands -Value $item
-            }
-            return
-        }
-
-        if ($Value -isnot [psobject]) {
-            return
-        }
-
-        if ($Value.PSObject.Properties.Name -contains "command" -and $Value.command -is [string]) {
-            $Value.command = $Value.command.Replace('$HOME/.claude', $claudeHome)
-        }
-
-        foreach ($property in $Value.PSObject.Properties) {
-            Update-Commands -Value $property.Value
-        }
-    }
-
-    Update-Commands -Value $settings.hooks
-    $settings | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $SettingsPath -Encoding UTF8
 }
 
 function Copy-DirectoryMerge {
@@ -201,6 +159,7 @@ function Remove-PackageOnlyPaths {
         "scripts\verify\skill-invocation.test.js",
         "scripts\verify\continuation-checks.test.js",
         "scripts\verify\install-rules.test.js",
+        "scripts\verify\learning.test.js",
         "scripts\verify\plugin-distribution.test.js"
     )
 
@@ -329,7 +288,6 @@ function Install-ClaudeWorkflow {
     Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
     $settingsPath = Join-Path $dest "settings.json"
     Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath
-    Convert-ClaudeSettingsHookPaths -SettingsPath $settingsPath
     Install-SharedDirs -Destination $dest
     Install-WorkflowRules -Destination $dest -HostName "claude-code"
     Remove-RetiredSkills -Destination $dest

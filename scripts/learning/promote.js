@@ -15,16 +15,31 @@ const {
     getProjectInstinctsDir,
     loadConfig,
     parseFrontmatter,
-    scanInstincts
+    scanInstincts,
+    shouldApply
 } = require('./project-utils')
+
+function parseConfidence(value) {
+    if (typeof value === 'string' && /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(value.trim())) {
+        value = Number(value)
+    }
+    return Number.isFinite(value) && value >= 0 && value <= 1 ? value : undefined
+}
 
 function parseArgs() {
     const args = process.argv.slice(2)
+    const apply = shouldApply(args)
+    const flag = '--min-confidence'
+    const thresholds = args.filter(arg => arg === flag || arg.startsWith(`${flag}=`))
+    const raw = thresholds[0] === flag ? args[args.indexOf(flag) + 1] : thresholds[0]?.slice(flag.length + 1)
+    const minConfidence = thresholds.length === 0 ? 0.7 : parseConfidence(raw)
+    if (thresholds.length > 1 || minConfidence === undefined) {
+        throw new Error('--min-confidence requires a single number between 0 and 1')
+    }
     return {
-        apply: args.includes('--apply'),
-        dryRun: args.includes('--dry-run') || !args.includes('--apply'),
+        apply,
         projectId: parseStringArg(args, '--project-id'),
-        minConfidence: parseFloat(parseStringArg(args, '--min-confidence') || '0.7')
+        minConfidence
     }
 }
 
@@ -51,11 +66,8 @@ function main() {
     for (const fileInfo of files) {
         const content = fs.readFileSync(fileInfo.path, 'utf8')
         const { meta } = parseFrontmatter(content)
-        const confidence = typeof meta.confidence === 'number'
-            ? meta.confidence
-            : parseFloat(meta.confidence) || 0
-
-        if (confidence < options.minConfidence) continue
+        const confidence = parseConfidence(meta.confidence)
+        if (confidence === undefined || confidence < options.minConfidence) continue
 
         const destination = path.join(globalInstinctsDir, fileInfo.category, candidateSlug(fileInfo.path))
         candidates.push({
@@ -95,4 +107,9 @@ function main() {
     }
 }
 
-main()
+try {
+    main()
+} catch (error) {
+    console.error(`[Promote] ${error.message}`)
+    process.exitCode = 1
+}

@@ -15,14 +15,14 @@ const {
     getProjectContext,
     getProjectInstinctsDir,
     loadConfig,
-    registerProject
+    registerProject,
+    shouldApply
 } = require('./project-utils')
 
 function parseArgs() {
     const args = process.argv.slice(2)
     return {
-        apply: args.includes('--apply'),
-        dryRun: args.includes('--dry-run') || !args.includes('--apply'),
+        apply: shouldApply(args),
         scope: parseStringArg(args, '--scope') || 'project',
         source: parseStringArg(args, '--source') ||
             path.join(os.homedir(), '.claude', 'homunculus', 'instincts')
@@ -63,7 +63,7 @@ function main() {
         ? getGlobalInstinctsDir(dataRoot)
         : getProjectInstinctsDir(dataRoot, context.project_id)
 
-    if (options.scope !== 'global') {
+    if (options.apply && options.scope !== 'global') {
         registerProject(dataRoot, context)
     }
 
@@ -90,4 +90,9 @@ function main() {
     }
 }
 
-main()
+try {
+    main()
+} catch (error) {
+    console.error(`[Migrate] ${error.message}`)
+    process.exitCode = 1
+}

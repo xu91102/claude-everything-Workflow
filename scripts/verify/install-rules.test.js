@@ -229,7 +229,43 @@ function checkInstallerEntrypoint() {
     fs.writeFileSync(path.join(skills, "handoff/agents/openai.yaml"),
       "policy:\n  allow_implicit_invocation: false\n");
   }
+  const settingsPath = path.join(profile, ".claude/settings.json");
+  fs.mkdirSync(path.dirname(settingsPath), { recursive: true });
+  const userHookGroup = {
+    matcher: "Edit|Write|MultiEdit",
+    hooks: [
+      { type: "command", command: 'node "$HOME/.claude/my-hooks/observe.js"', timeout: 7 },
+      { type: "command", command: 'node "$HOME/.claude/hooks/runtime/run-with-flags.js" post:edit:console-log "$HOME/.claude/hooks/my-team-check.js" standard,strict' },
+      { type: "prompt", prompt: "Keep this user hook" },
+    ],
+  };
+  const unrelatedHook = {
+    matcher: "Bash",
+    hooks: [{ type: "command", command: 'node "./hooks/session-start.js"' }],
+  };
+  const retiredSession = {
+    type: "command",
+    command: 'node "$HOME/.claude/hooks/runtime/run-with-flags.js" session:start "$HOME/.claude/hooks/session-start.js" minimal,standard,strict',
+  };
+  const retiredConsole = {
+    type: "command",
+    command: 'node scripts/hooks/run-with-flags.js post:write:console-log hooks/check-console-log.js standard,strict',
+  };
+  fs.writeFileSync(settingsPath, JSON.stringify({
+    hooks: {
+      PostToolUse: [{ ...userHookGroup, hooks: [...userHookGroup.hooks, retiredConsole] }],
+      SessionStart: [{ ...unrelatedHook, hooks: [...unrelatedHook.hooks, retiredSession] }],
+    },
+  }));
   run();
+  const installedSettings = JSON.parse(read(settingsPath).replace(/^\uFEFF/, ""));
+  assert.deepEqual(installedSettings.hooks.PostToolUse[0], userHookGroup);
+  assert.deepEqual(installedSettings.hooks.SessionStart, [unrelatedHook]);
+  assert.equal(installedSettings.hooks.PostToolUse.flatMap(({ hooks }) => hooks)
+    .filter(({ command }) => command?.includes("hooks/check-console-log.js")).length, 1);
+  run();
+  assert.deepEqual(JSON.parse(read(settingsPath).replace(/^\uFEFF/, "")), installedSettings,
+    "reinstallation must preserve user hooks and add each managed hook only once");
   assert.equal(read(path.join(profile, ".claude/references/rules/common/testing.md")),
     read(path.join(sourceRoot, "rules/common/testing.md")));
   assert.equal(fs.existsSync(path.join(profile, ".claude/rules/common/testing.md")), false);
@@ -251,6 +287,8 @@ function checkInstallerEntrypoint() {
       "安装不应保留仅供包内验证的续接测试");
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/plugin-distribution.test.js")), false,
       "安装不应保留仅供包内验证的插件分发测试");
+    assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/learning.test.js")), false,
+      "安装不应保留仅供包内验证的持续学习测试");
     assert.match(read(path.join(profile, host, "skills/handoff/agents/openai.yaml")),
       /allow_implicit_invocation: true/);
   }

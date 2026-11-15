@@ -185,10 +185,13 @@ function runSkillManifestChecks(context) {
 function validateNativeRoutes(manifest, routerBody) {
   const errors = [];
   const skills = Array.isArray(manifest?.skills) ? manifest.skills : [];
-  for (const match of routerBody.matchAll(/->\s*(native-entry\s+)?(skills\/[a-z0-9-]+\/SKILL\.md|[a-z0-9-]+)[ \t]*\r?$/gm)) {
-    const skill = skills.find((entry) => entry?.path === match[2] || entry?.name === match[2]);
-    if (skill?.invocation === "explicit-only" && !match[1]) {
-      errors.push(`router must use native-entry for explicit-only Skill: ${skill.name}`);
+  for (const [, mode, target] of routerBody.matchAll(/->\s*(?:(native-entry|read-reference)\s+)?(skills\/[a-z0-9-]+\/SKILL\.md|[a-z0-9-]+)[ \t]*\r?$/gm)) {
+    const skill = skills.find((entry) => entry?.path === target || entry?.name === target);
+    if (mode === "read-reference" && skill?.path !== target) {
+      errors.push(`read-reference must name a registered Skill file: ${target}`);
+    }
+    if (skill?.invocation === "explicit-only" && !mode) {
+      errors.push(`router must use native-entry or read-reference for explicit-only Skill: ${skill.name}`);
     }
   }
   return errors;

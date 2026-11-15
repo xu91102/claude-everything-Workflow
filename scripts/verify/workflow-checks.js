@@ -376,7 +376,6 @@ function checkCapabilityRouting() {
 
   for (const deliverySkill of [
     "skills/to-tickets/SKILL.md",
-    "skills/implement/SKILL.md",
     "skills/subagent-driven-development/SKILL.md",
   ]) {
     if (read(deliverySkill).includes("disable-model-invocation: true")) {

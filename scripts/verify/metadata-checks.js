@@ -31,6 +31,7 @@ const PACKAGE_ONLY_PATHS = [
   "scripts/verify/skill-invocation.test.js",
   "scripts/verify/continuation-checks.test.js",
   "scripts/verify/install-rules.test.js",
+  "scripts/verify/learning.test.js",
   "scripts/verify/plugin-distribution.test.js",
 ];
 
@@ -311,7 +312,6 @@ function checkHookConfigReferences() {
 
   requireTokens("scripts/merge-claude-settings.cjs", [
     "LEGACY_HOOK_PATTERNS",
-    "cleanHooks",
     "mergeSettings",
   ]);
 

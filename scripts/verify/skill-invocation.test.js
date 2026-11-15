@@ -71,6 +71,11 @@ const path = require("node:path");
 const YAML = require("yaml");
 const root = path.resolve(__dirname, "../..");
 const manifest = require("../../harness/manifest.json");
+const implement = manifest.skills.find((skill) => skill.name === "implement");
+assert.equal(implement?.invocation, "explicit-only");
+const routerBody = fs.readFileSync(path.join(root, "skills/using-superpowers/SKILL.md"), "utf8");
+assert.match(routerBody, /-> read-reference skills\/implement\/SKILL\.md/);
+assert.deepEqual(validateNativeRoutes(manifest, routerBody), []);
 for (const name of ["handoff", "improve-codebase-architecture", "triage"]) {
   const entry = manifest.skills.find((skill) => skill.name === name);
   assert.equal(entry?.invocation, "implicit", name);
@@ -84,4 +89,4 @@ for (const name of ["research", "wayfinder", "find-skills", "project-context", "
   assert.equal(manifest.skills.some((skill) => skill.name === name), false);
   assert.equal(fs.existsSync(path.join(root, "skills", name, "SKILL.md")), false, name);
 }
-console.log("Skill invocation tests passed (33 host-gate scenarios, three natural-language entries, seven retired skills).");
+console.log("Skill invocation tests passed (host gates, router references, natural-language entries and retired skills).");

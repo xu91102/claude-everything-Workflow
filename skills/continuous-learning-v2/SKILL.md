@@ -62,6 +62,7 @@ ${XDG_DATA_HOME:-~/.local/share}/ecc-homunculus/
 ## 安全边界
 
 - 默认不启用后台 observer；`observer.enabled` 保持 `false`，避免额外 token 和误学习。
+- 工具观察记录也默认关闭。仅当 `observation.enabled` 明确设为 `true` 且 Hook 在启用的档位中运行时才采集。
 - 不自动导入、导出、推广或删除 instinct。
 - 不把 raw observations 当作可共享知识；共享前只处理 instinct。
 - 不把 project instinct 自动提升为 global。
