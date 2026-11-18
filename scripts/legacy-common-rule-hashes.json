@@ -1,8 +1,23 @@
 {
   "version": 1,
   "algorithm": "sha256-lf",
-  "source": "origin/main history through a4f938bc70f3f85e4dcfad4d2534f522b823ea20",
+  "source": "common/: origin/main history through a4f938bc70f3f85e4dcfad4d2534f522b823ea20; top-level rules: first-parent main history through 7326e4b",
   "files": {
+    "02-implementation.md": [
+      "1bbe491d9b89e37a6a6d004e1b6e1ccd7478b94341e7b4c51ce8d01fad585c7f",
+      "700331676ad40d65acdeb469a67cf802cddff78ebf0861ec5e4427b5a3d23620"
+    ],
+    "08-specialty-rules-index.md": [
+      "283aba947990fd768597546f3aab12f8754d4d91968d6d119c3f5828c6be40dd",
+      "3fe1bcb7bdbad9ff8b074a36afd96b96fdf0da21c483b842c4ce2042ca398999",
+      "70f531356fd1fbd11d62ea0b2b43be82c278e975b43335a8b3956c207a930ef1",
+      "7ebf3b13e750fca3888843994ed43aba880ab98bdb8094b1f9070247d3791415"
+    ],
+    "09-first-principles-adversarial-testing.md": [
+      "182ab761713451fd9b04c290a070e0235a52833f52cbaf695f065363675faf2f",
+      "72b71a851e9349e19806ae66258843b2394d7acbadc4e6498788af6337ba8357",
+      "d912674d84c1427d24d9d716d28cc57b926a4cf49284cffd46473d02219a0a57"
+    ],
     "common/agent-orchestration.md": [
       "0518525f093f91b60dbae5259e0f228686687abdd65787b880f59e286c2e546c",
       "3b5095839ff85adefb7324518526be65c473770df9124d190137ba05721ca6bf",

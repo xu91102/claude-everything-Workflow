@@ -71,6 +71,8 @@ The CLI selects the shell or PowerShell installer for your platform. The same `-
 
 Installation updates user-level files and can affect multiple projects. Changed top-level configuration files are backed up; matching files inside shared directories are synchronized from the repository. Unknown files are generally retained, while known retired files are removed by an explicit cleanup list. Back up any personal edits to shared files before upgrading. Use the installer instead of copying the entire `rules/` directory: it handles the different rule locations used by each host.
 
+A fresh Claude Code installation puts CEW’s base, Git and security rules in `~/.claude/rules/`. Other CEW rules are available on demand under `~/.claude/references/rules/`. On upgrade, personally edited copies of the three newly migrated rules stay active. Obsolete rules left by older releases can also still load.
+
 ## How it works
 
 Start with a normal task request. The workflow router selects relevant skills; you do not need to memorize every skill name.
