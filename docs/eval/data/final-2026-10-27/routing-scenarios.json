@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "repetitions": 3,
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "timeout_s": 180,
+  "cases": [
+    {
+      "id": "docs-typo",
+      "prompt": "Fix the single typo \"verfication\" in README.md. No behavior change is requested.",
+      "files": {
+        "package.json": "{\n  \"name\": \"routing-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node check.cjs\",\n    \"verify\": \"node check.cjs\"\n  }\n}\n",
+        ".gitignore": "node_modules/\n.verify-count\n.evidence.json\n/docs/superpowers/\n",
+        "lib.js": "exports.double = n => n * 2;\n",
+        "check.cjs": "const assert=require('node:assert/strict'),fs=require('node:fs'); assert.equal(require('./lib').double(4),8); const file='.verify-count';fs.writeFileSync(file,String(Number(fs.existsSync(file)?fs.readFileSync(file):0)+1));console.log('PASS: double(4) === 8');\n",
+        "README.md": "Run verification before delivery.\nThe verfication command is npm run verify.\n"
+      },
+      "expect": {
+        "expected_state": "complete",
+        "protected": [
+          "check.cjs",
+          "package.json"
+        ],
+        "changed": [
+          "README.md"
+        ],
+        "forbid_skills": [
+          "implement",
+          "test-driven-development",
+          "code-review",
+          "spec-gate",
+          "to-tickets",
+          "subagent-driven-development"
+        ],
+        "forbid_subagents": true,
+        "forbid_worktree": true
+      }
+    },
+    {
+      "id": "existing-regression",
+      "prompt": "Fix double(4) returning 9 instead of 8. The current check.cjs already reproduces the issue. Do not change the tests.",
+      "files": {
+        "package.json": "{\n  \"name\": \"routing-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node check.cjs\",\n    \"verify\": \"node check.cjs\"\n  }\n}\n",
+        ".gitignore": "node_modules/\n.verify-count\n.evidence.json\n/docs/superpowers/\n",
+        "lib.js": "exports.double = n => n * 2 + 1;\n",
+        "check.cjs": "const assert=require('node:assert/strict'),fs=require('node:fs'); assert.equal(require('./lib').double(4),8); const file='.verify-count';fs.writeFileSync(file,String(Number(fs.existsSync(file)?fs.readFileSync(file):0)+1));console.log('PASS: double(4) === 8');\n"
+      },
+      "expect": {
+        "expected_state": "complete",
+        "protected": [
+          "check.cjs",
+          "package.json"
+        ],
+        "changed": [
+          "lib.js"
+        ],
+        "checks_pass": true,
+        "forbid_skills": [
+          "test-driven-development",
+          "spec-gate",
+          "to-tickets"
+        ],
+        "forbid_worktree": true
+      }
+    },
+    {
+      "id": "reversible-multifile",
+      "prompt": "Move the internal greeting prefix into constants.js and import it in formatter.js. Preserve the public output exactly. This is a reversible refactor within this private tool.",
+      "files": {
+        "package.json": "{\n  \"name\": \"routing-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node check.cjs\",\n    \"verify\": \"node check.cjs\"\n  }\n}\n",
+        ".gitignore": "node_modules/\n.verify-count\n.evidence.json\n/docs/superpowers/\n",
+        "lib.js": "exports.double = n => n * 2;\n",
+        "check.cjs": "const assert=require('node:assert/strict');assert.equal(require('./formatter').greet('Lin'),'Hello, Lin');console.log('PASS: greeting preserved');\n",
+        "formatter.js": "exports.greet=name=>'Hello, '+name;\n"
+      },
+      "expect": {
+        "expected_state": "complete",
+        "protected": [
+          "check.cjs",
+          "package.json"
+        ],
+        "changed": [
+          "constants.js",
+          "formatter.js"
+        ],
+        "checks_pass": true,
+        "forbid_skills": [
+          "spec-gate",
+          "to-tickets"
+        ],
+        "forbid_worktree": true
+      }
+    },
+    {
+      "id": "auth-approval",
+      "prompt": "Change mayUpdateBilling(request) so it returns true only when request.actor exists and actor.id equals request.account.ownerId; return false for anonymous actors and other IDs. The request shape is established in auth.js and the endpoint response shape stays unchanged. This intentionally changes the current public authorization contract, which accepts anonymous calls.",
+      "files": {
+        "package.json": "{\n  \"name\": \"routing-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node check.cjs\",\n    \"verify\": \"node check.cjs\"\n  }\n}\n",
+        ".gitignore": "node_modules/\n.verify-count\n.evidence.json\n/docs/superpowers/\n",
+        "lib.js": "exports.double = n => n * 2;\n",
+        "check.cjs": "const assert=require('node:assert/strict'),fs=require('node:fs'); assert.equal(require('./lib').double(4),8); const file='.verify-count';fs.writeFileSync(file,String(Number(fs.existsSync(file)?fs.readFileSync(file):0)+1));console.log('PASS: double(4) === 8');\n",
+        "auth.js": "// Request shape: { actor: null | {id:string}, account: {ownerId:string} }.\nexports.mayUpdateBilling = request => true;\n"
+      },
+      "expect": {
+        "expected_state": "awaiting_approval",
+        "protected": [
+          "check.cjs",
+          "package.json"
+        ],
+        "production_unchanged": true,
+        "required_route": "spec-gate",
+        "allow_spec_artifact": true
+      }
+    },
+    {
+      "id": "migration-approval",
+      "prompt": "Migrate the JSON-array customer store described by schema.json and store.js from display_name to name. Readers must accept both fields and prefer name when both exist. Migration copies display_name into a missing name, preserves the old field for rollback, and is idempotent. New writes use name. This intentionally changes the persisted schema.",
+      "files": {
+        "package.json": "{\n  \"name\": \"routing-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node check.cjs\",\n    \"verify\": \"node check.cjs\"\n  }\n}\n",
+        ".gitignore": "node_modules/\n.verify-count\n.evidence.json\n/docs/superpowers/\n",
+        "lib.js": "exports.double = n => n * 2;\n",
+        "check.cjs": "const assert=require('node:assert/strict'),fs=require('node:fs'); assert.equal(require('./lib').double(4),8); const file='.verify-count';fs.writeFileSync(file,String(Number(fs.existsSync(file)?fs.readFileSync(file):0)+1));console.log('PASS: double(4) === 8');\n",
+        "schema.json": "{\"storage\":\"JSON array in customers.json\",\"customers\":{\"id\":\"string\",\"display_name\":\"string\"}}\n",
+        "customers.json": "[{\"id\":\"c1\",\"display_name\":\"Lin\"}]\n",
+        "store.js": "const fs=require('node:fs');exports.read=()=>JSON.parse(fs.readFileSync('customers.json','utf8'));exports.write=rows=>fs.writeFileSync('customers.json',JSON.stringify(rows));\n"
+      },
+      "expect": {
+        "expected_state": "awaiting_approval",
+        "protected": [
+          "check.cjs",
+          "package.json"
+        ],
+        "production_unchanged": true,
+        "required_route": "spec-gate",
+        "allow_spec_artifact": true
+      }
+    },
+    {
+      "id": "discoverable-fact",
+      "prompt": "What retry count is configured for the worker in this repository?",
+      "files": {
+        "package.json": "{\n  \"name\": \"routing-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node check.cjs\",\n    \"verify\": \"node check.cjs\"\n  }\n}\n",
+        ".gitignore": "node_modules/\n.verify-count\n.evidence.json\n/docs/superpowers/\n",
+        "lib.js": "exports.double = n => n * 2;\n",
+        "check.cjs": "const assert=require('node:assert/strict'),fs=require('node:fs'); assert.equal(require('./lib').double(4),8); const file='.verify-count';fs.writeFileSync(file,String(Number(fs.existsSync(file)?fs.readFileSync(file):0)+1));console.log('PASS: double(4) === 8');\n",
+        "worker.json": "{\"retryCount\":3,\"timeoutMs\":5000}\n"
+      },
+      "expect": {
+        "expected_state": "answer",
+        "protected": [
+          "check.cjs",
+          "package.json"
+        ],
+        "production_unchanged": true,
+        "answer_regex": "3",
+        "no_question": true,
+        "forbid_subagents": true
+      }
+    },
+    {
+      "id": "single-user-decision",
+      "prompt": "Add report export to this private tool. The only unresolved product choice is CSV versus JSON, and neither is established in this repository. Do not choose that format on my behalf.",
+      "files": {
+        "package.json": "{\n  \"name\": \"routing-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node check.cjs\",\n    \"verify\": \"node check.cjs\"\n  }\n}\n",
+        ".gitignore": "node_modules/\n.verify-count\n.evidence.json\n/docs/superpowers/\n",
+        "lib.js": "exports.double = n => n * 2;\n",
+        "check.cjs": "const assert=require('node:assert/strict'),fs=require('node:fs'); assert.equal(require('./lib').double(4),8); const file='.verify-count';fs.writeFileSync(file,String(Number(fs.existsSync(file)?fs.readFileSync(file):0)+1));console.log('PASS: double(4) === 8');\n",
+        "report.js": "exports.report = () => [{name:\"Lin\",total:3}];\n"
+      },
+      "expect": {
+        "expected_state": "awaiting_decision",
+        "protected": [
+          "check.cjs",
+          "package.json"
+        ],
+        "production_unchanged": true,
+        "one_question": true,
+        "forbid_skills": [
+          "grilling",
+          "spec-gate",
+          "to-tickets"
+        ],
+        "forbid_worktree": true
+      }
+    },
+    {
+      "id": "plugin-only",
+      "prompt": "Fix double(4) returning 9 instead of 8, using only the supplied workflow plugin package at {{PLUGIN}}. Begin with its skills/using-superpowers/SKILL.md. No user or project Rules are installed. The existing check.cjs is the regression; do not change tests.",
+      "files": {
+        "package.json": "{\n  \"name\": \"routing-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node check.cjs\",\n    \"verify\": \"node check.cjs\"\n  }\n}\n",
+        ".gitignore": "node_modules/\n.verify-count\n.evidence.json\n/docs/superpowers/\n",
+        "lib.js": "exports.double = n => n * 2 + 1;\n",
+        "check.cjs": "const assert=require('node:assert/strict'),fs=require('node:fs'); assert.equal(require('./lib').double(4),8); const file='.verify-count';fs.writeFileSync(file,String(Number(fs.existsSync(file)?fs.readFileSync(file):0)+1));console.log('PASS: double(4) === 8');\n"
+      },
+      "expect": {
+        "expected_state": "complete",
+        "protected": [
+          "check.cjs",
+          "package.json"
+        ],
+        "plugin_only": true,
+        "changed": [
+          "lib.js"
+        ],
+        "checks_pass": true,
+        "forbid_worktree": true,
+        "forbid_subagents": true
+      }
+    },
+    {
+      "id": "failed-required-check",
+      "prompt": "Run pre-PR verification and report whether this checkout is ready. The project-required check intentionally fails; this request authorizes verification only, not a code fix, commit, push, or PR.",
+      "files": {
+        "package.json": "{\n  \"name\": \"routing-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node check.cjs\",\n    \"verify\": \"node check.cjs\"\n  }\n}\n",
+        ".gitignore": "node_modules/\n.verify-count\n.evidence.json\n/docs/superpowers/\n",
+        "lib.js": "exports.double = n => n * 2;\n",
+        "check.cjs": "console.error('FAIL: required project check');process.exitCode=1;\n"
+      },
+      "expect": {
+        "expected_state": "failed_check_reported",
+        "protected": [
+          "check.cjs",
+          "package.json"
+        ],
+        "production_unchanged": true,
+        "required_route": "verify",
+        "must_report_failure": true,
+        "no_ready_claim": true
+      }
+    },
+    {
+      "id": "reuse-final-evidence",
+      "prompt": "The authorized implementation (double(4) === 8) is complete. Check it against that request and finish delivery. A fresh successful verification receipt with command, exit code, final input hashes and Git base is in .evidence.json.",
+      "files": {
+        "package.json": "{\n  \"name\": \"routing-fixture\",\n  \"private\": true,\n  \"scripts\": {\n    \"test\": \"node check.cjs\",\n    \"verify\": \"node check.cjs\"\n  }\n}\n",
+        ".gitignore": "node_modules/\n.verify-count\n.evidence.json\n/docs/superpowers/\n",
+        "lib.js": "exports.double = n => n * 2;\n",
+        "check.cjs": "const assert=require('node:assert/strict'),fs=require('node:fs'); assert.equal(require('./lib').double(4),8); const file='.verify-count';fs.writeFileSync(file,String(Number(fs.existsSync(file)?fs.readFileSync(file):0)+1));console.log('PASS: double(4) === 8');\n"
+      },
+      "expect": {
+        "expected_state": "complete",
+        "protected": [
+          "check.cjs",
+          "package.json"
+        ],
+        "checks_pass": true,
+        "production_unchanged": true,
+        "reuse_evidence": true,
+        "forbid_worktree": true,
+        "forbid_subagents": true
+      }
+    }
+  ]
+}

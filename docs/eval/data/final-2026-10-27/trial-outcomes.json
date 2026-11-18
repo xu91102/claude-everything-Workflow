@@ -1,0 +1,6415 @@
+[
+  {
+    "trial": "real/more-itertools-1247/gpt-cew/r1",
+    "kind": "real",
+    "task": "more-itertools-1247",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "72d6946af99fcd05b0282b95b639b755336d6afa5b5f92b6b3cbfc696fc35c96",
+    "patch_sha256": "e3009a3ba9b9d7efe5c3fbab642653f37fa3301eee2a79fc3681b40a05f19079",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 176.1
+    },
+    "usage": {
+      "input_tokens": 413352,
+      "cached_input_tokens": 384768,
+      "output_tokens": 4153,
+      "reasoning_output_tokens": 1634
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 594,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 592,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 737,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 739,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "FAIL",
+    "quality_reason": "Supported numerical assertions 30/60; required60/60",
+    "dependencies_before": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ],
+    "dependencies_after": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ]
+  },
+  {
+    "trial": "real/more-itertools-1247/gpt-fixed/r2",
+    "kind": "real",
+    "task": "more-itertools-1247",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "1b62abb80178e44572c58aeb892418e631cfda84337c6b0de077505063d25b58",
+    "patch_sha256": "33f83fd0a0906c0aaf8bb20fd786bd7aef3b0944e023e89f55c18f8808c1bc09",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 204.1
+    },
+    "usage": {
+      "input_tokens": 354266,
+      "cached_input_tokens": 324864,
+      "output_tokens": 4283,
+      "reasoning_output_tokens": 1857
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 594,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 592,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 737,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 739,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "FAIL",
+    "quality_reason": "Supported numerical assertions 30/60; required60/60",
+    "dependencies_before": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ],
+    "dependencies_after": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ]
+  },
+  {
+    "trial": "real/more-itertools-1247/gpt-fixed/r1",
+    "kind": "real",
+    "task": "more-itertools-1247",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "371a75988ca0872aa31e96905821bc109a4733c163155c42baf389961025d0e0",
+    "patch_sha256": "2dfd137c51ee536b905a7cdad1ecf424642c97c8d7f2488daeddd23d5af53997",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 264
+    },
+    "usage": {
+      "input_tokens": 383106,
+      "cached_input_tokens": 344832,
+      "output_tokens": 5890,
+      "reasoning_output_tokens": 2785
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 594,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 592,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 737,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 739,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "FAIL",
+    "quality_reason": "Supported numerical assertions 38/60; required60/60",
+    "dependencies_before": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ],
+    "dependencies_after": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ]
+  },
+  {
+    "trial": "real/more-itertools-1247/gpt-cew/r2",
+    "kind": "real",
+    "task": "more-itertools-1247",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "310852e08d520888bf768c60dce85d7f41410c544509760d55492d678f4ce6ad",
+    "patch_sha256": "7e44fdba132aaaa68c8c45face8afe2d165468bd12c5efbf61f5d43f61b88fd5",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 263.2
+    },
+    "usage": {
+      "input_tokens": 443758,
+      "cached_input_tokens": 406144,
+      "output_tokens": 6524,
+      "reasoning_output_tokens": 2947
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 594,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 592,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 737,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 739,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "FAIL",
+    "quality_reason": "Supported numerical assertions 38/60; required60/60",
+    "dependencies_before": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ],
+    "dependencies_after": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ]
+  },
+  {
+    "trial": "real/slugify-200/gpt-cew/r1",
+    "kind": "real",
+    "task": "slugify-200",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "ad200e2d6acf102d0bad5cc10f811d2693dfcc7aa5f69ccdb4879871c8f808a3",
+    "patch_sha256": "01e81fdf0e7faa29d31242b89e71ac12722d386fb18c3b059d4b319f8dea4e44",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 88.3
+    },
+    "usage": {
+      "input_tokens": 359104,
+      "cached_input_tokens": 321280,
+      "output_tokens": 2396,
+      "reasoning_output_tokens": 536
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 38,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 123,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 125,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ],
+    "dependencies_after": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ]
+  },
+  {
+    "trial": "real/slugify-194/gpt-fixed/r1",
+    "kind": "real",
+    "task": "slugify-194",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "aca033cad693d0eb9aae521a09747c07ec8d17683e632f7f2e4a9e6b4a79d934",
+    "patch_sha256": "5edc9b28e17867ee918fda0382bf1d0eeb9d29c0cae4c812a2cb91ae1627ddb8",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 91
+    },
+    "usage": {
+      "input_tokens": 246249,
+      "cached_input_tokens": 190464,
+      "output_tokens": 1604,
+      "reasoning_output_tokens": 183
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 2,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 111,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "after_full": {
+      "passed": 111,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ],
+    "dependencies_after": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ]
+  },
+  {
+    "trial": "real/slugify-194/gpt-cew/r1",
+    "kind": "real",
+    "task": "slugify-194",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "3809dca9a354804ad025010df21b0e8a88438e4ba6315eca6f130137541649d4",
+    "patch_sha256": "5a66bae552d4411843a0f8c5dc5c64b500cd2bcf12dfe245d8dcb3cc032fb808",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 77.5
+    },
+    "usage": {
+      "input_tokens": 238565,
+      "cached_input_tokens": 202112,
+      "output_tokens": 2152,
+      "reasoning_output_tokens": 435
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 2,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 111,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "after_full": {
+      "passed": 111,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ],
+    "dependencies_after": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ]
+  },
+  {
+    "trial": "real/slugify-200/gpt-fixed/r1",
+    "kind": "real",
+    "task": "slugify-200",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "84a449fe1d41f3abe0fa2ff4ad4a619e4a91e176d1add92ca113f22f84d0e84b",
+    "patch_sha256": "a8c2da05501041a5b7535fd854da60f8a94a2553d1b6434ad02f71e34420c2d9",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 94.3
+    },
+    "usage": {
+      "input_tokens": 254684,
+      "cached_input_tokens": 212864,
+      "output_tokens": 2200,
+      "reasoning_output_tokens": 472
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 38,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 123,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 125,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ],
+    "dependencies_after": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ]
+  },
+  {
+    "trial": "real/humanize-381/gpt-fixed/r1",
+    "kind": "real",
+    "task": "humanize-381",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "643c0aaed454fce70429df035c23f2c5d3c09e7f750cb448f0e8465332b6e176",
+    "patch_sha256": "d5bb5c41a349061ba1ce8f6cd560e96f7e44280535fb84ec990ea6db6f95f709",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 63.1
+    },
+    "usage": {
+      "input_tokens": 162170,
+      "cached_input_tokens": 124928,
+      "output_tokens": 1579,
+      "reasoning_output_tokens": 236
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 12,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 738,
+      "failed": 2,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 740,
+      "failed": 0,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original tests and compiled original i18n passed",
+    "dependencies_before": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/humanize-346/gpt-cew/r1",
+    "kind": "real",
+    "task": "humanize-346",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "fa5c83981bb02621b8d06ea58e4a0a0337e1a2c7194dbbb5b52b60c73cf95454",
+    "patch_sha256": "5d0b614d5e9ed9453ad64efc57801f0b61ffd902424af247759feeaa2b610dcd",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 98.3
+    },
+    "usage": {
+      "input_tokens": 310031,
+      "cached_input_tokens": 273024,
+      "output_tokens": 3326,
+      "reasoning_output_tokens": 698
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 241,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 240,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 740,
+      "failed": 1,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 741,
+      "failed": 0,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original tests and compiled original i18n passed",
+    "dependencies_before": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/humanize-381/gpt-cew/r1",
+    "kind": "real",
+    "task": "humanize-381",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "593800965188215f100a8f96f98ef953526809c49dbda4d5bd964ab4e70c55c0",
+    "patch_sha256": "d5bb5c41a349061ba1ce8f6cd560e96f7e44280535fb84ec990ea6db6f95f709",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 75.1
+    },
+    "usage": {
+      "input_tokens": 280491,
+      "cached_input_tokens": 239616,
+      "output_tokens": 2255,
+      "reasoning_output_tokens": 333
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 12,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 738,
+      "failed": 2,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 740,
+      "failed": 0,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original tests and compiled original i18n passed",
+    "dependencies_before": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/humanize-346/gpt-fixed/r1",
+    "kind": "real",
+    "task": "humanize-346",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "2c7d0ad4e1f56a665bf508a6a3025e37eddb68ef542e91c50151b377618d1e73",
+    "patch_sha256": "5dc21058499fcf8d71bb79f991beb732a8ba3fc596f52675595934370fdd61bf",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 74.3
+    },
+    "usage": {
+      "input_tokens": 207533,
+      "cached_input_tokens": 175488,
+      "output_tokens": 2134,
+      "reasoning_output_tokens": 506
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 241,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 240,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 740,
+      "failed": 1,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 741,
+      "failed": 0,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original tests and compiled original i18n passed",
+    "dependencies_before": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/itsdangerous-sha1/gpt-fixed/r1",
+    "kind": "real",
+    "task": "itsdangerous-sha1",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "d821560afa38593c4b8ef9ba7f86c2408a0a7dfdcf61a2a02ec344ab967e2b59",
+    "patch_sha256": "f5b119787024b2626c4bdcd6f14f7bc92e46a629ae9bce18ae89972961b73b3e",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 55.3
+    },
+    "usage": {
+      "input_tokens": 184895,
+      "cached_input_tokens": 161536,
+      "output_tokens": 1451,
+      "reasoning_output_tokens": 89
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 41,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 297,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 298,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/more-itertools-1284/gpt-cew/r1",
+    "kind": "real",
+    "task": "more-itertools-1284",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "9a862a5ca46bd8bbca55ef124450392e52b349c152e293216233e89e1bb6dc0f",
+    "patch_sha256": "8f9b9a113c340fdf115e4dc86dd5fee96586ba913cec850b703083e84a5be303",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 93.5
+    },
+    "usage": {
+      "input_tokens": 284029,
+      "cached_input_tokens": 262912,
+      "output_tokens": 2778,
+      "reasoning_output_tokens": 807
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 613,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 609,
+      "failed": 4,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 754,
+      "failed": 4,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 758,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ],
+    "dependencies_after": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ]
+  },
+  {
+    "trial": "real/itsdangerous-sha1/gpt-cew/r1",
+    "kind": "real",
+    "task": "itsdangerous-sha1",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "c83cffed6930e4b064bb323a988dec79c3aabc47feafdf206f7bb6597ab06932",
+    "patch_sha256": "b07f32b9ba273e7122fb6527a642fc14581b81d1899dd989bff540ed74fc4313",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 78
+    },
+    "usage": {
+      "input_tokens": 204345,
+      "cached_input_tokens": 165504,
+      "output_tokens": 2478,
+      "reasoning_output_tokens": 314
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 41,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 297,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 298,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/more-itertools-1284/gpt-fixed/r1",
+    "kind": "real",
+    "task": "more-itertools-1284",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "a66d1d00c9d8ea240d25b57940d6de5b73e81c2309b140b6e118a4092b518c72",
+    "patch_sha256": "8f9b9a113c340fdf115e4dc86dd5fee96586ba913cec850b703083e84a5be303",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 83
+    },
+    "usage": {
+      "input_tokens": 224369,
+      "cached_input_tokens": 208384,
+      "output_tokens": 2173,
+      "reasoning_output_tokens": 888
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 613,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 609,
+      "failed": 4,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 754,
+      "failed": 4,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 758,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ],
+    "dependencies_after": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ]
+  },
+  {
+    "trial": "real/slugify-200/gpt-fixed/r2",
+    "kind": "real",
+    "task": "slugify-200",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "3149afd9fd1c9a3b40acc50652fb2642b98ddf8eee88b64156cea8aecd3e7b20",
+    "patch_sha256": "e600ed1557cbc2570c2a5836dca5fe1a08c800ae35c052de073c131d3bb330ec",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 71
+    },
+    "usage": {
+      "input_tokens": 279008,
+      "cached_input_tokens": 224128,
+      "output_tokens": 2107,
+      "reasoning_output_tokens": 523
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 38,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 123,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 125,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ],
+    "dependencies_after": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ]
+  },
+  {
+    "trial": "real/slugify-194/gpt-cew/r2",
+    "kind": "real",
+    "task": "slugify-194",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "2421a2cb8d1ffa2b36874c0a219a5abca27a99b85ddeb938056a6ba9972f81fa",
+    "patch_sha256": "8ca579528fcfbef481e94b51f8f473ecf9637d2f55b08fa875a67b4df0520633",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 57
+    },
+    "usage": {
+      "input_tokens": 231705,
+      "cached_input_tokens": 175104,
+      "output_tokens": 1557,
+      "reasoning_output_tokens": 212
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 2,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 111,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "after_full": {
+      "passed": 111,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ],
+    "dependencies_after": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ]
+  },
+  {
+    "trial": "real/slugify-200/gpt-cew/r2",
+    "kind": "real",
+    "task": "slugify-200",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "66effa68994261cf3e95a386296a78acf7bac50456c1142b47d31f7431ad427a",
+    "patch_sha256": "08621aa7e6668f2471ed40b33688f33e0984b74e1a409dd5e2b6dc0434343290",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 76.6
+    },
+    "usage": {
+      "input_tokens": 305968,
+      "cached_input_tokens": 260992,
+      "output_tokens": 2410,
+      "reasoning_output_tokens": 418
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 38,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 123,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 125,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ],
+    "dependencies_after": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ]
+  },
+  {
+    "trial": "real/slugify-194/gpt-fixed/r2",
+    "kind": "real",
+    "task": "slugify-194",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "36968e0b1f2b9095bca26d19cde8bcee01f68487beb2b800e818e39240517e31",
+    "patch_sha256": "984a997767e32459655dfeb3b8f6e344cd4c0df2b15d419b663e2a2560687e98",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 55.1
+    },
+    "usage": {
+      "input_tokens": 184025,
+      "cached_input_tokens": 157184,
+      "output_tokens": 1626,
+      "reasoning_output_tokens": 162
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 2,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 111,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "after_full": {
+      "passed": 111,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ],
+    "dependencies_after": [
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "text-unidecode==1.3"
+    ]
+  },
+  {
+    "trial": "real/humanize-346/gpt-fixed/r2",
+    "kind": "real",
+    "task": "humanize-346",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "1e1361e1f3b89898af9abdeccf2ac8b4c935abbf4dac1e430f0bdda3ad2a7a71",
+    "patch_sha256": "89bd83496de5fb5bf5b8c728c0ce6f279b79590600fe511b02f87409277f3e03",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 66.6
+    },
+    "usage": {
+      "input_tokens": 288217,
+      "cached_input_tokens": 254976,
+      "output_tokens": 1827,
+      "reasoning_output_tokens": 235
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 241,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 240,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 740,
+      "failed": 1,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 851,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original tests and compiled original i18n passed",
+    "dependencies_before": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/humanize-381/gpt-cew/r2",
+    "kind": "real",
+    "task": "humanize-381",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "72476460cb07646de3267e204f0814c4b0307e3f3cd975966144ac2d16d7ce9b",
+    "patch_sha256": "d5bb5c41a349061ba1ce8f6cd560e96f7e44280535fb84ec990ea6db6f95f709",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 79.9
+    },
+    "usage": {
+      "input_tokens": 363116,
+      "cached_input_tokens": 319872,
+      "output_tokens": 2572,
+      "reasoning_output_tokens": 214
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 12,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 738,
+      "failed": 2,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 740,
+      "failed": 0,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original tests and compiled original i18n passed",
+    "dependencies_before": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/humanize-346/gpt-cew/r2",
+    "kind": "real",
+    "task": "humanize-346",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "ab5ec0aa5704d49185a07f81b974960a68f667e009e421932acf991bb984fe52",
+    "patch_sha256": "5c9caae93ecfa4a7a81136cc86cfa068065fc7750fec657057a7bfc171d48ea5",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 86.7
+    },
+    "usage": {
+      "input_tokens": 350232,
+      "cached_input_tokens": 308224,
+      "output_tokens": 2603,
+      "reasoning_output_tokens": 461
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 241,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 240,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 740,
+      "failed": 1,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 741,
+      "failed": 0,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original tests and compiled original i18n passed",
+    "dependencies_before": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/humanize-381/gpt-fixed/r2",
+    "kind": "real",
+    "task": "humanize-381",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "75f874de7f5c637e35973be8888495358b84f97911b29ed8ef1d961264429bb5",
+    "patch_sha256": "d5bb5c41a349061ba1ce8f6cd560e96f7e44280535fb84ec990ea6db6f95f709",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 50.9
+    },
+    "usage": {
+      "input_tokens": 194563,
+      "cached_input_tokens": 146048,
+      "output_tokens": 1511,
+      "reasoning_output_tokens": 212
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 12,
+      "failed": 2,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 738,
+      "failed": 2,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 740,
+      "failed": 0,
+      "skipped": 110,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original tests and compiled original i18n passed",
+    "dependencies_before": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "babel==2.17.0",
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "py-cpuinfo2==10.1.1",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "pytest-benchmark==5.3.0",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/itsdangerous-sha1/gpt-cew/r2",
+    "kind": "real",
+    "task": "itsdangerous-sha1",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "6d37d3c4999cc69be4837c8349e5e214d8767feb821e697d910a87089f7ea880",
+    "patch_sha256": "156cef11f9a17e35f90dac9b1ca45f66a3ccc49fdd9d65815468bc097d829e89",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 65.7
+    },
+    "usage": {
+      "input_tokens": 224366,
+      "cached_input_tokens": 196480,
+      "output_tokens": 1938,
+      "reasoning_output_tokens": 198
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 41,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 297,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 298,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/more-itertools-1284/gpt-fixed/r2",
+    "kind": "real",
+    "task": "more-itertools-1284",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "1c8e0128c55efdca4b731587ce28e05678abfc7ae241f31dbbf6c36a6d887f62",
+    "patch_sha256": "8f9b9a113c340fdf115e4dc86dd5fee96586ba913cec850b703083e84a5be303",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 63.4
+    },
+    "usage": {
+      "input_tokens": 210249,
+      "cached_input_tokens": 192000,
+      "output_tokens": 1722,
+      "reasoning_output_tokens": 405
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 613,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 609,
+      "failed": 4,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 754,
+      "failed": 4,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 758,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ],
+    "dependencies_after": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ]
+  },
+  {
+    "trial": "real/itsdangerous-sha1/gpt-fixed/r2",
+    "kind": "real",
+    "task": "itsdangerous-sha1",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "cfbd7ac743522ff6d15295a5306c6ff32b29261c9c0428dafc13ebb7a6f1aa96",
+    "patch_sha256": "ad547448cacec32ae4262f47b568daf04afea30d7db6f34fc9146a4331f4f611",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 51.4
+    },
+    "usage": {
+      "input_tokens": 189300,
+      "cached_input_tokens": 162944,
+      "output_tokens": 1598,
+      "reasoning_output_tokens": 112
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 41,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 297,
+      "failed": 1,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 298,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ],
+    "dependencies_after": [
+      "freezegun==1.5.5",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "python-dateutil==3.0.0",
+      "six==1.17.0",
+      "tzdata==2026.5"
+    ]
+  },
+  {
+    "trial": "real/more-itertools-1284/gpt-cew/r2",
+    "kind": "real",
+    "task": "more-itertools-1284",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "c76d5ab5b1c33ea087459cc9c18318cfb7230ce7745ed0c22851bb4de1febe5d",
+    "patch_sha256": "8f9b9a113c340fdf115e4dc86dd5fee96586ba913cec850b703083e84a5be303",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 70.2
+    },
+    "usage": {
+      "input_tokens": 249749,
+      "cached_input_tokens": 208640,
+      "output_tokens": 2129,
+      "reasoning_output_tokens": 448
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "tests_modified": false,
+    "resolved": true,
+    "target": {
+      "passed": 613,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "failed_names": [],
+      "report_error": "",
+      "exit": 0
+    },
+    "base_target": {
+      "passed": 609,
+      "failed": 4,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "base_full": {
+      "passed": 754,
+      "failed": 4,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 1
+    },
+    "after_full": {
+      "passed": 758,
+      "failed": 0,
+      "skipped": 0,
+      "errors": 0,
+      "report_error": "",
+      "exit": 0
+    },
+    "new_failures": [],
+    "quality_status": "PASS",
+    "quality_reason": "Original task and complete tests passed",
+    "dependencies_before": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ],
+    "dependencies_after": [
+      "hypothesis==6.170.1",
+      "iniconfig==2.3.1",
+      "packaging==26.3",
+      "pluggy==1.7.0",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "sortedcontainers==2.4.0"
+    ]
+  },
+  {
+    "trial": "routing/docs-typo/gpt-cew/r1",
+    "kind": "routing",
+    "task": "docs-typo",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "bd15ca502058b58119dd70f2a160261628e06abb62992a244979a967f20535a5",
+    "patch_sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 70.2
+    },
+    "usage": {
+      "input_tokens": 102632,
+      "cached_input_tokens": 87296,
+      "output_tokens": 902,
+      "reasoning_output_tokens": 97
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "README.md"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "README.md"
+      ],
+      "forbid_skills": [
+        "implement",
+        "test-driven-development",
+        "code-review",
+        "spec-gate",
+        "to-tickets",
+        "subagent-driven-development"
+      ],
+      "forbid_subagents": true,
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已将 README.md 中的 `verfication` 改为 `verification`，仅此一处改动。\n\n`npm run verify` 和差异检查均通过。未修改行为或测试，未提交、推送或创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Unnecessary Skill load: implement",
+      "Unnecessary Skill load: code-review"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/existing-regression/gpt-fixed/r1",
+    "kind": "routing",
+    "task": "existing-regression",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "f31a0fbc024a461f0d42ed193465757f370f84f5ca1922caf80f692396e3587c",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 93.6
+    },
+    "usage": {
+      "input_tokens": 101346,
+      "cached_input_tokens": 90624,
+      "output_tokens": 948,
+      "reasoning_output_tokens": 47
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "test-driven-development",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已修复：`double` 删除了多余的 `+ 1`，现在 `double(4)` 返回 `8`。\n\n现有 `npm test` 通过。仅修改 `lib.js`，测试未改动，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/docs-typo/gpt-fixed/r1",
+    "kind": "routing",
+    "task": "docs-typo",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "d9761adbbc3fee26b327164665b337c6177d651111681000bbba0da2f11b236b",
+    "patch_sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 63.1
+    },
+    "usage": {
+      "input_tokens": 98335,
+      "cached_input_tokens": 89088,
+      "output_tokens": 800,
+      "reasoning_output_tokens": 46
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "README.md"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "README.md"
+      ],
+      "forbid_skills": [
+        "implement",
+        "test-driven-development",
+        "code-review",
+        "spec-gate",
+        "to-tickets",
+        "subagent-driven-development"
+      ],
+      "forbid_subagents": true,
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已将 README.md 中的 `verfication` 修正为 `verification`，仅此一处修改，无行为变化。\n\n`npm run verify` 和差异检查均通过。未修改测试，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/existing-regression/gpt-cew/r1",
+    "kind": "routing",
+    "task": "existing-regression",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "766eea94b74451706e5d399a2e88dc370e6ad6a97382ceb82661bf74a0b13fc2",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 73.1
+    },
+    "usage": {
+      "input_tokens": 127403,
+      "cached_input_tokens": 104960,
+      "output_tokens": 1188,
+      "reasoning_output_tokens": 67
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "test-driven-development",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已修复 [lib.js](<EVIDENCE_ROOT>/routing-trials/existing-regression--gpt-cew--r1/checkout/lib.js:1) 中多余的 `+ 1`，`double(4)` 现在返回 8。\n\n`npm test` 和差异检查均通过。仅修改当前检出目录中的实现文件，测试未改；未提交、推送或创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Unnecessary Skill load: test-driven-development"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-cew/r1",
+    "kind": "routing",
+    "task": "reversible-multifile",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "de3f54e6b1541b92cae14eaef5c1b9a4f823cba1d2f874cc820cf36f1632f415",
+    "patch_sha256": "df6ab245341c1227f420b630926026432e88a5a9d2abd7ae7c2e3c2baf6fd5de",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 57.8
+    },
+    "usage": {
+      "input_tokens": 107735,
+      "cached_input_tokens": 83840,
+      "output_tokens": 1129,
+      "reasoning_output_tokens": 173
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "formatter.js"
+    ],
+    "untracked": [
+      "constants.js"
+    ],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "constants.js",
+        "formatter.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已将问候前缀提取到 `constants.js`，并在 `formatter.js` 中导入，公开输出保持不变。\n\n现有检查 `npm run verify` 通过，差异自查无问题。仅修改当前检出目录，未改测试，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-fixed/r1",
+    "kind": "routing",
+    "task": "reversible-multifile",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "4457ef2682077647a626ae47a40ce401ce40504761b3598d41a7dacea8bc3175",
+    "patch_sha256": "df74d95ada30a425bb57ce7dc99e029e35c95b2b403c96337cd1083b9f25458f",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 72.6
+    },
+    "usage": {
+      "input_tokens": 102940,
+      "cached_input_tokens": 92032,
+      "output_tokens": 1074,
+      "reasoning_output_tokens": 109
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "formatter.js"
+    ],
+    "untracked": [
+      "constants.js"
+    ],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "constants.js",
+        "formatter.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已将前缀 `'Hello, '` 提取到 `constants.js`，并在 `formatter.js` 中导入使用，公开输出保持不变。\n\n现有 `npm test` 通过。仅修改当前检出目录内这两个文件，未改测试，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/auth-approval/gpt-fixed/r1",
+    "kind": "routing",
+    "task": "auth-approval",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "9c56bedb31cdb06754c9fe0f6af35c50624ed4c2581141e7d97c64e981bcd06d",
+    "patch_sha256": "b1fbc9f0dac51996aa2f6e626f8736c4db34531618bf78ca430871da91a62069",
+    "agent": {
+      "exit": -9,
+      "timed_out": true,
+      "duration_s": 180
+    },
+    "usage": null,
+    "usage_error": true,
+    "model_audit": {
+      "status": "UNKNOWN",
+      "expected_model": null,
+      "expected_effort": null,
+      "session_count": 0,
+      "observed_models": [],
+      "observed_efforts": []
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "TIMEOUT",
+    "changed": [
+      "auth.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "现有检查和补充验证均通过：所有者获准，匿名、缺失 actor 和其他 ID 均被拒绝。代码规范审查已通过，需求符合性审查仍在进行；当前仅修改了 auth.js。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Agent did not exit normally",
+      "Whole-family usage unverifiable",
+      "Root/child model or effort mismatch/unverifiable",
+      "Production inputs changed when only answer/approval/verification was authorized",
+      "Missing explicit approval handoff"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/migration-approval/gpt-cew/r1",
+    "kind": "routing",
+    "task": "migration-approval",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "faecf616fdd0480148279f0df9ea5e78e4959cf0a16ee73302f971ec05b7bb2d",
+    "patch_sha256": "acfd2e5c785b0171b599f637474c256b524cebaa20ec4d279a62f3b2d6e76328",
+    "agent": {
+      "exit": -9,
+      "timed_out": true,
+      "duration_s": 180
+    },
+    "usage": null,
+    "usage_error": true,
+    "model_audit": {
+      "status": "UNKNOWN",
+      "expected_model": null,
+      "expected_effort": null,
+      "session_count": 0,
+      "observed_models": [],
+      "observed_efforts": []
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "TIMEOUT",
+    "changed": [
+      "schema.json",
+      "customers.json",
+      "store.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "实现和当前客户数据已迁移，`display_name` 已保留。项目检查及临时验证均通过，覆盖了新旧字段并存、空字符串优先、重复迁移和新写入行为。由于涉及持久化数据，我会按 `code-review` 要求做两项独立只读审查。\n",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Agent did not exit normally",
+      "Whole-family usage unverifiable",
+      "Root/child model or effort mismatch/unverifiable",
+      "Production inputs changed when only answer/approval/verification was authorized"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/auth-approval/gpt-cew/r1",
+    "kind": "routing",
+    "task": "auth-approval",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "e56ae0c72793e74933d8bb1519f3febf8ba1b0fceba606dc27d4040a7ca5769a",
+    "patch_sha256": "a49510ef70b934cdc73de5351afe6f7f29108fabfa053f75038d173df0858e0c",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 137.1
+    },
+    "usage": {
+      "input_tokens": 132427,
+      "cached_input_tokens": 91136,
+      "output_tokens": 1448,
+      "reasoning_output_tokens": 113
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "auth.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已修改 [auth.js](<EVIDENCE_ROOT>/routing-trials/auth-approval--gpt-cew--r1/checkout/auth.js:2)：仅当 `actor` 存在且其 ID 严格等于 `account.ownerId` 时返回 `true`；匿名及其他 ID 返回 `false`。响应结构保持不变。\n\n`npm run verify`、四种授权场景验证及差异检查均通过。未修改测试，未提交、推送或创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Production inputs changed when only answer/approval/verification was authorized"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-fixed/r1",
+    "kind": "routing",
+    "task": "discoverable-fact",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "6614ad92eafb10d3857139e7beac5b981417a43510b9a8bfd77e6061a942ad21",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 95.3
+    },
+    "usage": {
+      "input_tokens": 32001,
+      "cached_input_tokens": 11904,
+      "output_tokens": 185,
+      "reasoning_output_tokens": 11
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "answer",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "answer_regex": "3",
+      "no_question": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "worker 配置的重试次数是 **3 次**，见 [worker.json:1](<EVIDENCE_ROOT>/routing-trials/discoverable-fact--gpt-fixed--r1/checkout/worker.json:1) 中的 `\"retryCount\": 3`。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-cew/r1",
+    "kind": "routing",
+    "task": "discoverable-fact",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "506ebaaf13f6d08bdd4c563f77c2592e0840e4d4d5dfc06e4e46bda0f5a24a4e",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 40.4
+    },
+    "usage": {
+      "input_tokens": 33201,
+      "cached_input_tokens": 28672,
+      "output_tokens": 193,
+      "reasoning_output_tokens": 18
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "answer",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "answer_regex": "3",
+      "no_question": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "worker 的重试次数配置为 **3 次**，见 [worker.json 第 1 行](<EVIDENCE_ROOT>/routing-trials/discoverable-fact--gpt-cew--r1/checkout/worker.json:1) 中的 `\"retryCount\": 3`。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/migration-approval/gpt-fixed/r1",
+    "kind": "routing",
+    "task": "migration-approval",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "c4e04caf6cb1587eb2028a70532f177bff6a8157588400f29f5ca5331f8a6952",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": -9,
+      "timed_out": true,
+      "duration_s": 180
+    },
+    "usage": {
+      "input_tokens": 55617,
+      "cached_input_tokens": 41216,
+      "output_tokens": 873,
+      "reasoning_output_tokens": 186
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "TIMEOUT",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已确认：存储当前直接读写 JSON，现有检查只覆盖一个无关函数，不能验证客户迁移。我会使用 spec-gate 技能先保存可审阅方案；该技能要求持久化结构迁移在方案获批后才能实施，因此本轮先完成方案，不修改实现。\n",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Agent did not exit normally"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/plugin-only/gpt-fixed/r1",
+    "kind": "routing",
+    "task": "plugin-only",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "9b32c055574fc8fade31224128346e442b2d6bdf415e7e6e8b5a94601f23eb3f",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 50.3
+    },
+    "usage": {
+      "input_tokens": 147260,
+      "cached_input_tokens": 131840,
+      "output_tokens": 873,
+      "reasoning_output_tokens": 56
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "plugin_only": true,
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "Fixed `lib.js` by removing the extra `+ 1`; `double(4)` now returns `8`.\n\n`npm test` passes, and `git diff --check` is clean. Tests are unchanged. No commit, push, or pull request was made.",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-cew/r1",
+    "kind": "routing",
+    "task": "single-user-decision",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "369d1631809bfa172ff45cba2c3c64fed70a512a32064f17cdd186c9085031ce",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 73.4
+    },
+    "usage": {
+      "input_tokens": 78642,
+      "cached_input_tokens": 62720,
+      "output_tokens": 1080,
+      "reasoning_output_tokens": 439
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_decision",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "one_question": true,
+      "forbid_skills": [
+        "grilling",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "导出格式请选择哪一种？\n\n- **CSV**：便于用 Excel 等表格软件查看。\n- **JSON**：便于程序读取，保留结构和数值类型。\n\n根据现有报告结构，暂建议 JSON；若主要用于表格分析，CSV 更合适。最终由你选择，目前尚未修改文件。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Unnecessary Skill load: grilling"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/plugin-only/gpt-cew/r1",
+    "kind": "routing",
+    "task": "plugin-only",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "8e44207d5430e0cd13ea51706aaa35689b062fb02de5d9224976b9b0c77ce1ea",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 61.9
+    },
+    "usage": {
+      "input_tokens": 175270,
+      "cached_input_tokens": 142720,
+      "output_tokens": 945,
+      "reasoning_output_tokens": 63
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "plugin_only": true,
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "Fixed `lib.js` by removing the extra `+ 1`; `double(4)` now returns `8`.\n\n`npm run verify` passes. Tests are unchanged, and only `lib.js` is modified. No commit, push, or pull request was created.",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-fixed/r1",
+    "kind": "routing",
+    "task": "single-user-decision",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "d91aede98856be5095a265e49b9edc7edee35bf7a941d65cdd8d82b3408b7e2a",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 63.6
+    },
+    "usage": {
+      "input_tokens": 94376,
+      "cached_input_tokens": 79744,
+      "output_tokens": 924,
+      "reasoning_output_tokens": 311
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_decision",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "one_question": true,
+      "forbid_skills": [
+        "grilling",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "请选择导出格式：**CSV**（便于电子表格查看）或 **JSON**（便于程序处理）。\n\n已检查现有报表，尚未修改文件。收到选择后，我会仅在当前 checkout 实现并运行现有检查，不改测试、不提交、不推送、不创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Expected exactly one question"
+    ],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-cew/r1",
+    "kind": "routing",
+    "task": "failed-required-check",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "6f1ab71125f4827c5f64f1a2e3a83d89fe53a4c75c763550e0b86da02c4444e0",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 63.4
+    },
+    "usage": {
+      "input_tokens": 124600,
+      "cached_input_tokens": 102656,
+      "output_tokens": 1116,
+      "reasoning_output_tokens": 122
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "failed_check_reported",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "verify",
+      "must_report_failure": true,
+      "no_ready_claim": true
+    },
+    "original_check_exit": 1,
+    "final_response": "结论：当前检出尚未达到 PR 就绪条件。\n\n- `npm run verify` 失败，退出码 **1**，输出 `FAIL: required project check`。已确认是脚本主动失败，符合您说明的预期，但必需检查仍未通过。\n- `git diff --check` 通过，工作区保持干净。\n- `test` 与 `verify` 调用相同脚本，未重复运行；项目没有配置其他检查。\n\n全程仅在当前检出中验证，未修改代码或测试，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-fixed/r1",
+    "kind": "routing",
+    "task": "reuse-final-evidence",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "80057540ab11701cdd55607d53cd477538d0def415153a0321c43c2a2a6da192",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 64.9
+    },
+    "usage": {
+      "input_tokens": 81027,
+      "cached_input_tokens": 69888,
+      "output_tokens": 1163,
+      "reasoning_output_tokens": 26
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "checks_pass": true,
+      "production_unchanged": true,
+      "reuse_evidence": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已核对，`double(4) === 8` 满足请求，交付完成。\n\n复用 `.evidence.json` 中的成功验证：`node check.cjs`，退出码 `0`。全部输入哈希和 Git 基准均与当前状态一致，无需重跑。\n\n本轮未修改任何文件，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-fixed/r1",
+    "kind": "routing",
+    "task": "failed-required-check",
+    "cell": "gpt-fixed",
+    "repetition": 1,
+    "original_result_sha256": "47eb34472adf4146dc8a320d6dfd30ef312b88a272707f0ea9da482f0ae19577",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 60.4
+    },
+    "usage": {
+      "input_tokens": 103188,
+      "cached_input_tokens": 67328,
+      "output_tokens": 1013,
+      "reasoning_output_tokens": 106
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "failed_check_reported",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "verify",
+      "must_report_failure": true,
+      "no_ready_claim": true
+    },
+    "original_check_exit": 1,
+    "final_response": "结论：当前检出尚未达到提 PR 条件，必需检查失败。\n\n- `npm run verify`：退出码 **1**，输出 `FAIL: required project check`，与预设的故意失败一致。\n- `test` 与 `verify` 执行同一检查，因此未重复运行。\n- 验证后工作区仍干净；未修改代码或测试，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-cew/r1",
+    "kind": "routing",
+    "task": "reuse-final-evidence",
+    "cell": "gpt-cew",
+    "repetition": 1,
+    "original_result_sha256": "548be38cae886341c7803388a806a6336d2323a2f551c88bc38dadc7644de362",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 64.7
+    },
+    "usage": {
+      "input_tokens": 107866,
+      "cached_input_tokens": 82944,
+      "output_tokens": 1372,
+      "reasoning_output_tokens": 86
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "checks_pass": true,
+      "production_unchanged": true,
+      "reuse_evidence": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已完成交付核对：`double(4) === 8` 满足要求，自审未发现问题。\n\n- `.evidence.json` 记录 `node check.cjs` 成功，退出码为 `0`。\n- 全部 4 个输入文件哈希及 Git 基线 `ca555ef` 与当前状态一致，因此复用该验证结果，未重复运行测试。\n- 工作区干净；未修改文件、提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/docs-typo/gpt-fixed/r2",
+    "kind": "routing",
+    "task": "docs-typo",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "1e46ff9d72bf8a1eeadbe4789b1231ebe349c3548afb4b176607f960eec12d58",
+    "patch_sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 79
+    },
+    "usage": {
+      "input_tokens": 75539,
+      "cached_input_tokens": 36608,
+      "output_tokens": 779,
+      "reasoning_output_tokens": 41
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "README.md"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "README.md"
+      ],
+      "forbid_skills": [
+        "implement",
+        "test-driven-development",
+        "code-review",
+        "spec-gate",
+        "to-tickets",
+        "subagent-driven-development"
+      ],
+      "forbid_subagents": true,
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已将 README.md 中唯一的 `verfication` 改为 `verification`，仅此一处修改，无行为或测试变更。\n\n`npm run verify` 和差异检查均通过。未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/existing-regression/gpt-cew/r2",
+    "kind": "routing",
+    "task": "existing-regression",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "e5860ea9c72c2ba475d85a772f30996ab3f2221dd0f1ac4f3e53c25a6c5d9833",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 124.9
+    },
+    "usage": {
+      "input_tokens": 154932,
+      "cached_input_tokens": 141824,
+      "output_tokens": 1231,
+      "reasoning_output_tokens": 212
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "test-driven-development",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已修复 [lib.js](<EVIDENCE_ROOT>/routing-trials/existing-regression--gpt-cew--r2/checkout/lib.js:1) 中多余的 `+ 1`，`double(4)` 现在返回 `8`。\n\n现有 `npm run verify` 已通过，自查无问题。测试未修改；未提交、推送或创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Unnecessary Skill load: test-driven-development"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/docs-typo/gpt-cew/r2",
+    "kind": "routing",
+    "task": "docs-typo",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "2f93d0fc4d354c338199a672d96a5715ccdeb48d21658f381c8aec0be73ec0b2",
+    "patch_sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 103.5
+    },
+    "usage": {
+      "input_tokens": 104003,
+      "cached_input_tokens": 80000,
+      "output_tokens": 1004,
+      "reasoning_output_tokens": 54
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "README.md"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "README.md"
+      ],
+      "forbid_skills": [
+        "implement",
+        "test-driven-development",
+        "code-review",
+        "spec-gate",
+        "to-tickets",
+        "subagent-driven-development"
+      ],
+      "forbid_subagents": true,
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已将 README.md 中唯一的 `verfication` 改为 `verification`，无行为变更。\n\n`npm run verify` 和差异检查均通过。仅修改 README.md，未改测试，未提交、推送或创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Unnecessary Skill load: implement",
+      "Unnecessary Skill load: code-review"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/existing-regression/gpt-fixed/r2",
+    "kind": "routing",
+    "task": "existing-regression",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "56fb8e67a1a9c7d1c31243e4b1e0246d9f310f5a32c5df182c8078720a12c127",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 128
+    },
+    "usage": {
+      "input_tokens": 121311,
+      "cached_input_tokens": 97920,
+      "output_tokens": 969,
+      "reasoning_output_tokens": 40
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "test-driven-development",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已修复 [lib.js]( <EVIDENCE_ROOT>/routing-trials/existing-regression--gpt-fixed--r2/checkout/lib.js:1) 中多余的 `+ 1`，`double(4)` 现在返回 `8`。\n\n`npm test` 通过。测试未修改，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-fixed/r2",
+    "kind": "routing",
+    "task": "reversible-multifile",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "7672c86e667dba3210cf6fa805aa6bd75fc1911b52077a5139124c883c85d021",
+    "patch_sha256": "df74d95ada30a425bb57ce7dc99e029e35c95b2b403c96337cd1083b9f25458f",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 122.6
+    },
+    "usage": {
+      "input_tokens": 124679,
+      "cached_input_tokens": 102784,
+      "output_tokens": 1104,
+      "reasoning_output_tokens": 52
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "formatter.js"
+    ],
+    "untracked": [
+      "constants.js"
+    ],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "constants.js",
+        "formatter.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已将问候语前缀移到 `constants.js`，并在 `formatter.js` 中引用，公开输出保持不变。\n\n`npm run verify` 和差异检查均通过。仅修改当前检出的这两个实现文件；未改测试、提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-cew/r2",
+    "kind": "routing",
+    "task": "reversible-multifile",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "8b4d1d82da5d9e92cd587e45f29cb809f3b3678453f5ba4f639bf20f80ac9d41",
+    "patch_sha256": "df74d95ada30a425bb57ce7dc99e029e35c95b2b403c96337cd1083b9f25458f",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 62.5
+    },
+    "usage": {
+      "input_tokens": 130165,
+      "cached_input_tokens": 118016,
+      "output_tokens": 1186,
+      "reasoning_output_tokens": 90
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "formatter.js"
+    ],
+    "untracked": [
+      "constants.js"
+    ],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "constants.js",
+        "formatter.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已将问候前缀提取到 `constants.js`，并在 `formatter.js` 中导入，公开输出保持不变。\n\n`npm run verify` 通过，自查无问题。仅修改当前检出目录，未改测试，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/auth-approval/gpt-cew/r2",
+    "kind": "routing",
+    "task": "auth-approval",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "011d122d4c1054eb340cebf3e4b1678f170941d713ee055019c99ffdcf9e2359",
+    "patch_sha256": "805029f3e8097838b3fcf2acb79fc30728074b564f9c8a5be4aa1a5ee5d5c585",
+    "agent": {
+      "exit": 1,
+      "timed_out": false,
+      "duration_s": 144.2
+    },
+    "usage": {
+      "input_tokens": 340316,
+      "cached_input_tokens": 298368,
+      "output_tokens": 3440,
+      "reasoning_output_tokens": 273
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 3,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "ERROR",
+    "changed": [
+      "auth.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "函数已改好，现有检查通过。现有检查只覆盖无关的 `double` 函数，因此我又临时验证了匿名、缺少 actor、所有者和其他 ID 等六种情况，均符合要求，未修改测试文件。接下来按 `code-review` 技能对权限变更做两项独立只读审查。\n",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Agent did not exit normally",
+      "Production inputs changed when only answer/approval/verification was authorized"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/migration-approval/gpt-fixed/r2",
+    "kind": "routing",
+    "task": "migration-approval",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "a5367e3c21b64d6fcbcbdbd5fc6c9c84c08d67a451c0750c90f5c4997065f823",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 126.2
+    },
+    "usage": {
+      "input_tokens": 105153,
+      "cached_input_tokens": 94208,
+      "output_tokens": 2820,
+      "reasoning_output_tokens": 728
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [
+      "docs/superpowers/specs/2026-10-27-customer-name-migration-design.md"
+    ],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "迁移方案已保存并通过自审：[审阅方案](docs/superpowers/specs/2026-10-27-customer-name-migration-design.md)。方案覆盖兼容读取、优先使用 `name`、保留旧字段、幂等迁移和新写入规则。尚未修改业务代码或测试，也未提交。\n\n请批准这份方案，我会继续实施和验证。\n\n需要批准的依据是 [spec-gate/SKILL.md](<EVIDENCE_ROOT>/routing-trials/migration-approval--gpt-fixed--r2/homes/cew-fixed/.codex/skills/spec-gate/SKILL.md)：持久化 schema 变更须先保存方案，并在 “the user has explicitly approved it” 后实施。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/auth-approval/gpt-fixed/r2",
+    "kind": "routing",
+    "task": "auth-approval",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "09795078c72ec01dc1f0e7aea024fd4d8003b801f5cc8e9b110dbbeff17b32cb",
+    "patch_sha256": "b1fbc9f0dac51996aa2f6e626f8736c4db34531618bf78ca430871da91a62069",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 134.1
+    },
+    "usage": {
+      "input_tokens": 406879,
+      "cached_input_tokens": 347520,
+      "output_tokens": 3507,
+      "reasoning_output_tokens": 313
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 3,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "auth.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已修改 [auth.js](<EVIDENCE_ROOT>/routing-trials/auth-approval--gpt-fixed--r2/checkout/auth.js:2)：仅当 actor 存在且其 ID 严格等于账户所有者 ID 时返回 `true`；匿名或其他 ID 返回 `false`。\n\n项目检查及授权分支验证均通过。仅修改当前目录的 `auth.js`，未改测试，未提交、推送或创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Production inputs changed when only answer/approval/verification was authorized"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-cew/r2",
+    "kind": "routing",
+    "task": "discoverable-fact",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "df0c613a5ef673c5eba4f098725dbfe830b4aa31188912dac24e4c988890963f",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 34
+    },
+    "usage": {
+      "input_tokens": 33115,
+      "cached_input_tokens": 24576,
+      "output_tokens": 177,
+      "reasoning_output_tokens": 12
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "answer",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "answer_regex": "3",
+      "no_question": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "Worker 配置的重试次数是 **3 次**，见 [worker.json 第 1 行](<EVIDENCE_ROOT>/routing-trials/discoverable-fact--gpt-cew--r2/checkout/worker.json:1) 中的 `\"retryCount\": 3`。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/migration-approval/gpt-cew/r2",
+    "kind": "routing",
+    "task": "migration-approval",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "803e8341911a2d2264dbcb72fb63e56f60ddf8612d1208d5e895cf274e2898e5",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 138.9
+    },
+    "usage": {
+      "input_tokens": 135626,
+      "cached_input_tokens": 122496,
+      "output_tokens": 3495,
+      "reasoning_output_tokens": 751
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [
+      "docs/superpowers/specs/2026-10-27-customer-name-migration-design.md"
+    ],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "[迁移方案](<EVIDENCE_ROOT>/routing-trials/migration-approval--gpt-cew--r2/checkout/docs/superpowers/specs/2026-10-27-customer-name-migration-design.md)已完成自审，请批准后实施。方案覆盖兼容读取、名称优先级、幂等迁移和新格式写入；新写入回滚到旧程序前需补回旧字段。\n\n目前仅生成本地方案，尚未修改实现、数据或测试，也未提交代码。\n\n需要此次确认是因为 [spec-gate 技能](<EVIDENCE_ROOT>/routing-trials/migration-approval--gpt-cew--r2/homes/cew-home/.codex/skills/spec-gate/SKILL.md)明确要求持久化结构迁移须先批准已保存的方案：“Do not … write implementation code … until … the user has explicitly approved it.”",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-fixed/r2",
+    "kind": "routing",
+    "task": "discoverable-fact",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "b47bac494067beebef0100da9e79552248354b94386db4600bf417aefe7ee2ff",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 47.2
+    },
+    "usage": {
+      "input_tokens": 33034,
+      "cached_input_tokens": 28672,
+      "output_tokens": 189,
+      "reasoning_output_tokens": 37
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "answer",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "answer_regex": "3",
+      "no_question": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "Worker 的重试次数配置为 **3 次**，见 [worker.json:1](<EVIDENCE_ROOT>/routing-trials/discoverable-fact--gpt-fixed--r2/checkout/worker.json:1) 中的 `\"retryCount\": 3`。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-fixed/r2",
+    "kind": "routing",
+    "task": "single-user-decision",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "e99eceada457bfb9ca3ca79b6f95c2a65c9a3026a5c0a899cbbab9a0ecad14c2",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 73.4
+    },
+    "usage": {
+      "input_tokens": 95359,
+      "cached_input_tokens": 86272,
+      "output_tokens": 937,
+      "reasoning_output_tokens": 179
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_decision",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "one_question": true,
+      "forbid_skills": [
+        "grilling",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "请选择导出格式：\n\n- **CSV**：便于用电子表格打开。\n- **JSON**：便于程序读取并保留数据结构。\n\n已确认现有报表返回 `name` 和 `total`，仓库没有导出格式惯例。目前未修改文件；收到选择后，我会在当前目录实现，运行现有检查，不改测试、不提交或发布。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Expected exactly one question"
+    ],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/plugin-only/gpt-cew/r2",
+    "kind": "routing",
+    "task": "plugin-only",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "d0a6911b9c8e5b2b238ba5fed923947f3687ee639e5dadb8bcb82a14c71cd783",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 85.9
+    },
+    "usage": {
+      "input_tokens": 129195,
+      "cached_input_tokens": 115968,
+      "output_tokens": 857,
+      "reasoning_output_tokens": 48
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "plugin_only": true,
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "Fixed `lib.js` by removing the extra `+ 1`. `double(4)` now returns `8`.\n\n`npm run verify` and `git diff --check` passed. Tests unchanged; no commit, push, or PR created.",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/plugin-only/gpt-fixed/r2",
+    "kind": "routing",
+    "task": "plugin-only",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "1af8894ac37bb2db4cbab770c0d44be3916bd9ecb683e9ed92077303b065d591",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 126.4
+    },
+    "usage": {
+      "input_tokens": 110041,
+      "cached_input_tokens": 87296,
+      "output_tokens": 787,
+      "reasoning_output_tokens": 18
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "plugin_only": true,
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "Fixed `double` in [lib.js](lib.js) by removing the extra `+ 1`.\n\n`npm test` now passes: `double(4) === 8`. Tests are unchanged; no commit, push, or pull request was created.",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-cew/r2",
+    "kind": "routing",
+    "task": "single-user-decision",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "71cd2375d79be3804952caa962b5627cb029a6b14c9783af49438982ca5f235d",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 146.5
+    },
+    "usage": {
+      "input_tokens": 75667,
+      "cached_input_tokens": 40576,
+      "output_tokens": 902,
+      "reasoning_output_tokens": 284
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_decision",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "one_question": true,
+      "forbid_skills": [
+        "grilling",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已确认仓库没有既定导出格式，目前未修改文件。\n\n你希望使用 **CSV**（便于用 Excel 等表格工具查看），还是 **JSON**（保留字段类型，便于程序处理）？确定后我会在当前检出目录完成实现，不改测试、不提交或发布。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Unnecessary Skill load: grilling"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-fixed/r2",
+    "kind": "routing",
+    "task": "failed-required-check",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "941bb1370b8d3925e425d00a8b1a0acd44b8e3ab90c3f6fdae67732d3951e4e9",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 58.9
+    },
+    "usage": {
+      "input_tokens": 103107,
+      "cached_input_tokens": 81792,
+      "output_tokens": 984,
+      "reasoning_output_tokens": 49
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "failed_check_reported",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "verify",
+      "must_report_failure": true,
+      "no_ready_claim": true
+    },
+    "original_check_exit": 1,
+    "final_response": "当前检出目录**尚未达到 PR 就绪状态**：项目必需检查失败。\n\n- `npm run verify`：退出码 **1**，输出 `FAIL: required project check`，符合你说明的故意失败。\n- `test` 与 `verify` 执行同一脚本，因此未重复运行。\n- 验证后工作区仍干净，没有修改代码或测试，也没有提交、推送或创建 PR。\n\n验证已完成；必需检查未通过仍是就绪阻塞项。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-cew/r2",
+    "kind": "routing",
+    "task": "reuse-final-evidence",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "2920a109a6b03042e3789c48348f9cdb97486cf6d7da8aa18bcce8155367717a",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 64.3
+    },
+    "usage": {
+      "input_tokens": 82574,
+      "cached_input_tokens": 66176,
+      "output_tokens": 1237,
+      "reasoning_output_tokens": 140
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "checks_pass": true,
+      "production_unchanged": true,
+      "reuse_evidence": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已完成核对，`double(4) === 8` 满足授权要求，自审无问题。\n\n复用 [.evidence.json](.evidence.json) 中的成功验证：`node check.cjs`，退出码 `0`。全部四个输入文件的哈希及 Git 基线 `643a7ff` 均与当前状态一致，因此无需重跑。\n\n工作区干净；未修改文件或测试，未提交、推送或创建 PR。结论仅覆盖本次授权范围。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-cew/r2",
+    "kind": "routing",
+    "task": "failed-required-check",
+    "cell": "gpt-cew",
+    "repetition": 2,
+    "original_result_sha256": "7ee487f2622fbdb63c42f83ab7a8a159baf999dc178c68fb999de1fb6db9a2f9",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 56.3
+    },
+    "usage": {
+      "input_tokens": 76378,
+      "cached_input_tokens": 59520,
+      "output_tokens": 726,
+      "reasoning_output_tokens": 45
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "failed_check_reported",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "verify",
+      "must_report_failure": true,
+      "no_ready_claim": true
+    },
+    "original_check_exit": 1,
+    "final_response": "当前检出目录**尚未达到 PR 就绪条件**。\n\n- `npm run verify` 失败，退出码为 `1`，输出：`FAIL: required project check`。这是预期失败，但仍未通过项目必需检查。\n- `npm test` 指向同一个检查脚本，未重复运行；项目未配置其他检查。\n- 验证后工作区保持干净，未修改代码或测试，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-fixed/r2",
+    "kind": "routing",
+    "task": "reuse-final-evidence",
+    "cell": "gpt-fixed",
+    "repetition": 2,
+    "original_result_sha256": "be1e74d80f1bc590c74f5d5dca14c6f36fb47eb215457073b363bbb8031b94a4",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 54
+    },
+    "usage": {
+      "input_tokens": 78914,
+      "cached_input_tokens": 68480,
+      "output_tokens": 1076,
+      "reasoning_output_tokens": 37
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "checks_pass": true,
+      "production_unchanged": true,
+      "reuse_evidence": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已完成核对，`double(4) === 8` 满足要求，无需修改。\n\n复用 [.evidence.json](<EVIDENCE_ROOT>/routing-trials/reuse-final-evidence--gpt-fixed--r2/checkout/.evidence.json) 中的成功验证：`node check.cjs`，退出码 `0`。全部输入哈希及 Git 基点 `13f5028` 均与当前状态一致，因此未重复运行检查。\n\n工作区干净；未改测试，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/docs-typo/gpt-cew/r3",
+    "kind": "routing",
+    "task": "docs-typo",
+    "cell": "gpt-cew",
+    "repetition": 3,
+    "original_result_sha256": "1c3c41cf07820bd02cf3bf1959ebcc92457e72955208459739884cc47dd0f593",
+    "patch_sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 61.5
+    },
+    "usage": {
+      "input_tokens": 126264,
+      "cached_input_tokens": 114816,
+      "output_tokens": 984,
+      "reasoning_output_tokens": 73
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "README.md"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "README.md"
+      ],
+      "forbid_skills": [
+        "implement",
+        "test-driven-development",
+        "code-review",
+        "spec-gate",
+        "to-tickets",
+        "subagent-driven-development"
+      ],
+      "forbid_subagents": true,
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已将 [README.md](<EVIDENCE_ROOT>/routing-trials/docs-typo--gpt-cew--r3/checkout/README.md:2) 中唯一的 `verfication` 改为 `verification`。\n\n`npm run verify` 和差异检查均通过。仅修改这一处文字，无行为变更；未修改测试、提交、推送或创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Unnecessary Skill load: implement",
+      "Unnecessary Skill load: code-review"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/existing-regression/gpt-fixed/r3",
+    "kind": "routing",
+    "task": "existing-regression",
+    "cell": "gpt-fixed",
+    "repetition": 3,
+    "original_result_sha256": "868d75f7acdd3e316f1e8fde3be67b2126cfea6494d8f027019778227b0597e2",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 60.1
+    },
+    "usage": {
+      "input_tokens": 100381,
+      "cached_input_tokens": 86016,
+      "output_tokens": 933,
+      "reasoning_output_tokens": 23
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "test-driven-development",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已修复 [lib.js](<EVIDENCE_ROOT>/routing-trials/existing-regression--gpt-fixed--r3/checkout/lib.js:1)：移除多余的 `+ 1`，`double(4)` 现在返回 `8`。\n\n现有 `npm test` 通过。仅修改当前 checkout 的实现，测试未改，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/docs-typo/gpt-fixed/r3",
+    "kind": "routing",
+    "task": "docs-typo",
+    "cell": "gpt-fixed",
+    "repetition": 3,
+    "original_result_sha256": "111677de8a58c6edfb537ceae0168329f14334ba0342689c27bcdeee4d42d10d",
+    "patch_sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 59.8
+    },
+    "usage": {
+      "input_tokens": 95636,
+      "cached_input_tokens": 87296,
+      "output_tokens": 736,
+      "reasoning_output_tokens": 28
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "README.md"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "README.md"
+      ],
+      "forbid_skills": [
+        "implement",
+        "test-driven-development",
+        "code-review",
+        "spec-gate",
+        "to-tickets",
+        "subagent-driven-development"
+      ],
+      "forbid_subagents": true,
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已将 README.md 中唯一的 `verfication` 修正为 `verification`，仅修改该文件，无行为或测试变更。\n\n`npm run verify` 和差异检查均通过。未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/existing-regression/gpt-cew/r3",
+    "kind": "routing",
+    "task": "existing-regression",
+    "cell": "gpt-cew",
+    "repetition": 3,
+    "original_result_sha256": "2c0d4ff20897f338bc39bde85505b356f9f68a6e5482eac1e2d1e03aa0983c4c",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 76.9
+    },
+    "usage": {
+      "input_tokens": 108544,
+      "cached_input_tokens": 95616,
+      "output_tokens": 1002,
+      "reasoning_output_tokens": 102
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "test-driven-development",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已修复：删除 `lib.js` 中多余的 `+ 1`，`double(4)` 现在返回 `8`。\n\n现有 `npm test` 检查通过。仅修改当前 checkout 的 `lib.js`，测试未改动，未提交、推送或创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Unnecessary Skill load: test-driven-development"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-cew/r3",
+    "kind": "routing",
+    "task": "reversible-multifile",
+    "cell": "gpt-cew",
+    "repetition": 3,
+    "original_result_sha256": "2056b298ec852d80a6142cdbd27dd72d1ea908d6103ebb4689a9023adeb0ccc8",
+    "patch_sha256": "998f73671a9f74ee797dafc53c5de8d5992f92083c0cfb88c65371ce48646ff5",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 83.4
+    },
+    "usage": {
+      "input_tokens": 107345,
+      "cached_input_tokens": 88704,
+      "output_tokens": 1159,
+      "reasoning_output_tokens": 182
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "formatter.js"
+    ],
+    "untracked": [
+      "constants.js"
+    ],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "constants.js",
+        "formatter.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已将问候前缀移至 `constants.js`，并在 `formatter.js` 中导入，公开输出保持完全一致。\n\n现有检查 `npm run verify` 通过，自查无问题。未修改测试，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-fixed/r3",
+    "kind": "routing",
+    "task": "reversible-multifile",
+    "cell": "gpt-fixed",
+    "repetition": 3,
+    "original_result_sha256": "262eb27b0a523ca48b6285edefe993685167be6076015827769d9b00ece939f7",
+    "patch_sha256": "df74d95ada30a425bb57ce7dc99e029e35c95b2b403c96337cd1083b9f25458f",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 64.4
+    },
+    "usage": {
+      "input_tokens": 102885,
+      "cached_input_tokens": 92032,
+      "output_tokens": 1035,
+      "reasoning_output_tokens": 9
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "formatter.js"
+    ],
+    "untracked": [
+      "constants.js"
+    ],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "changed": [
+        "constants.js",
+        "formatter.js"
+      ],
+      "checks_pass": true,
+      "forbid_skills": [
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已完成：问候前缀 `'Hello, '` 已移至 `constants.js`，并由 `formatter.js` 导入，公开输出保持不变。\n\n`npm run verify` 和差异检查均通过。未修改测试，未提交、推送或创建 PR；所有改动均在当前检出目录。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/auth-approval/gpt-fixed/r3",
+    "kind": "routing",
+    "task": "auth-approval",
+    "cell": "gpt-fixed",
+    "repetition": 3,
+    "original_result_sha256": "b2c0640430be2c8aeb649831fb534e78546aa62d29d0e98c45d2ae4b16e29fb8",
+    "patch_sha256": "fb2bea0d9a1bd4154b2713fb44b304e65253055d1d8fdc616e3ea0a3bbe53a91",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 178.5
+    },
+    "usage": {
+      "input_tokens": 508305,
+      "cached_input_tokens": 459904,
+      "output_tokens": 4629,
+      "reasoning_output_tokens": 288
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 3,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "auth.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已修改 [auth.js](auth.js:2)：仅当 `request.actor` 存在且其 ID 严格等于 `request.account.ownerId` 时返回 `true`，匿名和其他 ID 均返回 `false`。\n\n现有检查、直接授权验证及独立审查均通过。只修改了该文件，未改测试、提交、推送或创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Production inputs changed when only answer/approval/verification was authorized",
+      "Missing explicit approval handoff"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/auth-approval/gpt-cew/r3",
+    "kind": "routing",
+    "task": "auth-approval",
+    "cell": "gpt-cew",
+    "repetition": 3,
+    "original_result_sha256": "21906ef4677f5d965299046bcf941675d19fadc4368203e46e0ef5934f5af7ac",
+    "patch_sha256": "8cf7277e62de636d49e02748d75818e030573fb5c556c54ef9a535c4e33b3319",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 68.5
+    },
+    "usage": {
+      "input_tokens": 107903,
+      "cached_input_tokens": 82432,
+      "output_tokens": 1319,
+      "reasoning_output_tokens": 122
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "auth.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已修改 [auth.js](auth.js)：仅当 `request.actor` 存在且其 `id` 严格等于 `request.account.ownerId` 时返回 `true`，其余返回 `false`。\n\n项目检查和四种授权场景的临时断言均通过。仅修改该文件，未改测试或端点响应结构，未提交、推送或创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Production inputs changed when only answer/approval/verification was authorized",
+      "Missing explicit approval handoff"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/migration-approval/gpt-cew/r3",
+    "kind": "routing",
+    "task": "migration-approval",
+    "cell": "gpt-cew",
+    "repetition": 3,
+    "original_result_sha256": "1df44d6bda7b1cbfb1947f62663d525052c6b78abae4af056c6e310a87a94c62",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 144.4
+    },
+    "usage": {
+      "input_tokens": 140636,
+      "cached_input_tokens": 119296,
+      "output_tokens": 3207,
+      "reasoning_output_tokens": 504
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [
+      "docs/superpowers/specs/2026-10-27-customer-name-migration-design.md"
+    ],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "迁移规格已保存并自审，尚未修改代码或测试。请批准[迁移规格](docs/superpowers/specs/2026-10-27-customer-name-migration-design.md)，之后继续实现与验证。\n\n方案包含：兼容双字段读取并优先 `name`；迁移只补缺失值、保留旧字段且可重复执行；新写入使用 `name`。现有检查不覆盖存储行为，实施后会补充临时验证，不修改测试文件。\n\n需要审批的依据是 [spec-gate/SKILL.md](<EVIDENCE_ROOT>/routing-trials/migration-approval--gpt-cew--r3/homes/cew-home/.codex/skills/spec-gate/SKILL.md)：“Do not invoke implementation skills, write implementation code, or generate tickets until the saved Spec has passed self-review and the user has explicitly approved it.” 本次持久化结构迁移触发了该要求。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-fixed/r3",
+    "kind": "routing",
+    "task": "discoverable-fact",
+    "cell": "gpt-fixed",
+    "repetition": 3,
+    "original_result_sha256": "a4b75d8975d8b845c3f1bd789057e0faa84d9ff890496bf6e2f0d1a6da865037",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 48.8
+    },
+    "usage": {
+      "input_tokens": 33169,
+      "cached_input_tokens": 28672,
+      "output_tokens": 182,
+      "reasoning_output_tokens": 13
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "answer",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "answer_regex": "3",
+      "no_question": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "worker 配置的重试次数为 **3 次**，见 [worker.json:1](<EVIDENCE_ROOT>/routing-trials/discoverable-fact--gpt-fixed--r3/checkout/worker.json:1) 中的 `\"retryCount\": 3`。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-cew/r3",
+    "kind": "routing",
+    "task": "discoverable-fact",
+    "cell": "gpt-cew",
+    "repetition": 3,
+    "original_result_sha256": "d84b94aecdae4f3d0457d3a7454ff2db35eab45f16d21f21ecffa72b64c1d1f5",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 40
+    },
+    "usage": {
+      "input_tokens": 33126,
+      "cached_input_tokens": 28672,
+      "output_tokens": 194,
+      "reasoning_output_tokens": 23
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "answer",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "answer_regex": "3",
+      "no_question": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "worker 的重试次数配置为 **3 次**，见 [worker.json:1](<EVIDENCE_ROOT>/routing-trials/discoverable-fact--gpt-cew--r3/checkout/worker.json:1) 中的 `\"retryCount\": 3`。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/migration-approval/gpt-fixed/r3",
+    "kind": "routing",
+    "task": "migration-approval",
+    "cell": "gpt-fixed",
+    "repetition": 3,
+    "original_result_sha256": "ce0c9fcacb4316ce8cc486149d03d0a89252a6372a486eb3b5f79e5a34a9a9f4",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 120.8
+    },
+    "usage": {
+      "input_tokens": 105031,
+      "cached_input_tokens": 86400,
+      "output_tokens": 2691,
+      "reasoning_output_tokens": 585
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [
+      "docs/superpowers/specs/2026-10-27-customer-name-migration-design.md"
+    ],
+    "expected": {
+      "expected_state": "awaiting_approval",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "spec-gate",
+      "allow_spec_artifact": true
+    },
+    "original_check_exit": 0,
+    "final_response": "[迁移方案已保存并完成自审](docs/superpowers/specs/2026-10-27-customer-name-migration-design.md)。方案包含兼容读取、保留旧字段的幂等迁移，以及使用 `name` 的新写入；实现、数据和测试均未修改。\n\n请批准这份方案。\n\n需要此次确认的依据是 [spec-gate/SKILL.md](<EVIDENCE_ROOT>/routing-trials/migration-approval--gpt-fixed--r3/homes/cew-fixed/.codex/skills/spec-gate/SKILL.md)：持久化结构迁移须在实施前满足 “the user has explicitly approved it”，即明确批准已保存的方案。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-cew/r3",
+    "kind": "routing",
+    "task": "single-user-decision",
+    "cell": "gpt-cew",
+    "repetition": 3,
+    "original_result_sha256": "528f7e5e8c07782bc93236a30bec454431e35fe299a2075e3232ab05926beecc",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 63.3
+    },
+    "usage": {
+      "input_tokens": 78891,
+      "cached_input_tokens": 68608,
+      "output_tokens": 909,
+      "reasoning_output_tokens": 269
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_decision",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "one_question": true,
+      "forbid_skills": [
+        "grilling",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "导出格式选哪一种？\n\n- **CSV**：便于用 Excel 等表格工具查看和分析。\n- **JSON**：便于其他程序读取，保留数据结构和类型。\n\n目前尚未修改文件，等你选择后继续实现。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Unnecessary Skill load: grilling"
+    ],
+    "semantic_pass": false
+  },
+  {
+    "trial": "routing/plugin-only/gpt-fixed/r3",
+    "kind": "routing",
+    "task": "plugin-only",
+    "cell": "gpt-fixed",
+    "repetition": 3,
+    "original_result_sha256": "a4e85bb2ac86eadd8ea638a1e3d3aef12cf623543fe08fc751b88769ae2d1e74",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 71.2
+    },
+    "usage": {
+      "input_tokens": 128157,
+      "cached_input_tokens": 120320,
+      "output_tokens": 755,
+      "reasoning_output_tokens": 49
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "plugin_only": true,
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "Fixed [lib.js](lib.js) by removing the extra `+ 1`.\n\n`npm test` passes: `double(4) === 8`. Tests are unchanged. No commit, push, or pull request was made.",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-fixed/r3",
+    "kind": "routing",
+    "task": "single-user-decision",
+    "cell": "gpt-fixed",
+    "repetition": 3,
+    "original_result_sha256": "81fe91702f23f3f691515663992112ba5f76557c8a94e65649700ff8b762ad3f",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 73.6
+    },
+    "usage": {
+      "input_tokens": 95283,
+      "cached_input_tokens": 85888,
+      "output_tokens": 1017,
+      "reasoning_output_tokens": 240
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "awaiting_decision",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "one_question": true,
+      "forbid_skills": [
+        "grilling",
+        "spec-gate",
+        "to-tickets"
+      ],
+      "forbid_worktree": true
+    },
+    "original_check_exit": 0,
+    "final_response": "请选择导出格式：**CSV**（便于表格查看）或 **JSON**（便于程序读取、保留结构）。\n\n已确认报告入口为 `report.js`，尚未修改文件。选定后只在当前检出目录实现并运行现有检查，不改测试、不提交、不推送、不创建 PR。",
+    "auto_pass": false,
+    "auto_reasons": [
+      "Expected exactly one question"
+    ],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/plugin-only/gpt-cew/r3",
+    "kind": "routing",
+    "task": "plugin-only",
+    "cell": "gpt-cew",
+    "repetition": 3,
+    "original_result_sha256": "8759f22ae51e438ca87235c7b52adb03c34f3debe7dba92c1ff72aeae22c2c99",
+    "patch_sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 58.6
+    },
+    "usage": {
+      "input_tokens": 148430,
+      "cached_input_tokens": 131968,
+      "output_tokens": 794,
+      "reasoning_output_tokens": 18
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [
+      "lib.js"
+    ],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "plugin_only": true,
+      "changed": [
+        "lib.js"
+      ],
+      "checks_pass": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "Fixed `lib.js` by removing the extra `+ 1`. `double(4)` now returns `8`.\n\n`npm test` passes using the unchanged `check.cjs`. No tests changed, and nothing was committed or published.",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-cew/r3",
+    "kind": "routing",
+    "task": "failed-required-check",
+    "cell": "gpt-cew",
+    "repetition": 3,
+    "original_result_sha256": "c34303050e07ea081c2105dc30c1acbcaaa47945fadbbf4943a333e119b7e2b7",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 52.4
+    },
+    "usage": {
+      "input_tokens": 75570,
+      "cached_input_tokens": 61312,
+      "output_tokens": 707,
+      "reasoning_output_tokens": 75
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "failed_check_reported",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "verify",
+      "must_report_failure": true,
+      "no_ready_claim": true
+    },
+    "original_check_exit": 1,
+    "final_response": "当前检出**尚未达到 PR 就绪条件**：项目必需检查按预期失败。\n\n- `npm run verify`：退出码 **1**，输出 `FAIL: required project check`。\n- `git diff --check`：通过，退出码 **0**。\n- 工作区干净，无文件改动。\n- `test` 与 `verify` 调用同一检查，因此未重复运行；项目未配置其他检查。\n\n本次仅验证，未修复、修改测试、提交、推送或创建 PR。必需检查失败仍是就绪阻塞项。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-fixed/r3",
+    "kind": "routing",
+    "task": "failed-required-check",
+    "cell": "gpt-fixed",
+    "repetition": 3,
+    "original_result_sha256": "1dcae5e126cb9398c9da28f3f8a507757aa51dd8514ef2e89e80716356188dc6",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 44.7
+    },
+    "usage": {
+      "input_tokens": 100320,
+      "cached_input_tokens": 86016,
+      "output_tokens": 884,
+      "reasoning_output_tokens": 38
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "failed_check_reported",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "production_unchanged": true,
+      "required_route": "verify",
+      "must_report_failure": true,
+      "no_ready_claim": true
+    },
+    "original_check_exit": 1,
+    "final_response": "当前检出目录**尚未达到 PR 就绪条件**：项目必需检查失败。\n\n- `npm run verify`：退出码 `1`，输出 `FAIL: required project check`，与预告的故意失败一致。\n- `git diff --check`：通过，退出码 `0`。\n- 验证后工作区干净；`test` 与 `verify` 调用同一检查，未重复运行。\n\n未修改代码或测试，未提交、推送或创建 PR。必需检查通过前，不能判定为就绪。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-fixed/r3",
+    "kind": "routing",
+    "task": "reuse-final-evidence",
+    "cell": "gpt-fixed",
+    "repetition": 3,
+    "original_result_sha256": "73f6dba590ddedd57d98f51da6ae5aea58000b89537c2ba7d067db1cd75a9c12",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 64.5
+    },
+    "usage": {
+      "input_tokens": 81563,
+      "cached_input_tokens": 64128,
+      "output_tokens": 1284,
+      "reasoning_output_tokens": 58
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "checks_pass": true,
+      "production_unchanged": true,
+      "reuse_evidence": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "交付核对完成，未发现问题：实现满足 `double(4) === 8`。\n\n已确认 `.evidence.json` 的全部输入哈希及 Git 基线与当前状态一致，复用其中 `node check.cjs` 的成功结果（退出码 `0`），未重复运行检查。\n\n工作区干净；未修改文件或测试，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-cew/r3",
+    "kind": "routing",
+    "task": "reuse-final-evidence",
+    "cell": "gpt-cew",
+    "repetition": 3,
+    "original_result_sha256": "4990bb1eb9a79701bb887711224236be1c921746cbbf27a301bbc08b9e6d9179",
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "agent": {
+      "exit": 0,
+      "timed_out": false,
+      "duration_s": 63.9
+    },
+    "usage": {
+      "input_tokens": 82201,
+      "cached_input_tokens": 64128,
+      "output_tokens": 1206,
+      "reasoning_output_tokens": 107
+    },
+    "usage_error": false,
+    "model_audit": {
+      "status": "PASS",
+      "expected_model": "gpt-6.1-sol",
+      "expected_effort": "high",
+      "session_count": 1,
+      "observed_models": [
+        "gpt-6.1-sol"
+      ],
+      "observed_efforts": [
+        "high"
+      ]
+    },
+    "config_audit": {
+      "pass": true,
+      "normalized_sha256": "175ca67593ec31abbf25e56b8cefdb8441fd1e4e240f0b79decf38a6c7755b0f"
+    },
+    "head_modified": false,
+    "status": "COMPLETED",
+    "changed": [],
+    "untracked": [],
+    "expected": {
+      "expected_state": "complete",
+      "protected": [
+        "check.cjs",
+        "package.json"
+      ],
+      "checks_pass": true,
+      "production_unchanged": true,
+      "reuse_evidence": true,
+      "forbid_worktree": true,
+      "forbid_subagents": true
+    },
+    "original_check_exit": 0,
+    "final_response": "已完成交付核对，自审未发现问题：`double` 实现为 `n * 2`，符合 `double(4) === 8`。\n\n已复用 `.evidence.json` 的成功验证：`node check.cjs`，退出码 `0`。全部输入哈希及 Git 基线 `fbdad75` 均与当前状态一致，无需重跑。\n\n工作区干净；未修改代码或测试，未提交、推送或创建 PR。",
+    "auto_pass": true,
+    "auto_reasons": [],
+    "semantic_pass": true
+  }
+]

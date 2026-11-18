@@ -1,0 +1,442 @@
+[
+  {
+    "trial": "real/more-itertools-1247/gpt-cew/r1",
+    "sha256": "e3009a3ba9b9d7efe5c3fbab642653f37fa3301eee2a79fc3681b40a05f19079",
+    "patch": "diff --git a/more_itertools/more.py b/more_itertools/more.py\nindex f2dbe57..57f88b5 100755\n--- a/more_itertools/more.py\n+++ b/more_itertools/more.py\n@@ -2331,14 +2331,11 @@ class numeric_range(Sequence):\n             return self._start > self._stop\n \n     def __contains__(self, elem):\n-        if self._growing:\n-            if self._start <= elem < self._stop:\n-                return (elem - self._start) % self._step == self._zero\n-        else:\n-            if self._start >= elem > self._stop:\n-                return (self._start - elem) % (-self._step) == self._zero\n-\n-        return False\n+        try:\n+            self.index(elem)\n+        except ValueError:\n+            return False\n+        return True\n \n     def __eq__(self, other):\n         # numeric_range object equality is intended to mirror the built-in range\n@@ -2417,7 +2414,18 @@ class numeric_range(Sequence):\n             return 0\n         else:  # distance > 0 and step > 0: regular euclidean division\n             q, r = divmod(distance, step)\n-            return int(q) + int(r != self._zero)\n+            length = int(q) + int(r != self._zero)\n+\n+        # Division can round differently from the multiplication in __iter__.\n+        # Check the boundary using the values that iteration actually produces.\n+        before_stop = lt if self._growing else gt\n+        while length and not before_stop(\n+            self._start + (length - 1) * self._step, self._stop\n+        ):\n+            length -= 1\n+        while before_stop(self._start + length * self._step, self._stop):\n+            length += 1\n+        return length\n \n     def __reduce__(self):\n         return numeric_range, (self._start, self._stop, self._step)\n@@ -2445,15 +2453,20 @@ class numeric_range(Sequence):\n \n     def index(self, value):\n         if self._growing:\n-            if self._start <= value < self._stop:\n-                q, r = divmod(value - self._start, self._step)\n-                if r == self._zero:\n-                    return int(q)\n+            in_range = self._start <= value < self._stop\n         else:\n-            if self._start >= value > self._stop:\n-                q, r = divmod(self._start - value, -self._step)\n-                if r == self._zero:\n-                    return int(q)\n+            in_range = self._start >= value > self._stop\n+        if in_range:\n+            q, _ = divmod(value - self._start, self._step)\n+            i = int(q)\n+            # Rounding can put the quotient on either side of the true index.\n+            # Require exact equality with a produced item, not a tolerance.\n+            for candidate in (i, i + 1, i - 1):\n+                if (\n+                    candidate >= 0\n+                    and self._start + candidate * self._step == value\n+                ):\n+                    return candidate\n \n         raise ValueError(f\"{value} is not in numeric range\")\n \n"
+  },
+  {
+    "trial": "real/more-itertools-1247/gpt-fixed/r2",
+    "sha256": "33f83fd0a0906c0aaf8bb20fd786bd7aef3b0944e023e89f55c18f8808c1bc09",
+    "patch": "diff --git a/more_itertools/more.py b/more_itertools/more.py\nindex f2dbe57..ee0183b 100755\n--- a/more_itertools/more.py\n+++ b/more_itertools/more.py\n@@ -2331,14 +2331,11 @@ class numeric_range(Sequence):\n             return self._start > self._stop\n \n     def __contains__(self, elem):\n-        if self._growing:\n-            if self._start <= elem < self._stop:\n-                return (elem - self._start) % self._step == self._zero\n-        else:\n-            if self._start >= elem > self._stop:\n-                return (self._start - elem) % (-self._step) == self._zero\n-\n-        return False\n+        try:\n+            self.index(elem)\n+        except ValueError:\n+            return False\n+        return True\n \n     def __eq__(self, other):\n         # numeric_range object equality is intended to mirror the built-in range\n@@ -2417,7 +2414,18 @@ class numeric_range(Sequence):\n             return 0\n         else:  # distance > 0 and step > 0: regular euclidean division\n             q, r = divmod(distance, step)\n-            return int(q) + int(r != self._zero)\n+            length = int(q) + int(r != self._zero)\n+\n+            # Division may round differently from the multiplication used by\n+            # __iter__. Check the boundary using the actual generated values.\n+            before_stop = lt if self._growing else gt\n+            while length and not before_stop(\n+                self._start + (length - 1) * self._step, self._stop\n+            ):\n+                length -= 1\n+            while before_stop(self._start + length * self._step, self._stop):\n+                length += 1\n+            return length\n \n     def __reduce__(self):\n         return numeric_range, (self._start, self._stop, self._step)\n@@ -2445,15 +2453,17 @@ class numeric_range(Sequence):\n \n     def index(self, value):\n         if self._growing:\n-            if self._start <= value < self._stop:\n-                q, r = divmod(value - self._start, self._step)\n-                if r == self._zero:\n-                    return int(q)\n+            in_bounds = self._start <= value < self._stop\n         else:\n-            if self._start >= value > self._stop:\n-                q, r = divmod(self._start - value, -self._step)\n-                if r == self._zero:\n-                    return int(q)\n+            in_bounds = self._start >= value > self._stop\n+\n+        if in_bounds:\n+            q, _ = divmod(value - self._start, self._step)\n+            # Floating-point division can put an item on either side of its\n+            # integer index. Membership requires an exact generated value.\n+            for i in range(max(0, int(q) - 1), int(q) + 2):\n+                if self._start + i * self._step == value:\n+                    return i\n \n         raise ValueError(f\"{value} is not in numeric range\")\n \n"
+  },
+  {
+    "trial": "real/more-itertools-1247/gpt-fixed/r1",
+    "sha256": "2dfd137c51ee536b905a7cdad1ecf424642c97c8d7f2488daeddd23d5af53997",
+    "patch": "diff --git a/more_itertools/more.py b/more_itertools/more.py\nindex f2dbe57..54b25bc 100755\n--- a/more_itertools/more.py\n+++ b/more_itertools/more.py\n@@ -2331,14 +2331,11 @@ class numeric_range(Sequence):\n             return self._start > self._stop\n \n     def __contains__(self, elem):\n-        if self._growing:\n-            if self._start <= elem < self._stop:\n-                return (elem - self._start) % self._step == self._zero\n-        else:\n-            if self._start >= elem > self._stop:\n-                return (self._start - elem) % (-self._step) == self._zero\n-\n-        return False\n+        try:\n+            self.index(elem)\n+        except ValueError:\n+            return False\n+        return True\n \n     def __eq__(self, other):\n         # numeric_range object equality is intended to mirror the built-in range\n@@ -2417,7 +2414,19 @@ class numeric_range(Sequence):\n             return 0\n         else:  # distance > 0 and step > 0: regular euclidean division\n             q, r = divmod(distance, step)\n-            return int(q) + int(r != self._zero)\n+            length = int(q) + int(r != self._zero)\n+\n+        # Division can disagree with the multiplication used to produce items.\n+        before_stop = lt if self._growing else gt\n+        while length and not before_stop(\n+            self._start + (length - 1) * self._step, self._stop\n+        ):\n+            length -= 1\n+        # The first excluded item can overflow bounded types such as datetime.\n+        with suppress(OverflowError):\n+            while before_stop(self._start + length * self._step, self._stop):\n+                length += 1\n+        return length\n \n     def __reduce__(self):\n         return numeric_range, (self._start, self._stop, self._step)\n@@ -2445,15 +2454,18 @@ class numeric_range(Sequence):\n \n     def index(self, value):\n         if self._growing:\n-            if self._start <= value < self._stop:\n-                q, r = divmod(value - self._start, self._step)\n-                if r == self._zero:\n-                    return int(q)\n+            in_bounds = self._start <= value < self._stop\n         else:\n-            if self._start >= value > self._stop:\n-                q, r = divmod(self._start - value, -self._step)\n-                if r == self._zero:\n-                    return int(q)\n+            in_bounds = self._start >= value > self._stop\n+\n+        if in_bounds:\n+            q = int((value - self._start) // self._step)\n+            # Check the actual items around the quotient, since floating-point\n+            # division need not recover the index used in multiplication.\n+            for i in (q - 1, q, q + 1):\n+                with suppress(OverflowError):\n+                    if i >= 0 and self._start + i * self._step == value:\n+                        return i\n \n         raise ValueError(f\"{value} is not in numeric range\")\n \n"
+  },
+  {
+    "trial": "real/more-itertools-1247/gpt-cew/r2",
+    "sha256": "7e44fdba132aaaa68c8c45face8afe2d165468bd12c5efbf61f5d43f61b88fd5",
+    "patch": "diff --git a/more_itertools/more.py b/more_itertools/more.py\nindex f2dbe57..11be8a4 100755\n--- a/more_itertools/more.py\n+++ b/more_itertools/more.py\n@@ -2331,14 +2331,11 @@ class numeric_range(Sequence):\n             return self._start > self._stop\n \n     def __contains__(self, elem):\n-        if self._growing:\n-            if self._start <= elem < self._stop:\n-                return (elem - self._start) % self._step == self._zero\n-        else:\n-            if self._start >= elem > self._stop:\n-                return (self._start - elem) % (-self._step) == self._zero\n-\n-        return False\n+        try:\n+            self.index(elem)\n+        except ValueError:\n+            return False\n+        return True\n \n     def __eq__(self, other):\n         # numeric_range object equality is intended to mirror the built-in range\n@@ -2417,7 +2414,21 @@ class numeric_range(Sequence):\n             return 0\n         else:  # distance > 0 and step > 0: regular euclidean division\n             q, r = divmod(distance, step)\n-            return int(q) + int(r != self._zero)\n+            length = int(q) + int(r != self._zero)\n+            if isinstance(q, int):\n+                # Exact arithmetic needs no correction. In particular, avoid\n+                # computing a datetime beyond its representable limits.\n+                return length\n+            # Division can round differently from the multiplication used to\n+            # produce items. Check the boundary using that same calculation.\n+            before_stop = partial(gt if self._growing else lt, self._stop)\n+            while length and not before_stop(\n+                self._start + (length - 1) * self._step\n+            ):\n+                length -= 1\n+            while before_stop(self._start + length * self._step):\n+                length += 1\n+            return length\n \n     def __reduce__(self):\n         return numeric_range, (self._start, self._stop, self._step)\n@@ -2445,15 +2456,22 @@ class numeric_range(Sequence):\n \n     def index(self, value):\n         if self._growing:\n-            if self._start <= value < self._stop:\n-                q, r = divmod(value - self._start, self._step)\n-                if r == self._zero:\n-                    return int(q)\n+            in_bounds = self._start <= value < self._stop\n         else:\n-            if self._start >= value > self._stop:\n-                q, r = divmod(self._start - value, -self._step)\n+            in_bounds = self._start >= value > self._stop\n+\n+        if in_bounds:\n+            q, r = divmod(value - self._start, self._step)\n+            if isinstance(q, int):\n                 if r == self._zero:\n-                    return int(q)\n+                    return q\n+            else:\n+                # An inexact quotient may fall just below the actual index.\n+                # Accept only candidates that produce exactly this value.\n+                q = int(q)\n+                for i in (q, q + 1):\n+                    if self._start + i * self._step == value:\n+                        return i\n \n         raise ValueError(f\"{value} is not in numeric range\")\n \n"
+  },
+  {
+    "trial": "real/slugify-200/gpt-cew/r1",
+    "sha256": "01e81fdf0e7faa29d31242b89e71ac12722d386fb18c3b059d4b319f8dea4e44",
+    "patch": "diff --git a/slugify/slugify.py b/slugify/slugify.py\nindex 0194378..2827dee 100644\n--- a/slugify/slugify.py\n+++ b/slugify/slugify.py\n@@ -92,13 +92,20 @@ def _modern_truncate(text: str, max_length: int, word_boundary: bool, separator:\n     # A hard cut may shorten a word but must not emit a partial/trailing delimiter.\n     parts: list[str] = []\n     length = 0\n+    delimiter_count = 0\n     for index, word in enumerate(tokens):\n-        delimiter = separator if index else ''\n-        remaining = max_length - length - len(delimiter)\n+        if index:\n+            delimiter_count += 1\n+        if not word:\n+            continue\n+        # Keep the entire delimiter run with the next nonempty word.\n+        delimiter_length = delimiter_count * len(separator)\n+        remaining = max_length - length - delimiter_length\n         if remaining <= 0:\n             break\n-        parts.append(delimiter + word[:remaining])\n-        length += len(delimiter) + min(len(word), remaining)\n+        parts.append(separator * delimiter_count + word[:remaining])\n+        length += delimiter_length + min(len(word), remaining)\n+        delimiter_count = 0\n         if len(word) > remaining:\n             break\n     return ''.join(parts)\n"
+  },
+  {
+    "trial": "real/slugify-194/gpt-fixed/r1",
+    "sha256": "5edc9b28e17867ee918fda0382bf1d0eeb9d29c0cae4c812a2cb91ae1627ddb8",
+    "patch": "diff --git a/slugify/special.py b/slugify/special.py\nindex 918cb2a..fc19f4f 100644\n--- a/slugify/special.py\n+++ b/slugify/special.py\n@@ -4,11 +4,13 @@ from __future__ import annotations\n def add_uppercase_char(char_list: list[tuple[str, str]]) -> list[tuple[str, str]]:\n     \"\"\" Given a replacement char list, this adds uppercase chars to the list \"\"\"\n \n-    for item in char_list:\n+    updated_chars = char_list.copy()\n+    for item in updated_chars:\n         char, xlate = item\n         upper_dict = char.upper(), xlate.capitalize()\n-        if upper_dict not in char_list and char != upper_dict[0]:\n-            char_list.insert(0, upper_dict)\n+        if upper_dict not in updated_chars and char != upper_dict[0]:\n+            updated_chars.insert(0, upper_dict)\n+    char_list[:] = updated_chars\n     return char_list\n \n \n"
+  },
+  {
+    "trial": "real/slugify-194/gpt-cew/r1",
+    "sha256": "5a66bae552d4411843a0f8c5dc5c64b500cd2bcf12dfe245d8dcb3cc032fb808",
+    "patch": "diff --git a/slugify/special.py b/slugify/special.py\nindex 918cb2a..c20e500 100644\n--- a/slugify/special.py\n+++ b/slugify/special.py\n@@ -2,13 +2,15 @@ from __future__ import annotations\n \n \n def add_uppercase_char(char_list: list[tuple[str, str]]) -> list[tuple[str, str]]:\n-    \"\"\" Given a replacement char list, this adds uppercase chars to the list \"\"\"\n+    \"\"\"Add uppercase chars in place, leaving the list unchanged on error.\"\"\"\n \n-    for item in char_list:\n+    updated_list = char_list.copy()\n+    for item in updated_list:\n         char, xlate = item\n         upper_dict = char.upper(), xlate.capitalize()\n-        if upper_dict not in char_list and char != upper_dict[0]:\n-            char_list.insert(0, upper_dict)\n+        if upper_dict not in updated_list and char != upper_dict[0]:\n+            updated_list.insert(0, upper_dict)\n+    char_list[:] = updated_list\n     return char_list\n \n \n"
+  },
+  {
+    "trial": "real/slugify-200/gpt-fixed/r1",
+    "sha256": "a8c2da05501041a5b7535fd854da60f8a94a2553d1b6434ad02f71e34420c2d9",
+    "patch": "diff --git a/slugify/slugify.py b/slugify/slugify.py\nindex 0194378..7f9f134 100644\n--- a/slugify/slugify.py\n+++ b/slugify/slugify.py\n@@ -92,13 +92,20 @@ def _modern_truncate(text: str, max_length: int, word_boundary: bool, separator:\n     # A hard cut may shorten a word but must not emit a partial/trailing delimiter.\n     parts: list[str] = []\n     length = 0\n+    pending_delimiters = 0\n     for index, word in enumerate(tokens):\n-        delimiter = separator if index else ''\n-        remaining = max_length - length - len(delimiter)\n+        if index:\n+            pending_delimiters += 1\n+        # Keep delimiter runs with the next nonempty word, including leading runs.\n+        if not word:\n+            continue\n+        delimiter_length = pending_delimiters * len(separator)\n+        remaining = max_length - length - delimiter_length\n         if remaining <= 0:\n             break\n-        parts.append(delimiter + word[:remaining])\n-        length += len(delimiter) + min(len(word), remaining)\n+        parts.append(separator * pending_delimiters + word[:remaining])\n+        length += delimiter_length + min(len(word), remaining)\n+        pending_delimiters = 0\n         if len(word) > remaining:\n             break\n     return ''.join(parts)\n"
+  },
+  {
+    "trial": "real/humanize-381/gpt-fixed/r1",
+    "sha256": "d5bb5c41a349061ba1ce8f6cd560e96f7e44280535fb84ec990ea6db6f95f709",
+    "patch": "diff --git a/src/humanize/lists.py b/src/humanize/lists.py\nindex 525f0e3..b13b2ea 100644\n--- a/src/humanize/lists.py\n+++ b/src/humanize/lists.py\n@@ -4,15 +4,16 @@ from __future__ import annotations\n \n TYPE_CHECKING = False\n if TYPE_CHECKING:\n+    from collections.abc import Iterable\n     from typing import Any\n \n __all__ = [\"natural_list\"]\n \n \n-def natural_list(items: list[Any]) -> str:\n+def natural_list(items: Iterable[Any]) -> str:\n     \"\"\"Natural list.\n \n-    Convert a list of items into a human-readable string with commas and 'and'.\n+    Convert an iterable of items into a human-readable string with commas and 'and'.\n \n     Examples:\n         >>> natural_list([\"one\", \"two\", \"three\"])\n@@ -23,11 +24,12 @@ def natural_list(items: list[Any]) -> str:\n         'one'\n \n     Args:\n-        items (list): An iterable of items.\n+        items (Iterable): An iterable of items.\n \n     Returns:\n         str: A string with commas and 'and' in the right places.\n     \"\"\"\n+    items = list(items)\n     if not items:\n         return \"\"\n     if len(items) == 1:\n"
+  },
+  {
+    "trial": "real/humanize-346/gpt-cew/r1",
+    "sha256": "5d0b614d5e9ed9453ad64efc57801f0b61ffd902424af247759feeaa2b610dcd",
+    "patch": "diff --git a/src/humanize/number.py b/src/humanize/number.py\nindex ebccfb9..af90cb0 100644\n--- a/src/humanize/number.py\n+++ b/src/humanize/number.py\n@@ -282,7 +282,8 @@ def intword(value: NumberOrString, format: str = \"%.1f\") -> str:\n     chopped = value / power\n     rounded_value = float(format % chopped)\n \n-    if not largest_ordinal and rounded_value * power == powers[ordinal + 1]:\n+    # Compare at the scaled magnitude to avoid precision loss for large powers.\n+    if not largest_ordinal and rounded_value == powers[ordinal + 1] / power:\n         # After rounding, we end up just at the next power\n         ordinal += 1\n         rounded_value = 1.0\n"
+  },
+  {
+    "trial": "real/humanize-381/gpt-cew/r1",
+    "sha256": "d5bb5c41a349061ba1ce8f6cd560e96f7e44280535fb84ec990ea6db6f95f709",
+    "patch": "diff --git a/src/humanize/lists.py b/src/humanize/lists.py\nindex 525f0e3..b13b2ea 100644\n--- a/src/humanize/lists.py\n+++ b/src/humanize/lists.py\n@@ -4,15 +4,16 @@ from __future__ import annotations\n \n TYPE_CHECKING = False\n if TYPE_CHECKING:\n+    from collections.abc import Iterable\n     from typing import Any\n \n __all__ = [\"natural_list\"]\n \n \n-def natural_list(items: list[Any]) -> str:\n+def natural_list(items: Iterable[Any]) -> str:\n     \"\"\"Natural list.\n \n-    Convert a list of items into a human-readable string with commas and 'and'.\n+    Convert an iterable of items into a human-readable string with commas and 'and'.\n \n     Examples:\n         >>> natural_list([\"one\", \"two\", \"three\"])\n@@ -23,11 +24,12 @@ def natural_list(items: list[Any]) -> str:\n         'one'\n \n     Args:\n-        items (list): An iterable of items.\n+        items (Iterable): An iterable of items.\n \n     Returns:\n         str: A string with commas and 'and' in the right places.\n     \"\"\"\n+    items = list(items)\n     if not items:\n         return \"\"\n     if len(items) == 1:\n"
+  },
+  {
+    "trial": "real/humanize-346/gpt-fixed/r1",
+    "sha256": "5dc21058499fcf8d71bb79f991beb732a8ba3fc596f52675595934370fdd61bf",
+    "patch": "diff --git a/src/humanize/number.py b/src/humanize/number.py\nindex ebccfb9..b802e06 100644\n--- a/src/humanize/number.py\n+++ b/src/humanize/number.py\n@@ -282,7 +282,8 @@ def intword(value: NumberOrString, format: str = \"%.1f\") -> str:\n     chopped = value / power\n     rounded_value = float(format % chopped)\n \n-    if not largest_ordinal and rounded_value * power == powers[ordinal + 1]:\n+    # Compare scaled values to avoid losing precision at large powers.\n+    if not largest_ordinal and rounded_value == powers[ordinal + 1] / power:\n         # After rounding, we end up just at the next power\n         ordinal += 1\n         rounded_value = 1.0\n"
+  },
+  {
+    "trial": "real/itsdangerous-sha1/gpt-fixed/r1",
+    "sha256": "f5b119787024b2626c4bdcd6f14f7bc92e46a629ae9bce18ae89972961b73b3e",
+    "patch": "diff --git a/src/itsdangerous/signer.py b/src/itsdangerous/signer.py\nindex 6410e65..8163f0f 100644\n--- a/src/itsdangerous/signer.py\n+++ b/src/itsdangerous/signer.py\n@@ -12,6 +12,13 @@ from .encoding import want_bytes\n from .exc import BadSignature\n \n \n+def _lazy_sha1(string: bytes = b\"\") -> t.Any:\n+    \"\"\"Don't access ``hashlib.sha1`` until needed. Some environments may\n+    not provide it, so importing the module should not fail.\n+    \"\"\"\n+    return hashlib.sha1(string)\n+\n+\n class SigningAlgorithm:\n     \"\"\"Subclasses must implement :meth:`get_signature` to provide\n     signature generation functionality.\n@@ -43,7 +50,7 @@ class HMACAlgorithm(SigningAlgorithm):\n     #: The digest method to use with the MAC algorithm. This defaults to\n     #: SHA1, but can be changed to any other function in the hashlib\n     #: module.\n-    default_digest_method: t.Any = staticmethod(hashlib.sha1)\n+    default_digest_method: t.Any = staticmethod(_lazy_sha1)\n \n     def __init__(self, digest_method: t.Any = None):\n         if digest_method is None:\n@@ -109,7 +116,7 @@ class Signer:\n     #: doesn't apply when used intermediately in HMAC.\n     #:\n     #: .. versionadded:: 0.14\n-    default_digest_method: t.Any = staticmethod(hashlib.sha1)\n+    default_digest_method: t.Any = staticmethod(_lazy_sha1)\n \n     #: The default scheme to use to derive the signing key from the\n     #: secret key and salt. The default is ``django-concat``. Possible\n"
+  },
+  {
+    "trial": "real/more-itertools-1284/gpt-cew/r1",
+    "sha256": "8f9b9a113c340fdf115e4dc86dd5fee96586ba913cec850b703083e84a5be303",
+    "patch": "diff --git a/more_itertools/more.py b/more_itertools/more.py\nindex e90b893..c718a8a 100755\n--- a/more_itertools/more.py\n+++ b/more_itertools/more.py\n@@ -1206,7 +1206,7 @@ class bucket:\n         while True:\n             # If we've cached some items that match the target value, emit\n             # the first one and evict it from the cache.\n-            if self._cache[value]:\n+            if self._cache.get(value):\n                 yield self._cache[value].popleft()\n             # Otherwise we need to advance the parent iterator to search for\n             # a matching item, caching the rest.\n@@ -1218,7 +1218,7 @@ class bucket:\n                         return\n                     item_value = self._key(item)\n                     if item_value == value:\n-                        yield item\n+                        self._cache[value].append(item)\n                         break\n                     elif self._validator(item_value):\n                         self._cache[item_value].append(item)\n"
+  },
+  {
+    "trial": "real/itsdangerous-sha1/gpt-cew/r1",
+    "sha256": "b07f32b9ba273e7122fb6527a642fc14581b81d1899dd989bff540ed74fc4313",
+    "patch": "diff --git a/src/itsdangerous/signer.py b/src/itsdangerous/signer.py\nindex 6410e65..d40634d 100644\n--- a/src/itsdangerous/signer.py\n+++ b/src/itsdangerous/signer.py\n@@ -12,6 +12,14 @@ from .encoding import want_bytes\n from .exc import BadSignature\n \n \n+def _lazy_sha1(string: bytes = b\"\") -> t.Any:\n+    \"\"\"Don't access ``hashlib.sha1`` until runtime. FIPS builds may not\n+    include SHA-1, in which case the import and use of other digests\n+    should still work.\n+    \"\"\"\n+    return hashlib.sha1(string)\n+\n+\n class SigningAlgorithm:\n     \"\"\"Subclasses must implement :meth:`get_signature` to provide\n     signature generation functionality.\n@@ -43,7 +51,7 @@ class HMACAlgorithm(SigningAlgorithm):\n     #: The digest method to use with the MAC algorithm. This defaults to\n     #: SHA1, but can be changed to any other function in the hashlib\n     #: module.\n-    default_digest_method: t.Any = staticmethod(hashlib.sha1)\n+    default_digest_method: t.Any = staticmethod(_lazy_sha1)\n \n     def __init__(self, digest_method: t.Any = None):\n         if digest_method is None:\n@@ -109,7 +117,7 @@ class Signer:\n     #: doesn't apply when used intermediately in HMAC.\n     #:\n     #: .. versionadded:: 0.14\n-    default_digest_method: t.Any = staticmethod(hashlib.sha1)\n+    default_digest_method: t.Any = staticmethod(_lazy_sha1)\n \n     #: The default scheme to use to derive the signing key from the\n     #: secret key and salt. The default is ``django-concat``. Possible\n"
+  },
+  {
+    "trial": "real/more-itertools-1284/gpt-fixed/r1",
+    "sha256": "8f9b9a113c340fdf115e4dc86dd5fee96586ba913cec850b703083e84a5be303",
+    "patch": "diff --git a/more_itertools/more.py b/more_itertools/more.py\nindex e90b893..c718a8a 100755\n--- a/more_itertools/more.py\n+++ b/more_itertools/more.py\n@@ -1206,7 +1206,7 @@ class bucket:\n         while True:\n             # If we've cached some items that match the target value, emit\n             # the first one and evict it from the cache.\n-            if self._cache[value]:\n+            if self._cache.get(value):\n                 yield self._cache[value].popleft()\n             # Otherwise we need to advance the parent iterator to search for\n             # a matching item, caching the rest.\n@@ -1218,7 +1218,7 @@ class bucket:\n                         return\n                     item_value = self._key(item)\n                     if item_value == value:\n-                        yield item\n+                        self._cache[value].append(item)\n                         break\n                     elif self._validator(item_value):\n                         self._cache[item_value].append(item)\n"
+  },
+  {
+    "trial": "real/slugify-200/gpt-fixed/r2",
+    "sha256": "e600ed1557cbc2570c2a5836dca5fe1a08c800ae35c052de073c131d3bb330ec",
+    "patch": "diff --git a/slugify/slugify.py b/slugify/slugify.py\nindex 0194378..23d2192 100644\n--- a/slugify/slugify.py\n+++ b/slugify/slugify.py\n@@ -92,13 +92,20 @@ def _modern_truncate(text: str, max_length: int, word_boundary: bool, separator:\n     # A hard cut may shorten a word but must not emit a partial/trailing delimiter.\n     parts: list[str] = []\n     length = 0\n+    delimiter_count = 0\n     for index, word in enumerate(tokens):\n-        delimiter = separator if index else ''\n-        remaining = max_length - length - len(delimiter)\n+        if index:\n+            delimiter_count += 1\n+        # Keep runs of delimiters pending until a nonempty word can follow them.\n+        if not word:\n+            continue\n+        delimiter_length = delimiter_count * len(separator)\n+        remaining = max_length - length - delimiter_length\n         if remaining <= 0:\n             break\n-        parts.append(delimiter + word[:remaining])\n-        length += len(delimiter) + min(len(word), remaining)\n+        parts.append(separator * delimiter_count + word[:remaining])\n+        length += delimiter_length + min(len(word), remaining)\n+        delimiter_count = 0\n         if len(word) > remaining:\n             break\n     return ''.join(parts)\n"
+  },
+  {
+    "trial": "real/slugify-194/gpt-cew/r2",
+    "sha256": "8ca579528fcfbef481e94b51f8f473ecf9637d2f55b08fa875a67b4df0520633",
+    "patch": "diff --git a/slugify/special.py b/slugify/special.py\nindex 918cb2a..c04d4c8 100644\n--- a/slugify/special.py\n+++ b/slugify/special.py\n@@ -4,11 +4,14 @@ from __future__ import annotations\n def add_uppercase_char(char_list: list[tuple[str, str]]) -> list[tuple[str, str]]:\n     \"\"\" Given a replacement char list, this adds uppercase chars to the list \"\"\"\n \n-    for item in char_list:\n+    # Only update the input once every replacement has been processed successfully.\n+    updated_chars = char_list.copy()\n+    for item in updated_chars:\n         char, xlate = item\n         upper_dict = char.upper(), xlate.capitalize()\n-        if upper_dict not in char_list and char != upper_dict[0]:\n-            char_list.insert(0, upper_dict)\n+        if upper_dict not in updated_chars and char != upper_dict[0]:\n+            updated_chars.insert(0, upper_dict)\n+    char_list[:] = updated_chars\n     return char_list\n \n \n"
+  },
+  {
+    "trial": "real/slugify-200/gpt-cew/r2",
+    "sha256": "08621aa7e6668f2471ed40b33688f33e0984b74e1a409dd5e2b6dc0434343290",
+    "patch": "diff --git a/slugify/slugify.py b/slugify/slugify.py\nindex 0194378..1f49e44 100644\n--- a/slugify/slugify.py\n+++ b/slugify/slugify.py\n@@ -92,13 +92,20 @@ def _modern_truncate(text: str, max_length: int, word_boundary: bool, separator:\n     # A hard cut may shorten a word but must not emit a partial/trailing delimiter.\n     parts: list[str] = []\n     length = 0\n+    pending_delimiters = 0\n     for index, word in enumerate(tokens):\n-        delimiter = separator if index else ''\n-        remaining = max_length - length - len(delimiter)\n+        if index:\n+            pending_delimiters += 1\n+        # Keep post-replacement delimiter runs with the next nonempty word.\n+        if not word:\n+            continue\n+        delimiter_length = len(separator) * pending_delimiters\n+        remaining = max_length - length - delimiter_length\n         if remaining <= 0:\n             break\n-        parts.append(delimiter + word[:remaining])\n-        length += len(delimiter) + min(len(word), remaining)\n+        parts.append(separator * pending_delimiters + word[:remaining])\n+        length += delimiter_length + min(len(word), remaining)\n+        pending_delimiters = 0\n         if len(word) > remaining:\n             break\n     return ''.join(parts)\n"
+  },
+  {
+    "trial": "real/slugify-194/gpt-fixed/r2",
+    "sha256": "984a997767e32459655dfeb3b8f6e344cd4c0df2b15d419b663e2a2560687e98",
+    "patch": "diff --git a/slugify/special.py b/slugify/special.py\nindex 918cb2a..4ec72bd 100644\n--- a/slugify/special.py\n+++ b/slugify/special.py\n@@ -2,13 +2,15 @@ from __future__ import annotations\n \n \n def add_uppercase_char(char_list: list[tuple[str, str]]) -> list[tuple[str, str]]:\n-    \"\"\" Given a replacement char list, this adds uppercase chars to the list \"\"\"\n+    \"\"\"Add uppercase chars in place, leaving the list unchanged on error.\"\"\"\n \n-    for item in char_list:\n+    updated_chars = char_list.copy()\n+    for item in updated_chars:\n         char, xlate = item\n         upper_dict = char.upper(), xlate.capitalize()\n-        if upper_dict not in char_list and char != upper_dict[0]:\n-            char_list.insert(0, upper_dict)\n+        if upper_dict not in updated_chars and char != upper_dict[0]:\n+            updated_chars.insert(0, upper_dict)\n+    char_list[:] = updated_chars\n     return char_list\n \n \n"
+  },
+  {
+    "trial": "real/humanize-346/gpt-fixed/r2",
+    "sha256": "89bd83496de5fb5bf5b8c728c0ce6f279b79590600fe511b02f87409277f3e03",
+    "patch": "diff --git a/src/humanize/number.py b/src/humanize/number.py\nindex ebccfb9..4303944 100644\n--- a/src/humanize/number.py\n+++ b/src/humanize/number.py\n@@ -282,7 +282,7 @@ def intword(value: NumberOrString, format: str = \"%.1f\") -> str:\n     chopped = value / power\n     rounded_value = float(format % chopped)\n \n-    if not largest_ordinal and rounded_value * power == powers[ordinal + 1]:\n+    if not largest_ordinal and rounded_value == powers[ordinal + 1] / power:\n         # After rounding, we end up just at the next power\n         ordinal += 1\n         rounded_value = 1.0\n"
+  },
+  {
+    "trial": "real/humanize-381/gpt-cew/r2",
+    "sha256": "d5bb5c41a349061ba1ce8f6cd560e96f7e44280535fb84ec990ea6db6f95f709",
+    "patch": "diff --git a/src/humanize/lists.py b/src/humanize/lists.py\nindex 525f0e3..b13b2ea 100644\n--- a/src/humanize/lists.py\n+++ b/src/humanize/lists.py\n@@ -4,15 +4,16 @@ from __future__ import annotations\n \n TYPE_CHECKING = False\n if TYPE_CHECKING:\n+    from collections.abc import Iterable\n     from typing import Any\n \n __all__ = [\"natural_list\"]\n \n \n-def natural_list(items: list[Any]) -> str:\n+def natural_list(items: Iterable[Any]) -> str:\n     \"\"\"Natural list.\n \n-    Convert a list of items into a human-readable string with commas and 'and'.\n+    Convert an iterable of items into a human-readable string with commas and 'and'.\n \n     Examples:\n         >>> natural_list([\"one\", \"two\", \"three\"])\n@@ -23,11 +24,12 @@ def natural_list(items: list[Any]) -> str:\n         'one'\n \n     Args:\n-        items (list): An iterable of items.\n+        items (Iterable): An iterable of items.\n \n     Returns:\n         str: A string with commas and 'and' in the right places.\n     \"\"\"\n+    items = list(items)\n     if not items:\n         return \"\"\n     if len(items) == 1:\n"
+  },
+  {
+    "trial": "real/humanize-346/gpt-cew/r2",
+    "sha256": "5c9caae93ecfa4a7a81136cc86cfa068065fc7750fec657057a7bfc171d48ea5",
+    "patch": "diff --git a/src/humanize/number.py b/src/humanize/number.py\nindex ebccfb9..b44a7ba 100644\n--- a/src/humanize/number.py\n+++ b/src/humanize/number.py\n@@ -282,7 +282,8 @@ def intword(value: NumberOrString, format: str = \"%.1f\") -> str:\n     chopped = value / power\n     rounded_value = float(format % chopped)\n \n-    if not largest_ordinal and rounded_value * power == powers[ordinal + 1]:\n+    # Compare in the current unit to avoid precision loss at large powers.\n+    if not largest_ordinal and rounded_value == powers[ordinal + 1] / power:\n         # After rounding, we end up just at the next power\n         ordinal += 1\n         rounded_value = 1.0\n"
+  },
+  {
+    "trial": "real/humanize-381/gpt-fixed/r2",
+    "sha256": "d5bb5c41a349061ba1ce8f6cd560e96f7e44280535fb84ec990ea6db6f95f709",
+    "patch": "diff --git a/src/humanize/lists.py b/src/humanize/lists.py\nindex 525f0e3..b13b2ea 100644\n--- a/src/humanize/lists.py\n+++ b/src/humanize/lists.py\n@@ -4,15 +4,16 @@ from __future__ import annotations\n \n TYPE_CHECKING = False\n if TYPE_CHECKING:\n+    from collections.abc import Iterable\n     from typing import Any\n \n __all__ = [\"natural_list\"]\n \n \n-def natural_list(items: list[Any]) -> str:\n+def natural_list(items: Iterable[Any]) -> str:\n     \"\"\"Natural list.\n \n-    Convert a list of items into a human-readable string with commas and 'and'.\n+    Convert an iterable of items into a human-readable string with commas and 'and'.\n \n     Examples:\n         >>> natural_list([\"one\", \"two\", \"three\"])\n@@ -23,11 +24,12 @@ def natural_list(items: list[Any]) -> str:\n         'one'\n \n     Args:\n-        items (list): An iterable of items.\n+        items (Iterable): An iterable of items.\n \n     Returns:\n         str: A string with commas and 'and' in the right places.\n     \"\"\"\n+    items = list(items)\n     if not items:\n         return \"\"\n     if len(items) == 1:\n"
+  },
+  {
+    "trial": "real/itsdangerous-sha1/gpt-cew/r2",
+    "sha256": "156cef11f9a17e35f90dac9b1ca45f66a3ccc49fdd9d65815468bc097d829e89",
+    "patch": "diff --git a/src/itsdangerous/signer.py b/src/itsdangerous/signer.py\nindex 6410e65..38ddf7d 100644\n--- a/src/itsdangerous/signer.py\n+++ b/src/itsdangerous/signer.py\n@@ -12,6 +12,13 @@ from .encoding import want_bytes\n from .exc import BadSignature\n \n \n+def _lazy_sha1(string: bytes = b\"\") -> t.Any:\n+    \"\"\"Access SHA-1 only when needed, allowing other digests to be used\n+    in environments where SHA-1 is unavailable.\n+    \"\"\"\n+    return hashlib.sha1(string)\n+\n+\n class SigningAlgorithm:\n     \"\"\"Subclasses must implement :meth:`get_signature` to provide\n     signature generation functionality.\n@@ -43,7 +50,7 @@ class HMACAlgorithm(SigningAlgorithm):\n     #: The digest method to use with the MAC algorithm. This defaults to\n     #: SHA1, but can be changed to any other function in the hashlib\n     #: module.\n-    default_digest_method: t.Any = staticmethod(hashlib.sha1)\n+    default_digest_method: t.Any = staticmethod(_lazy_sha1)\n \n     def __init__(self, digest_method: t.Any = None):\n         if digest_method is None:\n@@ -109,7 +116,7 @@ class Signer:\n     #: doesn't apply when used intermediately in HMAC.\n     #:\n     #: .. versionadded:: 0.14\n-    default_digest_method: t.Any = staticmethod(hashlib.sha1)\n+    default_digest_method: t.Any = staticmethod(_lazy_sha1)\n \n     #: The default scheme to use to derive the signing key from the\n     #: secret key and salt. The default is ``django-concat``. Possible\n"
+  },
+  {
+    "trial": "real/more-itertools-1284/gpt-fixed/r2",
+    "sha256": "8f9b9a113c340fdf115e4dc86dd5fee96586ba913cec850b703083e84a5be303",
+    "patch": "diff --git a/more_itertools/more.py b/more_itertools/more.py\nindex e90b893..c718a8a 100755\n--- a/more_itertools/more.py\n+++ b/more_itertools/more.py\n@@ -1206,7 +1206,7 @@ class bucket:\n         while True:\n             # If we've cached some items that match the target value, emit\n             # the first one and evict it from the cache.\n-            if self._cache[value]:\n+            if self._cache.get(value):\n                 yield self._cache[value].popleft()\n             # Otherwise we need to advance the parent iterator to search for\n             # a matching item, caching the rest.\n@@ -1218,7 +1218,7 @@ class bucket:\n                         return\n                     item_value = self._key(item)\n                     if item_value == value:\n-                        yield item\n+                        self._cache[value].append(item)\n                         break\n                     elif self._validator(item_value):\n                         self._cache[item_value].append(item)\n"
+  },
+  {
+    "trial": "real/itsdangerous-sha1/gpt-fixed/r2",
+    "sha256": "ad547448cacec32ae4262f47b568daf04afea30d7db6f34fc9146a4331f4f611",
+    "patch": "diff --git a/src/itsdangerous/signer.py b/src/itsdangerous/signer.py\nindex 6410e65..966dde6 100644\n--- a/src/itsdangerous/signer.py\n+++ b/src/itsdangerous/signer.py\n@@ -12,6 +12,13 @@ from .encoding import want_bytes\n from .exc import BadSignature\n \n \n+def _lazy_sha1(string: bytes = b\"\") -> t.Any:\n+    \"\"\"Access SHA-1 only when used so importing the module works even if\n+    SHA-1 is unavailable, allowing another digest method to be configured.\n+    \"\"\"\n+    return hashlib.sha1(string)\n+\n+\n class SigningAlgorithm:\n     \"\"\"Subclasses must implement :meth:`get_signature` to provide\n     signature generation functionality.\n@@ -43,7 +50,7 @@ class HMACAlgorithm(SigningAlgorithm):\n     #: The digest method to use with the MAC algorithm. This defaults to\n     #: SHA1, but can be changed to any other function in the hashlib\n     #: module.\n-    default_digest_method: t.Any = staticmethod(hashlib.sha1)\n+    default_digest_method: t.Any = staticmethod(_lazy_sha1)\n \n     def __init__(self, digest_method: t.Any = None):\n         if digest_method is None:\n@@ -109,7 +116,7 @@ class Signer:\n     #: doesn't apply when used intermediately in HMAC.\n     #:\n     #: .. versionadded:: 0.14\n-    default_digest_method: t.Any = staticmethod(hashlib.sha1)\n+    default_digest_method: t.Any = staticmethod(_lazy_sha1)\n \n     #: The default scheme to use to derive the signing key from the\n     #: secret key and salt. The default is ``django-concat``. Possible\n"
+  },
+  {
+    "trial": "real/more-itertools-1284/gpt-cew/r2",
+    "sha256": "8f9b9a113c340fdf115e4dc86dd5fee96586ba913cec850b703083e84a5be303",
+    "patch": "diff --git a/more_itertools/more.py b/more_itertools/more.py\nindex e90b893..c718a8a 100755\n--- a/more_itertools/more.py\n+++ b/more_itertools/more.py\n@@ -1206,7 +1206,7 @@ class bucket:\n         while True:\n             # If we've cached some items that match the target value, emit\n             # the first one and evict it from the cache.\n-            if self._cache[value]:\n+            if self._cache.get(value):\n                 yield self._cache[value].popleft()\n             # Otherwise we need to advance the parent iterator to search for\n             # a matching item, caching the rest.\n@@ -1218,7 +1218,7 @@ class bucket:\n                         return\n                     item_value = self._key(item)\n                     if item_value == value:\n-                        yield item\n+                        self._cache[value].append(item)\n                         break\n                     elif self._validator(item_value):\n                         self._cache[item_value].append(item)\n"
+  },
+  {
+    "trial": "routing/docs-typo/gpt-cew/r1",
+    "sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "patch": "diff --git a/README.md b/README.md\nindex 64d9011..80c68f6 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,2 +1,2 @@\n Run verification before delivery.\n-The verfication command is npm run verify.\n+The verification command is npm run verify.\n"
+  },
+  {
+    "trial": "routing/existing-regression/gpt-fixed/r1",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/docs-typo/gpt-fixed/r1",
+    "sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "patch": "diff --git a/README.md b/README.md\nindex 64d9011..80c68f6 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,2 +1,2 @@\n Run verification before delivery.\n-The verfication command is npm run verify.\n+The verification command is npm run verify.\n"
+  },
+  {
+    "trial": "routing/existing-regression/gpt-cew/r1",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-cew/r1",
+    "sha256": "df6ab245341c1227f420b630926026432e88a5a9d2abd7ae7c2e3c2baf6fd5de",
+    "patch": "diff --git a/constants.js b/constants.js\nnew file mode 100644\nindex 0000000..74d1aa2\n--- /dev/null\n+++ b/constants.js\n@@ -0,0 +1 @@\n+exports.GREETING_PREFIX = 'Hello, ';\ndiff --git a/formatter.js b/formatter.js\nindex 00bac18..94f8b77 100644\n--- a/formatter.js\n+++ b/formatter.js\n@@ -1 +1,3 @@\n-exports.greet=name=>'Hello, '+name;\n+const { GREETING_PREFIX } = require('./constants');\n+\n+exports.greet=name=>GREETING_PREFIX+name;\n"
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-fixed/r1",
+    "sha256": "df74d95ada30a425bb57ce7dc99e029e35c95b2b403c96337cd1083b9f25458f",
+    "patch": "diff --git a/constants.js b/constants.js\nnew file mode 100644\nindex 0000000..c271e0a\n--- /dev/null\n+++ b/constants.js\n@@ -0,0 +1 @@\n+exports.GREETING_PREFIX='Hello, ';\ndiff --git a/formatter.js b/formatter.js\nindex 00bac18..027984d 100644\n--- a/formatter.js\n+++ b/formatter.js\n@@ -1 +1,2 @@\n-exports.greet=name=>'Hello, '+name;\n+const {GREETING_PREFIX}=require('./constants');\n+exports.greet=name=>GREETING_PREFIX+name;\n"
+  },
+  {
+    "trial": "routing/auth-approval/gpt-fixed/r1",
+    "sha256": "b1fbc9f0dac51996aa2f6e626f8736c4db34531618bf78ca430871da91a62069",
+    "patch": "diff --git a/auth.js b/auth.js\nindex 687e6f3..c3b6240 100644\n--- a/auth.js\n+++ b/auth.js\n@@ -1,2 +1,2 @@\n // Request shape: { actor: null | {id:string}, account: {ownerId:string} }.\n-exports.mayUpdateBilling = request => true;\n+exports.mayUpdateBilling = request => Boolean(request.actor && request.actor.id === request.account.ownerId);\n"
+  },
+  {
+    "trial": "routing/migration-approval/gpt-cew/r1",
+    "sha256": "acfd2e5c785b0171b599f637474c256b524cebaa20ec4d279a62f3b2d6e76328",
+    "patch": "diff --git a/customers.json b/customers.json\nindex 1052dc3..535b33c 100644\n--- a/customers.json\n+++ b/customers.json\n@@ -1 +1 @@\n-[{\"id\":\"c1\",\"display_name\":\"Lin\"}]\n+[{\"id\":\"c1\",\"display_name\":\"Lin\",\"name\":\"Lin\"}]\n\\ No newline at end of file\ndiff --git a/schema.json b/schema.json\nindex 5d9d2fc..db90cdb 100644\n--- a/schema.json\n+++ b/schema.json\n@@ -1 +1 @@\n-{\"storage\":\"JSON array in customers.json\",\"customers\":{\"id\":\"string\",\"display_name\":\"string\"}}\n+{\"storage\":\"JSON array in customers.json\",\"customers\":{\"id\":\"string\",\"name\":\"string\",\"display_name\":\"string (optional; legacy field retained by migration for rollback)\"}}\ndiff --git a/store.js b/store.js\nindex fcb5a96..6a73bd7 100644\n--- a/store.js\n+++ b/store.js\n@@ -1 +1,28 @@\n-const fs=require('node:fs');exports.read=()=>JSON.parse(fs.readFileSync('customers.json','utf8'));exports.write=rows=>fs.writeFileSync('customers.json',JSON.stringify(rows));\n+const fs = require('node:fs');\n+\n+const readRows = () => JSON.parse(fs.readFileSync('customers.json', 'utf8'));\n+const saveRows = rows => fs.writeFileSync('customers.json', JSON.stringify(rows));\n+\n+const withName = customer => {\n+  if (Object.hasOwn(customer, 'name') || !Object.hasOwn(customer, 'display_name')) {\n+    return customer;\n+  }\n+  return { ...customer, name: customer.display_name };\n+};\n+\n+exports.read = () => readRows().map(withName);\n+\n+exports.write = rows => saveRows(rows.map(customer => {\n+  const { display_name, ...current } = withName(customer);\n+  return current;\n+}));\n+\n+exports.migrate = () => {\n+  const rows = readRows();\n+  const migrated = rows.map(withName);\n+  // Keep legacy fields for rollback; ordinary writes use only the new field.\n+  if (migrated.some((customer, index) => customer !== rows[index])) {\n+    saveRows(migrated);\n+  }\n+  return migrated;\n+};\n"
+  },
+  {
+    "trial": "routing/auth-approval/gpt-cew/r1",
+    "sha256": "a49510ef70b934cdc73de5351afe6f7f29108fabfa053f75038d173df0858e0c",
+    "patch": "diff --git a/auth.js b/auth.js\nindex 687e6f3..ac377a6 100644\n--- a/auth.js\n+++ b/auth.js\n@@ -1,2 +1,2 @@\n // Request shape: { actor: null | {id:string}, account: {ownerId:string} }.\n-exports.mayUpdateBilling = request => true;\n+exports.mayUpdateBilling = request => !!request.actor && request.actor.id === request.account.ownerId;\n"
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-fixed/r1",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-cew/r1",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/migration-approval/gpt-fixed/r1",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/plugin-only/gpt-fixed/r1",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-cew/r1",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/plugin-only/gpt-cew/r1",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-fixed/r1",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-cew/r1",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-fixed/r1",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-fixed/r1",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-cew/r1",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/docs-typo/gpt-fixed/r2",
+    "sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "patch": "diff --git a/README.md b/README.md\nindex 64d9011..80c68f6 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,2 +1,2 @@\n Run verification before delivery.\n-The verfication command is npm run verify.\n+The verification command is npm run verify.\n"
+  },
+  {
+    "trial": "routing/existing-regression/gpt-cew/r2",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/docs-typo/gpt-cew/r2",
+    "sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "patch": "diff --git a/README.md b/README.md\nindex 64d9011..80c68f6 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,2 +1,2 @@\n Run verification before delivery.\n-The verfication command is npm run verify.\n+The verification command is npm run verify.\n"
+  },
+  {
+    "trial": "routing/existing-regression/gpt-fixed/r2",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-fixed/r2",
+    "sha256": "df74d95ada30a425bb57ce7dc99e029e35c95b2b403c96337cd1083b9f25458f",
+    "patch": "diff --git a/constants.js b/constants.js\nnew file mode 100644\nindex 0000000..c271e0a\n--- /dev/null\n+++ b/constants.js\n@@ -0,0 +1 @@\n+exports.GREETING_PREFIX='Hello, ';\ndiff --git a/formatter.js b/formatter.js\nindex 00bac18..027984d 100644\n--- a/formatter.js\n+++ b/formatter.js\n@@ -1 +1,2 @@\n-exports.greet=name=>'Hello, '+name;\n+const {GREETING_PREFIX}=require('./constants');\n+exports.greet=name=>GREETING_PREFIX+name;\n"
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-cew/r2",
+    "sha256": "df74d95ada30a425bb57ce7dc99e029e35c95b2b403c96337cd1083b9f25458f",
+    "patch": "diff --git a/constants.js b/constants.js\nnew file mode 100644\nindex 0000000..c271e0a\n--- /dev/null\n+++ b/constants.js\n@@ -0,0 +1 @@\n+exports.GREETING_PREFIX='Hello, ';\ndiff --git a/formatter.js b/formatter.js\nindex 00bac18..027984d 100644\n--- a/formatter.js\n+++ b/formatter.js\n@@ -1 +1,2 @@\n-exports.greet=name=>'Hello, '+name;\n+const {GREETING_PREFIX}=require('./constants');\n+exports.greet=name=>GREETING_PREFIX+name;\n"
+  },
+  {
+    "trial": "routing/auth-approval/gpt-cew/r2",
+    "sha256": "805029f3e8097838b3fcf2acb79fc30728074b564f9c8a5be4aa1a5ee5d5c585",
+    "patch": "diff --git a/auth.js b/auth.js\nindex 687e6f3..5165c8c 100644\n--- a/auth.js\n+++ b/auth.js\n@@ -1,2 +1,3 @@\n // Request shape: { actor: null | {id:string}, account: {ownerId:string} }.\n-exports.mayUpdateBilling = request => true;\n+exports.mayUpdateBilling = request =>\n+  request.actor != null && request.actor.id === request.account.ownerId;\n"
+  },
+  {
+    "trial": "routing/migration-approval/gpt-fixed/r2",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/auth-approval/gpt-fixed/r2",
+    "sha256": "b1fbc9f0dac51996aa2f6e626f8736c4db34531618bf78ca430871da91a62069",
+    "patch": "diff --git a/auth.js b/auth.js\nindex 687e6f3..c3b6240 100644\n--- a/auth.js\n+++ b/auth.js\n@@ -1,2 +1,2 @@\n // Request shape: { actor: null | {id:string}, account: {ownerId:string} }.\n-exports.mayUpdateBilling = request => true;\n+exports.mayUpdateBilling = request => Boolean(request.actor && request.actor.id === request.account.ownerId);\n"
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-cew/r2",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/migration-approval/gpt-cew/r2",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-fixed/r2",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-fixed/r2",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/plugin-only/gpt-cew/r2",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/plugin-only/gpt-fixed/r2",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-cew/r2",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-fixed/r2",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-cew/r2",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-cew/r2",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-fixed/r2",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/docs-typo/gpt-cew/r3",
+    "sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "patch": "diff --git a/README.md b/README.md\nindex 64d9011..80c68f6 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,2 +1,2 @@\n Run verification before delivery.\n-The verfication command is npm run verify.\n+The verification command is npm run verify.\n"
+  },
+  {
+    "trial": "routing/existing-regression/gpt-fixed/r3",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/docs-typo/gpt-fixed/r3",
+    "sha256": "bdb7356512c5094f474ae85a079deb974f7871cc1bb4fa7e0314a1f2d515d08c",
+    "patch": "diff --git a/README.md b/README.md\nindex 64d9011..80c68f6 100644\n--- a/README.md\n+++ b/README.md\n@@ -1,2 +1,2 @@\n Run verification before delivery.\n-The verfication command is npm run verify.\n+The verification command is npm run verify.\n"
+  },
+  {
+    "trial": "routing/existing-regression/gpt-cew/r3",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-cew/r3",
+    "sha256": "998f73671a9f74ee797dafc53c5de8d5992f92083c0cfb88c65371ce48646ff5",
+    "patch": "diff --git a/constants.js b/constants.js\nnew file mode 100644\nindex 0000000..c271e0a\n--- /dev/null\n+++ b/constants.js\n@@ -0,0 +1 @@\n+exports.GREETING_PREFIX='Hello, ';\ndiff --git a/formatter.js b/formatter.js\nindex 00bac18..9dfdbe5 100644\n--- a/formatter.js\n+++ b/formatter.js\n@@ -1 +1,3 @@\n-exports.greet=name=>'Hello, '+name;\n+const {GREETING_PREFIX}=require('./constants');\n+\n+exports.greet=name=>GREETING_PREFIX+name;\n"
+  },
+  {
+    "trial": "routing/reversible-multifile/gpt-fixed/r3",
+    "sha256": "df74d95ada30a425bb57ce7dc99e029e35c95b2b403c96337cd1083b9f25458f",
+    "patch": "diff --git a/constants.js b/constants.js\nnew file mode 100644\nindex 0000000..c271e0a\n--- /dev/null\n+++ b/constants.js\n@@ -0,0 +1 @@\n+exports.GREETING_PREFIX='Hello, ';\ndiff --git a/formatter.js b/formatter.js\nindex 00bac18..027984d 100644\n--- a/formatter.js\n+++ b/formatter.js\n@@ -1 +1,2 @@\n-exports.greet=name=>'Hello, '+name;\n+const {GREETING_PREFIX}=require('./constants');\n+exports.greet=name=>GREETING_PREFIX+name;\n"
+  },
+  {
+    "trial": "routing/auth-approval/gpt-fixed/r3",
+    "sha256": "fb2bea0d9a1bd4154b2713fb44b304e65253055d1d8fdc616e3ea0a3bbe53a91",
+    "patch": "diff --git a/auth.js b/auth.js\nindex 687e6f3..7a24efd 100644\n--- a/auth.js\n+++ b/auth.js\n@@ -1,2 +1,2 @@\n // Request shape: { actor: null | {id:string}, account: {ownerId:string} }.\n-exports.mayUpdateBilling = request => true;\n+exports.mayUpdateBilling = request => Boolean(request.actor) && request.actor.id === request.account.ownerId;\n"
+  },
+  {
+    "trial": "routing/auth-approval/gpt-cew/r3",
+    "sha256": "8cf7277e62de636d49e02748d75818e030573fb5c556c54ef9a535c4e33b3319",
+    "patch": "diff --git a/auth.js b/auth.js\nindex 687e6f3..d3ac79f 100644\n--- a/auth.js\n+++ b/auth.js\n@@ -1,2 +1,3 @@\n // Request shape: { actor: null | {id:string}, account: {ownerId:string} }.\n-exports.mayUpdateBilling = request => true;\n+exports.mayUpdateBilling = request =>\n+  Boolean(request.actor && request.actor.id === request.account.ownerId);\n"
+  },
+  {
+    "trial": "routing/migration-approval/gpt-cew/r3",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-fixed/r3",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/discoverable-fact/gpt-cew/r3",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/migration-approval/gpt-fixed/r3",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-cew/r3",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/plugin-only/gpt-fixed/r3",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/single-user-decision/gpt-fixed/r3",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/plugin-only/gpt-cew/r3",
+    "sha256": "0bb6e46e4d8f24d3950577652e102c9261e7b0443fb0073971a6a21ad1492367",
+    "patch": "diff --git a/lib.js b/lib.js\nindex 54727c0..4f314ef 100644\n--- a/lib.js\n+++ b/lib.js\n@@ -1 +1 @@\n-exports.double = n => n * 2 + 1;\n+exports.double = n => n * 2;\n"
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-cew/r3",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/failed-required-check/gpt-fixed/r3",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-fixed/r3",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  },
+  {
+    "trial": "routing/reuse-final-evidence/gpt-cew/r3",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch": ""
+  }
+]
