@@ -8,6 +8,9 @@ const crypto = require("node:crypto");
 const digest = (content) => crypto.createHash("sha256")
   .update(content.toString("utf8").replace(/\r\n/g, "\n")).digest("hex");
 
+// Only cross-task policies belong in Claude's automatically loaded rules directory.
+const claudeResidentRules = new Set(["01-base.md", "05-git-workflow.md", "07-forbidden.md"]);
+
 // Check the root and every descendant before touching a managed file; do not follow links.
 function checkedPath(root, relative) {
   const target = path.resolve(root, relative);
@@ -44,7 +47,7 @@ function copyRule({ source, root, relative, dryRun, log }) {
   }
 }
 
-function retireCommon({ source, root, relative, knownHashes, dryRun, log }) {
+function retireRule({ source, root, relative, knownHashes, dryRun, log }) {
   const target = checkedPath(root, relative);
   if (!fs.existsSync(target)) return;
   const hash = digest(fs.readFileSync(target));
@@ -67,18 +70,19 @@ function installRules({ sourceRoot, installRoot, host, dryRun = false, log = con
   const commonFiles = fs.readdirSync(path.join(rulesRoot, "common"), { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
     .map((entry) => `common/${entry.name}`);
+  const installedOnDemand = (relative) => host === "claude-code" && !claudeResidentRules.has(relative);
   // Validate all managed destinations before the first write, including upgrade cleanup paths.
   for (const relative of [...files, ...commonFiles]) {
     checkedPath(root, `rules/${relative}`);
-    if (host === "claude-code" && relative.startsWith("common/")) {
+    if (installedOnDemand(relative)) {
       checkedPath(root, `references/rules/${relative}`);
     }
   }
   for (const relative of [...files, ...commonFiles]) {
     const source = path.join(rulesRoot, relative);
-    const cold = host === "claude-code" && relative.startsWith("common/");
+    const cold = installedOnDemand(relative);
     copyRule({ source, root, relative: `${cold ? "references/rules" : "rules"}/${relative}`, dryRun, log });
-    if (cold) retireCommon({ source, root, relative: `rules/${relative}`,
+    if (cold) retireRule({ source, root, relative: `rules/${relative}`,
       knownHashes: legacy.files[relative] || [], dryRun, log });
   }
 }

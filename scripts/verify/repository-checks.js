@@ -351,8 +351,8 @@ function checkRuleLoadingPolicy() {
   if (!agentsBody.includes("~/.claude/rules/")) {
     fail("AGENTS.md should mention Claude Code user-level rules fallback");
   }
-  if (!agentsBody.includes("~/.claude/references/rules/common/")) {
-    fail("AGENTS.md should resolve Claude common rules from the cold reference directory");
+  if (!agentsBody.includes("`~/.claude/references/rules/`")) {
+    fail("AGENTS.md should resolve on-demand Claude rules under the same relative path");
   }
   if (!agentsBody.includes("不能把项目规则目录缺失等同于") || !agentsBody.includes("无规则")) {
     fail("AGENTS.md should forbid treating a missing project rules directory as no rules");

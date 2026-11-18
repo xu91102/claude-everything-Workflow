@@ -299,17 +299,18 @@ try {
   const fresh = path.join(tempRoot, "fresh");
   const common = fs.readdirSync(path.join(sourceRoot, "rules/common"));
   assert.equal(common.length, 8);
-  for (const file of common) {
-    assert.equal(read(path.join(fresh, "references/rules/common", file)),
-      read(path.join(sourceRoot, "rules/common", file)));
-    assert.equal(fs.existsSync(path.join(fresh, "rules/common", file)), false);
-  }
-  assert.equal(read(path.join(fresh, "rules/07-forbidden.md")),
-    read(path.join(sourceRoot, "rules/07-forbidden.md")));
-
+  const resident = ["01-base.md", "05-git-workflow.md", "07-forbidden.md"];
+  const onDemand = [
+    "02-implementation.md", "08-specialty-rules-index.md", "09-first-principles-adversarial-testing.md",
+  ];
+  assert.deepEqual(fs.readdirSync(path.join(fresh, "rules")).sort(), resident);
   install("codex", "codex");
-  assert.equal(read(path.join(tempRoot, "codex/rules/common/testing.md")),
-    read(path.join(sourceRoot, "rules/common/testing.md")));
+  for (const file of [...resident, ...onDemand, ...common.map((name) => `common/${name}`)]) {
+    const source = read(path.join(sourceRoot, "rules", file));
+    const claudeDir = resident.includes(file) ? "rules" : "references/rules";
+    assert.equal(read(path.join(fresh, claudeDir, file)), source);
+    assert.equal(read(path.join(tempRoot, "codex/rules", file)), source);
+  }
   install("preview", "claude-code", true);
   assert.equal(fs.existsSync(path.join(tempRoot, "preview")), false);
 
@@ -319,6 +320,15 @@ try {
     path.join(upgrade, "rules/common/testing.md"));
   fs.writeFileSync(path.join(upgrade, "rules/common/hooks.md"), "Personal hook policy\n");
   fs.writeFileSync(path.join(upgrade, "rules/common/personal.md"), "Keep my rules\n");
+  for (const file of onDemand) {
+    fs.copyFileSync(path.join(sourceRoot, "rules", file), path.join(upgrade, "rules", file));
+  }
+  const customRule = "02-implementation.md";
+  const personal = path.join(upgrade, "rules", customRule);
+  fs.writeFileSync(personal, "Personal implementation rules\n");
+  install("upgrade", "claude-code", true);
+  assert.equal(fs.existsSync(path.join(upgrade, "references")), false);
+  for (const file of onDemand) assert.ok(fs.existsSync(path.join(upgrade, "rules", file)));
   install("upgrade");
   assert.equal(fs.existsSync(path.join(upgrade, "rules/common/testing.md")), false);
   assert.equal(read(path.join(upgrade, "rules/common/hooks.md")), "Personal hook policy\n");
@@ -326,6 +336,12 @@ try {
   assert.ok(messages.some((message) => /保留.*hooks\.md/.test(message)));
   install("upgrade");
   assert.equal(read(path.join(upgrade, "rules/common/hooks.md")), "Personal hook policy\n");
+
+  assert.equal(read(personal), "Personal implementation rules\n");
+  for (const file of onDemand) {
+    assert.equal(fs.existsSync(path.join(upgrade, "rules", file)), file === customRule);
+    assert.equal(read(path.join(upgrade, "references/rules", file)), read(path.join(sourceRoot, "rules", file)));
+  }
 
   const outside = path.join(tempRoot, "outside");
   fs.mkdirSync(outside);

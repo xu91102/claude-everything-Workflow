@@ -5,43 +5,18 @@ description: Route engineering delivery and explicitly requested engineering wor
 
 # Using Superpowers
 
-Own routing and continuation. Skills return outcomes here instead of selecting one another.
-
-## Applicability
-
-用于工程交付（实现、调试、测试、审查）及用户明确请求的工程工作流，并接续这些流程的返回结果。
-普通问答、翻译、总结和一般资料检索直接处理；复杂度本身不触发本路由。
-
-## Priority
-
-User instructions, `AGENTS.md`, `CLAUDE.md`, and repository rules take precedence over Skills,
-commands, agents, and hooks, which take precedence over default behavior.
+Use this router for engineering delivery or an explicitly requested engineering workflow. Apply returned outcomes here. Answer ordinary questions, translations and summaries directly.
 
 ## Skill Invocation Rule
 
-Classify intent, discoverable facts, user-owned decisions, and risk; select the shortest applicable path
-below and read only its Skill. Briefly announce the selection, then act. Do not load a chain of Skills
-in anticipation of later stages. Reuse a Skill already read in this task unless it changed or context
-was lost; returning here means applying the routing decision, not reading this file again.
+User instructions and project rules (including `AGENTS.md` and `CLAUDE.md`) take priority over Skills, commands and hooks. Infer scope and acceptance from the request and project. Select the shortest applicable path, briefly explain the choice and read only the selected procedure. Reuse it while its contents and context are current.
 
-For delivery, infer the requested action, outcome, scope and acceptance evidence from the request and
-project. Inspect discoverable details and ask only for unresolved decisions that would change the result.
-`read-reference` means read the target as a file relative to the same distribution, without invoking it
-through a host Skill tool or asking the user to type its name. For `implement`, read
-[the delivery procedure](../implement/SKILL.md) after selecting it.
-
-Expected TDD RED stays in the current implementation loop. Do not reroute it as a reported bug.
-An explicit request may use ordinary language or a native `/name` or `$name` invocation.
-For handoff, triage and improve-codebase-architecture,
-require the corresponding user request; complexity or a router match alone is insufficient.
-Do not ask users to repeat an already clear request using command syntax. Skill selection never
-expands authorization for publishing, external writes, or other consequential actions.
+An explicit request can use ordinary language, `/name` or `$name`. When the user asks only for advice or status, report the proposal or verified state. A standalone review authorizes findings. Use existing delivery authorization to resume work within its scope.
 
 ## Three Lanes
 
-The three lanes are: direct (clear low-risk task), needs-decision (grilling inline), and formal-spec
-(explicit formal Spec or high-risk boundary). File count, new features, and ordinary complexity affect
-verification intensity, not the lane. Resolve only consequential user decisions that tools cannot discover.
+The three lanes are direct (clear low-risk task), needs-decision (grilling inline), and formal-spec (explicit formal Spec or high-risk boundary). File count, new features, and ordinary complexity affect
+verification intensity, not the lane. A high-risk boundary involves costly-to-reverse architecture, public contracts, authentication or authorization, persistent migrations, or irreversible external effects. Record this risk before grilling so the handoff can resume the formal Spec.
 
 ## Routing
 
@@ -54,6 +29,7 @@ Task arrives
   -> explicit grilling request?                    -> grilling explicit
   -> explicit handoff or fresh session or prototype branch?
                                                      -> skills/handoff/SKILL.md
+  -> standalone diff or PR review?                 -> skills/code-review/SKILL.md
   -> explicit triage request?                      -> skills/triage/SKILL.md
   -> explicit TDD request?                         -> skills/test-driven-development/SKILL.md
   -> explicit project verification setup/maintenance or real-flow acceptance request?
@@ -76,45 +52,26 @@ Task arrives
        -> otherwise                                 -> read-reference skills/implement/SKILL.md
   -> behavior change with a test path?             -> test-driven-development
   -> new feature or other Git-rule isolation need? -> rules/05-git-workflow.md
-  -> completion, fixed, or ready claim?            -> rules/common/testing.md
+  -> completion, fixed, or ready claim?            -> rules/common/testing.md (report final-state evidence, gaps and risk)
   -> skill discovery or install request?           -> use available host tooling for the explicit request
   -> external skill learning or edit?              -> rules/common/skills-learning.md
   -> otherwise                                     -> shortest applicable loop
 ```
 
-A high-risk boundary is a costly-to-reverse architecture or service boundary, public-contract compatibility, authentication or authorization boundary, persistent data/schema migration, or irreversible external side effect. Record this classification before grilling so its handoff can resume `spec-gate`.
-
 ### Workflow advice mode
 
-只返回推荐入口与原因、前置条件、需要补齐的用户决策或 Spec/tickets/map/handoff，以及直到
-审查和验证的闭环路径。不要调用下一 Skill、写文件或修改 tracker。
+给出推荐入口、理由、前置条件及到审查和验证的路径，列出尚缺的用户决定或工件。到建议为止。
 
 ### Agent-selected Delivery Topology
 
-用户要求完成一个定义明确的交付范围后，router 自行选择 `implement`、`to-tickets` 或
-`subagent-driven-development`；选择依据是持续性、依赖图、写入面和验证成本，而不是用户是否记得某个
-Skill 名称。开始时用一行说明所选拓扑及理由，然后继续执行。
+Select within the authorized scope. For one coherent delivery, `read-reference` means read [the delivery procedure](../implement/SKILL.md) from the same distribution as a file. Expected TDD RED stays in that implementation loop.
 
-- 一个可在当前上下文完成的连贯范围，使用 `implement`。
-- 需要跨会话、tracker 或可恢复依赖图时，使用 `to-tickets`。这仍必须展示 ticket 的行为、验收标准与
-  blocker，并在发布前获得用户对 ticket contract 的批准。
-- 只有至少两张已批准、无 blocker、写入面不重叠的 frontier tickets，才使用 SDD。不能安全并行时选择
-  串行 `implement`，不要为了使用 subagent 人为拆票。
-
-用户的交付授权覆盖已批准范围内的本地实现与拓扑选择，不覆盖新的产品范围、未决用户决策、外部 tracker
-mutation、commit、push、PR 或不可逆副作用。新的 frontier 只有仍在该授权范围内时才能由 router 再次选择
-执行拓扑。
+For durable work, show ticket behavior, acceptance criteria and blockers and obtain contract approval before publishing. Choose parallel ticket implementation only for at least two approved, unblocked tickets with disjoint write surfaces. Otherwise implement serially. Commit, push, PR, external tracker writes, irreversible actions and scope expansion require their own authorization. Reuse approvals already given.
 
 ## Process Outcomes
 
-Only when processing a grilling/Spec outcome or preparing a cross-session handoff, read
-[references/process-outcomes.md](references/process-outcomes.md). Follow the matching outcome before
-continuing; a self-reviewed Spec is not user approval. Ordinary direct delivery does not load this reference.
+For grilling/Spec outcomes or cross-session handoff, read [references/process-outcomes.md](references/process-outcomes.md). A self-reviewed Spec still needs user approval. Ordinary direct delivery does not load this reference.
 
 ## Compatibility Alias
 
-For one release cycle, interpret a user explicitly asking for the old name `brainstorming` as a formal Spec request. Explain that the entry moved to `/to-spec`; route through the same optional grilling and `spec-gate` path. Do not expose an old Skill shim or a second protocol source.
-
-## Completion
-
-Before saying work is complete, fixed, passing, or ready, apply `rules/common/testing.md` and report fresh evidence, skipped checks, and remaining risk.
+For one release cycle, explain that the old name `brainstorming` moved to `/to-spec` and apply the formal Spec route.
