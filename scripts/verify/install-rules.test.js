@@ -271,7 +271,10 @@ function checkInstallerEntrypoint() {
   assert.equal(fs.existsSync(path.join(profile, ".claude/rules/common/testing.md")), false);
   assert.equal(read(path.join(profile, ".codex/rules/common/testing.md")),
     read(path.join(sourceRoot, "rules/common/testing.md")));
-  assert.match(read(path.join(profile, ".claude/CLAUDE.md")), /^@AGENTS\.md$/m);
+  const claudeBootstrap = read(path.join(profile, ".claude/CLAUDE.md"));
+  assert.match(claudeBootstrap, /^@AGENTS\.md$/m);
+  assert.ok(claudeBootstrap.includes("~/.claude/references/rules/"),
+    "Claude's installed entry must locate on-demand rules outside the startup directory");
   for (const host of [".claude", ".codex"]) {
     assert.equal(read(path.join(profile, host, "references/git-worktrees.md")),
       read(path.join(sourceRoot, "references/git-worktrees.md")));

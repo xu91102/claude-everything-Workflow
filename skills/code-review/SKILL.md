@@ -63,6 +63,6 @@ Report mode, base and scope source, then separate `Standards` and `Spec` finding
 Do not merge or rerank findings across axes. Include checks not run and remaining risks.
 For self-review with no findings, a short conclusion and verification evidence are sufficient.
 
-For a standalone review, report findings and stop. During authorized implementation, fix Critical/Important
-findings before completion. Recheck affected axes against the same base and updated package; rerun both when scope, shared behavior or review assumptions change. Reuse checks whose relevant
+Fix Critical/Important findings before completion. Recheck affected axes against the same base and updated
+package; rerun both when scope, shared behavior or review assumptions change. Reuse checks whose relevant
 inputs are unchanged. A task's complete acceptance and required verification remain completion gates.
