@@ -14,6 +14,7 @@ model: sonnet
 - 优先项目已有脚本、依赖和 CLI；Agent Browser/MCP 只做探索，不替代最终测试。
 - 只修改本次 E2E 范围内的测试、配置和必要脚本，不顺手重构产品代码。
 - 失败时先读取 CLI、trace、截图、视频和 HTML 报告，再判断测试、产品或环境根因。
+- 可复跑测试用 Playwright CLI；需要登录态的交互式查看由主会话用 chrome-devtools MCP（`--autoConnect`）完成，不新开浏览器。
 
 ## 回传
 

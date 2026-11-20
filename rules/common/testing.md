@@ -35,3 +35,22 @@
 ## 端到端测试
 
 Playwright 的组织、等待、POM、CI 制品和 flake 处理以 `skills/e2e-testing/SKILL.md` 为准；探索工具不能替代可重复的 E2E。本地多 worktree 运行时隔离端口和环境变量，启动服务必须等待 Web/API ready。CI 失败时按 `skills/e2e-testing/SKILL.md` 保留失败制品。
+
+## 浏览器验证
+
+交互式验证（查看页面、确认交互和登录态）与可复跑 E2E 是两件事：
+
+- 需要用户已登录的 Chrome 时，使用 chrome-devtools MCP 的 `--autoConnect` 连接正在运行的 Chrome；不要用 Playwright MCP 或新开浏览器窗口。
+- 前置条件：Chrome 144+，在 `chrome://inspect/#remote-debugging` 启用远程调试，首次连接在 Chrome 弹窗中允许。MCP 未配置或连接失败时先提示用户，不要静默启动新浏览器。
+- 定位页面：先 `list_pages`，按项目 `baseURL`、端口或标题匹配标签页，再用 `select_page` 选中；需要时用 `take_snapshot` 或 `evaluate_script` 核对 `location.href`、`document.title` 或项目标记。多个候选时把 URL 和标题交给用户确认，不关闭用户已有标签页。
+- 项目页未打开时，在同一 Chrome 中用 `new_page` 打开项目地址，登录态不变。
+- 可复跑测试仍用 `npx playwright test` 或项目脚本，使用独立浏览器；登录态由 `storageState` 等测试内机制准备，不依赖日常 Chrome。
+
+Claude Code 的 MCP 配置示例（需要 Node.js 20.19+）：
+
+```bash
+claude mcp add -s user chrome-devtools -- \
+  npx -y chrome-devtools-mcp@latest --autoConnect
+```
+
+安装后可在 `~/.claude/settings.json` 的 `permissions.allow` 中加入 `mcp__chrome-devtools__*`。

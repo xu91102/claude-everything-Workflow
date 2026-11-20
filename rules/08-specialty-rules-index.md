@@ -12,7 +12,7 @@
 | Hook 行为、退出码、Profile、权限         | `common/hooks.md`                                                       |
 | Token、MCP、模型和上下文成本             | `common/performance.md`                                                 |
 | 外部 skill 学习、模式保存、演化评估      | `common/skills-learning.md`                                             |
-| 测试策略、TDD、E2E、验证范围             | `common/testing.md`                                                     |
+| 测试策略、TDD、E2E、浏览器验证、验证范围             | `common/testing.md`                                                     |
 | 提交、推送、PR、CI 质量门                | `05-git-workflow.md`、`common/pr-automation.md`                        |
 | 安全敏感实现或安全审查                   | `07-forbidden.md`                                                       |
 | 架构与兼容、错误处理、代码规模、注释                     | `02-implementation.md`                                                    |

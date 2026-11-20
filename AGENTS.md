@@ -21,6 +21,12 @@
 - Claude 升级时若保留了个人修改的旧 `~/.claude/rules/common/...`，该用户规则仍生效；读取同名参考前先检查并尊重该修改，不把新版通用参考覆盖到个人约束上。
 - `rules/common/` 是专项参考区；仅命令、agent、skill 或当前任务明确触发时读取。
 
+## 浏览器验证
+
+- 需要查看或操作已登录页面时，用 chrome-devtools MCP 的 `--autoConnect` 连接用户当前打开的 Chrome；它只连接，不新开窗口。
+- 先 `list_pages` 按项目地址匹配标签页，再 `select_page` 操作；多个候选时让用户确认，不关闭用户已有标签页。
+- 不要用 Playwright MCP 或新开浏览器验证登录态页面；Playwright 只用于可复跑的自动化测试。连接失败时按 `rules/common/testing.md` 的浏览器验证流程处理，不要改用新窗口绕过。
+
 ## 规则索引
 
 | 规则文件                                     | 内容与触发场景                                         |

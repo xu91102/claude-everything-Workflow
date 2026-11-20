@@ -73,6 +73,18 @@ Installation updates user-level files and can affect multiple projects. Changed 
 
 A fresh Claude Code installation puts CEW’s base, Git and security rules in `~/.claude/rules/`. Other CEW rules are available on demand under `~/.claude/references/rules/`. On upgrade, personally edited copies of the three newly migrated rules stay active. Obsolete rules left by older releases can also still load.
 
+### Browser verification (optional)
+
+When an interactive check needs your existing login, connect the agent to the Chrome instance you already use instead of launching a new browser:
+
+```sh
+# Chrome 144+, Node.js 20.19+, and remote debugging enabled at chrome://inspect/#remote-debugging
+claude mcp add -s user chrome-devtools -- \
+  npx -y chrome-devtools-mcp@latest --autoConnect
+```
+
+The agent lists open pages, selects the tab matching the project URL, and reuses the existing session instead of opening a new window. Repeatable `npx playwright test` runs still use their own browser and should prepare login state with `storageState`.
+
 ## How it works
 
 Start with a normal task request. The workflow router selects relevant skills; you do not need to memorize every skill name.
