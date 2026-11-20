@@ -55,6 +55,10 @@ codex plugin add claude-everything-workflow@cew
 
 CLI 命令以宿主版本为准；缺少 `plugin` 子命令时使用支持插件的应用版本或继续使用 npm 安装。
 
+### 浏览器验证 MCP
+
+Claude 插件根目录的 .mcp.json 会注册 chrome-devtools MCP，启用插件后无需手动 claude mcp add。首次使用要求 Node.js 20.19+、Chrome 144+，并在 chrome://inspect/#remote-debugging 启用远程调试；不满足时连接会失败，按工作流规则提示用户处理，不要改用新窗口。若默认 Node 低于 20.19，请改用 Node 20.19+ 手动执行 claude mcp add；插件默认使用 npx。
+
 ## 与 npm 安装的区别
 
 | 项目 | 插件安装 | npm 安装 |
@@ -67,7 +71,7 @@ CLI 命令以宿主版本为准；缺少 `plugin` 子命令时使用支持插件
 
 插件不会自动加载随包的 `AGENTS.md` 或注册 `rules/`，也不提供额外的资源路径适配；这些文件被打包不等于其规则已生效。需要全局入口和规则安装时使用 npm 安装器。只使用插件时，跨文件工作流仍需目标项目或用户已有配置提供可解析的规则及参考路径，不能视为与 npm 安装完全等价。
 
-同一宿主建议选一种方式，避免同名技能和 Claude hooks 重复。已有 npm 安装不会被插件自动迁移或删除；学习系统仍需显式配置。脚本声明的可选外部工具和依赖也不会因安装插件自动安装。基础检查脚本需要 Node.js 18+；运行仓库校验器需要安装 package.json 中的依赖。
+同一宿主建议选一种方式，避免同名技能和 Claude hooks 重复。已有 npm 安装不会被插件自动迁移或删除；学习系统仍需显式配置。脚本声明的可选外部工具和依赖也不会因安装插件自动安装；插件提供的 chrome-devtools MCP 仍需 Node.js 20.19+、Chrome 144+ 和远程调试开关。基础检查脚本需要 Node.js 18+；运行仓库校验器需要安装 package.json 中的依赖。
 
 ## 本地验证和维护
 

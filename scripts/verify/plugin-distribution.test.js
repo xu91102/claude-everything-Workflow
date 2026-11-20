@@ -24,6 +24,9 @@ test("both marketplaces resolve to the same self-contained, versioned workflow p
     const source = market.plugins[0].source;
     assert.equal(path.resolve(root, typeof source === "string" ? source : source.path), root);
   }
+  const mcp = readJson(".mcp.json");
+  assert.equal(mcp.mcpServers["chrome-devtools"].command, "npx");
+  assert.ok(mcp.mcpServers["chrome-devtools"].args.includes("--autoConnect"));
   assert.ok(fs.existsSync(path.join(root, codex.skills, "using-superpowers/SKILL.md")));
   assert.ok(!("hooks" in codex), "Claude hook events must not be advertised as Codex hooks");
   const hooks = readJson(claude.hooks).hooks;
