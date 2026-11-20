@@ -30,7 +30,7 @@ function main() {
 }
 
 function runInstall(args) {
-  const supported = new Set(["--claude-only", "--codex-only", "--dry-run", "--help", "-h"]);
+  const supported = new Set(["--claude-only", "--codex-only", "--dry-run", "--with-browser-mcp", "--help", "-h"]);
   const unknown = args.find((arg) => !supported.has(arg));
   if (unknown) {
     process.stderr.write(`Unknown option: ${unknown}\n`);
@@ -38,6 +38,10 @@ function runInstall(args) {
   }
   if (args.includes("--claude-only") && args.includes("--codex-only")) {
     process.stderr.write("--claude-only and --codex-only cannot be used together\n");
+    process.exit(1);
+  }
+  if (args.includes("--with-browser-mcp") && args.includes("--codex-only")) {
+    process.stderr.write("--with-browser-mcp requires installing the Claude workflow\n");
     process.exit(1);
   }
   if (args.includes("--help") || args.includes("-h")) {
@@ -85,6 +89,7 @@ function toPowerShellArgs(args) {
     if (arg === "--claude-only") return "-ClaudeOnly";
     if (arg === "--codex-only") return "-CodexOnly";
     if (arg === "--dry-run") return "-DryRun";
+    if (arg === "--with-browser-mcp") return "-WithBrowserMcp";
     return arg;
   });
 }
@@ -93,7 +98,7 @@ function printHelp() {
   process.stdout.write(`claude-everything-workflow
 
 Usage:
-  cew install [--claude-only|--codex-only] [--dry-run]
+  cew install [--claude-only|--codex-only] [--dry-run] [--with-browser-mcp]
   cew verify
 
 Examples:

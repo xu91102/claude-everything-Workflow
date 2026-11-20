@@ -77,13 +77,18 @@ node bin/claude-everything-workflow.js install
 
 需要在你已登录的页面上做交互式核对时，让 agent 连接你当前的 Chrome，而不是新开浏览器：
 
+- **Claude Code 插件安装**会通过仓库根目录的 `.mcp.json` 自动注册 `chrome-devtools` MCP。
+- **npm 安装**会打印配置提示；加上 `--with-browser-mcp` 可一步完成配置。
+
 ```sh
-# 需要 Chrome 144+、Node.js 20.19+，并在 chrome://inspect/#remote-debugging 启用远程调试
+npx claude-everything-workflow install --with-browser-mcp
+# 或直接配置：
 claude mcp add -s user chrome-devtools -- \
-  npx -y chrome-devtools-mcp@latest --autoConnect
+  npx -y chrome-devtools-mcp@latest --autoConnect \
+    --no-usage-statistics --no-performance-crux
 ```
 
-agent 会先列出已打开的页面，按项目地址选中标签页，复用现有登录态。可复跑的 `npx playwright test` 仍使用独立浏览器，登录态通过 `storageState` 准备，不依赖你的日常 Chrome。
+需要 Node.js 20.19+、Chrome 144+，并在 `chrome://inspect/#remote-debugging` 启用远程调试。agent 会先列出已打开的页面，按项目地址选中标签页，复用现有登录态，而不是新开窗口。可复跑的 `npx playwright test` 仍使用独立浏览器，登录态通过 `storageState` 准备。
 
 ## 如何使用
 
