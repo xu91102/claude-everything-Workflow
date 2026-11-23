@@ -75,10 +75,16 @@ node bin/claude-everything-workflow.js install
 
 ### 浏览器验证（可选）
 
-需要在你已登录的页面上做交互式核对时，让 agent 连接你当前的 Chrome，而不是新开浏览器。插件安装会通过仓库根目录的 `.mcp.json` 注册 `chrome-devtools` MCP；npm 安装需手动添加：
+需要在你已登录的页面上做交互式核对时，让 agent 连接你当前的 Chrome，而不是新开浏览器。Claude Code 插件安装会通过仓库根目录的 `.mcp.json` 注册 `chrome-devtools` MCP；npm 安装需手动添加：
 
 ```sh
+# Claude Code
 claude mcp add -s user chrome-devtools -- \
+  npx -y chrome-devtools-mcp@latest --autoConnect \
+    --no-usage-statistics --no-performance-crux
+
+# Codex
+codex mcp add chrome-devtools -- \
   npx -y chrome-devtools-mcp@latest --autoConnect \
     --no-usage-statistics --no-performance-crux
 ```

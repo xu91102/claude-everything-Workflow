@@ -75,10 +75,16 @@ A fresh Claude Code installation puts CEW’s base, Git and security rules in `~
 
 ### Browser verification (optional)
 
-Interactive checks that need your existing login can reuse the running Chrome instead of opening a new browser. Plugin installs register the `chrome-devtools` MCP from the repository's `.mcp.json`; for npm installs, add it manually:
+Interactive checks that need your existing login can reuse the running Chrome instead of opening a new browser. Claude Code plugin installs register the `chrome-devtools` MCP from the repository's `.mcp.json`; npm installs add it manually:
 
 ```sh
+# Claude Code
 claude mcp add -s user chrome-devtools -- \
+  npx -y chrome-devtools-mcp@latest --autoConnect \
+    --no-usage-statistics --no-performance-crux
+
+# Codex
+codex mcp add chrome-devtools -- \
   npx -y chrome-devtools-mcp@latest --autoConnect \
     --no-usage-statistics --no-performance-crux
 ```
