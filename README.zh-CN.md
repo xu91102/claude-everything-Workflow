@@ -73,6 +73,24 @@ node bin/claude-everything-workflow.js install
 
 全新安装时，CEW 将执行原则、Git 和安全规则放入 Claude Code 自动读取的 `~/.claude/rules/`，其余规则从 `~/.claude/references/rules/` 按需读取。升级时，本次迁移的三份规则如有个人修改，仍在原处生效。更早版本遗留的退役规则也可能继续加载。
 
+### 浏览器验证（可选）
+
+需要在你已登录的页面上做交互式核对时，让 agent 连接你当前的 Chrome，而不是新开浏览器。Claude Code 插件安装会通过仓库根目录的 `.mcp.json` 注册 `chrome-devtools` MCP；npm 安装需手动添加：
+
+```sh
+# Claude Code
+claude mcp add -s user chrome-devtools -- \
+  npx -y chrome-devtools-mcp@latest --autoConnect \
+    --no-usage-statistics --no-performance-crux
+
+# Codex
+codex mcp add chrome-devtools -- \
+  npx -y chrome-devtools-mcp@latest --autoConnect \
+    --no-usage-statistics --no-performance-crux
+```
+
+需要 Node.js 20.19+、Chrome 144+，并在 `chrome://inspect/#remote-debugging` 启用远程调试。已有同名 `chrome-devtools` 配置时，需为其补上 `--autoConnect`，否则会新开浏览器而不是复用当前 Chrome。agent 会先列出已打开的页面，按项目地址选中标签页。可复跑的 `npx playwright test` 仍使用独立浏览器，登录态通过 `storageState` 准备。
+
 ## 如何使用
 
 直接用自然语言描述任务，路由会选择相关技能，不需要记住所有 Skill 名称。

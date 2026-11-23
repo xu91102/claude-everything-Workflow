@@ -35,3 +35,9 @@
 ## 端到端测试
 
 Playwright 的组织、等待、POM、CI 制品和 flake 处理以 `skills/e2e-testing/SKILL.md` 为准；探索工具不能替代可重复的 E2E。本地多 worktree 运行时隔离端口和环境变量，启动服务必须等待 Web/API ready。CI 失败时按 `skills/e2e-testing/SKILL.md` 保留失败制品。
+
+## 浏览器验证
+
+- 需要登录态时复用已有会话；连接失败不另开浏览器绕过。
+- 操作前确认目标页面，不关闭或修改无关页面。
+- 可复跑测试使用独立测试登录态，不依赖用户日常会话。

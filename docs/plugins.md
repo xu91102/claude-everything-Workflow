@@ -55,6 +55,10 @@ codex plugin add claude-everything-workflow@cew
 
 CLI 命令以宿主版本为准；缺少 `plugin` 子命令时使用支持插件的应用版本或继续使用 npm 安装。
 
+### 浏览器验证 MCP
+
+Claude 插件根目录的 `.mcp.json` 会注册 `chrome-devtools` MCP，启用插件后无需手动配置。前置条件、手动添加命令和复用已登录 Chrome 的说明见 README 的“浏览器验证（可选）”。
+
 ## 与 npm 安装的区别
 
 | 项目 | 插件安装 | npm 安装 |

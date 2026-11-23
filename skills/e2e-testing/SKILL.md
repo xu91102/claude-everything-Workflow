@@ -13,7 +13,7 @@ origin: ECC
 1. 读取 `package.json`、lockfile、CI 配置和现有测试目录，确认包管理器与脚本。
 2. 查找 `playwright.config.*`、`tests/e2e/`、`e2e/`、`BASE_URL`、启动命令和测试数据准备方式。
 3. 优先使用项目已有依赖和 `npx playwright test`；缺少浏览器时再处理安装。
-4. Agent Browser 或 MCP 只用于交互式探索和定位，不作为最终测试或报告来源。
+4. 交互式探索和定位用 chrome-devtools MCP 连接用户已打开的 Chrome（`--autoConnect`），不新开浏览器；细节见 `rules/common/testing.md` 的“浏览器验证”，它不替代最终测试或报告。
 
 ## 执行契约
 
