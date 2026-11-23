@@ -88,7 +88,7 @@ claude mcp add -s user chrome-devtools -- \
     --no-usage-statistics --no-performance-crux
 ```
 
-Requires Node.js 20.19+, Chrome 144+, and remote debugging enabled at `chrome://inspect/#remote-debugging`. The agent lists open pages, selects the tab matching the project URL, and reuses the existing session instead of opening a new window. Repeatable `npx playwright test` runs still use their own browser and should prepare login state with `storageState`.
+Requires Node.js 20.19+, Chrome 144+, and remote debugging enabled at `chrome://inspect/#remote-debugging`. If the MCP server reports a closed connection, run `node -v` first: Node below 20.19 makes the server exit immediately, and Claude Code runs it with the Node that launched Claude Code. The agent lists open pages, selects the tab matching the project URL, and reuses the existing session instead of opening a new window. Repeatable `npx playwright test` runs still use their own browser and should prepare login state with `storageState`.
 
 ## How it works
 

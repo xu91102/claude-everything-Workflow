@@ -57,7 +57,7 @@ CLI 命令以宿主版本为准；缺少 `plugin` 子命令时使用支持插件
 
 ### 浏览器验证 MCP
 
-Claude 插件根目录的 .mcp.json 会注册 chrome-devtools MCP，启用插件后无需手动 claude mcp add。首次使用要求 Node.js 20.19+、Chrome 144+，并在 chrome://inspect/#remote-debugging 启用远程调试；不满足时连接会失败，按工作流规则提示用户处理，不要改用新窗口。若默认 Node 低于 20.19，请改用 Node 20.19+ 手动执行 claude mcp add；插件默认使用 npx。
+Claude 插件根目录的 .mcp.json 会注册 chrome-devtools MCP，启用插件后无需手动 claude mcp add。首次使用要求 Node.js 20.19+、Chrome 144+，并在 chrome://inspect/#remote-debugging 启用远程调试；不满足时连接会失败，按工作流规则提示用户处理，不要改用新窗口。连接关闭时先运行 `node -v`：低于 20.19 的服务会直接退出，而 Claude Code 使用启动它的那个 Node。若默认 Node 低于 20.19，请切换到 Node 20.19+ 后再启动 Claude Code 并手动执行 claude mcp add；插件默认使用 npx。
 
 ## 与 npm 安装的区别
 

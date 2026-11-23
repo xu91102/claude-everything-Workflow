@@ -88,7 +88,7 @@ claude mcp add -s user chrome-devtools -- \
     --no-usage-statistics --no-performance-crux
 ```
 
-需要 Node.js 20.19+、Chrome 144+，并在 `chrome://inspect/#remote-debugging` 启用远程调试。agent 会先列出已打开的页面，按项目地址选中标签页，复用现有登录态，而不是新开窗口。可复跑的 `npx playwright test` 仍使用独立浏览器，登录态通过 `storageState` 准备。
+需要 Node.js 20.19+、Chrome 144+，并在 `chrome://inspect/#remote-debugging` 启用远程调试。若 MCP 报连接关闭，先运行 `node -v` 确认版本：低于 20.19 时服务会直接退出，而 Claude Code 使用启动它的那个 Node。agent 会先列出已打开的页面，按项目地址选中标签页，复用现有登录态，而不是新开窗口。可复跑的 `npx playwright test` 仍使用独立浏览器，登录态通过 `storageState` 准备。
 
 ## 如何使用
 

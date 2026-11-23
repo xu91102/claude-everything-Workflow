@@ -15,7 +15,9 @@ const COMMAND = [
 ];
 
 function claudeConfigPath() {
-  return path.join(process.env.HOME || os.homedir(), ".claude.json");
+  // os.homedir() honours HOME on POSIX and USERPROFILE on Windows; process.env.HOME
+  // can be a Git Bash path like /c/Users/... that fs cannot resolve on Windows.
+  return path.join(os.homedir(), ".claude.json");
 }
 
 function hasServer() {
@@ -40,10 +42,15 @@ function commandLine() {
 }
 
 function printHint() {
+  const nodeWarning = nodeVersionAtLeast()
+    ? ""
+    : "  Current Node.js " + process.versions.node + " is below 20.19; the MCP server exits on startup.\n" +
+      "  Switch to Node.js 20.19+ before launching Claude Code.\n";
   process.stdout.write(
     "Browser verification: chrome-devtools MCP is not configured.\n" +
     "  " + commandLine() + "\n" +
     "  Requires Node.js 20.19+ and Chrome 144+ with remote debugging enabled at chrome://inspect/#remote-debugging.\n" +
+    nodeWarning +
     "  Or rerun with --with-browser-mcp to configure it automatically.\n"
   );
 }
