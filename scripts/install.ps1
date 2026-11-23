@@ -1,8 +1,7 @@
 param(
     [switch]$ClaudeOnly,
     [switch]$CodexOnly,
-    [switch]$DryRun,
-    [switch]$WithBrowserMcp
+    [switch]$DryRun
 )
 
 $ErrorActionPreference = "Stop"
@@ -12,9 +11,6 @@ if ($args.Count -gt 0) {
 }
 if ($ClaudeOnly -and $CodexOnly) {
     throw "-ClaudeOnly and -CodexOnly cannot be used together"
-}
-if ($WithBrowserMcp -and $CodexOnly) {
-    throw "-WithBrowserMcp requires installing the Claude workflow"
 }
 
 $RootDir = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -148,7 +144,6 @@ function Remove-PackageOnlyPaths {
         "scripts\install.sh",
         "scripts\install.ps1",
         "scripts\install-rules.js",
-        "scripts\setup-browser-mcp.js",
         "scripts\legacy-common-rule-hashes.json",
         "scripts\verify-harness.js",
         "scripts\verify\core.js",
@@ -280,16 +275,6 @@ function Test-InstallRoot {
     }
 }
 
-function Invoke-BrowserMcpSetup {
-    $mcpArgs = @((Join-Path $RootDir "scripts\setup-browser-mcp.js"))
-    if ($DryRun) { $mcpArgs += "--dry-run" }
-    if ($WithBrowserMcp) { $mcpArgs += "--ensure" }
-    & node @mcpArgs
-    if ($LASTEXITCODE -ne 0 -and $WithBrowserMcp) {
-        throw "chrome-devtools MCP setup failed with exit code $LASTEXITCODE"
-    }
-}
-
 function Install-ClaudeWorkflow {
     $dest = Join-Path $HomeDir ".claude"
 
@@ -307,7 +292,6 @@ function Install-ClaudeWorkflow {
     Install-WorkflowRules -Destination $dest -HostName "claude-code"
     Remove-RetiredSkills -Destination $dest
     Remove-PackageOnlyPaths -Destination $dest
-    Invoke-BrowserMcpSetup
 }
 
 function Install-CodexWorkflow {

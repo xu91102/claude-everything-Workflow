@@ -13,7 +13,7 @@ origin: ECC
 1. 读取 `package.json`、lockfile、CI 配置和现有测试目录，确认包管理器与脚本。
 2. 查找 `playwright.config.*`、`tests/e2e/`、`e2e/`、`BASE_URL`、启动命令和测试数据准备方式。
 3. 优先使用项目已有依赖和 `npx playwright test`；缺少浏览器时再处理安装。
-4. 交互式探索和定位用 chrome-devtools MCP 连接用户已打开的 Chrome（`--autoConnect`），不新开浏览器；它不替代最终测试或报告。
+4. 交互式探索和定位用 chrome-devtools MCP 连接用户已打开的 Chrome（`--autoConnect`），不新开浏览器；细节见 `rules/common/testing.md` 的“浏览器验证”，它不替代最终测试或报告。
 
 ## 执行契约
 
@@ -22,12 +22,6 @@ origin: ECC
 - 本地先运行与改动相关的最小集合；关键路径或新增测试重复运行以检查 flaky。
 - 失败先读取 CLI 输出、trace、screenshot、video 和 HTML report，再判断是产品缺陷、测试缺陷还是环境问题。
 - CI 失败保留 `playwright-report`、`test-results`、trace、screenshot 和 video；修复后至少复跑失败用例。
-
-## 交互式验证
-
-- 浏览已登录页面、确认交互效果时，用 chrome-devtools MCP 的 `--autoConnect` 连接当前 Chrome；先 `list_pages` 按项目地址选中标签页，再操作。
-- 不为登录态页面新开浏览器；可复跑测试走 `npx playwright test`，登录态在测试内用 `storageState` 等机制准备。
-- 连接、定位和失败回退细节见 `rules/common/testing.md` 的“浏览器验证”。
 
 ## 最小配置要求
 

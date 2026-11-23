@@ -75,20 +75,15 @@ A fresh Claude Code installation puts CEW’s base, Git and security rules in `~
 
 ### Browser verification (optional)
 
-Interactive checks that need your existing login can reuse the running Chrome instead of opening a new browser:
-
-- **Claude Code plugin installs** register the `chrome-devtools` MCP automatically from the repository's `.mcp.json`.
-- **npm installs** print a setup hint; add `--with-browser-mcp` to configure it in one step.
+Interactive checks that need your existing login can reuse the running Chrome instead of opening a new browser. Plugin installs register the `chrome-devtools` MCP from the repository's `.mcp.json`; for npm installs, add it manually:
 
 ```sh
-npx claude-everything-workflow install --with-browser-mcp
-# or configure it directly:
 claude mcp add -s user chrome-devtools -- \
   npx -y chrome-devtools-mcp@latest --autoConnect \
     --no-usage-statistics --no-performance-crux
 ```
 
-Requires Node.js 20.19+, Chrome 144+, and remote debugging enabled at `chrome://inspect/#remote-debugging`. If the MCP server reports a closed connection, run `node -v` first: Node below 20.19 makes the server exit immediately, and Claude Code runs it with the Node that launched Claude Code. The agent lists open pages, selects the tab matching the project URL, and reuses the existing session instead of opening a new window. Repeatable `npx playwright test` runs still use their own browser and should prepare login state with `storageState`.
+Requires Node.js 20.19+, Chrome 144+, and remote debugging enabled at `chrome://inspect/#remote-debugging`. If a `chrome-devtools` server already exists, add `--autoConnect` to it; without it the server opens a new browser instead of reusing the running Chrome. The agent lists open pages and selects the tab matching the project URL. Repeatable `npx playwright test` runs still use their own browser and should prepare login state with `storageState`.
 
 ## How it works
 

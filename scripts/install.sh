@@ -7,7 +7,6 @@ HOME_DIR="${HOME:?HOME is required}"
 INSTALL_CLAUDE=1
 INSTALL_CODEX=1
 DRY_RUN=0
-WITH_BROWSER_MCP=0
 SHOW_HELP=0
 
 usage() {
@@ -18,8 +17,6 @@ Options:
   --claude-only   Only install to ~/.claude
   --codex-only    Only install to ~/.codex
   --dry-run       Print operations without writing files
-  --with-browser-mcp
-                  Configure chrome-devtools MCP for Claude Code (Node.js 20.19+)
   -h, --help      Show this help
 EOF
 }
@@ -45,9 +42,6 @@ while [ "$#" -gt 0 ]; do
         --dry-run)
             DRY_RUN=1
             ;;
-        --with-browser-mcp)
-            WITH_BROWSER_MCP=1
-            ;;
         -h|--help)
             SHOW_HELP=1
             ;;
@@ -59,11 +53,6 @@ while [ "$#" -gt 0 ]; do
     esac
     shift
 done
-
-if [ "$WITH_BROWSER_MCP" -eq 1 ] && [ "$INSTALL_CLAUDE" -eq 0 ]; then
-    echo "--with-browser-mcp requires installing the Claude workflow" >&2
-    exit 1
-fi
 
 if [ "$SHOW_HELP" -eq 1 ]; then
     usage
@@ -166,7 +155,6 @@ remove_package_only_paths() {
         "scripts/install.sh" \
         "scripts/install.ps1" \
         "scripts/install-rules.js" \
-        "scripts/setup-browser-mcp.js" \
         "scripts/legacy-common-rule-hashes.json" \
         "scripts/verify-harness.js" \
         "scripts/verify/core.js" \
@@ -265,18 +253,6 @@ check_install_root() {
     fi
 }
 
-configure_browser_mcp() {
-    if [ "$DRY_RUN" -eq 1 ] && [ "$WITH_BROWSER_MCP" -eq 1 ]; then
-        node "$ROOT_DIR/scripts/setup-browser-mcp.js" --dry-run --ensure
-    elif [ "$DRY_RUN" -eq 1 ]; then
-        node "$ROOT_DIR/scripts/setup-browser-mcp.js" --dry-run
-    elif [ "$WITH_BROWSER_MCP" -eq 1 ]; then
-        node "$ROOT_DIR/scripts/setup-browser-mcp.js" --ensure
-    else
-        node "$ROOT_DIR/scripts/setup-browser-mcp.js"
-    fi
-}
-
 install_claude() {
     local dest="$HOME_DIR/.claude"
 
@@ -290,7 +266,6 @@ install_claude() {
     install_workflow_rules claude-code "$dest"
     cleanup_retired_skills "$dest"
     remove_package_only_paths "$dest"
-    configure_browser_mcp
 }
 
 install_codex() {

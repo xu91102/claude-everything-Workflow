@@ -23,9 +23,7 @@
 
 ## 浏览器验证
 
-- 需要查看或操作已登录页面时，用 chrome-devtools MCP 的 `--autoConnect` 连接用户当前打开的 Chrome；它只连接，不新开窗口。
-- 先 `list_pages` 按项目地址匹配标签页，再 `select_page` 操作；多个候选时让用户确认，不关闭用户已有标签页。
-- 不要用 Playwright MCP 或新开浏览器验证登录态页面；Playwright 只用于可复跑的自动化测试。连接失败时按 `rules/common/testing.md` 的浏览器验证流程处理，不要改用新窗口绕过。
+需要复用用户已登录的 Chrome 做交互式验证时，按 `rules/common/testing.md` 的“浏览器验证”执行；不要新开浏览器验证登录态页面。
 
 ## 规则索引
 

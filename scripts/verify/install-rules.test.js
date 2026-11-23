@@ -65,16 +65,6 @@ function checkInstallerCliOptions() {
   for (const host of [".claude", ".codex"]) {
     assert.equal(fs.existsSync(path.join(profile, host)), false);
   }
-  const browserConflict = spawnSync(process.execPath, [
-    path.join(sourceRoot, "bin/claude-everything-workflow.js"), "install",
-    "--codex-only", "--with-browser-mcp",
-  ], {
-    cwd: sourceRoot, env: { ...process.env, USERPROFILE: profile, HOME: profile },
-    encoding: "utf8", timeout: 60000,
-  });
-  assert.ifError(browserConflict.error);
-  assert.notEqual(browserConflict.status, 0);
-  assert.match(browserConflict.stderr, /requires installing the Claude workflow/);
   for (const help of ["--help", "-h"]) {
     const result = spawnSync(process.execPath, [
       path.join(sourceRoot, "bin/claude-everything-workflow.js"), "install", help,
@@ -172,33 +162,6 @@ function checkInstallerMergeFailure() {
   assert.match(result.stderr, /Claude settings merge failed/);
   assert.doesNotMatch(result.stdout, /Install complete/);
   assert.equal(fs.readFileSync(settingsPath, "utf8"), previous);
-}
-
-function checkBrowserMcpSetup() {
-  const profile = path.join(tempRoot, "browser mcp profile");
-  fs.mkdirSync(profile, { recursive: true });
-  const script = path.join(sourceRoot, "scripts/setup-browser-mcp.js");
-  const run = (args) => spawnSync(process.execPath, [script, ...args], {
-    cwd: sourceRoot,
-    env: { ...process.env, HOME: profile, USERPROFILE: profile },
-    encoding: "utf8", timeout: 60000,
-  });
-
-  const missing = run([]);
-  assert.ifError(missing.error);
-  assert.equal(missing.status, 0, missing.stderr);
-  assert.match(missing.stdout, /not configured/);
-
-  fs.writeFileSync(path.join(profile, ".claude.json"),
-    JSON.stringify({ mcpServers: { "chrome-devtools": { command: "npx" } } }));
-  const present = run([]);
-  assert.equal(present.status, 0, present.stderr);
-  assert.match(present.stdout, /already configured/);
-
-  fs.writeFileSync(path.join(profile, ".claude.json"), "{}");
-  const dry = run(["--ensure", "--dry-run"]);
-  assert.equal(dry.status, 0, dry.stderr);
-  assert.match(dry.stdout, /claude mcp add/);
 }
 
 function checkInstallerEntrypoint() {
@@ -323,7 +286,6 @@ function checkInstallerEntrypoint() {
     }
     assert.equal(fs.existsSync(path.join(profile, host, "skills/wayfinder/agents")), false);
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/install-rules.js")), false);
-    assert.equal(fs.existsSync(path.join(profile, host, "scripts/setup-browser-mcp.js")), false);
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/continuation-checks.test.js")), false,
       "安装不应保留仅供包内验证的续接测试");
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/plugin-distribution.test.js")), false,
@@ -394,12 +356,11 @@ try {
   assert.throws(() => install("invalid", "unknown"), /host/i);
   checkLegacyMigration();
   checkInstallerCliOptions();
-  checkBrowserMcpSetup();
   checkBashHelpOptions();
   checkInstallerLinkedRoots();
   checkInstallerMergeFailure();
   checkInstallerEntrypoint();
-  console.log("Rule installation tests passed (migration, backups, custom rules, symlink safety, both hosts, browser MCP setup, installer dry-run and execution).");
+  console.log("Rule installation tests passed (migration, backups, custom rules, symlink safety, both hosts, installer dry-run and execution).");
 } finally {
   // Only remove the exact private directory returned by mkdtemp; never a caller-supplied path.
   fs.rmSync(tempRoot, { recursive: true, force: true });
