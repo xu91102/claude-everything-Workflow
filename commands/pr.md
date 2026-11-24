@@ -8,10 +8,12 @@ description: 提交、推送和创建 Pull Request 的标准工作流
 
 把当前工作区中的有效改动整理成可提交、可审阅、可追踪的 PR。
 
+默认创建 Ready for review（可审查）PR；只有用户明确要求草稿或传入 `--draft` 时才创建 Draft PR。
+
 ## 使用方式
 
 ```text
-/pr                         # 检查当前改动，准备提交和 PR
+/pr                         # 默认创建 Ready PR
 /pr --draft                 # 创建 Draft PR
 /pr --staged                # 只处理已暂存内容
 /pr "fix: 修复登录过期处理"   # 使用指定提交标题
