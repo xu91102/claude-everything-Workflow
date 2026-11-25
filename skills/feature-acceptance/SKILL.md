@@ -14,7 +14,7 @@ description: "建立或维护项目验收与 Playwright E2E，执行真实流程
 ## 项目验收与 E2E 能力
 
 - **建立 / 维护验收能力**：读取 [项目验收能力](references/project-verification.md)，复用目标项目的驱动与测试入口，生成或更新项目本地操作说明和功能地图，并实际跑通。
-- **可重跑 E2E / Playwright**：需要新增、维护可提交并在 CI 重跑的浏览器测试或排查 flaky 时，读取 [可重跑 E2E 测试](references/e2e-testing.md)（按需再读 [playwright-patterns.md](references/playwright-patterns.md)），必要时委派 `agents/e2e-runner.md`。
+- **可重跑 E2E / Playwright**：需要新增、维护可在 CI 重跑的浏览器测试，或在根因确认后修复不稳定用例时，读取 [可重跑 E2E 测试](references/e2e-testing.md)（按需再读 [playwright-patterns.md](references/playwright-patterns.md)），必要时委派 `agents/e2e-runner.md`。
 - **执行验收**：先查项目指令指定的验收入口和功能地图，复用已验证命令，按本次改动选择受影响用例；没有地图时仍可完成一次性验收，不强制脚手架。工具失效时保留失败证据；只在授权范围内修复，不通过删用例或改成功标准取得通过。
 
 CEW 维护通用方法；平台命令、选择器、账号前置条件和功能地图由目标项目维护。
