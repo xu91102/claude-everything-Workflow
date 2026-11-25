@@ -42,12 +42,14 @@ function checkEvalCli() {
   const bin = fs.mkdtempSync(path.join(os.tmpdir(), "cew-eval-test-"));
   const stub = `#!/usr/bin/env node
 const fs = require("node:fs");
+fs.writeFileSync(process.env.PROMPT_FILE, process.argv.at(-1));
 const output = process.argv.indexOf("--output-last-message");
 if (output >= 0) fs.writeFileSync(process.argv[output + 1], process.env.FINAL);
 process.stdout.write(process.env.STDOUT);
 process.stderr.write(process.env.STDERR);
 process.exitCode = Number(process.env.HOST_STATUS);
 `;
+  const promptFile = path.join(bin, "prompt.txt");
   try {
     for (const host of ["claude", "codex"]) {
       fs.writeFileSync(path.join(bin, host), stub, { mode: 0o755 });
@@ -58,7 +60,7 @@ process.exitCode = Number(process.env.HOST_STATUS);
     const run = (host, id, final, expectedStatus, diagnostics = "", hostStatus = 0) => {
       const result = spawnSync(process.execPath, ["scripts/eval-scenarios.js", "--host", host, "--id", id], {
         cwd: root, encoding: "utf8",
-        env: { ...process.env, PATH: bin + path.delimiter + process.env.PATH, FINAL: final,
+        env: { ...process.env, PATH: bin + path.delimiter + process.env.PATH, FINAL: final, PROMPT_FILE: promptFile,
           STDOUT: host === "codex" ? correct : final, STDERR: diagnostics, HOST_STATUS: String(hostStatus) },
       });
       assert.ifError(result.error);
@@ -70,8 +72,19 @@ process.exitCode = Number(process.env.HOST_STATUS);
       run(host, "direct-small-change", "NONE. Do not choose implement.", 1);
       run(host, "direct-small-change", "{}", 1, correct);
       run(host, "direct-small-change", correct, 0);
+      const prompt = fs.readFileSync(promptFile, "utf8");
+      assert.ok(!prompt.includes("第一个 Skill 或规则"), "the host question must not ask for the first routing hop");
+      assert.ok(!prompt.includes(target), "keep the expected answer out of the host prompt");
+      const router = JSON.stringify({ target: "skills/using-superpowers/SKILL.md" });
+      run(host, "direct-small-change", router, 1);
+      run(host, "workflow-advice", router, 0);
       run(host, "direct-small-change", correct, 1, "", 1);
       run(host, "non-eng-translate", JSON.stringify({ target: "NONE" }), 0);
+      const debug = JSON.stringify({ target: "skills/systematic-debugging/SKILL.md" });
+      const acceptance = JSON.stringify({ target: "skills/feature-acceptance/SKILL.md" });
+      run(host, "e2e-flaky-fix", debug, 0);
+      run(host, "e2e-flaky-fix", acceptance, 1);
+      run(host, "e2e-playwright-tests", acceptance, 0);
     }
   } finally {
     fs.rmSync(bin, { recursive: true, force: true });

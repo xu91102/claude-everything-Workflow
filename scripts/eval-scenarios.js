@@ -39,8 +39,10 @@ function parseArgs(argv) {
 
 function buildEvalPrompt(scenario) {
   return [
-    "这是一个只读工作流路由测试：不要修改任何文件，不要执行写操作。",
-    "请根据当前仓库的 AGENTS.md、skills/using-superpowers/SKILL.md 与各 skill 的 description，选择处理以下请求的第一个 Skill 或规则。只输出一个 JSON 对象，target 填完整的仓库相对文件路径（包含文件名）；无需进入工程路由时填字符串 NONE。不要加 Markdown 围栏。",
+    "这是一个只读工作流路由测试：只做选路，不执行下方用户请求，不修改任何文件。",
+    "根据本仓库的 AGENTS.md、工作流路由、Skill 说明和它们引用的规则，判断分发后由哪个文件直接负责用户当前要做的事。只查工作流文档，不查场景题库、测试、评测脚本或提交记录。",
+    "通用路由器只负责转交时，沿分发继续判断；路由器自己完成请求时，可以是答案。多阶段任务按当前要解决的具体问题选负责方。配套参考资料和后续步骤不作为本次目标。",
+    "只输出一个 JSON 对象，target 填该 Skill 或规则的完整仓库相对文件路径（包含文件名）；无需进入工程流程时填字符串 NONE。不要加 Markdown 围栏。",
     "",
     `用户请求：${scenario.prompt}`,
   ].join("\n");
