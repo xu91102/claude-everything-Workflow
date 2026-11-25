@@ -44,12 +44,16 @@ function checkEvalCli() {
 const fs = require("node:fs");
 fs.writeFileSync(process.env.PROMPT_FILE, process.argv.at(-1));
 const output = process.argv.indexOf("--output-last-message");
-if (output >= 0) fs.writeFileSync(process.argv[output + 1], process.env.FINAL);
-process.stdout.write(process.env.STDOUT);
-process.stderr.write(process.env.STDERR);
-process.exitCode = Number(process.env.HOST_STATUS);
+const samples = JSON.parse(fs.readFileSync(process.env.SAMPLES_FILE, "utf8"));
+const { final, hostStatus = 0, diagnostics = "" } = samples.shift();
+fs.writeFileSync(process.env.SAMPLES_FILE, JSON.stringify(samples));
+if (output >= 0) fs.writeFileSync(process.argv[output + 1], final);
+process.stdout.write(output >= 0 ? process.env.DECOY : final);
+process.stderr.write(diagnostics);
+process.exitCode = hostStatus;
 `;
   const promptFile = path.join(bin, "prompt.txt");
+  const samplesFile = path.join(bin, "samples.json");
   try {
     for (const host of ["claude", "codex"]) {
       fs.writeFileSync(path.join(bin, host), stub, { mode: 0o755 });
@@ -57,18 +61,32 @@ process.exitCode = Number(process.env.HOST_STATUS);
     const target = "skills/implement/SKILL.md";
     const correct = JSON.stringify({ target });
     const excluded = JSON.stringify({ target: "NONE", reason: `Do not choose ${target}` });
-    const run = (host, id, final, expectedStatus, diagnostics = "", hostStatus = 0) => {
-      const result = spawnSync(process.execPath, ["scripts/eval-scenarios.js", "--host", host, "--id", id], {
+    const runSamples = (host, id, samples, verdict) => {
+      fs.writeFileSync(samplesFile, JSON.stringify(samples));
+      const args = ["scripts/eval-scenarios.js", "--host", host, "--id", id];
+      if (samples.length > 1) args.push("--repeat", String(samples.length));
+      const result = spawnSync(process.execPath, args, {
         cwd: root, encoding: "utf8",
-        env: { ...process.env, PATH: bin + path.delimiter + process.env.PATH, FINAL: final, PROMPT_FILE: promptFile,
-          STDOUT: host === "codex" ? correct : final, STDERR: diagnostics, HOST_STATUS: String(hostStatus) },
+        env: { ...process.env, PATH: bin + path.delimiter + process.env.PATH,
+          SAMPLES_FILE: samplesFile, PROMPT_FILE: promptFile, DECOY: correct },
       });
       assert.ifError(result.error);
-      assert.equal(result.status, expectedStatus, `${host} ${id}: ${result.stdout} ${result.stderr}`);
-      assert.match(result.stdout, expectedStatus === 0 ? /^PASS /m : /^FAIL /m);
+      assert.equal(result.status, verdict === "PASS" ? 0 : 1, `${host} ${id}: ${result.stdout} ${result.stderr}`);
+      assert.ok(result.stdout.startsWith(`${verdict} ${id} `), result.stdout);
+      assert.deepEqual(JSON.parse(fs.readFileSync(samplesFile, "utf8")), []);
+      return result.stdout;
     };
+    const run = (host, id, final, expectedStatus, diagnostics = "", hostStatus = 0) =>
+      runSamples(host, id, [{ final, diagnostics, hostStatus }], expectedStatus === 0 ? "PASS" : "FAIL");
     for (const host of ["claude", "codex"]) {
       run(host, "direct-small-change", excluded, 1, correct);
+      run(host, "direct-small-change", `Rejected example: ${correct}. Final choice: NONE.`, 1);
+      const fence = "`".repeat(3);
+      run(host, "direct-small-change", [fence + "json", correct, fence].join("\r\n"), 0);
+      run(host, "direct-small-change", [fence, correct, fence].join("\n"), 0);
+      run(host, "direct-small-change", [fence + "json", correct].join("\n"), 1);
+      run(host, "direct-small-change", [correct, fence].join("\n"), 1);
+      run(host, "direct-small-change", [correct, correct].join("\n"), 1);
       run(host, "direct-small-change", "NONE. Do not choose implement.", 1);
       run(host, "direct-small-change", "{}", 1, correct);
       run(host, "direct-small-change", correct, 0);
@@ -78,6 +96,17 @@ process.exitCode = Number(process.env.HOST_STATUS);
       const router = JSON.stringify({ target: "skills/using-superpowers/SKILL.md" });
       run(host, "direct-small-change", router, 1);
       run(host, "workflow-advice", router, 0);
+      const right = { final: correct };
+      const wrong = { final: router };
+      const repeat = (samples, verdict) => runSamples(host, "direct-small-change", samples, verdict);
+      repeat([right, right], "PASS");
+      repeat([wrong, wrong], "FAIL");
+      repeat([right, wrong], "UNSTABLE");
+      assert.match(repeat([right, { final: "", hostStatus: 1 }], "FAIL"), /host-error/);
+      assert.match(repeat([right, { final: "{}" }], "FAIL"), /invalid-answer/);
+      const incomplete = repeat([right, wrong, { final: "invalid" }, { final: correct, hostStatus: 1 }], "FAIL");
+      assert.match(incomplete, /invalid-answer/);
+      assert.match(incomplete, /host-error/);
       run(host, "direct-small-change", correct, 1, "", 1);
       run(host, "non-eng-translate", JSON.stringify({ target: "NONE" }), 0);
       const debug = JSON.stringify({ target: "skills/systematic-debugging/SKILL.md" });

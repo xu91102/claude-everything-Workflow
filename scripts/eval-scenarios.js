@@ -7,7 +7,7 @@
  *   node scripts/eval-scenarios.js --host claude --limit 5
  *   node scripts/eval-scenarios.js --host codex --id bug-diagnosis --repeat 3
  *
- * --repeat N 对每个场景采样 N 次；样本全部命中期望才算 PASS，样本不一致标记 UNSTABLE。
+ * --repeat N 对每个场景采样 N 次；全部命中为 PASS；全部有效但选路不一致为 UNSTABLE；宿主或回答格式异常为 FAIL。
  */
 
 const fs = require("node:fs");
@@ -78,22 +78,15 @@ function runHost(host, prompt) {
 }
 
 function selectedTarget(answer) {
-  const text = String(answer || "")
-    .trim()
-    .replace(/^```(?:json)?\s*/i, "")
-    .replace(/\s*```$/, "");
-  const candidates = [text];
-  const objectMatch = text.match(/\{[\s\S]*\}/);
-  if (objectMatch) candidates.push(objectMatch[0]);
-  for (const candidate of candidates) {
-    try {
-      const value = JSON.parse(candidate);
-      if (typeof value?.target === "string") return value.target;
-    } catch (error) {
-      if (!(error instanceof SyntaxError)) throw error;
-    }
+  const text = String(answer || "").trim();
+  const fenced = /^```(?:json)?[ \t]*\r?\n([\s\S]*?)\r?\n[ \t]*```$/i.exec(text);
+  try {
+    const value = JSON.parse(fenced ? fenced[1] : text);
+    return typeof value?.target === "string" && value.target.trim() ? value.target : null;
+  } catch (error) {
+    if (error instanceof SyntaxError) return null;
+    throw error;
   }
-  return null;
 }
 
 function main() {
@@ -115,25 +108,28 @@ function main() {
     const samples = [];
     for (let i = 0; i < opts.repeat; i += 1) {
       const { result, answer } = runHost(opts.host, evalPrompt);
+      const hostFailed = result.status !== 0 || Boolean(result.error);
       samples.push({
         status: result.status,
-        target: selectedTarget(answer),
-        diagnostic: result.error?.message || result.stderr || "",
+        hostFailed,
+        target: hostFailed ? null : selectedTarget(answer),
+        diagnostic: (result.error?.message || result.stderr || "").trim().slice(0, 200),
       });
     }
     const targets = samples.map((sample) => sample.target);
-    const ok = samples.every((sample) => sample.status === 0 && sample.target === expected);
-    const unstable = new Set(targets).size > 1;
+    const ok = targets.every((target) => target === expected);
+    const unstable = !targets.includes(null) && new Set(targets).size > 1;
     if (ok) passed += 1;
     console.log(
       `${ok ? "PASS" : unstable ? "UNSTABLE" : "FAIL"} ${scenario.id} ` +
       `(expected: ${expected}) samples=${JSON.stringify(targets)}`,
     );
     for (const sample of samples) {
-      if (sample.status === 0 && sample.target === expected) continue;
+      if (sample.target === expected) continue;
+      const reason = sample.hostFailed ? "host-error" : sample.target === null ? "invalid-answer" : "wrong-target";
       console.log(
         `  exit=${sample.status} target=${JSON.stringify(sample.target)} ` +
-        sample.diagnostic.trim().slice(0, 200),
+        `reason=${reason} ${sample.diagnostic}`,
       );
     }
   }
