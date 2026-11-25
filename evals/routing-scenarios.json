@@ -23,11 +23,11 @@
     {
       "id": "direct-small-change",
       "category": "delivery",
-      "prompt": "给 parseConfig 加一个默认值 fallback，并补一个单元测试",
+      "prompt": "给 parseConfig 加一个默认值 fallback",
       "expectedTarget": "skills/implement/SKILL.md",
       "expectedLane": "direct",
       "requiredSignals": ["direct-scope", "implement"],
-      "rationale": "明确、低风险的单次交付请求直接走 direct 通道与 implement。"
+      "rationale": "明确、低风险的单次交付请求直接走 direct 通道与 implement；测试补写由 implement 内部的 TDD 步骤承接，不单独路由。"
     },
     {
       "id": "workflow-advice",
