@@ -16,6 +16,8 @@ disable-model-invocation: true
 - approved Spec scope：已获用户批准的 Spec 是范围与验收来源。
 - ticket：仅此路径先读取 [references/ticket-delivery.md](references/ticket-delivery.md)，核实 frontier，
   再按该引用与下方共用步骤交付。无 ticket 范围不得 claim 或写入任何 tracker。
+- 并行多票：仅当 router 确认存在至少两张已批准、无 blocker、写入面不重叠的 frontier tickets 时，
+  读取 [references/parallel-delivery.md](references/parallel-delivery.md) 在隔离 worktree 中分派并集成。
 
 缺少可复核验收、存在实质用户决策或命中尚未批准的 formal Spec/高风险边界时，返回 router，不能猜测或实施。
 普通范围使用当前会话，不为满足流程创建新的上下文或 tracker。

@@ -6,7 +6,7 @@ const os = require("node:os");
 const path = require("node:path");
 const crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
-const { installRules } = require("../install-rules");
+const { installRules, finalizeBackups, BACKUP_ROOT_NAME } = require("../install-rules");
 
 const sourceRoot = path.resolve(__dirname, "../..");
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "cew-rules-"));
@@ -39,9 +39,25 @@ function checkLegacyMigration() {
 
   const cold = path.join(target, "references/rules/common/testing.md");
   fs.writeFileSync(cold, previous);
-  installRules(options);
+  installRules({ ...options, backupId: "20261125100000" });
   assert.equal(read(cold), "Current distribution\n");
-  assert.equal(read(cold + ".bak." + hash), previous);
+  assert.equal(
+    read(path.join(target, BACKUP_ROOT_NAME, "20261125100000/references/rules/common/testing.md")),
+    previous,
+  );
+  assert.equal(fs.existsSync(cold + ".bak." + hash), false);
+
+  // Legacy inline .bak.* files and older backup directories are cleaned on finalizeBackups.
+  fs.writeFileSync(path.join(target, "AGENTS.md.bak.20260101000000"), "old top backup\n");
+  fs.writeFileSync(path.join(target, "rules/01-base.md.bak.deadbeef"), "old rule backup\n");
+  fs.writeFileSync(cold + ".bak." + hash, previous);
+  fs.mkdirSync(path.join(target, BACKUP_ROOT_NAME, "20261124000000"), { recursive: true });
+  fs.writeFileSync(path.join(target, BACKUP_ROOT_NAME, "20261124000000/AGENTS.md"), "older\n");
+  finalizeBackups({ installRoot: target, backupId: "20261125100000", log: () => {} });
+  assert.equal(fs.existsSync(path.join(target, "AGENTS.md.bak.20260101000000")), false);
+  assert.equal(fs.existsSync(path.join(target, "rules/01-base.md.bak.deadbeef")), false);
+  assert.equal(fs.existsSync(cold + ".bak." + hash), false);
+  assert.deepEqual(fs.readdirSync(path.join(target, BACKUP_ROOT_NAME)), ["20261125100000"]);
 }
 
 function checkInstallerCliOptions() {
@@ -286,8 +302,10 @@ function checkInstallerEntrypoint() {
     }
     assert.equal(fs.existsSync(path.join(profile, host, "skills/wayfinder/agents")), false);
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/install-rules.js")), false);
-    assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/continuation-checks.test.js")), false,
-      "安装不应保留仅供包内验证的续接测试");
+    assert.equal(fs.existsSync(path.join(profile, host, "scripts/eval-scenarios.js")), false,
+      "安装不应保留仅供包内评测的场景脚本");
+    assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/scenario-checks.test.js")), false,
+      "安装不应保留仅供包内验证的场景测试");
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/plugin-distribution.test.js")), false,
       "安装不应保留仅供包内验证的插件分发测试");
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/learning.test.js")), false,
@@ -302,13 +320,10 @@ try {
   const fresh = path.join(tempRoot, "fresh");
   const common = fs.readdirSync(path.join(sourceRoot, "rules/common"));
   assert.equal(common.length, 8);
-  const resident = ["01-base.md", "05-git-workflow.md", "07-forbidden.md"];
-  const onDemand = [
-    "02-implementation.md", "08-specialty-rules-index.md", "09-first-principles-adversarial-testing.md",
-  ];
+  const resident = ["01-base.md", "02-implementation.md", "05-git-workflow.md"];
   assert.deepEqual(fs.readdirSync(path.join(fresh, "rules")).sort(), resident);
   install("codex", "codex");
-  for (const file of [...resident, ...onDemand, ...common.map((name) => `common/${name}`)]) {
+  for (const file of [...resident, ...common.map((name) => `common/${name}`)]) {
     const source = read(path.join(sourceRoot, "rules", file));
     const claudeDir = resident.includes(file) ? "rules" : "references/rules";
     assert.equal(read(path.join(fresh, claudeDir, file)), source);
@@ -323,28 +338,17 @@ try {
     path.join(upgrade, "rules/common/testing.md"));
   fs.writeFileSync(path.join(upgrade, "rules/common/hooks.md"), "Personal hook policy\n");
   fs.writeFileSync(path.join(upgrade, "rules/common/personal.md"), "Keep my rules\n");
-  for (const file of onDemand) {
-    fs.copyFileSync(path.join(sourceRoot, "rules", file), path.join(upgrade, "rules", file));
-  }
-  const customRule = "02-implementation.md";
-  const personal = path.join(upgrade, "rules", customRule);
-  fs.writeFileSync(personal, "Personal implementation rules\n");
+  fs.writeFileSync(path.join(upgrade, "rules/08-specialty-rules-index.md"), "Personal index\n");
   install("upgrade", "claude-code", true);
   assert.equal(fs.existsSync(path.join(upgrade, "references")), false);
-  for (const file of onDemand) assert.ok(fs.existsSync(path.join(upgrade, "rules", file)));
   install("upgrade");
   assert.equal(fs.existsSync(path.join(upgrade, "rules/common/testing.md")), false);
   assert.equal(read(path.join(upgrade, "rules/common/hooks.md")), "Personal hook policy\n");
   assert.equal(read(path.join(upgrade, "rules/common/personal.md")), "Keep my rules\n");
+  assert.equal(read(path.join(upgrade, "rules/08-specialty-rules-index.md")), "Personal index\n");
   assert.ok(messages.some((message) => /保留.*hooks\.md/.test(message)));
   install("upgrade");
   assert.equal(read(path.join(upgrade, "rules/common/hooks.md")), "Personal hook policy\n");
-
-  assert.equal(read(personal), "Personal implementation rules\n");
-  for (const file of onDemand) {
-    assert.equal(fs.existsSync(path.join(upgrade, "rules", file)), file === customRule);
-    assert.equal(read(path.join(upgrade, "references/rules", file)), read(path.join(sourceRoot, "rules", file)));
-  }
 
   const outside = path.join(tempRoot, "outside");
   fs.mkdirSync(outside);

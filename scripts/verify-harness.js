@@ -7,6 +7,7 @@ const { runMetadataChecks } = require("./verify/metadata-checks");
 const { runSkillManifestChecks } = require("./verify/skill-manifest-checks");
 const { runRepositoryChecks } = require("./verify/repository-checks");
 const { runWorkflowChecks } = require("./verify/workflow-checks");
+const { runScenarioChecks } = require("./verify/scenario-checks");
 const { runRuntimeChecks } = require("./verify/runtime-checks");
 
 function main() {
@@ -17,6 +18,7 @@ function main() {
   runSkillManifestChecks(context);
   runRepositoryChecks(context);
   runWorkflowChecks(context);
+  runScenarioChecks(context);
   runRuntimeChecks(context);
 
   if (context.warnings.length > 0) {

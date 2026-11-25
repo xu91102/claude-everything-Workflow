@@ -11,13 +11,11 @@
 - 需要隔离时，实现、验证、审查、提交都在任务 worktree 内完成，不改原始 checkout。
 - 不创建嵌套 worktree，不丢弃或覆盖用户已有改动。
 
-## 提交格式 (CRITICAL)
+## 提交格式与禁止项 (CRITICAL)
 
-使用 `<type>(<scope>): <subject>`：`feat` 新功能、`fix` 修复、`docs` 文档、`style` 不影响逻辑的格式调整、`refactor` 重构、`perf` 性能、`test` 测试、`chore` 构建或工具。提交信息必须描述实际改动，例如 `feat(user): 添加用户登录功能`。
-
-## 提交检查清单
-
-提交前确认：提交信息符合规范；代码已通过 lint；只暂存本次任务相关文件；PR 前验证结果已记录。代码与安全禁止项统一见 `rules/07-forbidden.md`。
+- 使用 `<type>(<scope>): <subject>`：`feat` 新功能、`fix` 修复、`docs` 文档、`style` 不影响逻辑的格式调整、`refactor` 重构、`perf` 性能、`test` 测试、`chore` 构建或工具。提交信息必须描述实际改动，例如 `feat(user): 添加用户登录功能`。
+- 提交前确认：提交信息符合规范；代码已通过 lint；只暂存本次任务相关文件；PR 前验证结果已记录。代码与安全禁止项见 `rules/02-implementation.md`。
+- 禁止提交 `node_modules` 等依赖目录、`.env` 等敏感配置、`dist`/`build` 等应由 CI 生成的产物，以及无提交信息的提交。
 
 ## Superpowers 本地工件
 

@@ -1,9 +1,7 @@
----
-name: subagent-driven-development
-description: Dispatch approved independent frontier tickets in isolated worktrees; use only when router selects SDD.
----
+# Parallel Delivery
 
-# Subagent-Driven Development
+仅当 router 为已授权范围选择 `implement` 的并行模式时读取；单张 ticket 的交付步骤见
+[ticket-delivery.md](ticket-delivery.md)，共用的隔离、审查和验证见 `skills/implement/SKILL.md`。
 
 Run several independent frontier tickets in parallel without reintroducing a long implementation plan.
 Each fresh subagent receives one approved ticket, discovers current code details itself, and returns evidence
@@ -15,13 +13,13 @@ communication.
 Use only when all of the following are true:
 
 - the router is executing a user-authorized delivery scope and records why SDD is safer or faster than
-  serial `implement`;
+  serial delivery;
 - at least two selected tickets are `ready-for-agent`, unclaimed and have no unresolved blocker;
 - the tickets do not modify the same files, shared migration, release boundary or external state;
 - each ticket can finish in one fresh subagent context.
 
-Announce the selected topology and its reason in one line, then continue. Otherwise use `implement` for
-one ticket. Do not manufacture extra tickets merely to justify parallelism.
+Announce the selected topology and its reason in one line, then continue. Otherwise deliver one ticket
+serially with `implement`. Do not manufacture extra tickets merely to justify parallelism.
 
 ## Prepare
 
@@ -100,7 +98,7 @@ let a parallel worker decide it unilaterally.
 
 ## Example
 
-Tickets `01` and `02` are both unblocked and modify different packages. The router selects SDD, creates one
+Tickets `01` and `02` are both unblocked and modify different packages. The router selects parallel mode, creates one
 integration worktree plus two worker worktrees, then dispatches two fresh subagents. Each implements and
 verifies only its own ticket. Review both worker diffs, apply passing diffs to the integration worktree, and
 run the combined gate before resolving either ticket or returning the unlocked frontier to the router.

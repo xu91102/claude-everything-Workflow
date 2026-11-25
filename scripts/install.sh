@@ -8,6 +8,7 @@ INSTALL_CLAUDE=1
 INSTALL_CODEX=1
 DRY_RUN=0
 SHOW_HELP=0
+BACKUP_ID="$(date +%Y%m%d%H%M%S)"
 
 usage() {
     cat <<'EOF'
@@ -75,29 +76,39 @@ run() {
 backup_if_changed() {
     local src="$1"
     local dest="$2"
+    local install_root="$3"
 
     if [ ! -f "$dest" ] || cmp -s "$src" "$dest"; then
         return
     fi
 
-    local backup="${dest}.bak.$(date +%Y%m%d%H%M%S)"
+    if [ -L "$install_root/.cew-backups" ]; then
+        echo "Refusing symlinked backup directory: $install_root/.cew-backups" >&2
+        exit 1
+    fi
+
+    local rel_name="${dest#"$install_root"/}"
+    local backup="$install_root/.cew-backups/$BACKUP_ID/$rel_name"
     echo "Backup: $dest -> $backup"
+    run mkdir -p "$(dirname "$backup")"
     run cp "$dest" "$backup"
 }
 
 copy_file() {
     local src="$1"
     local dest="$2"
+    local install_root="$3"
 
-    backup_if_changed "$src" "$dest"
+    backup_if_changed "$src" "$dest" "$install_root"
     run cp "$src" "$dest"
 }
 
 copy_claude_settings() {
     local src="$1"
     local dest="$2"
+    local install_root="$3"
 
-    backup_if_changed "$src" "$dest"
+    backup_if_changed "$src" "$dest" "$install_root"
     if [ "$DRY_RUN" -eq 1 ]; then
         echo "[dry-run] merge '$src' into '$dest' preserving existing user hooks, env and mcpServers"
         echo "[dry-run] purge legacy hook paths while merging Claude settings"
@@ -156,19 +167,18 @@ remove_package_only_paths() {
         "scripts/install.ps1" \
         "scripts/install-rules.js" \
         "scripts/legacy-common-rule-hashes.json" \
+        "scripts/eval-scenarios.js" \
         "scripts/verify-harness.js" \
         "scripts/verify/core.js" \
-        "scripts/verify/grilling-spec-gate-checks.js" \
         "scripts/verify/metadata-checks.js" \
         "scripts/verify/repository-checks.js" \
         "scripts/verify/runtime-checks.js" \
         "scripts/verify/workflow-checks.js" \
-        "scripts/verify/workflow-ownership-fixtures.js" \
-        "scripts/verify/workflow-ownership.js" \
+        "scripts/verify/scenario-checks.js" \
+        "scripts/verify/scenario-checks.test.js" \
         "scripts/verify/skill-manifest-checks.js" \
         "scripts/verify/skill-manifest-checks.test.js" \
         "scripts/verify/skill-invocation.test.js" \
-        "scripts/verify/continuation-checks.test.js" \
         "scripts/verify/install-rules.test.js" \
         "scripts/verify/learning.test.js" \
         "scripts/verify/plugin-distribution.test.js"
@@ -259,13 +269,14 @@ install_claude() {
     echo "Installing Claude workflow to $dest"
     run mkdir -p "$dest"
     remove_obsolete_workflow_paths "$dest"
-    copy_file "$ROOT_DIR/CLAUDE.md" "$dest/CLAUDE.md"
-    copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
-    copy_claude_settings "$ROOT_DIR/settings.json" "$dest/settings.json"
+    copy_file "$ROOT_DIR/CLAUDE.md" "$dest/CLAUDE.md" "$dest"
+    copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md" "$dest"
+    copy_claude_settings "$ROOT_DIR/settings.json" "$dest/settings.json" "$dest"
     install_shared_dirs "$dest"
     install_workflow_rules claude-code "$dest"
     cleanup_retired_skills "$dest"
     remove_package_only_paths "$dest"
+    finalize_backups "$dest"
 }
 
 install_codex() {
@@ -274,18 +285,26 @@ install_codex() {
     echo "Installing Codex workflow to $dest"
     run mkdir -p "$dest"
     remove_obsolete_workflow_paths "$dest"
-    copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md"
+    copy_file "$ROOT_DIR/AGENTS.md" "$dest/AGENTS.md" "$dest"
     install_shared_dirs "$dest"
     install_workflow_rules codex "$dest"
     cleanup_retired_skills "$dest"
     remove_package_only_paths "$dest"
+    finalize_backups "$dest"
 }
 
 install_workflow_rules() {
     local host_name="$1"
     local dest="$2"
     # Bash <4.4 treats empty arrays as unset under set -u.
-    local options=("$ROOT_DIR/scripts/install-rules.js" "$host_name" "$dest")
+    local options=("$ROOT_DIR/scripts/install-rules.js" "$host_name" "$dest" "--backup-id" "$BACKUP_ID")
+    if [ "$DRY_RUN" -eq 1 ]; then options+=(--dry-run); fi
+    node "${options[@]}"
+}
+
+finalize_backups() {
+    local dest="$1"
+    local options=("$ROOT_DIR/scripts/install-rules.js" "--finalize-backups" "$dest" "--backup-id" "$BACKUP_ID")
     if [ "$DRY_RUN" -eq 1 ]; then options+=(--dry-run); fi
     node "${options[@]}"
 }

@@ -8,7 +8,7 @@
 
 ## 交付拓扑
 
-to-tickets / implement / subagent-driven-development 的选择判据以 `skills/using-superpowers/SKILL.md` 为唯一权威来源；不能在无法证明安全并行时人为拆分任务。
+to-tickets / implement（含 `skills/implement/references/parallel-delivery.md` 并行模式）的选择判据以 `skills/using-superpowers/SKILL.md` 为唯一权威来源；不能在无法证明安全并行时人为拆分任务。
 
 ## 上下文与权限
 

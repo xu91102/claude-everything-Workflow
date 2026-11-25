@@ -30,7 +30,7 @@ ticket as the Spec source：`/code-review --worktree <pre-ticket-base> --spec <t
 外部评论或关闭需要相应明确授权。不得自动关闭外部 Issue 或 parent issue。
 
 resolve 后重查依赖图并返回 router。newly unlocked tickets 仍在已授权范围内时，router
-可重新选择串行 `implement` 或安全 SDD；超出范围则报告 frontier 并停止。
+可重新选择串行 `implement` 或安全并行模式（见 [parallel-delivery.md](parallel-delivery.md)）；超出范围则报告 frontier 并停止。
 
 ## FINISH_DELIVERY
 

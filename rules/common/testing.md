@@ -30,11 +30,11 @@
 
 新功能、bug 修复、重构引起的行为变化和公共 API 变化使用 `skills/test-driven-development/SKILL.md`；本规则不复制 RED/GREEN/REFACTOR 步骤。
 
-复杂、高风险或行为变化按需读取 `rules/09-first-principles-adversarial-testing.md`，覆盖异常状态、重复执行、权限、路径、跨平台和外部依赖失败。
+复杂、高风险或行为变化应补充对抗性验证，主动覆盖异常输入（空值、缺失字段、损坏配置、未知枚举）、重复/并发执行与部分失败重试、特殊字符与跨平台路径、权限/磁盘/网络/依赖失败、历史数据与用户已有改动以及边界数值。
 
 ## 端到端测试
 
-Playwright 的组织、等待、POM、CI 制品和 flake 处理以 `skills/e2e-testing/SKILL.md` 为准；探索工具不能替代可重复的 E2E。本地多 worktree 运行时隔离端口和环境变量，启动服务必须等待 Web/API ready。CI 失败时按 `skills/e2e-testing/SKILL.md` 保留失败制品。
+Playwright 的组织、等待、POM、CI 制品和 flake 处理以 `skills/feature-acceptance/references/e2e-testing.md` 为准；探索工具不能替代可重复的 E2E。本地多 worktree 运行时隔离端口和环境变量，启动服务必须等待 Web/API ready。CI 失败时按 `skills/feature-acceptance/references/e2e-testing.md` 保留失败制品。
 
 ## 浏览器验证
 

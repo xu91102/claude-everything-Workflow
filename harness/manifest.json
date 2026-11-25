@@ -51,22 +51,10 @@
       "invocation": "implicit"
     },
     {
-      "name": "e2e-testing",
-      "path": "skills/e2e-testing/SKILL.md",
-      "owner": "skills/e2e-testing/SKILL.md",
-      "version": "0.1.1",
-      "compatibility": [
-        "claude-code",
-        "codex"
-      ],
-      "allowedTools": null,
-      "invocation": "implicit"
-    },
-    {
       "name": "feature-acceptance",
       "path": "skills/feature-acceptance/SKILL.md",
       "owner": "skills/feature-acceptance/SKILL.md",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "compatibility": [
         "claude-code",
         "codex"
@@ -159,18 +147,6 @@
       "invocation": "implicit"
     },
     {
-      "name": "subagent-driven-development",
-      "path": "skills/subagent-driven-development/SKILL.md",
-      "owner": "skills/subagent-driven-development/SKILL.md",
-      "version": "0.1.1",
-      "compatibility": [
-        "claude-code",
-        "codex"
-      ],
-      "allowedTools": null,
-      "invocation": "implicit"
-    },
-    {
       "name": "systematic-debugging",
       "path": "skills/systematic-debugging/SKILL.md",
       "owner": "skills/systematic-debugging/SKILL.md",
@@ -249,7 +225,6 @@
       "owner": "skills/using-superpowers/SKILL.md",
       "surfaces": [
         "AGENTS.md",
-        "rules/08-specialty-rules-index.md",
         "rules/common/skills-learning.md"
       ],
       "enforcement": "advisory"
@@ -301,8 +276,7 @@
       "id": "ticket-delivery",
       "owner": "skills/to-tickets/SKILL.md",
       "surfaces": [
-        "skills/implement/SKILL.md",
-        "skills/subagent-driven-development/SKILL.md"
+        "skills/implement/SKILL.md"
       ],
       "enforcement": "blocking"
     }

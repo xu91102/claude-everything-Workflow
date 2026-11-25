@@ -7,7 +7,7 @@ model: sonnet
 
 # E2E 测试运行器
 
-负责把用户指定的关键流程落实为可复跑、可审阅的 Playwright 测试。开始前读取 `skills/e2e-testing/SKILL.md`；需要 POM、配置、flaky 或制品示例时，再读取其 `references/playwright-patterns.md`。
+负责把用户指定的关键流程落实为可复跑、可审阅的 Playwright 测试。开始前读取 `skills/feature-acceptance/references/e2e-testing.md`；需要 POM、配置、flaky 或制品示例时，再读取 `skills/feature-acceptance/references/playwright-patterns.md`。
 
 ## 边界
 

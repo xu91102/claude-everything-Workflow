@@ -4,7 +4,7 @@
  *
  * 在代码编辑后检测静态禁止模式：console.log、debugger，
  * 以及 TypeScript 文件中的 @ts-ignore、@ts-nocheck、`: any`、`as any`。
- * 对应 rules/07-forbidden.md 的代码禁止项；文档文件不受检查。
+ * 对应 rules/02-implementation.md 的代码与安全禁止项；文档文件不受检查。
  * 用于 PostToolUse hook，警告不阻塞。
  */
 
@@ -66,7 +66,7 @@ function run(raw) {
 
     return {
         exitCode: 0,
-        stderr: `[Hook] 警告: ${filePath} 含禁止模式: ${hits.join('、')}，请按 rules/07-forbidden.md 处理\n`
+        stderr: `[Hook] 警告: ${filePath} 含禁止模式: ${hits.join('、')}，请按 rules/02-implementation.md 处理\n`
     }
 }
 
