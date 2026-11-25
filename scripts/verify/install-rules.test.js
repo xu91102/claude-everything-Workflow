@@ -104,6 +104,79 @@ function checkPromotedImplementationRule() {
   assert.equal(fs.existsSync(cold), false);
 }
 
+function checkCodexImplementationRuleUpgrades() {
+  const fixture = path.join(tempRoot, "codex-release");
+  const target = path.join(tempRoot, "codex-existing");
+  const filename = "02-implementation.md";
+  const source = path.join(fixture, "rules", filename);
+  const active = path.join(target, "rules", filename);
+  const old = "Original release\n";
+  const initial = "# Implementation\nScope: fix bugs.\n\n# Checks\nRun unit tests.\n";
+  const personal = initial.replace("fix bugs.", "fix bugs. Leave unrelated work alone.").replace(/\n/g, "\r\n");
+  const updated = initial.replace("unit tests", "unit and integration tests");
+  const base = path.join(target, ".cew-rule-state", "02-implementation.base.md");
+  const incoming = path.join(target, ".cew-rule-state", "02-implementation.incoming.md");
+  const run = (dryRun = false) => installRules({
+    sourceRoot: fixture, installRoot: target, host: "codex", dryRun, log: () => {},
+  });
+  fs.mkdirSync(path.dirname(active), { recursive: true });
+  fs.mkdirSync(path.join(fixture, "rules/common"), { recursive: true });
+  fs.mkdirSync(path.join(fixture, "scripts"));
+  const oldHash = crypto.createHash("sha256").update(old).digest("hex");
+  fs.writeFileSync(path.join(fixture, "scripts/legacy-common-rule-hashes.json"),
+    JSON.stringify({ files: { [filename]: [oldHash] } }));
+  fs.writeFileSync(source, initial);
+  fs.writeFileSync(active, personal);
+  run(true);
+  assert.deepEqual(fs.readdirSync(target), ["rules"], "dry-run leaves no installation state");
+  run();
+  run();
+  assert.equal(fs.readFileSync(active, "utf8"), personal, "customizations must stay in the active Codex rule");
+
+  fs.writeFileSync(source, updated);
+  run(true);
+  assert.equal(read(base), initial, "preview must not consume the upstream delta");
+  assert.equal(fs.readFileSync(active, "utf8"), personal);
+  run();
+  const merged = personal.replace("unit tests", "unit and integration tests");
+  assert.equal(fs.readFileSync(active, "utf8"), merged, "apply independent upstream edits and preserve CRLF");
+  run();
+  assert.equal(fs.readFileSync(active, "utf8"), merged, "a retry does not duplicate edits");
+
+  fs.writeFileSync(source, updated.replace("Scope: fix bugs.", "Scope: add features."));
+  run();
+  assert.equal(fs.readFileSync(active, "utf8"), merged, "overlapping edits leave the personal rule intact");
+  assert.equal(read(base), updated, "keep the last applied base for a retry");
+  assert.equal(read(incoming), read(source), "offer the conflicting distribution outside active rules");
+  run();
+  assert.equal(fs.readFileSync(active, "utf8"), merged);
+
+  // Apply a later non-conflicting release even if Git was unavailable on the first attempt.
+  const later = updated.replace("Run unit and integration tests.", "Run the release checks.");
+  fs.writeFileSync(source, later);
+  const originalPath = process.env.PATH;
+  try {
+    process.env.PATH = path.join(tempRoot, "no-git");
+    run();
+  } finally {
+    process.env.PATH = originalPath;
+  }
+  assert.equal(fs.readFileSync(active, "utf8"), merged, "missing Git preserves the usable rule");
+  assert.equal(read(base), updated);
+  assert.equal(read(incoming), later);
+  run();
+  assert.equal(read(active), later.replace("fix bugs.", "fix bugs. Leave unrelated work alone."));
+  assert.equal(read(base), later);
+  assert.equal(fs.existsSync(incoming), false);
+
+  const stockRoot = path.join(tempRoot, "codex-stock");
+  const stock = path.join(stockRoot, "rules", filename);
+  fs.mkdirSync(path.dirname(stock), { recursive: true });
+  fs.writeFileSync(stock, old.replace(/\n/g, "\r\n"));
+  installRules({ sourceRoot: fixture, installRoot: stockRoot, host: "codex", log: () => {} });
+  assert.equal(read(stock), read(source), "a known older distribution still upgrades");
+}
+
 function checkInstallerCliOptions() {
   const profile = path.join(tempRoot, "invalid-cli-profile");
   for (const [options, message] of [
@@ -329,7 +402,11 @@ function checkInstallerEntrypoint() {
   assert.deepEqual(installedSettings.hooks.SessionStart, [unrelatedHook]);
   assert.equal(installedSettings.hooks.PostToolUse.flatMap(({ hooks }) => hooks)
     .filter(({ command }) => command?.includes("hooks/check-console-log.js")).length, 1);
+  const codexRule = path.join(profile, ".codex/rules/02-implementation.md");
+  const customizedRule = read(codexRule) + "\nKeep unrelated work separate.\n";
+  fs.writeFileSync(codexRule, customizedRule);
   run();
+  assert.equal(read(codexRule), customizedRule, "the host installer must preserve the active Codex rule");
   assert.equal(read(path.join(backups, earlier, "AGENTS.md")), "My original instructions\n");
   assert.deepEqual(JSON.parse(read(settingsPath).replace(/^\uFEFF/, "")), installedSettings,
     "reinstallation must preserve user hooks and add each managed hook only once");
@@ -411,6 +488,7 @@ try {
   assert.throws(() => install("invalid", "unknown"), /host/i);
   checkLegacyMigration();
   checkPromotedImplementationRule();
+  checkCodexImplementationRuleUpgrades();
   checkInstallerCliOptions();
   checkBashHelpOptions();
   checkInstallerLinkedRoots();

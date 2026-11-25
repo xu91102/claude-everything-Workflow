@@ -71,6 +71,8 @@ The CLI selects the shell or PowerShell installer for your platform. The same `-
 
 Installation updates user-level files and can affect multiple projects. Changed top-level configuration files are backed up; matching files inside shared directories are synchronized from the repository. Unknown files are generally retained, while known retired files are removed by an explicit cleanup list. Back up any personal edits to shared files before upgrading. Use the installer instead of copying the entire `rules/` directory: it handles the different rule locations used by each host.
 
+The Codex installer preserves edits to `~/.codex/rules/02-implementation.md`. On the first upgrade it records the packaged rule as a baseline. Later upgrades use Git to merge independent changes. If a merge conflicts or Git is unavailable, the personal rule stays active and the installer prints the incoming copy’s location and manual merge instructions.
+
 A fresh Claude Code installation puts CEW’s base, Git and security rules in `~/.claude/rules/`. Other CEW rules are available on demand under `~/.claude/references/rules/`. On upgrade, personally edited copies of the three newly migrated rules stay active. Obsolete rules left by older releases can also still load.
 
 ### Browser verification (optional)
