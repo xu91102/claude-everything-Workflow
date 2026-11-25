@@ -4,6 +4,11 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const crypto = require("node:crypto");
+const os = require("node:os");
+const { spawnSync } = require("node:child_process");
+
+const CODEX_RULE_BASE = ".cew-rule-state/02-implementation.base.md";
+const CODEX_RULE_INCOMING = ".cew-rule-state/02-implementation.incoming.md";
 
 const BACKUP_ROOT_NAME = ".cew-backups";
 const LEGACY_TOP_LEVEL_BAK = /^(?:CLAUDE\.md|AGENTS\.md|settings\.json)\.bak\..+$/;
@@ -45,9 +50,20 @@ function checkedPath(root, relative) {
   return target;
 }
 
-function copyRule({ source, root, relative, backupId, dryRun, log }) {
+function replaceFile(file, content, mode = 0o600) {
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const temp = file + ".tmp-" + crypto.randomUUID();
+  try {
+    fs.writeFileSync(temp, content, { flag: "wx", mode });
+    fs.renameSync(temp, file);
+  } finally {
+    fs.rmSync(temp, { force: true });
+  }
+}
+
+function copyRule({ source, root, relative, backupId, dryRun, log, merged }) {
   const target = checkedPath(root, relative);
-  const content = fs.readFileSync(source);
+  const content = merged ?? fs.readFileSync(source);
   if (fs.existsSync(target)) {
     const previous = fs.readFileSync(target);
     if (content.equals(previous)) return;
@@ -61,7 +77,60 @@ function copyRule({ source, root, relative, backupId, dryRun, log }) {
   log(`${dryRun ? "[dry-run] " : ""}安装规则: ${target}`);
   if (!dryRun) {
     fs.mkdirSync(path.dirname(target), { recursive: true });
-    fs.copyFileSync(source, target);
+    if (merged) replaceFile(target, merged, fs.statSync(target).mode);
+    else fs.copyFileSync(source, target);
+  }
+}
+
+// Git only sees disposable copies. A conflict, invalid text or missing Git leaves the live rule untouched.
+function mergeRuleText(local, base, incoming) {
+  const scratch = fs.mkdtempSync(path.join(os.tmpdir(), "cew-rule-merge-"));
+  try {
+    const paths = [];
+    for (const [name, bytes] of [["local", local], ["base", base], ["incoming", incoming]]) {
+      const text = bytes.toString("utf8");
+      if (text.includes("\0") || !Buffer.from(text).equals(bytes)) return null;
+      const file = path.join(scratch, name);
+      fs.writeFileSync(file, text.replace(/\r\n/g, "\n"));
+      paths.push(file);
+    }
+    const result = spawnSync("git", ["merge-file", "-p", "--", ...paths], { cwd: scratch });
+    if (result.status !== 0 || result.error) return null;
+    const crlf = local.includes("\r\n") && !local.toString("utf8").replace(/\r\n/g, "").includes("\n");
+    return crlf ? Buffer.from(result.stdout.toString("utf8").replace(/\n/g, "\r\n")) : result.stdout;
+  } finally {
+    fs.rmSync(scratch, { recursive: true, force: true });
+  }
+}
+
+function installCodexImplementationRule(options, knownHashes) {
+  const { source, root, relative, dryRun, log } = options;
+  const target = checkedPath(root, relative);
+  const base = checkedPath(root, CODEX_RULE_BASE);
+  const incoming = checkedPath(root, CODEX_RULE_INCOMING);
+  const previous = fs.existsSync(base) ? fs.readFileSync(base) : null;
+  const local = fs.existsSync(target) ? fs.readFileSync(target) : null;
+  const next = fs.readFileSync(source);
+  const localHash = local && digest(local);
+  const pristine = !local || localHash === digest(next) ||
+    (previous ? localHash === digest(previous) : knownHashes.includes(localHash));
+
+  if (pristine) {
+    copyRule(options);
+  } else if (previous && digest(previous) !== digest(next)) {
+    const merged = mergeRuleText(local, previous, next);
+    if (!merged) {
+      log(`${dryRun ? "[dry-run] " : ""}无法自动合并，保留个人规则 ${target}。请对照 ${incoming} 手动合并，再用它更新基线 ${base}。`);
+      if (!dryRun) replaceFile(incoming, next);
+      return;
+    }
+    copyRule({ ...options, merged });
+  } else {
+    log(`保留 Codex 个人实现规则: ${target}`);
+  }
+  if (!dryRun) {
+    if (!previous || !previous.equals(next)) replaceFile(base, next);
+    fs.rmSync(incoming, { force: true });
   }
 }
 
@@ -183,6 +252,10 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
   const promoted = (relative) => host === "claude-code" && relative === "02-implementation.md";
   // Validate all managed destinations before the first write, including upgrade cleanup paths.
   checkedPath(root, BACKUP_ROOT_NAME);
+  if (host === "codex") {
+    checkedPath(root, CODEX_RULE_BASE);
+    checkedPath(root, CODEX_RULE_INCOMING);
+  }
   for (const relative of [...files, ...commonFiles]) {
     checkedPath(root, `rules/${relative}`);
     if (installedOnDemand(relative) || promoted(relative)) {
@@ -195,6 +268,11 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
   }
   for (const relative of [...files, ...commonFiles]) {
     const source = path.join(rulesRoot, relative);
+    if (host === "codex" && relative === "02-implementation.md") {
+      installCodexImplementationRule({ source, root, relative: `rules/${relative}`, backupId, dryRun, log },
+        legacy.files[relative] || []);
+      continue;
+    }
     if (promoted(relative)) {
       installPromotedRule({ source, root, relative, knownHashes: legacy.files[relative] || [], backupId, dryRun, log });
       continue;

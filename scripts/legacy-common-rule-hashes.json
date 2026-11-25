@@ -1,9 +1,10 @@
 {
   "version": 1,
   "algorithm": "sha256-lf",
-  "source": "common/: origin/main history through a4f938bc70f3f85e4dcfad4d2534f522b823ea20; top-level rules: first-parent main history through 7326e4b",
+  "source": "common/: origin/main history through a4f938bc70f3f85e4dcfad4d2534f522b823ea20; top-level rules: first-parent main history through 7326e4b; 02-implementation.md also includes v0.2.9",
   "files": {
     "02-implementation.md": [
+      "4412acfbffdc9ac5823de7dd5fdd985297e4184260b4ccebbf7f633dae6090db",
       "1bbe491d9b89e37a6a6d004e1b6e1ccd7478b94341e7b4c51ce8d01fad585c7f",
       "700331676ad40d65acdeb469a67cf802cddff78ebf0861ec5e4427b5a3d23620"
     ],
