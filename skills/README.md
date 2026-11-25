@@ -14,8 +14,7 @@
 - `grilling`：对计划、设计或重大用户决策进行单问式压力测试。
 - `spec-gate`：显式 formal spec 或高风险任务的零访谈成稿、自审和用户批准门。
 - `to-tickets`：把已批准工作拆成 tracer-bullet tickets 和 blocking graph。
-- `implement`：执行用户授权的低风险 direct scope、已批准 Spec scope 或 frontier ticket；仅 ticket 路径 claim、resolve 并刷新 frontier。
-- `subagent-driven-development`：router 对已授权范围发现多个相互独立的 frontier tickets 时，分派到隔离 worktree 的 fresh subagent。
+- `implement`：执行用户授权的低风险 direct scope、已批准 Spec scope 或 frontier ticket；支持串行交付与安全并行多票（`references/parallel-delivery.md`）。
 - `triage`：对 Issue/外部 PR 分类、验证并形成 agent-ready brief。
 - `handoff`：将当前上下文脱敏压缩到临时 Markdown，供全新 session 接续。
 
@@ -33,8 +32,7 @@
 - `test-driven-development`：行为变化的 Red Test Gate。
 - `systematic-debugging`：区分普通明确失败与疑难故障；预期 TDD RED 留在实现循环。
 - `resolving-merge-conflicts`：按双方原始意图逐 hunk 解决 merge/rebase 冲突。
-- `e2e-testing`：Playwright E2E 模式、CI、制品和 flaky 处理。
-- `feature-acceptance`：建立/维护项目验收工具与功能地图；按用户或项目验收合同执行真实流程并复核证据。
+- `feature-acceptance`：建立/维护项目验收工具、功能地图与可重跑 Playwright E2E（`references/e2e-testing.md`）；按用户或项目验收合同执行真实流程并复核证据。
 
 ## Harness / 上下文与编排
 

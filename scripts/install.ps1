@@ -22,6 +22,7 @@ if (-not $HomeDir) {
 
 $InstallClaude = -not $CodexOnly
 $InstallCodex = -not $ClaudeOnly
+$BackupId = Get-Date -Format 'yyyyMMddHHmmss'
 
 function Invoke-InstallCommand {
     param(
@@ -40,7 +41,8 @@ function Invoke-InstallCommand {
 function Backup-IfChanged {
     param(
         [string]$Source,
-        [string]$Destination
+        [string]$Destination,
+        [string]$InstallRoot
     )
 
     if (-not (Test-Path -LiteralPath $Destination)) {
@@ -53,8 +55,19 @@ function Backup-IfChanged {
         return
     }
 
-    $backup = "$Destination.bak.$(Get-Date -Format 'yyyyMMddHHmmss')"
+    $backupRoot = Join-Path $InstallRoot ".cew-backups"
+    $existingBackupRoot = Get-Item -LiteralPath $backupRoot -Force -ErrorAction SilentlyContinue
+    if ($null -ne $existingBackupRoot -and ($existingBackupRoot.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+        throw "Refusing symlinked backup directory: $backupRoot"
+    }
+
+    $relative = [IO.Path]::GetFileName($Destination)
+    $backupDir = Join-Path $backupRoot $BackupId
+    $backup = Join-Path $backupDir $relative
     Write-Host "Backup: $Destination -> $backup"
+    Invoke-InstallCommand `
+        -Description "New-Item -ItemType Directory '$backupDir'" `
+        -Action { New-Item -ItemType Directory -Path $backupDir -Force | Out-Null }
     Invoke-InstallCommand `
         -Description "Copy-Item '$Destination' '$backup'" `
         -Action { Copy-Item -LiteralPath $Destination -Destination $backup -Force }
@@ -63,10 +76,11 @@ function Backup-IfChanged {
 function Copy-ConfigFile {
     param(
         [string]$Source,
-        [string]$Destination
+        [string]$Destination,
+        [string]$InstallRoot
     )
 
-    Backup-IfChanged -Source $Source -Destination $Destination
+    Backup-IfChanged -Source $Source -Destination $Destination -InstallRoot $InstallRoot
     Invoke-InstallCommand `
         -Description "Copy-Item '$Source' '$Destination'" `
         -Action { Copy-Item -LiteralPath $Source -Destination $Destination -Force }
@@ -75,10 +89,11 @@ function Copy-ConfigFile {
 function Copy-ClaudeSettings {
     param(
         [string]$Source,
-        [string]$Destination
+        [string]$Destination,
+        [string]$InstallRoot
     )
 
-    Backup-IfChanged -Source $Source -Destination $Destination
+    Backup-IfChanged -Source $Source -Destination $Destination -InstallRoot $InstallRoot
 
     if ($DryRun) {
         Write-Host "[dry-run] Merge '$Source' into '$Destination' preserving existing user hooks, env and mcpServers"
@@ -145,19 +160,18 @@ function Remove-PackageOnlyPaths {
         "scripts\install.ps1",
         "scripts\install-rules.js",
         "scripts\legacy-common-rule-hashes.json",
+        "scripts\eval-scenarios.js",
         "scripts\verify-harness.js",
         "scripts\verify\core.js",
-        "scripts\verify\grilling-spec-gate-checks.js",
         "scripts\verify\metadata-checks.js",
         "scripts\verify\repository-checks.js",
         "scripts\verify\runtime-checks.js",
         "scripts\verify\workflow-checks.js",
-        "scripts\verify\workflow-ownership-fixtures.js",
-        "scripts\verify\workflow-ownership.js",
+        "scripts\verify\scenario-checks.js",
+        "scripts\verify\scenario-checks.test.js",
         "scripts\verify\skill-manifest-checks.js",
         "scripts\verify\skill-manifest-checks.test.js",
         "scripts\verify\skill-invocation.test.js",
-        "scripts\verify\continuation-checks.test.js",
         "scripts\verify\install-rules.test.js",
         "scripts\verify\learning.test.js",
         "scripts\verify\plugin-distribution.test.js"
@@ -284,14 +298,15 @@ function Install-ClaudeWorkflow {
         -Action { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
 
     Remove-ObsoleteWorkflowPaths -Destination $dest
-    Copy-ConfigFile -Source (Join-Path $RootDir "CLAUDE.md") -Destination (Join-Path $dest "CLAUDE.md")
-    Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
+    Copy-ConfigFile -Source (Join-Path $RootDir "CLAUDE.md") -Destination (Join-Path $dest "CLAUDE.md") -InstallRoot $dest
+    Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md") -InstallRoot $dest
     $settingsPath = Join-Path $dest "settings.json"
-    Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath
+    Copy-ClaudeSettings -Source (Join-Path $RootDir "settings.json") -Destination $settingsPath -InstallRoot $dest
     Install-SharedDirs -Destination $dest
     Install-WorkflowRules -Destination $dest -HostName "claude-code"
     Remove-RetiredSkills -Destination $dest
     Remove-PackageOnlyPaths -Destination $dest
+    Complete-WorkflowBackups -Destination $dest
 }
 
 function Install-CodexWorkflow {
@@ -303,21 +318,33 @@ function Install-CodexWorkflow {
         -Action { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
 
     Remove-ObsoleteWorkflowPaths -Destination $dest
-    Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md")
+    Copy-ConfigFile -Source (Join-Path $RootDir "AGENTS.md") -Destination (Join-Path $dest "AGENTS.md") -InstallRoot $dest
     Install-SharedDirs -Destination $dest
     Install-WorkflowRules -Destination $dest -HostName "codex"
     Remove-RetiredSkills -Destination $dest
     Remove-PackageOnlyPaths -Destination $dest
+    Complete-WorkflowBackups -Destination $dest
 }
 
 function Install-WorkflowRules {
     param([string]$Destination, [string]$HostName)
 
-    $ruleArgs = @((Join-Path $RootDir "scripts\install-rules.js"), $HostName, $Destination)
+    $ruleArgs = @((Join-Path $RootDir "scripts\install-rules.js"), $HostName, $Destination, "--backup-id", $BackupId)
     if ($DryRun) { $ruleArgs += "--dry-run" }
     & node @ruleArgs
     if ($LASTEXITCODE -ne 0) {
         throw "Rule installation failed with exit code $LASTEXITCODE"
+    }
+}
+
+function Complete-WorkflowBackups {
+    param([string]$Destination)
+
+    $backupArgs = @((Join-Path $RootDir "scripts\install-rules.js"), "--finalize-backups", $Destination, "--backup-id", $BackupId)
+    if ($DryRun) { $backupArgs += "--dry-run" }
+    & node @backupArgs
+    if ($LASTEXITCODE -ne 0) {
+        throw "Backup finalization failed with exit code $LASTEXITCODE"
     }
 }
 

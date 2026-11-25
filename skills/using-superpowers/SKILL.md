@@ -5,116 +5,37 @@ description: Route engineering delivery and explicitly requested engineering wor
 
 # Using Superpowers
 
-Own routing and continuation. Skills return outcomes here instead of selecting one another.
+仅用于工程交付（实现、调试、测试、审查）及显式工程工作流；普通问答、翻译、总结和资料检索直接处理。
+优先级：用户指令 / `AGENTS.md` / `CLAUDE.md` / 项目 Rules > Skills / Commands / Agents / Hooks > 默认行为。
 
-## Applicability
+## 选路原则
 
-用于工程交付（实现、调试、测试、审查）及用户明确请求的工程工作流，并接续这些流程的返回结果。
-普通问答、翻译、总结和一般资料检索直接处理；复杂度本身不触发本路由。
+- 选最短适用路径，只读当前阶段需要的 Skill，不预加载整条链路；简短说明选择后即执行。
+- 显式请求某一专职能力（如 `grilling`、`feature-acceptance`、`handoff`、`triage`、`prototype`、`improve-codebase-architecture`、`resolving-merge-conflicts`、`test-driven-development`、`code-review`）时，宿主按各 Skill 的 `description` 直接匹配，不再逐条在路由表重复列出。
+- 复杂度本身不触发额外门禁；`handoff`、`triage`、`improve-codebase-architecture` 仅在用户明确请求时使用。
 
-## Priority
+## 三条交付通道
 
-User instructions, `AGENTS.md`, `CLAUDE.md`, and repository rules take precedence over Skills,
-commands, agents, and hooks, which take precedence over default behavior.
+1. **direct**：需求明确、低风险 → `read-reference skills/implement/SKILL.md`（有测试路径的行为变化结合 `test-driven-development`）。
+2. **needs-decision**：存在会实质改变结果且工具查不到的用户决策 → `skills/grilling/SKILL.md`（高风险或显式 Spec 场景记录 `resume_target: spec-gate`）。
+3. **formal-spec**：用户要求 formal Spec（含旧称 `brainstorming`，引导至 `/to-spec`）或命中高风险边界（难逆架构/服务边界、公共契约兼容、认证授权、持久化 schema 迁移、不可逆外部副作用）→ `skills/spec-gate/SKILL.md`。
 
-## Skill Invocation Rule
-
-Classify intent, discoverable facts, user-owned decisions, and risk; select the shortest applicable path
-below and read only its Skill. Briefly announce the selection, then act. Do not load a chain of Skills
-in anticipation of later stages. Reuse a Skill already read in this task unless it changed or context
-was lost; returning here means applying the routing decision, not reading this file again.
-
-For delivery, infer the requested action, outcome, scope and acceptance evidence from the request and
-project. Inspect discoverable details and ask only for unresolved decisions that would change the result.
-`read-reference` means read the target as a file relative to the same distribution, without invoking it
-through a host Skill tool or asking the user to type its name. For `implement`, read
-[the delivery procedure](../implement/SKILL.md) after selecting it.
-
-Expected TDD RED stays in the current implementation loop. Do not reroute it as a reported bug.
-An explicit request may use ordinary language or a native `/name` or `$name` invocation.
-For handoff, triage and improve-codebase-architecture,
-require the corresponding user request; complexity or a router match alone is insufficient.
-Do not ask users to repeat an already clear request using command syntax. Skill selection never
-expands authorization for publishing, external writes, or other consequential actions.
-
-## Three Lanes
-
-The three lanes are: direct (clear low-risk task), needs-decision (grilling inline), and formal-spec
-(explicit formal Spec or high-risk boundary). File count, new features, and ordinary complexity affect
-verification intensity, not the lane. Resolve only consequential user decisions that tools cannot discover.
-
-## Routing
-
-Use process skills before implementation skills:
+## 核心路由
 
 ```text
-Task arrives
-  -> explicit workflow advice?                    -> workflow advice mode
-  -> explicit documented grilling request?        -> grilling explicit + domain-modeling persistent mode
-  -> explicit grilling request?                    -> grilling explicit
-  -> explicit handoff or fresh session or prototype branch?
-                                                     -> skills/handoff/SKILL.md
-  -> explicit triage request?                      -> skills/triage/SKILL.md
-  -> explicit TDD request?                         -> skills/test-driven-development/SKILL.md
-  -> explicit project verification setup/maintenance or real-flow acceptance request?
-                                                     -> skills/feature-acceptance/SKILL.md
-  -> explicit E2E or Playwright request?           -> skills/e2e-testing/SKILL.md + agents/e2e-runner.md
-  -> explicit harness audit?                       -> agents/harness-optimizer.md
-  -> explicit architecture-health audit?           -> skills/improve-codebase-architecture/SKILL.md
-  -> merge or rebase conflict?                     -> skills/resolving-merge-conflicts/SKILL.md
-  -> reported bug or unexplained/repeated failure? -> skills/systematic-debugging/SKILL.md
-  -> discoverable fact?                            -> inspect it; do not ask
-  -> external engineering fact or documentation question? -> inspect primary sources directly; cite the answer
-  -> explicit prototype or runnable design question? -> skills/prototype/SKILL.md
-  -> unresolved user-owned decision?               -> skills/grilling/SKILL.md (grilling inline)
-       high-risk or explicit formal Spec context?  -> resume_target: spec-gate
-  -> explicit formal Spec or high-risk boundary?   -> spec-gate
-  -> delivery request in defined scope?            -> select delivery topology
-       -> durable multi-session/tracker graph?     -> skills/to-tickets/SKILL.md
-       -> independent frontier tickets with no overlapping write surface?
-                                                     -> skills/subagent-driven-development/SKILL.md
-       -> otherwise                                 -> read-reference skills/implement/SKILL.md
-  -> behavior change with a test path?             -> test-driven-development
-  -> new feature or other Git-rule isolation need? -> rules/05-git-workflow.md
-  -> completion, fixed, or ready claim?            -> rules/common/testing.md
-  -> skill discovery or install request?           -> use available host tooling for the explicit request
-  -> external skill learning or edit?              -> rules/common/skills-learning.md
-  -> otherwise                                     -> shortest applicable loop
+工程任务到达
+  -> 询问工作流建议？                 -> 只返回推荐路径、前置条件和闭环，不写文件
+  -> 故障 / 偶发失败 / 性能回退？      -> skills/systematic-debugging/SKILL.md（预期 TDD RED 留在实现循环）
+  -> 未决关键用户决策？               -> skills/grilling/SKILL.md
+  -> 显式 formal Spec 或高风险边界？  -> skills/spec-gate/SKILL.md
+  -> 明确范围的交付请求？             -> 选择交付拓扑（一行说明理由）：
+       需要跨会话 / tracker 依赖图    -> skills/to-tickets/SKILL.md
+       其余（含已批准多票安全并行）   -> read-reference skills/implement/SKILL.md
+  -> 声明完成 / 修复 / ready？        -> rules/common/testing.md
 ```
 
-A high-risk boundary is a costly-to-reverse architecture or service boundary, public-contract compatibility, authentication or authorization boundary, persistent data/schema migration, or irreversible external side effect. Record this classification before grilling so its handoff can resume `spec-gate`.
+## 交付拓扑与收尾
 
-### Workflow advice mode
-
-只返回推荐入口与原因、前置条件、需要补齐的用户决策或 Spec/tickets/map/handoff，以及直到
-审查和验证的闭环路径。不要调用下一 Skill、写文件或修改 tracker。
-
-### Agent-selected Delivery Topology
-
-用户要求完成一个定义明确的交付范围后，router 自行选择 `implement`、`to-tickets` 或
-`subagent-driven-development`；选择依据是持续性、依赖图、写入面和验证成本，而不是用户是否记得某个
-Skill 名称。开始时用一行说明所选拓扑及理由，然后继续执行。
-
-- 一个可在当前上下文完成的连贯范围，使用 `implement`。
-- 需要跨会话、tracker 或可恢复依赖图时，使用 `to-tickets`。这仍必须展示 ticket 的行为、验收标准与
-  blocker，并在发布前获得用户对 ticket contract 的批准。
-- 只有至少两张已批准、无 blocker、写入面不重叠的 frontier tickets，才使用 SDD。不能安全并行时选择
-  串行 `implement`，不要为了使用 subagent 人为拆票。
-
-用户的交付授权覆盖已批准范围内的本地实现与拓扑选择，不覆盖新的产品范围、未决用户决策、外部 tracker
-mutation、commit、push、PR 或不可逆副作用。新的 frontier 只有仍在该授权范围内时才能由 router 再次选择
-执行拓扑。
-
-## Process Outcomes
-
-Only when processing a grilling/Spec outcome or preparing a cross-session handoff, read
-[references/process-outcomes.md](references/process-outcomes.md). Follow the matching outcome before
-continuing; a self-reviewed Spec is not user approval. Ordinary direct delivery does not load this reference.
-
-## Compatibility Alias
-
-For one release cycle, interpret a user explicitly asking for the old name `brainstorming` as a formal Spec request. Explain that the entry moved to `/to-spec`; route through the same optional grilling and `spec-gate` path. Do not expose an old Skill shim or a second protocol source.
-
-## Completion
-
-Before saying work is complete, fixed, passing, or ready, apply `rules/common/testing.md` and report fresh evidence, skipped checks, and remaining risk.
+- 单次会话可完成的范围用 `implement`；仅当存在 ≥2 张已批准、无 blocker、写入面不重叠的 frontier tickets 时，按 `skills/implement/references/parallel-delivery.md` 并行分派。
+- 处理 `grilling` / `spec-gate` 返回结果或跨会话交接时，按需读取 [references/process-outcomes.md](references/process-outcomes.md)。
+- 交付授权不扩大产品范围，也不覆盖 commit、push、PR 或外部写入；声明完成前按 `rules/common/testing.md` 报告本轮新鲜验证证据、未运行项和剩余风险。

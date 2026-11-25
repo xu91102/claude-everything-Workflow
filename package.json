@@ -1,6 +1,6 @@
 {
   "name": "claude-everything-workflow",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Claude Code and Codex harness with rules, skills, agents, hooks, and verification gates.",
   "keywords": [
     "claude-code",
@@ -19,10 +19,11 @@
     "verify": "node scripts/verify-harness.js",
     "test:manifest": "node scripts/verify/skill-manifest-checks.test.js",
     "test:invocation": "node scripts/verify/skill-invocation.test.js",
-    "test:continuation": "node scripts/verify/continuation-checks.test.js",
+    "test:scenarios": "node scripts/verify/scenario-checks.test.js",
     "test:install-rules": "node scripts/verify/install-rules.test.js",
     "test:learning": "node --test scripts/verify/learning.test.js",
     "test:plugins": "node --test scripts/verify/plugin-distribution.test.js",
+    "eval:scenarios": "node scripts/eval-scenarios.js",
     "verify:upstream": "node scripts/verify-upstream-capability-map.js",
     "pack:dry-run": "npm pack --dry-run"
   },
@@ -41,6 +42,7 @@
     "README.md",
     "README.zh-CN.md",
     "docs/plugins.md",
+    "evals/",
     "settings.json",
     "agents/",
     "bin/",

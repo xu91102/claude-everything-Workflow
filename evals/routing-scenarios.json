@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "description": "路由与工作流场景测试清单：验证典型任务描述能映射到正确的 Skill、参考文档或规则。",
+  "scenarios": [
+    {
+      "id": "non-eng-translate",
+      "category": "non-engineering",
+      "prompt": "把这段英文 README 翻译成自然的中文",
+      "expectedTarget": null,
+      "expectedLane": "none",
+      "requiredSignals": ["普通问答", "翻译"],
+      "rationale": "纯翻译属于非工程任务，直接处理，不进入工程路由。"
+    },
+    {
+      "id": "non-eng-summary",
+      "category": "non-engineering",
+      "prompt": "帮我总结一下这篇文章的三个核心观点",
+      "expectedTarget": null,
+      "expectedLane": "none",
+      "requiredSignals": ["总结"],
+      "rationale": "纯总结直接处理，不触发工程工作流。"
+    },
+    {
+      "id": "direct-small-change",
+      "category": "delivery",
+      "prompt": "给 parseConfig 加一个默认值 fallback，并补一个单元测试",
+      "expectedTarget": "skills/implement/SKILL.md",
+      "expectedLane": "direct",
+      "requiredSignals": ["direct-scope", "implement"],
+      "rationale": "明确、低风险的单次交付请求直接走 direct 通道与 implement。"
+    },
+    {
+      "id": "workflow-advice",
+      "category": "routing",
+      "prompt": "我要重做计费模块，请先告诉我应该按什么工作流推进，不要改文件",
+      "expectedTarget": "skills/using-superpowers/SKILL.md",
+      "expectedLane": "advice",
+      "requiredSignals": ["工作流建议", "不写文件"],
+      "rationale": "询问工作流建议时只给路径与前置条件，不写文件。"
+    },
+    {
+      "id": "bug-diagnosis",
+      "category": "debugging",
+      "prompt": "生产环境偶发 502 错误，帮我排查一下根因",
+      "expectedTarget": "skills/systematic-debugging/SKILL.md",
+      "expectedLane": "debugging",
+      "requiredSignals": ["bug", "flaky"],
+      "rationale": "故障和偶发失败应进入 systematic-debugging。"
+    },
+    {
+      "id": "perf-regression",
+      "category": "debugging",
+      "prompt": "最近列表页渲染从 80ms 变慢到 900ms，定位性能回退原因",
+      "expectedTarget": "skills/systematic-debugging/SKILL.md",
+      "expectedLane": "debugging",
+      "requiredSignals": ["slowness", "performance"],
+      "rationale": "性能回退归入 systematic-debugging。"
+    },
+    {
+      "id": "tdd-behavior-change",
+      "category": "engineering",
+      "prompt": "用 TDD 方式实现优惠券过期校验逻辑",
+      "expectedTarget": "skills/test-driven-development/SKILL.md",
+      "expectedLane": "direct",
+      "requiredSignals": ["RED", "GREEN", "REFACTOR"],
+      "rationale": "明确要求 TDD 或行为变化测试闭环时进入 test-driven-development。"
+    },
+    {
+      "id": "code-review-diff",
+      "category": "review",
+      "prompt": "帮我审查一下当前分支相对 main 的代码改动",
+      "expectedTarget": "skills/code-review/SKILL.md",
+      "expectedLane": "review",
+      "requiredSignals": ["Review", "diff"],
+      "rationale": "固定基线的代码审查应进入 code-review。"
+    },
+    {
+      "id": "merge-conflict",
+      "category": "git",
+      "prompt": "rebase main 时出现 4 个文件冲突，帮我逐块解决",
+      "expectedTarget": "skills/resolving-merge-conflicts/SKILL.md",
+      "expectedLane": "direct",
+      "requiredSignals": ["merge", "rebase", "conflict"],
+      "rationale": "活跃的 merge/rebase 冲突应进入 resolving-merge-conflicts。"
+    },
+    {
+      "id": "acceptance-real-flow",
+      "category": "acceptance",
+      "prompt": "按真实用户流程验收下单支付页面，并保留截图和日志证据",
+      "expectedTarget": "skills/feature-acceptance/SKILL.md",
+      "expectedLane": "acceptance",
+      "requiredSignals": ["真实流程", "证据"],
+      "rationale": "真实流程验收和证据复核进入 feature-acceptance。"
+    },
+    {
+      "id": "acceptance-setup-map",
+      "category": "acceptance",
+      "prompt": "给这个项目建立可复用的验收工具入口和功能地图",
+      "expectedTarget": "skills/feature-acceptance/SKILL.md",
+      "expectedReference": "skills/feature-acceptance/references/project-verification.md",
+      "expectedLane": "acceptance",
+      "requiredSignals": ["项目验收", "功能地图"],
+      "rationale": "建立或维护项目验收能力进入 feature-acceptance 及其 project-verification 参考。"
+    },
+    {
+      "id": "e2e-playwright-tests",
+      "category": "acceptance",
+      "prompt": "用 Playwright 给登录和结账主流程补可重跑的 E2E 自动化测试",
+      "expectedTarget": "skills/feature-acceptance/SKILL.md",
+      "expectedReference": "skills/feature-acceptance/references/e2e-testing.md",
+      "expectedLane": "acceptance",
+      "requiredSignals": ["Playwright", "E2E"],
+      "rationale": "Playwright / E2E 测试已并入 feature-acceptance 及其 e2e-testing 参考。"
+    },
+    {
+      "id": "e2e-flaky-fix",
+      "category": "acceptance",
+      "prompt": "CI 里的 Playwright 测试经常超时 flaky，帮我定位并稳定下来",
+      "expectedTarget": "skills/feature-acceptance/SKILL.md",
+      "expectedReference": "skills/feature-acceptance/references/playwright-patterns.md",
+      "expectedLane": "acceptance",
+      "requiredSignals": ["Playwright", "flaky"],
+      "rationale": "Playwright flaky 治理使用 feature-acceptance 的 E2E 与 patterns 参考。"
+    },
+    {
+      "id": "grilling-ambiguous-decision",
+      "category": "decision",
+      "prompt": "我想给产品加多租户隔离，但还没想好按 schema 还是按行级隔离，你逐个问题追问我",
+      "expectedTarget": "skills/grilling/SKILL.md",
+      "expectedLane": "needs-decision",
+      "requiredSignals": ["one question", "decision"],
+      "rationale": "存在未决关键用户决策或显式追问时进入 grilling。"
+    },
+    {
+      "id": "formal-spec-explicit",
+      "category": "spec",
+      "prompt": "先写一份正式 Spec 设计权限中心改造方案，等我审批后再实现",
+      "expectedTarget": "skills/spec-gate/SKILL.md",
+      "expectedLane": "formal-spec",
+      "requiredSignals": ["Spec", "approval"],
+      "rationale": "显式要求 formal Spec 必须进入 spec-gate 并等待用户批准。"
+    },
+    {
+      "id": "formal-spec-high-risk-schema",
+      "category": "spec",
+      "prompt": "把订单表的主键从自增 ID 迁移为雪花 ID，直接开始改",
+      "expectedTarget": "skills/spec-gate/SKILL.md",
+      "expectedLane": "formal-spec",
+      "requiredSignals": ["schema", "spec-gate"],
+      "rationale": "持久化 schema 迁移命中高风险边界，应走 formal-spec 通道。"
+    },
+    {
+      "id": "formal-spec-brainstorming-alias",
+      "category": "spec",
+      "prompt": "用 brainstorming 帮我规划一下新通知系统的设计文档",
+      "expectedTarget": "skills/spec-gate/SKILL.md",
+      "expectedLane": "formal-spec",
+      "requiredSignals": ["brainstorming", "/to-spec"],
+      "rationale": "旧称 brainstorming 路由至 formal-spec 并引导使用 /to-spec。"
+    },
+    {
+      "id": "tickets-multi-session",
+      "category": "planning",
+      "prompt": "把这个已批准的大改 Spec 拆成可跨会话推进、有依赖关系的垂直 tickets",
+      "expectedTarget": "skills/to-tickets/SKILL.md",
+      "expectedLane": "tickets",
+      "requiredSignals": ["tickets", "approval"],
+      "rationale": "需要跨会话/tracker 依赖图时进入 to-tickets。"
+    },
+    {
+      "id": "parallel-frontier-tickets",
+      "category": "delivery",
+      "prompt": "现在有两张已批准、无阻塞且修改不同模块的 frontier tickets，安全并行交付",
+      "expectedTarget": "skills/implement/SKILL.md",
+      "expectedReference": "skills/implement/references/parallel-delivery.md",
+      "expectedLane": "delivery-parallel",
+      "requiredSignals": ["parallel-delivery.md", "frontier"],
+      "rationale": "多张独立 frontier tickets 的并行交付已并入 implement 的 parallel-delivery 参考。"
+    },
+    {
+      "id": "handoff-fresh-session",
+      "category": "context",
+      "prompt": "上下文快满了，帮我生成一份脱敏的 handoff 交接文档，我准备开新会话继续",
+      "expectedTarget": "skills/handoff/SKILL.md",
+      "expectedLane": "explicit-only",
+      "requiredSignals": ["handoff", "fresh session"],
+      "rationale": "明确要求交接/新会话时进入 handoff。"
+    },
+    {
+      "id": "triage-external-issue",
+      "category": "triage",
+      "prompt": "帮我 triage 这个外部提交的 GitHub Issue，验证复现并整理成 agent-ready brief",
+      "expectedTarget": "skills/triage/SKILL.md",
+      "expectedLane": "explicit-only",
+      "requiredSignals": ["triage", "brief"],
+      "rationale": "明确要求 issue/PR triage 时进入 triage。"
+    },
+    {
+      "id": "prototype-design-probe",
+      "category": "design",
+      "prompt": "写一个可扔掉的最小原型验证虚拟滚动在 10 万条数据下是否流畅",
+      "expectedTarget": "skills/prototype/SKILL.md",
+      "expectedLane": "design",
+      "requiredSignals": ["prototype", "probe"],
+      "rationale": "回答单个可运行设计问题的临时探针进入 prototype。"
+    },
+    {
+      "id": "architecture-health-audit",
+      "category": "design",
+      "prompt": "对当前代码库做一次只读的架构健康度审计，找出浅模块加深机会",
+      "expectedTarget": "skills/improve-codebase-architecture/SKILL.md",
+      "expectedLane": "explicit-only",
+      "requiredSignals": ["architecture-health", "audit"],
+      "rationale": "明确要求架构健康度审计时进入 improve-codebase-architecture。"
+    },
+    {
+      "id": "domain-modeling-invariants",
+      "category": "design",
+      "prompt": "梳理订阅计费的实体状态机、不变量和上下文边界",
+      "expectedTarget": "skills/domain-modeling/SKILL.md",
+      "expectedLane": "design",
+      "requiredSignals": ["entities", "invariants"],
+      "rationale": "业务概念、状态与不变量建模进入 domain-modeling。"
+    },
+    {
+      "id": "codebase-deep-module",
+      "category": "design",
+      "prompt": "这个缓存层的接口把内部细节都漏给调用方了，帮我设计一个深模块和 seam",
+      "expectedTarget": "skills/codebase-design/SKILL.md",
+      "expectedLane": "design",
+      "requiredSignals": ["deep modules", "seams"],
+      "rationale": "深模块与接缝设计进入 codebase-design。"
+    },
+    {
+      "id": "completion-evidence-gate",
+      "category": "verification",
+      "prompt": "改动写完了，准备告诉用户已经修复并可以提交 PR",
+      "expectedTarget": "rules/common/testing.md",
+      "expectedLane": "verification",
+      "requiredSignals": ["验证证据", "退出码"],
+      "rationale": "任何完成/修复/ready 声明前必须遵守 rules/common/testing.md。"
+    },
+    {
+      "id": "new-feature-worktree-and-pr",
+      "category": "git",
+      "prompt": "我要开发一个新功能并创建 PR，帮我按规范拉分支和提交",
+      "expectedTarget": "rules/05-git-workflow.md",
+      "expectedLane": "git",
+      "requiredSignals": ["git worktree", "origin/main"],
+      "rationale": "新功能必须基于最新 origin/main 创建独立 worktree 与任务分支。"
+    }
+  ]
+}

@@ -1,12 +1,6 @@
----
-name: e2e-testing
-description: Use for explicit Playwright or E2E work; keep tests repeatable and load detailed patterns on demand.
-origin: ECC
----
+# 可重跑 E2E 测试
 
-# E2E Testing
-
-只在用户明确要求 E2E、Playwright、端到端回归或测试不稳定性处理时加载。这里负责把需求落到项目已有的可重复测试入口；通用示例和配置细节见 `references/playwright-patterns.md`，命中具体问题时再读取。
+仅在需要新增或维护可提交、可在 CI 重跑的 E2E / Playwright 测试，或处理 E2E 不稳定性时读取。这里负责把需求落到项目已有的可重复测试入口；通用示例和配置细节见 [playwright-patterns.md](playwright-patterns.md)，命中具体问题时再读取。
 
 ## 先发现项目现状
 
@@ -33,4 +27,4 @@ origin: ECC
 
 ## 参考
 
-需要 POM、配置模板、flaky 隔离、重试和制品示例时，按需读取 `references/playwright-patterns.md`。
+需要 POM、配置模板、flaky 隔离、重试和制品示例时，按需读取 [playwright-patterns.md](playwright-patterns.md)。

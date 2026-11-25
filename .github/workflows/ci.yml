@@ -35,8 +35,8 @@ jobs:
       - name: Test host invocation policies
         run: npm run test:invocation
 
-      - name: Test continuation and authorization contracts
-        run: npm run test:continuation
+      - name: Test routing scenarios
+        run: npm run test:scenarios
 
       - name: Test rule installation and migration
         run: npm run test:install-rules

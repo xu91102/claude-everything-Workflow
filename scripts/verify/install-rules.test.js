@@ -6,7 +6,7 @@ const os = require("node:os");
 const path = require("node:path");
 const crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
-const { installRules } = require("../install-rules");
+const { installRules, finalizeBackups, BACKUP_ROOT_NAME } = require("../install-rules");
 
 const sourceRoot = path.resolve(__dirname, "../..");
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "cew-rules-"));
@@ -24,8 +24,9 @@ function checkLegacyMigration() {
   fs.writeFileSync(path.join(fixture, "rules/common/testing.md"), "Current distribution\n");
   const previous = "Previous distribution\n";
   const hash = crypto.createHash("sha256").update(previous).digest("hex");
+  fs.writeFileSync(path.join(fixture, "rules/02-implementation.md"), "New resident distribution\n");
   fs.writeFileSync(path.join(fixture, "scripts/legacy-common-rule-hashes.json"),
-    JSON.stringify({ files: { "common/testing.md": [hash] } }));
+    JSON.stringify({ files: { "common/testing.md": [hash], "02-implementation.md": [hash] } }));
   const target = path.join(tempRoot, "legacy-target");
   fs.mkdirSync(path.join(target, "rules/common"), { recursive: true });
   fs.writeFileSync(path.join(target, "rules/common/testing.md"), previous.replace(/\n/g, "\r\n"));
@@ -37,11 +38,70 @@ function checkLegacyMigration() {
   assert.equal(fs.existsSync(path.join(target, "rules/common/testing.md")), false);
   assert.equal(read(path.join(target, "references/rules/common/testing.md")), "Current distribution\n");
 
+  const previousReference = path.join(target, "references/rules/02-implementation.md");
+  fs.writeFileSync(previousReference, previous.replace(/\n/g, "\r\n"));
+  fs.unlinkSync(path.join(target, "rules/02-implementation.md"));
   const cold = path.join(target, "references/rules/common/testing.md");
   fs.writeFileSync(cold, previous);
-  installRules(options);
+  installRules({ ...options, backupId: "20261125100000" });
   assert.equal(read(cold), "Current distribution\n");
-  assert.equal(read(cold + ".bak." + hash), previous);
+  assert.equal(read(path.join(target, "rules/02-implementation.md")), "New resident distribution\n");
+  assert.equal(fs.existsSync(previousReference), false);
+  assert.equal(
+    read(path.join(target, BACKUP_ROOT_NAME, "20261125100000/references/rules/common/testing.md")),
+    previous,
+  );
+  assert.equal(fs.existsSync(cold + ".bak." + hash), false);
+
+  // Legacy inline .bak.* files and older backup directories are cleaned on finalizeBackups.
+  fs.writeFileSync(path.join(target, "AGENTS.md.bak.20260101000000"), "old top backup\n");
+  fs.writeFileSync(path.join(target, "rules/01-base.md.bak.deadbeef"), "old rule backup\n");
+  fs.writeFileSync(cold + ".bak." + hash, previous);
+  const olderSnapshot = path.join(target, BACKUP_ROOT_NAME, "20261124000000");
+  fs.mkdirSync(path.join(olderSnapshot, "references/rules/common"), { recursive: true });
+  fs.writeFileSync(path.join(olderSnapshot, "references/rules/common/testing.md"), "Superseded backup\n");
+  fs.writeFileSync(path.join(target, BACKUP_ROOT_NAME, "20261124000000/AGENTS.md"), "older\n");
+  finalizeBackups({ installRoot: target, dryRun: true, log: () => {} });
+  assert.equal(read(path.join(olderSnapshot, "references/rules/common/testing.md")), "Superseded backup\n");
+  finalizeBackups({ installRoot: target, log: () => {} });
+  assert.equal(fs.existsSync(path.join(olderSnapshot, "references")), false);
+  assert.equal(read(path.join(target, BACKUP_ROOT_NAME, "20261125100000/references/rules/common/testing.md")), previous);
+  assert.equal(fs.existsSync(path.join(target, "AGENTS.md.bak.20260101000000")), false);
+  assert.equal(fs.existsSync(path.join(target, "rules/01-base.md.bak.deadbeef")), false);
+  assert.equal(fs.existsSync(cold + ".bak." + hash), false);
+  const backups = path.join(target, BACKUP_ROOT_NAME);
+  assert.equal(read(path.join(backups, "legacy/AGENTS.md.bak.20260101000000")), "old top backup\n");
+  assert.equal(read(path.join(backups, "legacy/rules/01-base.md.bak.deadbeef")), "old rule backup\n");
+  assert.equal(read(path.join(backups, "20261124000000/AGENTS.md")), "older\n",
+    "a later partial backup must preserve the only copy of each unchanged file");
+}
+
+function checkPromotedImplementationRule() {
+  const filename = "02-implementation.md";
+  const target = path.join(tempRoot, "promoted");
+  const cold = path.join(target, "references/rules", filename);
+  const resident = path.join(target, "rules", filename);
+  const custom = "My implementation policy\r\n";
+  fs.mkdirSync(path.dirname(cold), { recursive: true });
+  fs.writeFileSync(cold, custom);
+  install("promoted", "claude-code", true);
+  assert.equal(fs.existsSync(resident), false);
+  assert.equal(fs.readFileSync(cold, "utf8"), custom);
+  install("promoted");
+  assert.equal(fs.readFileSync(resident, "utf8"), custom, "promote personal rules byte-for-byte");
+  install("promoted");
+  assert.equal(fs.readFileSync(resident, "utf8"), custom, "preserve promoted rules on reinstall");
+  assert.equal(fs.existsSync(cold), false);
+
+  fs.writeFileSync(cold, "Separate personal reference\n");
+  install("promoted");
+  assert.equal(fs.readFileSync(resident, "utf8"), custom, "existing personal resident rules take priority");
+  assert.equal(read(cold), "Separate personal reference\n", "preserve conflicting personal copies");
+
+  fs.copyFileSync(path.join(sourceRoot, "rules", filename), resident);
+  install("promoted");
+  assert.equal(read(resident), "Separate personal reference\n", "repair a previously shadowed policy");
+  assert.equal(fs.existsSync(cold), false);
 }
 
 function checkInstallerCliOptions() {
@@ -257,13 +317,20 @@ function checkInstallerEntrypoint() {
       SessionStart: [{ ...unrelatedHook, hooks: [...unrelatedHook.hooks, retiredSession] }],
     },
   }));
+  fs.writeFileSync(path.join(profile, ".claude/AGENTS.md"), "My original instructions\n");
   run();
+  // Give the first snapshot a distinct, earlier timestamp even on fast machines.
+  const backups = path.join(profile, ".claude", BACKUP_ROOT_NAME);
+  const [firstSnapshot] = fs.readdirSync(backups);
+  const earlier = "20000101000000";
+  fs.renameSync(path.join(backups, firstSnapshot), path.join(backups, earlier));
   const installedSettings = JSON.parse(read(settingsPath).replace(/^\uFEFF/, ""));
   assert.deepEqual(installedSettings.hooks.PostToolUse[0], userHookGroup);
   assert.deepEqual(installedSettings.hooks.SessionStart, [unrelatedHook]);
   assert.equal(installedSettings.hooks.PostToolUse.flatMap(({ hooks }) => hooks)
     .filter(({ command }) => command?.includes("hooks/check-console-log.js")).length, 1);
   run();
+  assert.equal(read(path.join(backups, earlier, "AGENTS.md")), "My original instructions\n");
   assert.deepEqual(JSON.parse(read(settingsPath).replace(/^\uFEFF/, "")), installedSettings,
     "reinstallation must preserve user hooks and add each managed hook only once");
   assert.equal(read(path.join(profile, ".claude/references/rules/common/testing.md")),
@@ -286,8 +353,10 @@ function checkInstallerEntrypoint() {
     }
     assert.equal(fs.existsSync(path.join(profile, host, "skills/wayfinder/agents")), false);
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/install-rules.js")), false);
-    assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/continuation-checks.test.js")), false,
-      "安装不应保留仅供包内验证的续接测试");
+    assert.equal(fs.existsSync(path.join(profile, host, "scripts/eval-scenarios.js")), false,
+      "安装不应保留仅供包内评测的场景脚本");
+    assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/scenario-checks.test.js")), false,
+      "安装不应保留仅供包内验证的场景测试");
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/plugin-distribution.test.js")), false,
       "安装不应保留仅供包内验证的插件分发测试");
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/learning.test.js")), false,
@@ -302,13 +371,10 @@ try {
   const fresh = path.join(tempRoot, "fresh");
   const common = fs.readdirSync(path.join(sourceRoot, "rules/common"));
   assert.equal(common.length, 8);
-  const resident = ["01-base.md", "05-git-workflow.md", "07-forbidden.md"];
-  const onDemand = [
-    "02-implementation.md", "08-specialty-rules-index.md", "09-first-principles-adversarial-testing.md",
-  ];
+  const resident = ["01-base.md", "02-implementation.md", "05-git-workflow.md"];
   assert.deepEqual(fs.readdirSync(path.join(fresh, "rules")).sort(), resident);
   install("codex", "codex");
-  for (const file of [...resident, ...onDemand, ...common.map((name) => `common/${name}`)]) {
+  for (const file of [...resident, ...common.map((name) => `common/${name}`)]) {
     const source = read(path.join(sourceRoot, "rules", file));
     const claudeDir = resident.includes(file) ? "rules" : "references/rules";
     assert.equal(read(path.join(fresh, claudeDir, file)), source);
@@ -323,28 +389,17 @@ try {
     path.join(upgrade, "rules/common/testing.md"));
   fs.writeFileSync(path.join(upgrade, "rules/common/hooks.md"), "Personal hook policy\n");
   fs.writeFileSync(path.join(upgrade, "rules/common/personal.md"), "Keep my rules\n");
-  for (const file of onDemand) {
-    fs.copyFileSync(path.join(sourceRoot, "rules", file), path.join(upgrade, "rules", file));
-  }
-  const customRule = "02-implementation.md";
-  const personal = path.join(upgrade, "rules", customRule);
-  fs.writeFileSync(personal, "Personal implementation rules\n");
+  fs.writeFileSync(path.join(upgrade, "rules/08-specialty-rules-index.md"), "Personal index\n");
   install("upgrade", "claude-code", true);
   assert.equal(fs.existsSync(path.join(upgrade, "references")), false);
-  for (const file of onDemand) assert.ok(fs.existsSync(path.join(upgrade, "rules", file)));
   install("upgrade");
   assert.equal(fs.existsSync(path.join(upgrade, "rules/common/testing.md")), false);
   assert.equal(read(path.join(upgrade, "rules/common/hooks.md")), "Personal hook policy\n");
   assert.equal(read(path.join(upgrade, "rules/common/personal.md")), "Keep my rules\n");
+  assert.equal(read(path.join(upgrade, "rules/08-specialty-rules-index.md")), "Personal index\n");
   assert.ok(messages.some((message) => /保留.*hooks\.md/.test(message)));
   install("upgrade");
   assert.equal(read(path.join(upgrade, "rules/common/hooks.md")), "Personal hook policy\n");
-
-  assert.equal(read(personal), "Personal implementation rules\n");
-  for (const file of onDemand) {
-    assert.equal(fs.existsSync(path.join(upgrade, "rules", file)), file === customRule);
-    assert.equal(read(path.join(upgrade, "references/rules", file)), read(path.join(sourceRoot, "rules", file)));
-  }
 
   const outside = path.join(tempRoot, "outside");
   fs.mkdirSync(outside);
@@ -355,6 +410,7 @@ try {
   assert.deepEqual(fs.readdirSync(outside), []);
   assert.throws(() => install("invalid", "unknown"), /host/i);
   checkLegacyMigration();
+  checkPromotedImplementationRule();
   checkInstallerCliOptions();
   checkBashHelpOptions();
   checkInstallerLinkedRoots();

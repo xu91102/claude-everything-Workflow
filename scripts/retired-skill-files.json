@@ -58,6 +58,13 @@
     ],
     "verification-before-completion": [
       "SKILL.md"
+    ],
+    "subagent-driven-development": [
+      "SKILL.md"
+    ],
+    "e2e-testing": [
+      "SKILL.md",
+      "references/playwright-patterns.md"
     ]
   }
 }
