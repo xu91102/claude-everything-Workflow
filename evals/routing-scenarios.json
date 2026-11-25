@@ -114,13 +114,12 @@
     },
     {
       "id": "e2e-flaky-fix",
-      "category": "acceptance",
+      "category": "debugging",
       "prompt": "CI 里的 Playwright 测试经常超时 flaky，帮我定位并稳定下来",
-      "expectedTarget": "skills/feature-acceptance/SKILL.md",
-      "expectedReference": "skills/feature-acceptance/references/playwright-patterns.md",
-      "expectedLane": "acceptance",
-      "requiredSignals": ["Playwright", "flaky"],
-      "rationale": "Playwright flaky 治理使用 feature-acceptance 的 E2E 与 patterns 参考。"
+      "expectedTarget": "skills/systematic-debugging/SKILL.md",
+      "expectedLane": "debugging",
+      "requiredSignals": ["flaky", "根因"],
+      "rationale": "先定位间歇性超时的根因。根因确认后，需要维护或稳定浏览器测试时再使用验收 Skill 的 E2E 参考。"
     },
     {
       "id": "grilling-ambiguous-decision",
@@ -243,7 +242,7 @@
     {
       "id": "new-feature-worktree-and-pr",
       "category": "git",
-      "prompt": "我要开发一个新功能并创建 PR，帮我按规范拉分支和提交",
+      "prompt": "新功能的范围已确定。这一步只处理 Git：帮我创建独立工作区和分支，说明开发完成后如何提交并开 PR",
       "expectedTarget": "rules/05-git-workflow.md",
       "expectedLane": "git",
       "requiredSignals": ["git worktree", "origin/main"],
