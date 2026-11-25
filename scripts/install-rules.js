@@ -65,6 +65,33 @@ function copyRule({ source, root, relative, backupId, dryRun, log }) {
   }
 }
 
+function installPromotedRule({ source, root, relative, knownHashes, backupId, dryRun, log }) {
+  const oldPath = checkedPath(root, `references/rules/${relative}`);
+  const destination = `rules/${relative}`;
+  const resident = checkedPath(root, destination);
+  const distributed = new Set([...knownHashes, digest(fs.readFileSync(source))]);
+  const personalContent = (file) => {
+    if (!fs.existsSync(file)) return null;
+    const content = fs.readFileSync(file);
+    return distributed.has(digest(content)) ? null : content;
+  };
+  const residentPolicy = personalContent(resident);
+  const oldPolicy = personalContent(oldPath);
+  if (residentPolicy) {
+    log(`保留常驻个人规则: ${resident}`);
+    if (oldPolicy && !residentPolicy.equals(oldPolicy)) {
+      log(`保留内容不同的个人参考副本: ${oldPath}`);
+      return;
+    }
+  } else {
+    copyRule({ source: oldPolicy ? oldPath : source, root, relative: destination, backupId, dryRun, log });
+  }
+  if (fs.existsSync(oldPath)) {
+    log(`${dryRun ? "[dry-run] " : ""}移除已迁入常驻目录的规则: ${oldPath}`);
+    if (!dryRun) fs.unlinkSync(oldPath);
+  }
+}
+
 function retireRule({ source, root, relative, knownHashes, dryRun, log }) {
   const target = checkedPath(root, relative);
   if (!fs.existsSync(target)) return;
@@ -78,42 +105,66 @@ function retireRule({ source, root, relative, knownHashes, dryRun, log }) {
   if (!dryRun) fs.unlinkSync(target);
 }
 
-function removeLegacyBakInDir(root, relDir, pattern, recursive, dryRun, log) {
+function archiveLegacyBackups(root, relDir, pattern, recursive, dryRun, log) {
   const dir = checkedPath(root, relDir);
   if (!fs.existsSync(dir)) return;
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.isSymbolicLink()) continue;
     const childRel = relDir === "." ? entry.name : path.posix.join(relDir, entry.name);
     if (entry.isDirectory()) {
-      if (recursive) removeLegacyBakInDir(root, childRel, pattern, true, dryRun, log);
+      if (recursive) archiveLegacyBackups(root, childRel, pattern, true, dryRun, log);
     } else if (entry.isFile() && pattern.test(entry.name)) {
       const target = checkedPath(root, childRel);
-      log(`${dryRun ? "[dry-run] " : ""}清理历史备份: ${target}`);
-      if (!dryRun) fs.unlinkSync(target);
+      const archive = checkedPath(root, path.join(BACKUP_ROOT_NAME, "legacy", childRel));
+      log(`${dryRun ? "[dry-run] " : ""}归档历史备份: ${target}`);
+      if (dryRun) continue;
+      fs.mkdirSync(path.dirname(archive), { recursive: true });
+      try {
+        fs.copyFileSync(target, archive, fs.constants.COPYFILE_EXCL);
+      } catch (error) {
+        if (error.code !== "EEXIST") throw error;
+        if (!fs.readFileSync(target).equals(fs.readFileSync(archive))) continue;
+      }
+      fs.unlinkSync(target);
     }
   }
 }
 
-function finalizeBackups({ installRoot, backupId, dryRun = false, log = console.log }) {
+// Snapshots are sparse. Only retire a file after seeing a newer backup of the same path.
+function pruneSupersededFiles(snapshot, relative, seen, dryRun, log) {
+  const dir = checkedPath(snapshot, relative);
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const child = path.join(relative, entry.name);
+    if (entry.isDirectory()) {
+      pruneSupersededFiles(snapshot, child, seen, dryRun, log);
+    } else if (entry.isFile()) {
+      if (seen.has(child)) {
+        const file = checkedPath(snapshot, child);
+        log(`${dryRun ? "[dry-run] " : ""}清理已有较新副本的备份: ${file}`);
+        if (!dryRun) fs.unlinkSync(file);
+      }
+      seen.add(child);
+    }
+  }
+  if (!dryRun && fs.readdirSync(dir).length === 0) fs.rmdirSync(dir);
+}
+
+function finalizeBackups({ installRoot, dryRun = false, log = console.log }) {
   const root = path.resolve(installRoot);
   if (!fs.existsSync(root)) return;
-  removeLegacyBakInDir(root, ".", LEGACY_TOP_LEVEL_BAK, false, dryRun, log);
-  removeLegacyBakInDir(root, "rules", LEGACY_RULE_BAK, true, dryRun, log);
-  removeLegacyBakInDir(root, "references/rules", LEGACY_RULE_BAK, true, dryRun, log);
+  archiveLegacyBackups(root, ".", LEGACY_TOP_LEVEL_BAK, false, dryRun, log);
+  archiveLegacyBackups(root, "rules", LEGACY_RULE_BAK, true, dryRun, log);
+  archiveLegacyBackups(root, "references/rules", LEGACY_RULE_BAK, true, dryRun, log);
 
   const backupRoot = checkedPath(root, BACKUP_ROOT_NAME);
   if (!fs.existsSync(backupRoot)) return;
-  const dirs = fs.readdirSync(backupRoot, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && !entry.isSymbolicLink())
+  const snapshots = fs.readdirSync(backupRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && /^\d{14}$/.test(entry.name))
     .map((entry) => entry.name)
-    .sort();
-  if (dirs.length <= 1) return;
-  const keep = backupId && dirs.includes(backupId) ? backupId : dirs[dirs.length - 1];
-  for (const name of dirs) {
-    if (name === keep) continue;
-    const oldDir = checkedPath(root, path.posix.join(BACKUP_ROOT_NAME, name));
-    log(`${dryRun ? "[dry-run] " : ""}清理旧备份目录: ${oldDir}`);
-    if (!dryRun) fs.rmSync(oldDir, { recursive: true, force: true });
+    .sort().reverse();
+  const seen = new Set();
+  for (const snapshot of snapshots) {
+    pruneSupersededFiles(checkedPath(backupRoot, snapshot), "", seen, dryRun, log);
   }
 }
 
@@ -129,11 +180,12 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
     .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
     .map((entry) => `common/${entry.name}`);
   const installedOnDemand = (relative) => host === "claude-code" && !claudeResidentRules.has(relative);
+  const promoted = (relative) => host === "claude-code" && relative === "02-implementation.md";
   // Validate all managed destinations before the first write, including upgrade cleanup paths.
   checkedPath(root, BACKUP_ROOT_NAME);
   for (const relative of [...files, ...commonFiles]) {
     checkedPath(root, `rules/${relative}`);
-    if (installedOnDemand(relative)) {
+    if (installedOnDemand(relative) || promoted(relative)) {
       checkedPath(root, `references/rules/${relative}`);
     }
   }
@@ -143,6 +195,10 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
   }
   for (const relative of [...files, ...commonFiles]) {
     const source = path.join(rulesRoot, relative);
+    if (promoted(relative)) {
+      installPromotedRule({ source, root, relative, knownHashes: legacy.files[relative] || [], backupId, dryRun, log });
+      continue;
+    }
     const cold = installedOnDemand(relative);
     copyRule({ source, root, relative: `${cold ? "references/rules" : "rules"}/${relative}`, backupId, dryRun, log });
     if (cold) {

@@ -10,6 +10,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const os = require("node:os");
 const { spawnSync } = require("node:child_process");
 
 const root = path.resolve(__dirname, "..");
@@ -39,17 +40,37 @@ function parseArgs(argv) {
 function buildEvalPrompt(scenario) {
   return [
     "这是一个只读工作流路由测试：不要修改任何文件，不要执行写操作。",
-    "请根据当前仓库的 AGENTS.md、skills/using-superpowers/SKILL.md 与各 skill 的 description，回答面对以下用户请求时，第一步应该选择哪个 Skill/规则路径（若无需进入工程路由则回答 NONE），并用一句话说明理由。",
+    "请根据当前仓库的 AGENTS.md、skills/using-superpowers/SKILL.md 与各 skill 的 description，选择处理以下请求的第一个 Skill 或规则。只输出一个 JSON 对象，target 填完整的仓库相对文件路径（包含文件名）；无需进入工程路由时填字符串 NONE。不要加 Markdown 围栏。",
     "",
     `用户请求：${scenario.prompt}`,
   ].join("\n");
 }
 
 function runHost(host, prompt) {
+  const options = { cwd: root, encoding: "utf8", timeout: 120000 };
   if (host === "claude") {
-    return spawnSync("claude", ["-p", prompt], { cwd: root, encoding: "utf8", timeout: 120000 });
+    const result = spawnSync("claude", ["-p", "--output-format", "text", prompt], options);
+    return { result, answer: result.stdout };
   }
-  return spawnSync("codex", ["exec", prompt], { cwd: root, encoding: "utf8", timeout: 120000 });
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cew-eval-"));
+  try {
+    const finalMessage = path.join(dir, "answer.json");
+    const result = spawnSync("codex", ["exec", "--output-last-message", finalMessage, prompt], options);
+    const answer = result.status === 0 && fs.existsSync(finalMessage) ? fs.readFileSync(finalMessage, "utf8") : "";
+    return { result, answer };
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+function selectedTarget(answer) {
+  try {
+    const value = JSON.parse(answer);
+    return typeof value?.target === "string" ? value.target : null;
+  } catch (error) {
+    if (error instanceof SyntaxError) return null;
+    throw error;
+  }
 }
 
 function main() {
@@ -67,20 +88,15 @@ function main() {
       passed += 1;
       continue;
     }
-    const res = runHost(opts.host, evalPrompt);
-    const out = `${res.stdout || ""}\n${res.stderr || ""}`;
-    const expectedToken = scenario.expectedTarget
-      ? path.basename(path.dirname(scenario.expectedTarget)) === "skills"
-        ? scenario.expectedTarget
-        : scenario.expectedTarget.startsWith("skills/")
-          ? scenario.expectedTarget.split("/")[1]
-          : path.basename(scenario.expectedTarget)
-      : "none";
-    const ok = res.status === 0 && out.toLowerCase().includes(expectedToken.toLowerCase());
+    const { result, answer } = runHost(opts.host, evalPrompt);
+    const expected = scenario.expectedTarget ?? "NONE";
+    const selected = selectedTarget(answer);
+    const ok = result.status === 0 && selected === expected;
     if (ok) passed += 1;
     console.log(`${ok ? "PASS" : "FAIL"} ${scenario.id} (expected: ${scenario.expectedTarget || "NONE"})`);
     if (!ok) {
-      console.log(`  exit=${res.status} snippet=${out.trim().slice(0, 200).replace(/\s+/g, " ")}`);
+      const diagnostic = result.error?.message || result.stderr || "";
+      console.log(`  exit=${result.status} target=${JSON.stringify(selected)} ${diagnostic.trim().slice(0, 200)}`);
     }
   }
   console.log(`\nSummary: ${passed}/${list.length} passed.`);
