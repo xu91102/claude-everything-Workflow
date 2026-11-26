@@ -7,8 +7,8 @@ const crypto = require("node:crypto");
 const os = require("node:os");
 const { spawnSync } = require("node:child_process");
 
-const CODEX_RULE_BASE = ".cew-rule-state/02-implementation.base.md";
-const CODEX_RULE_INCOMING = ".cew-rule-state/02-implementation.incoming.md";
+const IMPLEMENTATION_RULE_BASE = ".cew-rule-state/02-implementation.base.md";
+const IMPLEMENTATION_RULE_INCOMING = ".cew-rule-state/02-implementation.incoming.md";
 
 const BACKUP_ROOT_NAME = ".cew-backups";
 const LEGACY_TOP_LEVEL_BAK = /^(?:CLAUDE\.md|AGENTS\.md|settings\.json)\.bak\..+$/;
@@ -103,11 +103,11 @@ function mergeRuleText(local, base, incoming) {
   }
 }
 
-function installCodexImplementationRule(options, knownHashes) {
+function installMergedImplementationRule(options, knownHashes, hostLabel) {
   const { source, root, relative, dryRun, log } = options;
   const target = checkedPath(root, relative);
-  const base = checkedPath(root, CODEX_RULE_BASE);
-  const incoming = checkedPath(root, CODEX_RULE_INCOMING);
+  const base = checkedPath(root, IMPLEMENTATION_RULE_BASE);
+  const incoming = checkedPath(root, IMPLEMENTATION_RULE_INCOMING);
   const previous = fs.existsSync(base) ? fs.readFileSync(base) : null;
   const local = fs.existsSync(target) ? fs.readFileSync(target) : null;
   const next = fs.readFileSync(source);
@@ -126,7 +126,7 @@ function installCodexImplementationRule(options, knownHashes) {
     }
     copyRule({ ...options, merged });
   } else {
-    log(`保留 Codex 个人实现规则: ${target}`);
+    log(`保留 ${hostLabel} 个人实现规则: ${target}`);
   }
   if (!dryRun) {
     if (!previous || !previous.equals(next)) replaceFile(base, next);
@@ -238,7 +238,7 @@ function finalizeBackups({ installRoot, dryRun = false, log = console.log }) {
 }
 
 function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupId(), dryRun = false, log = console.log }) {
-  if (!["claude-code", "codex"].includes(host)) throw new Error(`Invalid host: ${host}`);
+  if (!["claude-code", "codex", "antigravity"].includes(host)) throw new Error(`Invalid host: ${host}`);
   const root = path.resolve(installRoot);
   const rulesRoot = path.join(sourceRoot, "rules");
   const legacy = JSON.parse(fs.readFileSync(path.join(sourceRoot, "scripts/legacy-common-rule-hashes.json"), "utf8"));
@@ -248,29 +248,35 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
   const commonFiles = fs.readdirSync(path.join(rulesRoot, "common"), { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
     .map((entry) => `common/${entry.name}`);
-  const installedOnDemand = (relative) => host === "claude-code" && !claudeResidentRules.has(relative);
+  const installedOnDemand = (relative) => host === "antigravity" ||
+    (host === "claude-code" && !claudeResidentRules.has(relative));
   const promoted = (relative) => host === "claude-code" && relative === "02-implementation.md";
   // Validate all managed destinations before the first write, including upgrade cleanup paths.
   checkedPath(root, BACKUP_ROOT_NAME);
-  if (host === "codex") {
-    checkedPath(root, CODEX_RULE_BASE);
-    checkedPath(root, CODEX_RULE_INCOMING);
+  if (host === "codex" || host === "antigravity") {
+    checkedPath(root, IMPLEMENTATION_RULE_BASE);
+    checkedPath(root, IMPLEMENTATION_RULE_INCOMING);
   }
   for (const relative of [...files, ...commonFiles]) {
-    checkedPath(root, `rules/${relative}`);
+    if (host !== "antigravity") checkedPath(root, `rules/${relative}`);
     if (installedOnDemand(relative) || promoted(relative)) {
       checkedPath(root, `references/rules/${relative}`);
     }
   }
   for (const retired of retiredTopLevelRules) {
-    checkedPath(root, `rules/${retired}`);
-    if (host === "claude-code") checkedPath(root, `references/rules/${retired}`);
+    if (host !== "antigravity") checkedPath(root, `rules/${retired}`);
+    if (host === "claude-code" || host === "antigravity") checkedPath(root, `references/rules/${retired}`);
   }
   for (const relative of [...files, ...commonFiles]) {
     const source = path.join(rulesRoot, relative);
-    if (host === "codex" && relative === "02-implementation.md") {
-      installCodexImplementationRule({ source, root, relative: `rules/${relative}`, backupId, dryRun, log },
-        legacy.files[relative] || []);
+    if ((host === "codex" || host === "antigravity") && relative === "02-implementation.md") {
+      const targetRelative = host === "antigravity" ? `references/rules/${relative}` : `rules/${relative}`;
+      const hostLabel = host === "antigravity" ? "Antigravity" : "Codex";
+      installMergedImplementationRule(
+        { source, root, relative: targetRelative, backupId, dryRun, log },
+        legacy.files[relative] || [],
+        hostLabel,
+      );
       continue;
     }
     if (promoted(relative)) {
@@ -279,7 +285,7 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
     }
     const cold = installedOnDemand(relative);
     copyRule({ source, root, relative: `${cold ? "references/rules" : "rules"}/${relative}`, backupId, dryRun, log });
-    if (cold) {
+    if (cold && host === "claude-code") {
       retireRule({
         source, root, relative: `rules/${relative}`,
         knownHashes: legacy.files[relative] || [], dryRun, log,
@@ -288,14 +294,16 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
   }
   for (const retired of retiredTopLevelRules) {
     const knownHashes = legacy.files[retired] || [];
-    retireRule({ source: null, root, relative: `rules/${retired}`, knownHashes, dryRun, log });
-    if (host === "claude-code") {
+    if (host !== "antigravity") {
+      retireRule({ source: null, root, relative: `rules/${retired}`, knownHashes, dryRun, log });
+    }
+    if (host === "claude-code" || host === "antigravity") {
       retireRule({ source: null, root, relative: `references/rules/${retired}`, knownHashes, dryRun, log });
     }
   }
 }
 
-module.exports = { BACKUP_ROOT_NAME, installRules, finalizeBackups };
+module.exports = { BACKUP_ROOT_NAME, checkedPath, defaultBackupId, installRules, finalizeBackups };
 
 function parseCli(argv) {
   let dryRun = false;
@@ -334,7 +342,7 @@ if (require.main === module) {
     } else {
       const [host, installRoot] = positional;
       if (!host || !installRoot || positional.length !== 2) {
-        throw new Error("Usage: install-rules.js <claude-code|codex> <install-root> [--backup-id <id>] [--dry-run]");
+        throw new Error("Usage: install-rules.js <claude-code|codex|antigravity> <install-root> [--backup-id <id>] [--dry-run]");
       }
       installRules({
         sourceRoot: path.resolve(__dirname, ".."),

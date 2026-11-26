@@ -30,13 +30,13 @@ CEW 使用你已有的项目和模型，不提供模型，也不替代 Claude Co
 
 ### 环境要求
 
-- 已安装并配置 Claude Code 和/或 Codex。
+- 已安装并配置 Claude Code、Codex 和/或 Antigravity。
 - Node.js **18+**，以及 npm/npx。
-- macOS/Linux：Bash 和 `rsync`。Windows：PowerShell；Git Bash/WSL 配有 Bash 和 `rsync` 时也可使用 shell 安装器。
+- macOS/Linux：Bash 和 `rsync`（安装 Claude Code / Codex 时需要 `rsync`）。Windows：PowerShell；Git Bash/WSL 配有 Bash 和 `rsync` 时也可使用 shell 安装器。
 
 ### 从 npm 安装
 
-先预览，再安装到两个宿主：
+先预览，再安装到全部支持的宿主：
 
 ```sh
 npx claude-everything-workflow install --dry-run
@@ -48,6 +48,7 @@ npx claude-everything-workflow install
 ```sh
 npx claude-everything-workflow install --claude-only
 npx claude-everything-workflow install --codex-only
+npx claude-everything-workflow install --antigravity-only
 ```
 
 ### 从源码安装
@@ -60,7 +61,7 @@ node bin/claude-everything-workflow.js install --dry-run
 node bin/claude-everything-workflow.js install
 ```
 
-命令行入口会按系统选择 shell 或 PowerShell 安装器，同样支持 `--claude-only` 和 `--codex-only`。npm 命令安装已发布版本；源码命令安装当前 checkout 中的内容。
+命令行入口会按系统选择 shell 或 PowerShell 安装器，同样支持 `--claude-only`、`--codex-only` 和 `--antigravity-only`。npm 命令安装已发布版本；源码命令安装当前 checkout 中的内容。
 
 ### 安装会修改什么
 
@@ -68,10 +69,13 @@ node bin/claude-everything-workflow.js install
 | --- | --- | --- |
 | Claude Code | `~/.claude/` | 共享工作流文件、`CLAUDE.md` 入口、规则，以及合并后的 hooks 配置。 |
 | Codex | `~/.codex/` | 共享工作流文件和 `AGENTS.md`；不会自动启用 Claude Code hooks。 |
+| Antigravity (Gemini) | `~/.gemini/config/plugins/claude-everything-workflow/` | 原生插件（`plugin.json`、`rules/AGENTS.md`、按需加载的 `references/rules/`、转换后的 `skills/` 与 `agents/`、`scripts/learning/`）。 |
 
-安装修改的是用户级目录，可能影响多个项目。顶层配置内容不同时会先备份；共享目录中的同名文件按仓库版本同步。未知文件通常保留，已登记的退役文件按明确清单清理。升级前请备份对共享文件的个人修改。不要直接复制整个 `rules/` 目录，安装器会处理两个宿主不同的规则加载位置。
+安装修改的是用户级目录，可能影响多个项目。顶层配置内容不同时会先备份；共享目录中的同名文件按仓库版本同步。未知文件通常保留，已登记的退役文件按明确清单清理。升级前请备份对共享文件的个人修改。不要直接复制整个 `rules/` 目录，安装器会处理不同宿主各自的规则加载位置。
 
-Codex 安装器会保留 `~/.codex/rules/02-implementation.md` 中的个人修改。首次升级会记录本次分发的规则，供后续版本比较。此后上游规则变化时，安装器用 Git 自动合并互不冲突的改动。遇到冲突或 Git 不可用时，个人规则继续生效，安装日志会给出新版规则副本和手动合并方法。
+Codex 安装器会保留 `~/.codex/rules/02-implementation.md` 中的个人修改；Antigravity 安装器也对 `~/.gemini/config/plugins/claude-everything-workflow/references/rules/02-implementation.md` 采用相同的 Git 三方合并机制。首次升级会记录本次分发的规则，供后续版本比较。此后上游规则变化时，安装器用 Git 自动合并互不冲突的改动。遇到冲突或 Git 不可用时，个人规则继续生效，安装日志会给出新版规则副本和手动合并方法。
+
+Antigravity 插件只把入口 `rules/AGENTS.md` 放入自动加载目录 `rules/`，其余详细规则放在 `references/rules/` 按需读取。若存在旧版 `~/.gemini/AGENTS.md`，安装器不会擅自删除，只打印提示供你手动备份或移除。
 
 全新安装时，CEW 将执行原则、Git 和安全规则放入 Claude Code 自动读取的 `~/.claude/rules/`，其余规则从 `~/.claude/references/rules/` 按需读取。升级时，本次迁移的三份规则如有个人修改，仍在原处生效。更早版本遗留的退役规则也可能继续加载。
 

@@ -6,6 +6,8 @@ HOME_DIR="${HOME:?HOME is required}"
 
 INSTALL_CLAUDE=1
 INSTALL_CODEX=1
+INSTALL_ANTIGRAVITY=1
+SELECTED_ONLY=""
 DRY_RUN=0
 SHOW_HELP=0
 BACKUP_ID="$(date +%Y%m%d%H%M%S)"
@@ -15,30 +17,35 @@ usage() {
 Usage: scripts/install.sh [options]
 
 Options:
-  --claude-only   Only install to ~/.claude
-  --codex-only    Only install to ~/.codex
-  --dry-run       Print operations without writing files
-  -h, --help      Show this help
+  --claude-only       Only install to ~/.claude
+  --codex-only        Only install to ~/.codex
+  --antigravity-only  Only install Antigravity plugin to ~/.gemini/config/plugins/claude-everything-workflow
+  --dry-run           Print operations without writing files
+  -h, --help          Show this help
 EOF
+}
+
+set_only_host() {
+    local flag="$1"
+    if [ -n "$SELECTED_ONLY" ] && [ "$SELECTED_ONLY" != "$flag" ]; then
+        echo "$SELECTED_ONLY and $flag cannot be used together" >&2
+        exit 1
+    fi
+    SELECTED_ONLY="$flag"
+    INSTALL_CLAUDE=0
+    INSTALL_CODEX=0
+    INSTALL_ANTIGRAVITY=0
+    case "$flag" in
+        --claude-only) INSTALL_CLAUDE=1 ;;
+        --codex-only) INSTALL_CODEX=1 ;;
+        --antigravity-only) INSTALL_ANTIGRAVITY=1 ;;
+    esac
 }
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
-        --claude-only)
-            if [ "$INSTALL_CLAUDE" -eq 0 ]; then
-                echo "--claude-only and --codex-only cannot be used together" >&2
-                exit 1
-            fi
-            INSTALL_CLAUDE=1
-            INSTALL_CODEX=0
-            ;;
-        --codex-only)
-            if [ "$INSTALL_CODEX" -eq 0 ]; then
-                echo "--claude-only and --codex-only cannot be used together" >&2
-                exit 1
-            fi
-            INSTALL_CLAUDE=0
-            INSTALL_CODEX=1
+        --claude-only|--codex-only|--antigravity-only)
+            set_only_host "$1"
             ;;
         --dry-run)
             DRY_RUN=1
@@ -166,6 +173,7 @@ remove_package_only_paths() {
         "scripts/install.sh" \
         "scripts/install.ps1" \
         "scripts/install-rules.js" \
+        "scripts/install-antigravity.js" \
         "scripts/legacy-common-rule-hashes.json" \
         "scripts/eval-scenarios.js" \
         "scripts/verify-harness.js" \
@@ -293,6 +301,19 @@ install_codex() {
     finalize_backups "$dest"
 }
 
+install_antigravity() {
+    local options=("$ROOT_DIR/scripts/install-antigravity.js" "$HOME_DIR" "--backup-id" "$BACKUP_ID")
+    if [ "$DRY_RUN" -eq 1 ]; then options+=(--dry-run); fi
+    node "${options[@]}"
+}
+
+check_antigravity_root() {
+    check_install_root "$HOME_DIR/.gemini"
+    check_install_root "$HOME_DIR/.gemini/config"
+    check_install_root "$HOME_DIR/.gemini/config/plugins"
+    check_install_root "$HOME_DIR/.gemini/config/plugins/claude-everything-workflow"
+}
+
 install_workflow_rules() {
     local host_name="$1"
     local dest="$2"
@@ -316,8 +337,13 @@ fi
 if [ "$INSTALL_CODEX" -eq 1 ]; then
     check_install_root "$HOME_DIR/.codex"
 fi
+if [ "$INSTALL_ANTIGRAVITY" -eq 1 ]; then
+    check_antigravity_root
+fi
 
-require_rsync
+if [ "$INSTALL_CLAUDE" -eq 1 ] || [ "$INSTALL_CODEX" -eq 1 ]; then
+    require_rsync
+fi
 
 if [ "$INSTALL_CLAUDE" -eq 1 ]; then
     install_claude
@@ -325,6 +351,10 @@ fi
 
 if [ "$INSTALL_CODEX" -eq 1 ]; then
     install_codex
+fi
+
+if [ "$INSTALL_ANTIGRAVITY" -eq 1 ]; then
+    install_antigravity
 fi
 
 echo "Install complete."

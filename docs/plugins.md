@@ -55,6 +55,24 @@ codex plugin add claude-everything-workflow@cew
 
 CLI 命令以宿主版本为准；缺少 `plugin` 子命令时使用支持插件的应用版本或继续使用 npm 安装。
 
+## Antigravity (Gemini)
+
+Antigravity 支持原生用户级插件（`~/.gemini/config/plugins/claude-everything-workflow/`）。可直接通过 npm 一键安装并在后续像 Codex 一样同步升级：
+
+```sh
+npx claude-everything-workflow install --antigravity-only
+```
+
+或者运行 `npx claude-everything-workflow install` 同时同步 Claude Code、Codex 与 Antigravity。安装器会自动生成或同步：
+
+- `plugin.json`：原生插件清单（版本与 `package.json` 保持一致）。
+- `rules/AGENTS.md`：唯一的常驻入口规则，指引按需读取 `references/rules/` 下的基础规则与 `common/` 专项规则。
+- `skills/`：同步全部工作流技能，并把非重复命令（`pr`、`verify`、`to-spec`、`learn`）转换为原生技能；自动清理已退役技能。
+- `agents/`：转换工具名称与插件内引用路径为 Antigravity 原生子代理格式。
+- `references/rules/02-implementation.md`：采用与 Codex 相同的 Git 三方合并机制，升级时保留个人修改。
+
+不自动启用 Claude Code 专用 hooks。若本机存在旧版 `~/.gemini/AGENTS.md`，安装器不会自动删除，仅在输出中提示手动确认。
+
 ### 浏览器验证 MCP
 
 Claude 插件根目录的 `.mcp.json` 会注册 `chrome-devtools` MCP，启用插件后无需手动配置。前置条件、手动添加命令和复用已登录 Chrome 的说明见 README 的“浏览器验证（可选）”。

@@ -30,14 +30,24 @@ function main() {
 }
 
 function runInstall(args) {
-  const supported = new Set(["--claude-only", "--codex-only", "--dry-run", "--help", "-h"]);
+  const supported = new Set([
+    "--claude-only",
+    "--codex-only",
+    "--antigravity-only",
+    "--dry-run",
+    "--help",
+    "-h",
+  ]);
   const unknown = args.find((arg) => !supported.has(arg));
   if (unknown) {
     process.stderr.write(`Unknown option: ${unknown}\n`);
     process.exit(1);
   }
-  if (args.includes("--claude-only") && args.includes("--codex-only")) {
-    process.stderr.write("--claude-only and --codex-only cannot be used together\n");
+  const onlyFlags = ["--claude-only", "--codex-only", "--antigravity-only"].filter(
+    (flag) => args.includes(flag),
+  );
+  if (onlyFlags.length > 1) {
+    process.stderr.write(`${onlyFlags.join(" and ")} cannot be used together\n`);
     process.exit(1);
   }
   if (args.includes("--help") || args.includes("-h")) {
@@ -84,6 +94,7 @@ function toPowerShellArgs(args) {
   return args.map((arg) => {
     if (arg === "--claude-only") return "-ClaudeOnly";
     if (arg === "--codex-only") return "-CodexOnly";
+    if (arg === "--antigravity-only") return "-AntigravityOnly";
     if (arg === "--dry-run") return "-DryRun";
     return arg;
   });
@@ -93,12 +104,13 @@ function printHelp() {
   process.stdout.write(`claude-everything-workflow
 
 Usage:
-  cew install [--claude-only|--codex-only] [--dry-run]
+  cew install [--claude-only|--codex-only|--antigravity-only] [--dry-run]
   cew verify
 
 Examples:
   npx claude-everything-workflow install
   npx claude-everything-workflow install --codex-only
+  npx claude-everything-workflow install --antigravity-only
   npx claude-everything-workflow verify
 `);
 }
