@@ -69,7 +69,7 @@ node bin/claude-everything-workflow.js install
 | --- | --- | --- |
 | Claude Code | `~/.claude/` | 共享工作流文件、`CLAUDE.md` 入口、规则，以及合并后的 hooks 配置。 |
 | Codex | `~/.codex/` | 共享工作流文件和 `AGENTS.md`；不会自动启用 Claude Code hooks。 |
-| Antigravity (Gemini) | `~/.gemini/config/plugins/claude-everything-workflow/` | 原生插件（`plugin.json`、`rules/AGENTS.md`、按需加载的 `references/rules/`、转换后的 `skills/` 与 `agents/`、`scripts/learning/`）。 |
+| Antigravity (Gemini) | `~/.gemini/config/plugins/claude-everything-workflow/` | 原生插件（`plugin.json`、`hooks.json` 与 `hooks/`、`rules/AGENTS.md`、按需加载的 `references/rules/`、转换后的 `skills/` 与 `agents/`、`scripts/learning/`）。 |
 
 安装修改的是用户级目录，可能影响多个项目。顶层配置内容不同时会先备份；共享目录中的同名文件按仓库版本同步。未知文件通常保留，已登记的退役文件按明确清单清理。升级前请备份对共享文件的个人修改。不要直接复制整个 `rules/` 目录，安装器会处理不同宿主各自的规则加载位置。
 

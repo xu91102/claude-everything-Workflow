@@ -122,13 +122,16 @@ function mergeRuleText(local, base, incoming) {
 }
 
 function installMergedImplementationRule(options, knownHashes, hostLabel) {
-  const { source, root, relative, dryRun, log } = options;
+  const { source, root, relative, dryRun, log, transformContent } = options;
   const target = checkedPath(root, relative);
   const base = checkedPath(root, IMPLEMENTATION_RULE_BASE);
   const incoming = checkedPath(root, IMPLEMENTATION_RULE_INCOMING);
   const previous = fs.existsSync(base) ? fs.readFileSync(base) : null;
   const local = fs.existsSync(target) ? fs.readFileSync(target) : null;
-  const next = fs.readFileSync(source);
+  const rawNext = fs.readFileSync(source);
+  const next = transformContent
+    ? Buffer.from(transformContent(relative, rawNext.toString("utf8")), "utf8")
+    : rawNext;
   const localHash = local && digest(local);
   const pristine = !local || localHash === digest(next) ||
     (previous ? localHash === digest(previous) : knownHashes.includes(localHash));
@@ -355,7 +358,7 @@ function installRules({
     const source = path.join(rulesRoot, relative);
     if (policy.mergedRule && relative === "02-implementation.md") {
       installMergedImplementationRule(
-        { source, root, relative: policy.mergedRule.relative, backupId, dryRun, log },
+        { source, root, relative: policy.mergedRule.relative, backupId, dryRun, log, transformContent },
         legacy.files[relative] || [],
         policy.mergedRule.hostLabel,
       );
@@ -386,6 +389,7 @@ module.exports = {
   BACKUP_ROOT_NAME,
   checkedPath,
   defaultBackupId,
+  replaceFile,
   validateBackupId,
   validateRuleTargets,
   installRules,

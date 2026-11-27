@@ -387,6 +387,24 @@ function checkRetiredAgentCleanup() {
   fs.symlinkSync(outside, agents, process.platform === "win32" ? "junction" : "dir");
   run();
   assert.equal(read(path.join(outside, name)), original, "preserve files outside the install root's agents directory");
+
+  // File-level symlink inside a regular agents/ directory must also be preserved.
+  if (process.platform === "win32") {
+    fs.rmdirSync(agents);
+  } else {
+    fs.unlinkSync(agents);
+  }
+  fs.mkdirSync(agents);
+  const linkedFileTarget = path.join(outside, "linked.md");
+  fs.writeFileSync(linkedFileTarget, original);
+  if (process.platform !== "win32") {
+    fs.symlinkSync(linkedFileTarget, path.join(agents, name));
+    const linkRun = spawnSync(process.execPath, [cleanup, fixture], { encoding: "utf8" });
+    assert.ifError(linkRun.error);
+    assert.equal(linkRun.status, 0, linkRun.stderr);
+    assert.match(linkRun.stdout, /Preserving symlinked retired agent:/);
+    assert.equal(read(linkedFileTarget), original);
+  }
 }
 
 function checkInstallerEntrypoint() {
@@ -640,14 +658,18 @@ function checkInstallerEntrypoint() {
   runGit("init", "-q");
   runGit("config", "user.name", "Test");
   runGit("config", "user.email", "test@example.com");
-  const invokeHook = (commandLine, extraEnv = {}, toolCwd = hookRepo, legacyCwd = agRoot) => {
+  const invokeHook = (commandLine, extraEnv = {}, opts = {}) => {
+    const toolCwd = "toolCwd" in opts ? opts.toolCwd : hookRepo;
+    const legacyCwd = "legacyCwd" in opts ? opts.legacyCwd : agRoot;
+    const args = { CommandLine: commandLine };
+    if (toolCwd !== undefined) args.Cwd = toolCwd;
+    const payload = { toolCall: { name: "run_command", args } };
+    if (legacyCwd !== undefined) payload.cwd = legacyCwd;
+    if (opts.workspacePaths !== undefined) payload.workspacePaths = opts.workspacePaths;
     const res = spawnSync(process.execPath, ["./hooks/runtime/antigravity-pre-tool.js"], {
       cwd: agRoot,
       env: { ...process.env, ...extraEnv },
-      input: JSON.stringify({
-        toolCall: { name: "run_command", args: { CommandLine: commandLine, Cwd: toolCwd } },
-        cwd: legacyCwd,
-      }),
+      input: JSON.stringify(payload),
       encoding: "utf8",
       timeout: 10000,
     });
@@ -660,6 +682,10 @@ function checkInstallerEntrypoint() {
   runGit("add", "clean.js");
   assert.deepEqual(invokeHook('git commit -m "feat: clean"'), { decision: "allow" });
   assert.deepEqual(invokeHook("git status"), { decision: "allow" });
+  assert.deepEqual(
+    invokeHook("git status", {}, { toolCwd: path.join(tempRoot, "missing-cwd") }),
+    { decision: "allow" },
+  );
 
   const secretVal = "skTest0123456789abcdef012345";
   fs.writeFileSync(path.join(hookRepo, "secret.js"), `const apiKey = "${secretVal}";\n`);
@@ -668,8 +694,38 @@ function checkInstallerEntrypoint() {
   assert.equal(denied.decision, "deny");
   assert.match(denied.reason, /检测到疑似密钥/);
   assert.equal(denied.reason.includes(secretVal), false);
-  assert.equal(invokeHook('git commit -m "feat: legacy"', {}, null, hookRepo).decision, "deny");
-  assert.equal(invokeHook('git commit -m "feat: invalid"', {}, path.join(tempRoot, "missing-cwd")).decision, "deny");
+  assert.equal(
+    invokeHook('git commit -m "feat: legacy"', {}, { toolCwd: null, legacyCwd: hookRepo }).decision,
+    "deny",
+  );
+  assert.equal(
+    invokeHook('git commit -m "feat: workspace"', {}, {
+      toolCwd: undefined,
+      legacyCwd: undefined,
+      workspacePaths: [hookRepo],
+    }).decision,
+    "deny",
+  );
+  assert.equal(
+    invokeHook('git commit -m "feat: empty-cwd"', {}, {
+      toolCwd: "",
+      legacyCwd: undefined,
+      workspacePaths: [hookRepo],
+    }).decision,
+    "deny",
+  );
+  assert.equal(
+    invokeHook('git commit -m "feat: rel-cwd"', {}, {
+      toolCwd: path.basename(hookRepo),
+      legacyCwd: undefined,
+      workspacePaths: [tempRoot],
+    }).decision,
+    "deny",
+  );
+  assert.equal(
+    invokeHook('git commit -m "feat: invalid"', {}, { toolCwd: path.join(tempRoot, "missing-cwd") }).decision,
+    "deny",
+  );
   assert.deepEqual(invokeHook('git commit -m "feat: secret"', { ECC_HOOK_PROFILE: "minimal" }), {
     decision: "allow",
   });

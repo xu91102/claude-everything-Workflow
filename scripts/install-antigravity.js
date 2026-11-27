@@ -3,7 +3,6 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
 const {
   BACKUP_ROOT_NAME,
@@ -11,6 +10,7 @@ const {
   defaultBackupId,
   finalizeBackups,
   installRules,
+  replaceFile,
   validateBackupId,
   validateRuleTargets,
 } = require("./install-rules");
@@ -233,7 +233,7 @@ function buildHooksConfig() {
                 {
                   type: "command",
                   command: "node ./hooks/runtime/antigravity-pre-tool.js",
-                  timeout: 10,
+                  timeout: 15,
                 },
               ],
             },
@@ -268,35 +268,13 @@ function writeManagedFile({ pluginRoot, relative, content, mode, backupId, dryRu
       const backup = checkedPath(pluginRoot, path.posix.join(BACKUP_ROOT_NAME, backupId, relative));
       log(`${dryRun ? "[dry-run] " : ""}备份文件: ${backup}`);
       if (!dryRun) {
-        fs.mkdirSync(path.dirname(backup), { recursive: true });
-        fs.copyFileSync(target, backup);
+        replaceFile(backup, previous, existingStat.mode);
       }
     }
   }
   if (!dryRun) {
     const writableMode = mode !== undefined ? (mode & 0o777) | 0o200 : undefined;
-    fs.mkdirSync(path.dirname(target), { recursive: true });
-    const temp = `${target}.tmp-${crypto.randomUUID()}`;
-    try {
-      fs.writeFileSync(temp, next, {
-        flag: "wx",
-        ...(writableMode !== undefined ? { mode: writableMode } : {}),
-      });
-      if (process.platform !== "win32" && writableMode !== undefined) {
-        fs.chmodSync(temp, writableMode);
-      }
-      const priorMode = process.platform === "win32" && existingStat ? existingStat.mode : null;
-      const readOnly = priorMode !== null && !(priorMode & 0o200);
-      if (readOnly) fs.chmodSync(target, priorMode | 0o200);
-      try {
-        fs.renameSync(temp, target);
-      } catch (error) {
-        if (readOnly) fs.chmodSync(target, priorMode);
-        throw error;
-      }
-    } finally {
-      fs.rmSync(temp, { force: true });
-    }
+    replaceFile(target, next, writableMode ?? existingStat?.mode ?? 0o644);
   } else {
     log(`[dry-run] 写入文件: ${target}`);
   }

@@ -4,8 +4,8 @@
 /**
  * Antigravity PreToolUse Hook 适配器
  *
- * 读取 Antigravity camelCase stdin JSON，将 run_command 调用转发给
- * hooks/commit-quality.js，并输出符合 hooks.json 契约的 JSON 决策。
+ * 读取 Antigravity camelCase stdin JSON，将含 git commit 的 run_command 调用
+ * 转发给 hooks/commit-quality.js，并输出符合 hooks.json 契约的 JSON 决策。
  */
 
 const path = require("node:path");
@@ -14,6 +14,33 @@ const { isHookEnabled } = require("./hook-flags");
 
 const HOOK_ID = "pre:bash:commit-quality";
 const PROFILES = "standard,strict";
+
+function isValidDirString(value) {
+  return typeof value === "string" && value.trim().length > 0 && !value.includes("\0");
+}
+
+function resolveWorkDir(payload) {
+  const workspacePaths = Array.isArray(payload?.workspacePaths) ? payload.workspacePaths : [];
+  const workspaceRoot = workspacePaths.find(isValidDirString);
+  const baseCwd = isValidDirString(payload?.cwd)
+    ? payload.cwd
+    : workspaceRoot || process.cwd();
+
+  const rawToolCwd = payload?.toolCall?.args?.Cwd;
+  if (rawToolCwd !== undefined && rawToolCwd !== null) {
+    if (typeof rawToolCwd !== "string" || rawToolCwd.includes("\0")) {
+      return { valid: false };
+    }
+    if (rawToolCwd.trim()) {
+      const resolved = path.isAbsolute(rawToolCwd)
+        ? rawToolCwd
+        : path.resolve(baseCwd, rawToolCwd);
+      return { valid: true, cwd: resolved };
+    }
+  }
+
+  return { valid: true, cwd: baseCwd };
+}
 
 function run(raw) {
   if (!isHookEnabled(HOOK_ID, { profiles: PROFILES })) {
@@ -33,21 +60,28 @@ function run(raw) {
     return { decision: "allow" };
   }
 
-  const commitQualityPath = path.resolve(__dirname, "..", "commit-quality.js");
-  const cwd = payload.toolCall.args.Cwd ?? payload.cwd ?? process.cwd();
-  if (typeof cwd !== "string" || !cwd.trim() || cwd.includes("\0")) {
+  if (!/\bcommit\b/i.test(commandLine)) {
+    return { decision: "allow" };
+  }
+
+  const workDir = resolveWorkDir(payload);
+  if (!workDir.valid) {
     return { decision: "deny", reason: "Invalid run_command working directory." };
   }
 
+  const commitQualityPath = path.resolve(__dirname, "..", "commit-quality.js");
   const result = spawnSync(process.execPath, [commitQualityPath], {
     input: JSON.stringify({ tool_input: { command: commandLine } }),
-    cwd,
+    cwd: workDir.cwd,
     encoding: "utf8",
-    timeout: 10000,
+    timeout: 8000,
   });
 
   if (result.error || (result.status !== 0 && result.status !== 2)) {
-    return { decision: "deny", reason: "Could not run the commit check in the requested working directory." };
+    return {
+      decision: "deny",
+      reason: "Could not run the commit check in the requested working directory.",
+    };
   }
   const reason = (result.stderr || "").trim();
   if (result.status === 2) {
@@ -69,7 +103,14 @@ if (require.main === module) {
     raw += chunk;
   });
   process.stdin.on("end", () => {
-    process.stdout.write(`${JSON.stringify(run(raw))}\n`);
+    try {
+      process.stdout.write(`${JSON.stringify(run(raw))}\n`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      process.stdout.write(
+        `${JSON.stringify({ decision: "allow", reason: `cew-commit-quality hook error: ${message}` })}\n`,
+      );
+    }
     process.exit(0);
   });
 }

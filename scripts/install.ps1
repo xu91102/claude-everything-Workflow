@@ -50,12 +50,13 @@ function Get-Sha256Hex {
 
     $resolvedPath = (Resolve-Path -LiteralPath $LiteralPath).ProviderPath
     $sha256 = [System.Security.Cryptography.SHA256]::Create()
-    $stream = [System.IO.File]::OpenRead($resolvedPath)
+    $stream = $null
     try {
+        $stream = [System.IO.File]::OpenRead($resolvedPath)
         $bytes = $sha256.ComputeHash($stream)
         return ([BitConverter]::ToString($bytes) -replace '-', '')
     } finally {
-        $stream.Dispose()
+        if ($null -ne $stream) { $stream.Dispose() }
         $sha256.Dispose()
     }
 }

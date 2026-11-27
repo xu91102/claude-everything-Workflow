@@ -46,8 +46,8 @@ function validateManifest(manifest) {
       throw new Error(`Invalid retired skill entry: ${skill}`);
     }
   }
-  const agents = manifest.retired_agent_hashes ?? {};
-  if (typeof agents !== "object" || Array.isArray(agents)) throw new Error("Invalid retired agent manifest");
+  const agents = manifest.retired_agent_hashes === undefined ? {} : manifest.retired_agent_hashes;
+  if (!agents || typeof agents !== "object" || Array.isArray(agents)) throw new Error("Invalid retired agent manifest");
   for (const [name, hashes] of Object.entries(agents)) {
     if (!/^[a-z0-9-]+\.md$/.test(name) || !Array.isArray(hashes) || hashes.length === 0 ||
         !hashes.every((hash) => typeof hash === "string" && /^[a-f0-9]{64}$/.test(hash))) {
@@ -182,7 +182,13 @@ function cleanupRetiredAgents(installRoot, agents, dryRun) {
   if (lstatIfExists(installRoot)?.isSymbolicLink() || !lstatIfExists(directory)?.isDirectory()) return;
   for (const [name, hashes] of agents) {
     const target = path.join(directory, name);
-    if (!lstatIfExists(target)?.isFile()) continue;
+    const stat = lstatIfExists(target);
+    if (!stat) continue;
+    if (stat.isSymbolicLink()) {
+      writeLine(`Preserving symlinked retired agent: ${target}`);
+      continue;
+    }
+    if (!stat.isFile()) continue;
     // SHA-256 of LF text, including the distinct files generated for Antigravity.
     const text = fs.readFileSync(target, "utf8").replace(/\r\n/g, "\n");
     if (!hashes.includes(createHash("sha256").update(text).digest("hex"))) {
