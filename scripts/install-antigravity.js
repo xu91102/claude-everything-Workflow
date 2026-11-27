@@ -3,7 +3,6 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
 const {
   BACKUP_ROOT_NAME,
@@ -11,6 +10,7 @@ const {
   defaultBackupId,
   finalizeBackups,
   installRules,
+  replaceFile,
   validateBackupId,
   validateRuleTargets,
 } = require("./install-rules");
@@ -221,6 +221,41 @@ function buildPluginManifest(sourceRoot) {
   return JSON.stringify(manifest, null, 2) + "\n";
 }
 
+function buildHooksConfig() {
+  return (
+    JSON.stringify(
+      {
+        "cew-commit-quality": {
+          PreToolUse: [
+            {
+              matcher: "run_command",
+              hooks: [
+                {
+                  type: "command",
+                  command: "node ./hooks/runtime/antigravity-pre-tool.js",
+                  timeout: 15,
+                },
+              ],
+            },
+          ],
+        },
+      },
+      null,
+      2,
+    ) + "\n"
+  );
+}
+
+function rewriteAntigravityReferences(relative, text) {
+  let updated = text
+    .replace(/`commands\/(pr|verify|to-spec|learn)\.md`/g, (_, cmd) => `\`${PLUGIN_HOME_REF}/skills/${cmd}/SKILL.md\``)
+    .replace(/`commands\/code-review\.md`/g, `\`${PLUGIN_HOME_REF}/skills/code-review/SKILL.md\``);
+  if (relative === "skills/continuous-learning-v2/SKILL.md") {
+    updated = updated.replace(/`commands\/`/g, `\`${PLUGIN_HOME_REF}/skills/learn/SKILL.md\``);
+  }
+  return updated;
+}
+
 function writeManagedFile({ pluginRoot, relative, content, mode, backupId, dryRun, log }) {
   const target = checkedPath(pluginRoot, relative);
   const next = Buffer.isBuffer(content) ? content : Buffer.from(content, "utf8");
@@ -233,27 +268,13 @@ function writeManagedFile({ pluginRoot, relative, content, mode, backupId, dryRu
       const backup = checkedPath(pluginRoot, path.posix.join(BACKUP_ROOT_NAME, backupId, relative));
       log(`${dryRun ? "[dry-run] " : ""}备份文件: ${backup}`);
       if (!dryRun) {
-        fs.mkdirSync(path.dirname(backup), { recursive: true });
-        fs.copyFileSync(target, backup);
+        replaceFile(backup, previous, existingStat.mode);
       }
     }
   }
   if (!dryRun) {
     const writableMode = mode !== undefined ? (mode & 0o777) | 0o200 : undefined;
-    fs.mkdirSync(path.dirname(target), { recursive: true });
-    const temp = `${target}.tmp-${crypto.randomUUID()}`;
-    try {
-      fs.writeFileSync(temp, next, {
-        flag: "wx",
-        ...(writableMode !== undefined ? { mode: writableMode } : {}),
-      });
-      if (process.platform !== "win32" && writableMode !== undefined) {
-        fs.chmodSync(temp, writableMode);
-      }
-      fs.renameSync(temp, target);
-    } finally {
-      fs.rmSync(temp, { force: true });
-    }
+    replaceFile(target, next, writableMode ?? existingStat?.mode ?? 0o644);
   } else {
     log(`[dry-run] 写入文件: ${target}`);
   }
@@ -371,17 +392,27 @@ function installAntigravity({
     path.join(sourceRoot, "scripts/learning"),
     "scripts/learning",
   );
+  const hookFiles = [
+    "hooks/commit-quality.js",
+    "hooks/runtime/hook-flags.js",
+    "hooks/runtime/antigravity-pre-tool.js",
+  ].map((relPath) => {
+    const srcPath = path.join(sourceRoot, relPath);
+    return { srcPath, relPath, mode: fs.statSync(srcPath).mode & 0o777 };
+  });
   const commandSkills = buildCommandSkills(sourceRoot);
   const agentFiles = buildAgentFiles(sourceRoot);
 
   const managedPaths = [
     BACKUP_ROOT_NAME,
     "plugin.json",
+    "hooks.json",
     "rules/AGENTS.md",
     "harness/manifest.json",
     ...refFiles.map((item) => item.relPath),
     ...skillFiles.map((item) => item.relPath),
     ...learningFiles.map((item) => item.relPath),
+    ...hookFiles.map((item) => item.relPath),
     ...commandSkills.map((item) => item.relative),
     ...agentFiles.map((item) => item.relative),
   ];
@@ -407,6 +438,14 @@ function installAntigravity({
   });
   writeManagedFile({
     pluginRoot,
+    relative: "hooks.json",
+    content: buildHooksConfig(),
+    backupId,
+    dryRun,
+    log,
+  });
+  writeManagedFile({
+    pluginRoot,
     relative: "rules/AGENTS.md",
     content: fs.readFileSync(path.join(sourceRoot, "AGENTS.md")),
     backupId,
@@ -421,11 +460,15 @@ function installAntigravity({
     log,
   });
 
-  for (const item of [...refFiles, ...skillFiles, ...learningFiles]) {
+  for (const item of [...refFiles, ...skillFiles, ...learningFiles, ...hookFiles]) {
+    let content = fs.readFileSync(item.srcPath);
+    if (item.relPath.startsWith("skills/") && item.relPath.endsWith(".md")) {
+      content = rewriteAntigravityReferences(item.relPath, content.toString("utf8"));
+    }
     writeManagedFile({
       pluginRoot,
       relative: item.relPath,
-      content: fs.readFileSync(item.srcPath),
+      content,
       mode: item.mode,
       dryRun,
       log,
@@ -448,6 +491,7 @@ function installAntigravity({
     backupId,
     dryRun,
     log,
+    transformContent: rewriteAntigravityReferences,
   });
 
   runRetiredSkillCleanup(sourceRoot, pluginRoot, dryRun, log);

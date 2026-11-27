@@ -45,6 +45,22 @@ function Invoke-InstallCommand {
     & $Action
 }
 
+function Get-Sha256Hex {
+    param([string]$LiteralPath)
+
+    $resolvedPath = (Resolve-Path -LiteralPath $LiteralPath).ProviderPath
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    $stream = $null
+    try {
+        $stream = [System.IO.File]::OpenRead($resolvedPath)
+        $bytes = $sha256.ComputeHash($stream)
+        return ([BitConverter]::ToString($bytes) -replace '-', '')
+    } finally {
+        if ($null -ne $stream) { $stream.Dispose() }
+        $sha256.Dispose()
+    }
+}
+
 function Backup-IfChanged {
     param(
         [string]$Source,
@@ -56,9 +72,9 @@ function Backup-IfChanged {
         return
     }
 
-    $sourceHash = Get-FileHash -LiteralPath $Source -Algorithm SHA256
-    $destHash = Get-FileHash -LiteralPath $Destination -Algorithm SHA256
-    if ($sourceHash.Hash -eq $destHash.Hash) {
+    $sourceHash = Get-Sha256Hex -LiteralPath $Source
+    $destHash = Get-Sha256Hex -LiteralPath $Destination
+    if ($sourceHash -eq $destHash) {
         return
     }
 
@@ -404,26 +420,6 @@ if ($InstallAntigravity) {
 }
 
 Test-RetiredSkillManifest
-
-function Resolve-AntigravityInstall {
-    if (-not $script:InstallAntigravity -or $ExplicitAntigravity) {
-        return
-    }
-
-    $geminiDir = Join-Path $HomeDir ".gemini"
-    $item = Get-Item -LiteralPath $geminiDir -Force -ErrorAction SilentlyContinue
-    if ($null -eq $item) {
-        Write-Host "Skipping Antigravity plugin sync ($geminiDir not found; use -AntigravityOnly to install)."
-        $script:InstallAntigravity = $false
-        return
-    }
-    if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -or (-not $item.PSIsContainer)) {
-        Write-Host "Skipping Antigravity plugin sync ($geminiDir is not a regular directory; use -AntigravityOnly to inspect)."
-        $script:InstallAntigravity = $false
-    }
-}
-
-Resolve-AntigravityInstall
 
 if ($InstallClaude) {
     Install-ClaudeWorkflow

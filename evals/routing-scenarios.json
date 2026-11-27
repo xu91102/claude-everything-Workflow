@@ -122,6 +122,15 @@
       "rationale": "先定位间歇性超时的根因。根因确认后，需要维护或稳定浏览器测试时再使用验收 Skill 的 E2E 参考。"
     },
     {
+      "id": "debugging-third-round-recurrence",
+      "category": "debugging",
+      "prompt": "这个导入路径问题前两轮修复单测都过了，第三轮复审又在重试队列复现，帮我重查原因",
+      "expectedTarget": "skills/systematic-debugging/SKILL.md",
+      "expectedLane": "debugging",
+      "requiredSignals": ["复发", "证据闭环"],
+      "rationale": "同类问题在多轮修复或复审中复发应进入 systematic-debugging 证据闭环，重新检验共同假设而不是继续追加局部补丁。"
+    },
+    {
       "id": "grilling-ambiguous-decision",
       "category": "decision",
       "prompt": "我想给产品加多租户隔离，但还没想好按 schema 还是按行级隔离，你逐个问题追问我",

@@ -66,12 +66,13 @@ npx claude-everything-workflow install --antigravity-only
 或者运行 `npx claude-everything-workflow install`（当本机已存在非符号链接的 `~/.gemini` 时会自动同步 Antigravity；未存在时跳过，可随时用 `--antigravity-only` 显式安装）。安装器会自动生成或同步：
 
 - `plugin.json`：原生插件清单（版本与 `package.json` 保持一致）。
+- `hooks.json` & `hooks/`：注册 Antigravity 原生 `PreToolUse`（`run_command`）提交密钥与质量拦截钩子，沿用 `ECC_HOOK_PROFILE`、`ECC_DISABLED_HOOKS` 控制；不自动启用 Claude Code 专用编辑/观察 hooks。
 - `rules/AGENTS.md`：唯一的常驻入口规则，指引按需读取 `references/rules/` 下的基础规则与 `common/` 专项规则。
-- `skills/`：同步全部工作流技能，并把非重复命令（`pr`、`verify`、`to-spec`、`learn`）转换为原生技能；自动清理已退役技能。
+- `skills/`：同步全部工作流技能，并把非重复命令（`pr`、`verify`、`to-spec`、`learn`）转换为原生技能，同时把内部 `commands/` 引用改写为插件内技能路径；自动清理已退役技能。
 - `agents/`：转换工具名称与插件内引用路径为 Antigravity 原生子代理格式。
 - `references/rules/02-implementation.md`：采用与 Codex 相同的 Git 三方合并机制，升级时保留个人修改。
 
-不自动启用 Claude Code 专用 hooks。若本机存在旧版 `~/.gemini/AGENTS.md`，安装器不会自动删除，仅在输出中提示手动确认。
+若本机存在旧版 `~/.gemini/AGENTS.md`，安装器不会自动删除，仅在输出中提示手动确认。
 
 ### 浏览器验证 MCP
 
