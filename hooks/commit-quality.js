@@ -334,12 +334,15 @@ function applyCdTarget(target, baseDir, physical = false) {
     return { dir: baseDir ? path.resolve(baseDir, target) : target, unresolved: false }
 }
 
-function shellScope(directory) {
+function shellScope(directory, inFunction = false) {
     return {
         directory,
         pipelineStart: directory,
         listStart: directory,
         inPipeline: false,
+        inFunction,
+        returned: false,
+        exited: false,
         controlStack: [],
         conditionalDepth: 0,
         preConditionalDir: null,
@@ -359,11 +362,22 @@ function resetConditionalState(scope) {
     scope.condMutatedEnv = false
 }
 
+function sameGitVariables(a, b) {
+    if (a === b) return true
+    for (const name of GIT_PATH_ENV) {
+        if ((a[name]?.value ?? null) !== (b[name]?.value ?? null) ||
+            Boolean(a[name]?.exported) !== Boolean(b[name]?.exported)) {
+            return false
+        }
+    }
+    return true
+}
+
 function recordScopeMutation(scope, nextDirectory) {
     const before = scope.directory
     const cdChanged = nextDirectory.dir !== before.dir ||
         Boolean(nextDirectory.unresolved) !== Boolean(before.unresolved)
-    const envChanged = nextDirectory.variables !== before.variables ||
+    const envChanged = !sameGitVariables(nextDirectory.variables, before.variables) ||
         Boolean(nextDirectory.unresolvedEnv) !== Boolean(before.unresolvedEnv)
     scope.directory = nextDirectory
     if (cdChanged) {
@@ -708,7 +722,11 @@ function* walkShellCommands(segments, scope, analysis, depth) {
         yield { analysisWarning: 'Shell 嵌套过深' }
         return
     }
-    for (const segment of segments) {
+    for (let segIdx = 0; segIdx < segments.length; segIdx++) {
+        const segment = segments[segIdx]
+        const nextOp = segments[segIdx + 1]?.operator
+        const deterministic = scope.controlStack.length === 0 && scope.conditionalDepth === 0 &&
+            !scope.inPipeline && nextOp !== '|' && nextOp !== '&'
         const directory = scope.directory
         if (segment.functionName) {
             const functions = new Map(directory.functions)
@@ -717,9 +735,19 @@ function* walkShellCommands(segments, scope, analysis, depth) {
             continue
         }
         if (segment.body) {
-            const child = shellScope(directory)
+            const child = shellScope(directory, scope.inFunction)
             yield* walkShellCommands(segment.body, child, analysis, depth + 1)
-            if (segment.shared) recordScopeMutation(scope, child.directory)
+            if (segment.shared) {
+                recordScopeMutation(scope, child.directory)
+                if (deterministic && child.exited) {
+                    scope.exited = true
+                    break
+                }
+                if (deterministic && child.returned && scope.inFunction) {
+                    scope.returned = true
+                    break
+                }
+            }
             continue
         }
         if (segment.operator) {
@@ -754,7 +782,7 @@ function* walkShellCommands(segments, scope, analysis, depth) {
                 continue
             }
             analysis.active.add(definition)
-            const child = shellScope({ ...activeDir, variables })
+            const child = shellScope({ ...activeDir, variables }, true)
             yield* walkShellCommands(definition.body, child, analysis, depth + 1)
             analysis.active.delete(definition)
             if (definition.shared) {
@@ -765,6 +793,10 @@ function* walkShellCommands(segments, scope, analysis, depth) {
                     else delete restored[name]
                 }
                 recordScopeMutation(scope, { ...child.directory, variables: restored })
+                if (deterministic && child.exited) {
+                    scope.exited = true
+                    break
+                }
             }
             continue
         }
@@ -777,6 +809,20 @@ function* walkShellCommands(segments, scope, analysis, depth) {
                 dir: next.dir,
                 unresolved: next.unresolved || (activeDir.unresolved && !isAbs)
             })
+            continue
+        }
+        if (executable === 'return') {
+            if (deterministic && scope.inFunction) {
+                scope.returned = true
+                break
+            }
+            continue
+        }
+        if (executable === 'exit') {
+            if (deterministic) {
+                scope.exited = true
+                break
+            }
             continue
         }
         if (!GIT_EXECUTABLE_REGEX.test(executable)) continue

@@ -411,4 +411,27 @@ test("command substitution, nested subshells, heredoc messages, wrappers, and Wi
   const badPhys = run(payload("cd -P nonexistent/.. && git commit -m 'feat: bad-phys'"), { cwd: root });
   assert.equal(badPhys.exitCode, 0);
   assert.match(badPhys.stderr, /无法检查暂存区/);
+
+  // Deterministic return/exit stops unreachable commands without leaking out of subshells.
+  for (const unreach of [
+    "save() { return 0; git commit -m 'test: unreachable'; }; save; printf done",
+    "save() { { return 0; }; git commit -m 'test: brace-unreach'; }; save",
+    "exit 0; git commit -m 'test: after-exit'",
+  ]) {
+    const res = run(payload(unreach), { cwd: inner });
+    assert.equal(res.exitCode, 0, unreach);
+    assert.equal(res.stderr, undefined, unreach);
+  }
+  for (const reach of [
+    "save() { ( return 0; git commit -m 'test: sub-unreach' ); git commit -m 'feat: after-sub'; }; save",
+    "save() { if false; then return 0; fi; git commit -m 'feat: cond-reach'; }; save",
+    "save() { false && return 0; git commit -m 'feat: short-reach'; }; save",
+    "f() { exit 0; }; false && f; git commit -m 'feat: cond-fn-exit'",
+    "save() { if false; then { return 0; }; fi; git commit -m 'feat: cond-brace-ret'; }; save",
+    "{ exit 0; } | cat; git commit -m 'feat: pipe-brace-exit'",
+  ]) {
+    const res = run(payload(reach), { cwd: inner });
+    assert.equal(res.exitCode, 2, reach);
+    assert.match(res.stderr, /s\.js:1/, reach);
+  }
 });
