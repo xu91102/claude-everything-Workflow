@@ -55,6 +55,7 @@ function checkScriptLayout() {
     "hooks/runtime/antigravity-pre-tool.js",
     "hooks/runtime/hook-flags.js",
     "hooks/commit-quality.js",
+    "hooks/check-edited-file.js",
     "hooks/check-console-log.js",
     "hooks/check-code-size.js",
     "scripts/learning/review-confidence.js",
@@ -71,8 +72,7 @@ function checkScriptLayout() {
 
   requireTokens("settings.json", [
     "hooks/runtime/run-with-flags.js",
-    "hooks/check-console-log.js",
-    "hooks/check-code-size.js",
+    "hooks/check-edited-file.js",
     "hooks/commit-quality.js",
     "skills/continuous-learning-v2/hooks/observe-v2.js",
   ]);
@@ -580,9 +580,63 @@ function checkGitDiffWhitespace() {
   }
 }
 
+function checkEditedFileHook() {
+  for (const config of ["settings.json", ".claude-plugin/hooks.json"]) {
+    const post = JSON.parse(read(config)).hooks?.PostToolUse || [];
+    const edit = post.filter((g) => g.matcher === "Edit|Write|MultiEdit").flatMap((g) => g.hooks || []);
+    if (edit.length !== 1 || !edit[0].command?.includes("hooks/check-edited-file.js")) {
+      fail(`${config} must register a single PostToolUse check-edited-file hook`);
+    }
+  }
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cew-edit-hook-"));
+  try {
+    const file = path.join(dir, "demo.ts");
+    fs.writeFileSync(file, "// @ts-ignore\n" + "a".repeat(121) + "\n");
+    const stdin = JSON.stringify({ tool_input: { file_path: file } });
+    const runScript = (script, extraEnv = {}) => {
+      const res = spawnSync(process.execPath, [rel(script)], {
+        input: stdin,
+        encoding: "utf8",
+        env: { ...process.env, ECC_HOOK_PROFILE: "standard", ECC_DISABLED_HOOKS: "", ...extraEnv },
+        timeout: 10000,
+      });
+      if (res.error || res.status !== 0) {
+        fail(`${script} failed: ${res.error?.message || res.stderr}`);
+        return "";
+      }
+      return res.stderr || "";
+    };
+    const all = runScript("hooks/check-edited-file.js");
+    if (!all.includes("@ts-ignore") || !all.includes("120")) {
+      fail("hooks/check-edited-file.js must report both pattern and size warnings");
+    }
+    const noLog = runScript("hooks/check-edited-file.js", { ECC_DISABLED_HOOKS: "post:edit:console-log" });
+    if (noLog.includes("@ts-ignore") || !noLog.includes("120")) {
+      fail("hooks/check-edited-file.js must honor ECC_DISABLED_HOOKS=post:edit:console-log");
+    }
+    const noSize = runScript("hooks/check-edited-file.js", { ECC_DISABLED_HOOKS: "post:edit:code-size" });
+    if (!noSize.includes("@ts-ignore") || noSize.includes("120")) {
+      fail("hooks/check-edited-file.js must honor ECC_DISABLED_HOOKS=post:edit:code-size");
+    }
+    const minimal = runScript("hooks/check-edited-file.js", { ECC_HOOK_PROFILE: "minimal" });
+    if (!minimal.includes("@ts-ignore") || !minimal.includes("120")) {
+      fail("hooks/check-edited-file.js must defer profile gating to run-with-flags.js");
+    }
+    if (!runScript("hooks/check-console-log.js").includes("@ts-ignore")) {
+      fail("hooks/check-console-log.js compatibility wrapper failed");
+    }
+    if (!runScript("hooks/check-code-size.js").includes("120")) {
+      fail("hooks/check-code-size.js compatibility wrapper failed");
+    }
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 function runRuntimeChecks(context) {
   bindContext(context);
   checkScriptLayout();
+  checkEditedFileHook();
   checkContinuousLearningV21();
   checkObserveV2();
   checkInstalledPackageOnlyPaths();

@@ -498,9 +498,35 @@ function checkInstallerEntrypoint() {
     type: "command",
     command: 'node scripts/hooks/run-with-flags.js post:write:console-log hooks/check-console-log.js standard,strict',
   };
+  const claudeRootPrefix = windows ? path.join(profile, ".claude") : "$HOME/.claude";
+  const oldEditHooks = [
+    {
+      type: "command",
+      command: `node "${claudeRootPrefix}/hooks/runtime/run-with-flags.js" post:edit:console-log "${claudeRootPrefix}/hooks/check-console-log.js" standard,strict`,
+      timeout: 5,
+    },
+    {
+      type: "command",
+      command: `node "${claudeRootPrefix}/hooks/runtime/run-with-flags.js" post:edit:code-size "${claudeRootPrefix}/hooks/check-code-size.js" standard,strict`,
+      timeout: 5,
+    },
+  ];
+  const legacyEditMatcherGroup = {
+    matcher: "Edit",
+    hooks: [
+      {
+        type: "command",
+        command: `node "${claudeRootPrefix}/hooks/runtime/run-with-flags.js" post:edit:console-log "${claudeRootPrefix}/hooks/check-console-log.js" standard,strict`,
+        timeout: 5,
+      },
+    ],
+  };
   fs.writeFileSync(settingsPath, JSON.stringify({
     hooks: {
-      PostToolUse: [{ ...userHookGroup, hooks: [...userHookGroup.hooks, retiredConsole] }],
+      PostToolUse: [
+        { ...userHookGroup, hooks: [...userHookGroup.hooks, retiredConsole, ...oldEditHooks] },
+        legacyEditMatcherGroup,
+      ],
       SessionStart: [{ ...unrelatedHook, hooks: [...unrelatedHook.hooks, retiredSession] }],
     },
   }));
@@ -514,8 +540,13 @@ function checkInstallerEntrypoint() {
   const installedSettings = JSON.parse(read(settingsPath).replace(/^\uFEFF/, ""));
   assert.deepEqual(installedSettings.hooks.PostToolUse[0], userHookGroup);
   assert.deepEqual(installedSettings.hooks.SessionStart, [unrelatedHook]);
-  assert.equal(installedSettings.hooks.PostToolUse.flatMap(({ hooks }) => hooks)
-    .filter(({ command }) => /hooks[\\/]check-console-log\.js/.test(command || "")).length, 1);
+  assert.equal(installedSettings.hooks.PostToolUse.some((g) => g.matcher === "Edit"), false,
+    "legacy matcher=Edit official console-log hook must be cleaned on upgrade");
+  const allPostEditCommands = installedSettings.hooks.PostToolUse.flatMap(({ hooks }) => hooks)
+    .map(({ command }) => command || "");
+  assert.equal(allPostEditCommands.filter((c) => /hooks[\\/]check-edited-file\.js/.test(c)).length, 1);
+  assert.equal(allPostEditCommands.filter((c) => /hooks[\\/]check-console-log\.js/.test(c)).length, 0);
+  assert.equal(allPostEditCommands.filter((c) => /hooks[\\/]check-code-size\.js/.test(c)).length, 0);
   const codexRule = path.join(profile, ".codex/rules/02-implementation.md");
   const customizedRule = read(codexRule) + "\nKeep unrelated work separate.\n";
   fs.writeFileSync(codexRule, customizedRule);

@@ -11,7 +11,7 @@
 - 摘要字段以 `rules/common/context-hygiene.md` 为唯一来源；不按轮数机械总结，不保存完整 transcript，不覆盖用户规则和决策；敏感内容只记录风险和证据位置，不持久化原值。
 - `ECC_HOOK_PROFILE` 支持 `minimal`、默认 `standard` 和 `strict`；`ECC_DISABLED_HOOKS` 禁用指定 Hook ID。
 - `standard`、`strict` 默认启用提交检查：疑似密钥命中时阻止提交，提交格式与调试代码仅警告；`minimal` 不启用此 Hook。它不替代目标项目的安全检查与质量门。
-- `check-code-size` 与 `check-console-log` 是兼容性提示，不替代目标项目 lint 或类型规则；项目已有等价检查
+- `check-edited-file`（Hook ID `post:edit:quality`，仍兼容单独禁用 `post:edit:console-log` 与 `post:edit:code-size`）是兼容性提示，不替代目标项目 lint 或类型规则；项目已有等价检查
   或约定不适用时，可用 `ECC_DISABLED_HOOKS` 关闭相应提示，不能借此绕过项目质量门。
 
 ## 权限
