@@ -6,12 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/runtime/run-with-flags.js\" post:edit:console-log hooks/check-console-log.js standard,strict",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/runtime/run-with-flags.js\" post:edit:code-size hooks/check-code-size.js standard,strict",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/runtime/run-with-flags.js\" post:edit:quality hooks/check-edited-file.js standard,strict",
             "timeout": 5
           }
         ]
