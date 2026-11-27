@@ -51,6 +51,7 @@ must not influence each other.
 Lack of agent capacity is never a reason to fall back to self-review. If parallelism is unavailable during
 `dual` review, run dual axes sequentially in fresh isolated contexts. If no independent context is
 available, return `BLOCKED`, mark review `NOT RUN`, and do not claim completion.
+Only when the user explicitly opts out of local review in favor of external/online PR review (e.g., GitHub `@codex review`), callers record local review as `SKIPPED (deferred to user-requested online review)` rather than self-reviewing or claiming review passed, and treat review as pending until the online review result is received and addressed.
 
 ## Report and follow-up
 

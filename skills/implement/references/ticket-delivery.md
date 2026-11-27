@@ -23,6 +23,7 @@
 
 ticket as the Spec source：`/code-review --worktree <pre-ticket-base> --spec <ticket>`。
 审查包和 fresh verification 要求以入口为准；失败时 ticket 保持 `in-progress`，不得进入 RESOLVE。
+用户显式指定线上 PR 审查替代不替代单票审查，也不授权在线上审查结果出来前 `RESOLVE` 依赖审查的 ticket。
 
 ## RESOLVE 与 REFRESH_FRONTIER
 
@@ -38,6 +39,8 @@ resolve 后重查依赖图并返回 router。newly unlocked tickets 仍在已授
 - frontier 为空但仍有 open tickets：返回 `BLOCKED_GRAPH`，列出依赖、循环、claim 冲突或状态异常，
   保持交付未完成，不能进入 PR 收尾。
 - 只有 open ticket count = 0：以 feature/worktree 起点为固定基点执行全分支相称 review，再运行
-  `/verify pre-pr`。通过后展示 `/pr` 或 keep 当前 branch/worktree 的选择；已获授权的动作可继续。
+  `/verify pre-pr`。若用户显式要求跳过本地审查、改走线上 PR 审查，可在此阶段将全分支审查记为
+  `SKIPPED（用户指定线上审查）` 并继续 `/verify pre-pr` 与 `/pr`（标明线上审查待完成，不写成已通过）；
+  通过后展示 `/pr` 或 keep 当前 branch/worktree 的选择；已获授权的动作可继续。
 - tracker publication、claim、resolve、评论和关闭需要各自适用的授权；一次阶段授权不推导出下一阶段。
   不自动 merge、删除 branch 或清理 worktree。

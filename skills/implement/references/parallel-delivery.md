@@ -79,7 +79,8 @@ let a parallel worker decide it unilaterally.
    integration worktree package from the common base. Include its tracked, staged, unstaged and
    task-owned untracked files, and give every selected ticket body as the combined Spec source. Then run
    the combined verification required by the selected tickets. Do not resolve any selected ticket until
-   this integrate-and-verify gate passes.
+   this integrate-and-verify gate passes (user-requested online PR review opt-out does not bypass worker
+   or integration review gates before resolving tickets).
 5. Update a local tracker only for integrated tickets that pass the gate. External claim, comment or close
    operations still require the confirmation specified by `implement`.
 6. Refresh the graph after every resolve and return it to the router. The router may select the next
