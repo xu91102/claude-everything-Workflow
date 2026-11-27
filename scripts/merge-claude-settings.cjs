@@ -53,7 +53,6 @@ function hookCommand(hook, installRoot) {
     script: installedPath(executable, installRoot),
     id: match[4],
     target: relativeLegacyRunner ? target : installedPath(target, installRoot),
-    arguments: hook.command.slice(match[0].length).trim(),
     relativeLegacyRunner,
   };
 }
@@ -66,7 +65,7 @@ function validateHookGroups(events) {
   }
 }
 
-function mergeHookGroups(current, incoming, installRoot, windowsPaths, event) {
+function mergeHookGroups(current, incoming, installRoot, windowsPaths) {
   const managedTargets = new Map();
   const managedGroups = incoming.map((group) => {
     const hooks = group.hooks.filter((hook) => {
@@ -83,13 +82,7 @@ function mergeHookGroups(current, incoming, installRoot, windowsPaths, event) {
   const userGroups = current.map((group) => ({
     ...group,
     hooks: group.hooks.filter((hook) => {
-      const { script, id, target, relativeLegacyRunner, arguments: args } = hookCommand(hook, installRoot);
-      if (event === "PostToolUse" && group.matcher === "Edit|Write|MultiEdit" && script === RUNNER &&
-          ((id === "post:edit:console-log" && target === "hooks/check-console-log.js") ||
-           (id === "post:edit:code-size" && target === "hooks/check-code-size.js")) &&
-          args === "standard,strict" && hook.timeout === 5 &&
-          Object.keys(hook).every(key => ["type", "command", "timeout"].includes(key)) &&
-          Object.keys(group).every(key => ["matcher", "hooks"].includes(key))) return false;
+      const { script, id, target, relativeLegacyRunner } = hookCommand(hook, installRoot);
       if (LEGACY_HOOK_PATTERNS.includes(script)) return false;
       if (!relativeLegacyRunner && script !== RUNNER) return true;
       if (LEGACY_WRAPPED_TARGETS.get(id)?.includes(target)) return false;
@@ -110,7 +103,6 @@ function mergeSettings(source, existing, { installRoot = path.join(os.homedir(),
       Object.hasOwn(incoming, event) ? incoming[event] : [],
       installRoot,
       windowsPaths,
-      event,
     )])
     .filter(([, groups]) => groups.length > 0));
   return {

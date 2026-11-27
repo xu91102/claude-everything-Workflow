@@ -20,28 +20,88 @@ const SECRET_PATTERNS = [
     /(?:token)\s*[:=]\s*['"][a-zA-Z0-9_\-.]{20,}/i,
     /(?:AKIA|AGPA|AIDA|AROA|AIPA)[A-Z0-9]{12,}/
 ]
-const DEBUG_PATTERNS = [
-    /\bconsole\.log\b/,
-    /\bdebugger\b/
-]
-const COMMIT_MSG_REGEX = /^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?:\s.+/
+const DEBUG_PATTERNS = [/\bconsole\.log\b/, /\bdebugger\b/]
+const COMMIT_MSG_REGEX =
+    /^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?:\s.+/
 const GIT_OPTIONS_WITH_ARG = new Set([
-    '-C',
-    '-c',
-    '--git-dir',
-    '--work-tree',
-    '--namespace',
-    '--super-prefix',
-    '--exec-path',
-    '--config-env'
+    '-C', '-c', '--git-dir', '--work-tree', '--namespace',
+    '--super-prefix', '--exec-path', '--config-env'
 ])
 const FORWARDED_GIT_VALUE_FLAGS = new Set(['-C', '--git-dir', '--work-tree'])
+const GIT_PATH_ENV = new Set([
+    'GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_COMMON_DIR',
+    'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES'
+])
+const SHELL_ASSIGNMENT = /^([a-zA-Z_][a-zA-Z0-9_]*)=([\s\S]*)$/
+const SHELL_CONTROL_WORDS = new Set(['if', 'then', 'elif', 'else', 'do', 'while', 'until', '!'])
+const CD_FLAGS = new Set(['-L', '-P', '-e', '-@'])
+const GIT_EXECUTABLE_REGEX = /^(?:.*[\\/])?git(?:\.exe)?$/i
+
+function isWindowsPathSuffix(text) {
+    return /(?:^|[\s;|&(])(?:[A-Za-z]:|\\\\)[^\s;|&()<>'"]*$/.test(text)
+}
+
+function readBalancedParen(source, start) {
+    let depth = 1
+    let quote = null
+    let escaped = false
+    for (let i = start; i < source.length; i++) {
+        const ch = source[i]
+        if (escaped) {
+            escaped = false
+            continue
+        }
+        if (ch === '\\' && quote !== "'") {
+            escaped = true
+            continue
+        }
+        if (quote) {
+            if (ch === quote) quote = null
+            continue
+        }
+        if (ch === "'" || ch === '"') {
+            quote = ch
+            continue
+        }
+        if (ch === '(') depth += 1
+        else if (ch === ')') {
+            depth -= 1
+            if (depth === 0) return i
+        }
+    }
+    return source.length - 1
+}
+
+function isBareArithmetic(command, start) {
+    const closeIdx = readBalancedParen(command, start + 1)
+    if (command[closeIdx - 1] !== ')') return false
+    const inner = command.slice(start + 2, closeIdx - 1)
+    return !/[;\n|&]|\bcommit\b/.test(inner)
+}
+
+function skipHereDocBodies(command, start, documents) {
+    let cursor = start
+    for (const { delimiter, stripTabs } of documents) {
+        while (cursor < command.length) {
+            const newline = command.indexOf('\n', cursor)
+            const end = newline === -1 ? command.length : newline
+            const line = command.slice(cursor, end).replace(/\r$/, '')
+            cursor = newline === -1 ? end : end + 1
+            if ((stripTabs ? line.replace(/^\t+/, '') : line) === delimiter) break
+        }
+    }
+    return cursor
+}
 
 function splitCommandSegments(command) {
     const root = []
     const groups = []
     let segments = root
-    const functionHead = /(?:function[ \t]+([\w-]+)(?:\s*\(\s*\))?|([a-zA-Z_][\w-]*)[ \t]*\(\s*\))(?:\s|#[^\n]*\n)*(\{(?=[\s;&|()<>]|$)|\()/y
+    const fnHead = new RegExp(
+        '(?:function[ \\t]+([\\w-]+)(?:\\s*\\(\\s*\\))?|([a-zA-Z_][\\w-]*)[ \\t]*\\(\\s*\\))' +
+        '(?:\\s|#[^\\n]*\\n)*(\\{(?=[\\s;&|()<>]|$)|\\()',
+        'y'
+    )
     const continuations = new Set(['&&', '||', '|'])
     let current = ''
     let quote = null
@@ -61,13 +121,19 @@ function splitCommandSegments(command) {
             escaped = false
             continue
         }
-        if (ch === '\\' && quote !== "'") {
+        if (ch === '\\' && quote !== "'" && (quote !== null || !isWindowsPathSuffix(current))) {
             if (command[i + 1] === '\n') {
                 i += 1
                 continue
             }
             current += ch
             escaped = true
+            continue
+        }
+        if (quote !== "'" && command.startsWith('$(', i)) {
+            const endIdx = readBalancedParen(command, i + 2)
+            current += command.slice(i, endIdx + 1)
+            i = endIdx
             continue
         }
         if (quote) {
@@ -80,14 +146,13 @@ function splitCommandSegments(command) {
             current += ch
             continue
         }
-        // Inside arithmetic expressions, << is a bit shift, not a redirection.
         if (arithmeticDepth) {
             if (ch === '(') arithmeticDepth += 1
             if (ch === ')') arithmeticDepth -= 1
             current += ch
             continue
         }
-        if (command.startsWith('((', i)) {
+        if (command.startsWith('((', i) && isBareArithmetic(command, i)) {
             arithmeticDepth = 2
             current += '(('
             i += 1
@@ -104,26 +169,26 @@ function splitCommandSegments(command) {
             continue
         }
         if (command.startsWith('<<', i)) {
-            const match = /^<<(-?)[ \t]*((?:'[^'\n]*'|"(?:\\.|[^"\\\n])*"|\\[^\n]|[^\s;&|<>()\\'"])+)/.exec(command.slice(i))
-            if (match) {
-                hereDocs.push({ delimiter: tokenizeSegment(match[2])[0], stripTabs: Boolean(match[1]) })
+            const m = /^<<(-?)[ \t]*((?:'[^'\n]*'|"(?:\\.|[^"\\\n])*"|\\[^\n]|[^\s;&|<>()\\'"])+)/
+                .exec(command.slice(i))
+            if (m) {
+                hereDocs.push({ delimiter: tokenizeSegment(m[2])[0], stripTabs: Boolean(m[1]) })
                 current += ' '
-                i += match[0].length - 1
+                i += m[0].length - 1
                 continue
             }
         }
         let opener = ch
         let functionName
         if (/[a-zA-Z_]/.test(ch) && (!i || /[\s;&|({]/.test(command[i - 1])) && !current.trim()) {
-            functionHead.lastIndex = i
-            const header = functionHead.exec(command)
+            fnHead.lastIndex = i
+            const header = fnHead.exec(command)
             if (header) {
                 functionName = header[1] || header[2]
                 opener = header[3]
-                i = functionHead.lastIndex - 1
+                i = fnHead.lastIndex - 1
             }
         }
-        // Braces are shell reserved words only at a command boundary.
         const braceWord = (ch === '{' || ch === '}') && !current.trim() &&
             (i + 1 === command.length || /[\s;&|()<>]/.test(command[i + 1]))
         if (functionName || ch === '(' || (braceWord && ch === '{')) {
@@ -141,9 +206,7 @@ function splitCommandSegments(command) {
         }
         if (ch === '\n' || ch === ';') {
             push()
-            if (ch === ';' || !continuations.has(segments.at(-1)?.operator)) {
-                segments.push({ operator: ';' })
-            }
+            if (ch === ';' || !continuations.has(segments.at(-1)?.operator)) segments.push({ operator: ';' })
             if (ch === '\n' && hereDocs.length) {
                 i = skipHereDocBodies(command, i + 1, hereDocs) - 1
                 hereDocs.length = 0
@@ -169,20 +232,6 @@ function splitCommandSegments(command) {
     return root
 }
 
-function skipHereDocBodies(command, start, documents) {
-    let cursor = start
-    for (const { delimiter, stripTabs } of documents) {
-        while (cursor < command.length) {
-            const newline = command.indexOf('\n', cursor)
-            const end = newline === -1 ? command.length : newline
-            const line = command.slice(cursor, end).replace(/\r$/, '')
-            cursor = newline === -1 ? end : end + 1
-            if ((stripTabs ? line.replace(/^\t+/, '') : line) === delimiter) break
-        }
-    }
-    return cursor
-}
-
 function tokenizeSegment(segment) {
     const tokens = []
     let current = ''
@@ -198,9 +247,18 @@ function tokenizeSegment(segment) {
             hasToken = true
             continue
         }
-        if (ch === '\\' && quote !== "'" && (quote !== '"' || /["$\\\x60\n]/.test(segment[i + 1] || ''))) {
+        const winPath = quote === null && /^(?:[A-Za-z]:|\\\\)/.test(current)
+        if (ch === '\\' && quote !== "'" && !winPath &&
+            (quote !== '"' || /["$\\\x60\n]/.test(segment[i + 1] || ''))) {
             escaped = true
             hasToken = true
+            continue
+        }
+        if (quote !== "'" && segment.startsWith('$(', i)) {
+            const endIdx = readBalancedParen(segment, i + 2)
+            current += segment.slice(i, endIdx + 1)
+            hasToken = true
+            i = endIdx
             continue
         }
         if (quote) {
@@ -229,36 +287,38 @@ function tokenizeSegment(segment) {
     return tokens
 }
 
+function isDynamicValue(value) {
+    return typeof value === 'string' && /[$\x60]/.test(value)
+}
+
 function extractCommitMessage(commitArgs) {
     for (let i = 0; i < commitArgs.length; i++) {
         const arg = commitArgs[i]
         if (arg === '--') break
-        if ((arg === '-m' || arg === '--message') && i + 1 < commitArgs.length) return commitArgs[i + 1]
-        if (arg.startsWith('--message=')) return arg.slice('--message='.length)
-        if (/^-m.+/.test(arg)) return arg.slice(2)
+        let raw = null
+        if ((arg === '-m' || arg === '--message') && i + 1 < commitArgs.length) raw = commitArgs[i + 1]
+        else if (arg.startsWith('--message=')) raw = arg.slice('--message='.length)
+        else if (/^-m.+/.test(arg)) raw = arg.slice(2)
+        if (raw !== null) return isDynamicValue(raw) ? null : raw
     }
     return null
 }
 
 function applyCdTarget(target, baseDir) {
-    if (!target || target === '-' || target.startsWith('~') || /[$\x60]/.test(target)) {
+    if (!target || target === '-' || target.startsWith('~') || isDynamicValue(target)) {
         return { dir: baseDir, unresolved: true }
+    }
+    if (/^(?:[A-Za-z]:[\\/]|\\\\)/.test(target)) {
+        return { dir: target, unresolved: false }
     }
     return { dir: baseDir ? path.resolve(baseDir, target) : target, unresolved: false }
 }
-
-const GIT_PATH_ENV = new Set([
-    'GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_COMMON_DIR',
-    'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES'
-])
 
 function shellScope(directory) {
     return { directory, pipelineStart: directory, listStart: directory, inPipeline: false }
 }
 
 function advanceShellScope(scope, operator) {
-    // Each stage starts in the pipeline's original directory. A trailing & runs
-    // the whole AND/OR list in a child, including directory changes before &&.
     if (operator === '|') {
         scope.directory = scope.pipelineStart
         scope.inPipeline = true
@@ -270,8 +330,6 @@ function advanceShellScope(scope, operator) {
     scope.pipelineStart = scope.directory
     scope.inPipeline = false
 }
-
-const SHELL_ASSIGNMENT = /^([a-zA-Z_][a-zA-Z0-9_]*)=([\s\S]*)$/
 
 function updateGitVariables(previous, words, operation) {
     const variables = { ...previous }
@@ -295,7 +353,111 @@ function updateGitVariables(previous, words, operation) {
 }
 
 function isDynamicGitPath(value) {
-    return typeof value === 'string' && (/[$\x60]/.test(value) || value.startsWith('~'))
+    return typeof value === 'string' && (isDynamicValue(value) || value.startsWith('~'))
+}
+
+function parseLeadingCommandPrefix(tokens, baseVariables) {
+    const assignments = []
+    const unsetNames = []
+    let clearEnv = false
+    let usedEnvCommand = false
+    let idx = 0
+
+    while (idx < tokens.length) {
+        const token = tokens[idx]
+        if (SHELL_CONTROL_WORDS.has(token) || token === 'command' || token === 'exec') {
+            idx += 1
+            continue
+        }
+        if (token === 'env') {
+            usedEnvCommand = true
+            idx += 1
+            while (idx < tokens.length) {
+                const opt = tokens[idx]
+                if (opt === '-i' || opt === '--ignore-environment') {
+                    clearEnv = true
+                    idx += 1
+                } else if (opt === '-u' && idx + 1 < tokens.length) {
+                    unsetNames.push(tokens[idx + 1])
+                    idx += 2
+                } else if (opt.startsWith('--unset=')) {
+                    unsetNames.push(opt.slice('--unset='.length))
+                    idx += 1
+                } else if (opt === '--') {
+                    idx += 1
+                    break
+                } else {
+                    break
+                }
+            }
+            continue
+        }
+        const assignment = SHELL_ASSIGNMENT.exec(token)
+        if (!assignment) break
+        if (GIT_PATH_ENV.has(assignment[1])) assignments.push(token)
+        idx += 1
+    }
+
+    let variables = clearEnv
+        ? Object.fromEntries([...GIT_PATH_ENV].map((name) => [name, { value: null, exported: false }]))
+        : { ...baseVariables }
+    if (unsetNames.length) variables = updateGitVariables(variables, unsetNames, 'unset')
+    if (assignments.length) {
+        variables = updateGitVariables(variables, assignments, tokens[idx] ? 'export' : 'assign')
+    }
+    return { idx, executable: tokens[idx], assignments, usedEnvCommand, variables }
+}
+
+function parseGitCommand(tokens, startIdx) {
+    const gitDirArgs = []
+    const gitArgValues = []
+    let subIdx = startIdx + 1
+    while (subIdx < tokens.length) {
+        const token = tokens[subIdx]
+        if (token === '--') {
+            subIdx += 1
+            break
+        }
+        if (FORWARDED_GIT_VALUE_FLAGS.has(token)) {
+            if (subIdx + 1 < tokens.length) {
+                gitDirArgs.push(token, tokens[subIdx + 1])
+                gitArgValues.push(tokens[subIdx + 1])
+                subIdx += 2
+                continue
+            }
+            break
+        }
+        if (token.startsWith('-C') && token.length > 2) {
+            const val = token.slice(2)
+            gitDirArgs.push('-C', val)
+            gitArgValues.push(val)
+            subIdx += 1
+            continue
+        }
+        if (token.startsWith('--git-dir=') || token.startsWith('--work-tree=')) {
+            gitDirArgs.push(token)
+            gitArgValues.push(token.slice(token.indexOf('=') + 1))
+            subIdx += 1
+            continue
+        }
+        if (GIT_OPTIONS_WITH_ARG.has(token)) {
+            subIdx += 2
+            continue
+        }
+        if (token.startsWith('-')) {
+            subIdx += 1
+            continue
+        }
+        break
+    }
+    return { subcommand: tokens[subIdx], subIdx, gitDirArgs, gitArgValues }
+}
+
+function parseCdTarget(tokens, startIdx) {
+    let idx = startIdx + 1
+    while (idx < tokens.length && CD_FLAGS.has(tokens[idx])) idx += 1
+    if (tokens[idx] === '--') idx += 1
+    return tokens[idx]
 }
 
 function* gitCommitInvocations(command, initialCwd) {
@@ -303,13 +465,15 @@ function* gitCommitInvocations(command, initialCwd) {
     for (const name of GIT_PATH_ENV) {
         if (Object.hasOwn(process.env, name)) variables[name] = { value: process.env[name], exported: true }
     }
-    const scope = shellScope({ dir: initialCwd, unresolved: false, functions: new Map(), variables })
+    const scope = shellScope({
+        dir: initialCwd, unresolved: false, hasPriorStagingMutation: false,
+        functions: new Map(), variables
+    })
     const analysis = { initialCwd, active: new Set(), calls: 0 }
     yield* walkShellCommands(splitCommandSegments(command), scope, analysis, 0)
 }
 
 function* walkShellCommands(segments, scope, analysis, depth) {
-    // Limit expansion of recursive or repeatedly invoked shell functions.
     if (depth > 64) {
         yield { analysisWarning: 'Shell 嵌套过深' }
         return
@@ -333,27 +497,22 @@ function* walkShellCommands(segments, scope, analysis, depth) {
             continue
         }
         const tokens = tokenizeSegment(segment.text)
-        const assignments = []
-        let idx = 0
-        while (idx < tokens.length) {
-            const assignment = SHELL_ASSIGNMENT.exec(tokens[idx])
-            if (!assignment && tokens[idx] !== 'env') break
-            if (assignment && GIT_PATH_ENV.has(assignment[1])) assignments.push(tokens[idx])
-            idx += 1
-        }
-        const executable = tokens[idx]
+        const { idx, executable, assignments, usedEnvCommand, variables } =
+            parseLeadingCommandPrefix(tokens, directory.variables)
+
         if (!executable) {
-            if (assignments.length && !tokens.includes('env')) {
-                scope.directory = { ...directory, variables: updateGitVariables(directory.variables, assignments, 'assign') }
+            if (assignments.length && !usedEnvCommand) {
+                scope.directory = { ...directory, variables }
             }
             continue
         }
         if (executable === 'export' || executable === 'unset') {
-            const variables = updateGitVariables(directory.variables, tokens.slice(idx + 1), executable)
-            scope.directory = { ...directory, variables }
+            scope.directory = {
+                ...directory,
+                variables: updateGitVariables(directory.variables, tokens.slice(idx + 1), executable)
+            }
             continue
         }
-        const variables = assignments.length ? updateGitVariables(directory.variables, assignments, 'export') : directory.variables
         const definition = directory.functions.get(executable)
         if (definition) {
             if (analysis.active.has(definition) || ++analysis.calls > 128) {
@@ -365,7 +524,6 @@ function* walkShellCommands(segments, scope, analysis, depth) {
             yield* walkShellCommands(definition.body, child, analysis, depth + 1)
             analysis.active.delete(definition)
             if (definition.shared) {
-                // Prefix assignments on a function call expire when it returns.
                 const restored = { ...child.directory.variables }
                 for (const assignment of assignments) {
                     const name = SHELL_ASSIGNMENT.exec(assignment)[1]
@@ -376,9 +534,8 @@ function* walkShellCommands(segments, scope, analysis, depth) {
             }
             continue
         }
-
         if (executable === 'cd') {
-            const target = tokens[idx + 1] === '--' ? tokens[idx + 2] : tokens[idx + 1]
+            const target = parseCdTarget(tokens, idx)
             const next = applyCdTarget(target, directory.dir)
             scope.directory = {
                 ...directory,
@@ -387,49 +544,15 @@ function* walkShellCommands(segments, scope, analysis, depth) {
             }
             continue
         }
+        if (!GIT_EXECUTABLE_REGEX.test(executable)) continue
 
-        if (!(executable === 'git' || executable.endsWith('/git') || executable.endsWith('\\git'))) {
+        const { subcommand, subIdx, gitDirArgs, gitArgValues } = parseGitCommand(tokens, idx)
+        if ((subcommand === 'add' || subcommand === 'stage' || subcommand === 'rm') &&
+            !tokens.slice(subIdx + 1).some(arg => arg === '-n' || arg === '--dry-run')) {
+            scope.directory = { ...directory, hasPriorStagingMutation: true }
             continue
         }
-
-        const gitDirArgs = []
-        let subIdx = idx + 1
-        while (subIdx < tokens.length) {
-            const token = tokens[subIdx]
-            if (token === '--') {
-                subIdx += 1
-                break
-            }
-            if (FORWARDED_GIT_VALUE_FLAGS.has(token)) {
-                if (subIdx + 1 < tokens.length) {
-                    gitDirArgs.push(token, tokens[subIdx + 1])
-                    subIdx += 2
-                    continue
-                }
-                break
-            }
-            if (token.startsWith('-C') && token.length > 2) {
-                gitDirArgs.push('-C', token.slice(2))
-                subIdx += 1
-                continue
-            }
-            if (token.startsWith('--git-dir=') || token.startsWith('--work-tree=')) {
-                gitDirArgs.push(token)
-                subIdx += 1
-                continue
-            }
-            if (GIT_OPTIONS_WITH_ARG.has(token)) {
-                subIdx += 2
-                continue
-            }
-            if (token.startsWith('-')) {
-                subIdx += 1
-                continue
-            }
-            break
-        }
-
-        if (tokens[subIdx] === 'commit') {
+        if (subcommand === 'commit') {
             const gitEnv = {}
             for (const [name, variable] of Object.entries(variables)) {
                 gitEnv[name] = variable.exported ? variable.value : null
@@ -438,8 +561,10 @@ function* walkShellCommands(segments, scope, analysis, depth) {
                 gitDirArgs,
                 gitEnv,
                 unresolvedEnv: Object.values(gitEnv).some(isDynamicGitPath),
+                unresolvedGitArg: gitArgValues.some(isDynamicGitPath),
                 cdDir: directory.dir !== analysis.initialCwd ? directory.dir : null,
                 unresolvedCd: directory.unresolved,
+                hasPriorStagingMutation: Boolean(directory.hasPriorStagingMutation),
                 message: extractCommitMessage(tokens.slice(subIdx + 1))
             }
         }
@@ -483,10 +608,20 @@ function checkLinePatterns(line, filePath, lineNumber, warnings) {
     return blocked
 }
 
+function formatGitError(err) {
+    const stderrLine = String(err?.stderr || '').split(/\r?\n/).find(line => line.trim()) || ''
+    const fallback = String(err?.code || err?.message || '').split(/\r?\n/)[0]
+    return (stderrLine || fallback).replace(/[\x00-\x1f]/g, ' ').trim().slice(0, 120)
+}
+
 function scanStagedDiff(commitInvocation, baseCwd) {
     const warnings = []
     if (commitInvocation.unresolvedEnv) {
         warnings.push('[Hook] 无法检查暂存区（Git 环境路径无法静态解析）；本次密钥与调试检查未运行。')
+        return { warnings, shouldBlock: false }
+    }
+    if (commitInvocation.unresolvedGitArg) {
+        warnings.push('[Hook] 无法检查暂存区（Git 路径参数无法静态解析）；本次密钥与调试检查未运行。')
         return { warnings, shouldBlock: false }
     }
     if (commitInvocation.unresolvedCd) {
@@ -510,15 +645,14 @@ function scanStagedDiff(commitInvocation, baseCwd) {
             if (value === null) delete env[name]
             else env[name] = value
         }
-        const execOptions = {
+        const diff = execFileSync('git', gitArgs, {
             env,
             encoding: 'utf8',
             stdio: ['ignore', 'pipe', 'pipe'],
             timeout: 10000,
             maxBuffer: 16 * 1024 * 1024,
             ...(effectiveCwd ? { cwd: effectiveCwd } : {})
-        }
-        const diff = execFileSync('git', gitArgs, execOptions)
+        })
 
         let currentFile = ''
         let newLine = 0
@@ -534,9 +668,7 @@ function scanStagedDiff(commitInvocation, baseCwd) {
                 inHunk = true
             } else if (inHunk && currentFile) {
                 if (line.startsWith('+')) {
-                    if (checkLinePatterns(line.slice(1), currentFile, newLine, warnings)) {
-                        shouldBlock = true
-                    }
+                    if (checkLinePatterns(line.slice(1), currentFile, newLine, warnings)) shouldBlock = true
                     newLine += 1
                 } else if (line.startsWith(' ')) {
                     newLine += 1
@@ -544,7 +676,7 @@ function scanStagedDiff(commitInvocation, baseCwd) {
             }
         }
     } catch (err) {
-        const detail = String(err?.code || err?.message || '').split('\n')[0].trim().slice(0, 120)
+        const detail = formatGitError(err)
         warnings.push(
             detail
                 ? `[Hook] 无法检查暂存区（${detail}）；本次密钥与调试检查未运行。`
@@ -574,8 +706,12 @@ function run(raw, options = {}) {
     const baseCwd = typeof cwd === 'string' && cwd ? cwd : process.cwd()
     const command = input?.tool_input?.command
     if (typeof command !== 'string') return { exitCode: 0 }
+
     const warnings = []
     let shouldBlock = false
+    let warnedStaging = false
+    const scanCache = new Map()
+
     for (const commitInvocation of gitCommitInvocations(command, baseCwd)) {
         if (commitInvocation.analysisWarning) {
             warnings.push(`[Hook] 无法检查暂存区（${commitInvocation.analysisWarning}）。`)
@@ -588,30 +724,38 @@ function run(raw, options = {}) {
                 '[Hook] type: feat|fix|docs|style|refactor|perf|test|chore'
             )
         }
+        if (commitInvocation.hasPriorStagingMutation && !warnedStaging) {
+            warnings.push('[Hook] 命令包含暂存操作（git add/stage/rm），PreToolUse 仅检查执行前的已暂存区。')
+            warnedStaging = true
+        }
 
-        const scan = scanStagedDiff(commitInvocation, baseCwd)
-        warnings.push(...scan.warnings)
+        const cacheKey = JSON.stringify([
+            commitInvocation.cdDir || baseCwd,
+            commitInvocation.gitDirArgs,
+            commitInvocation.gitEnv,
+            commitInvocation.unresolvedEnv,
+            commitInvocation.unresolvedGitArg,
+            commitInvocation.unresolvedCd
+        ])
+        let scan = scanCache.get(cacheKey)
+        if (!scan) {
+            scan = scanStagedDiff(commitInvocation, baseCwd)
+            scanCache.set(cacheKey, scan)
+            warnings.push(...scan.warnings)
+        }
         if (scan.shouldBlock) shouldBlock = true
     }
 
-    if (warnings.length === 0) {
-        return { exitCode: 0 }
-    }
-
+    if (warnings.length === 0) return { exitCode: 0 }
     const stderr = warnings.join('\n') + '\n'
     if (shouldBlock) {
-        return {
-            exitCode: 2,
-            stderr: stderr + '[Hook] 提交被阻止: 请移除密钥后重试\n'
-        }
+        return { exitCode: 2, stderr: stderr + '[Hook] 提交被阻止: 请移除密钥后重试\n' }
     }
-
     return { exitCode: 0, stderr }
 }
 
 module.exports = { run, diffPath, extractGitCommitInvocation }
 
-// 支持独立运行
 if (require.main === module) {
     let data = ''
     process.stdin.setEncoding('utf8')

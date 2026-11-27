@@ -59,7 +59,9 @@ test("diffPath decodes Git quoted UTF-8 paths and strips b/ prefix", () => {
   assert.equal(diffPath('"b/src/\\344\\270\\255\\346\\226\\207 file.js"'), "src/中文 file.js");
 });
 
-test("multi-file staged diff attributes secret and debug lines to the exact first file without echoing secrets", (t) => {
+test(
+  "multi-file staged diff attributes secret and debug lines to the exact first file without echoing secrets",
+  (t) => {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "cew-cq-"));
   t.after(() => fs.rmSync(tempRoot, { recursive: true, force: true }));
 
@@ -243,8 +245,13 @@ test("Git directory and index settings select the actual staged files", (t) => {
   const inner = initRepo(root, "inner repo");
   const alternate = path.join(inner, "alternate.index");
   fs.writeFileSync(path.join(inner, "alternate.js"), "debugger;\n");
-  execFileSync("git", ["add", "alternate.js"], { cwd: inner, env: { ...process.env, GIT_INDEX_FILE: alternate } });
-  const prefix = "env GIT_DIR='../inner repo/.git' GIT_WORK_TREE='../inner repo' GIT_INDEX_FILE='../inner repo/alternate.index'";
+  execFileSync("git", ["add", "alternate.js"], {
+    cwd: inner,
+    env: { ...process.env, GIT_INDEX_FILE: alternate },
+  });
+  const prefix =
+    "env GIT_DIR='../inner repo/.git' GIT_WORK_TREE='../inner repo'" +
+    " GIT_INDEX_FILE='../inner repo/alternate.index'";
   assert.match(run(payload(prefix + " git commit -m 'test: index'"), { cwd: outer }).stderr, /alternate\.js:1/);
   const commit = "git commit -m 'test: exported index'";
   const exported = prefix.replace(/^env /, "export ");
@@ -258,33 +265,85 @@ test("Git directory and index settings select the actual staged files", (t) => {
   }
   assert.match(run(payload("export GIT_INDEX_FILE=$LATER; " + commit), { cwd: outer }).stderr, /无法检查暂存区/);
 
-  assert.match(run(payload('GIT_INDEX_FILE="$OTHER_INDEX" git commit -m "test: dynamic"'), { cwd: outer }).stderr, /无法检查暂存区/);
+  assert.match(
+    run(payload('GIT_INDEX_FILE="$OTHER_INDEX" git commit -m "test: dynamic"'), { cwd: outer }).stderr,
+    /无法检查暂存区/,
+  );
 });
 
-test("both Claude installation modes register one edit check and honor individual switches", (t) => {
-  const root = path.resolve(__dirname, "../..");
-  for (const config of ["settings.json", ".claude-plugin/hooks.json"]) {
-    const hooks = JSON.parse(fs.readFileSync(path.join(root, config))).hooks.PostToolUse;
-    const edit = hooks.filter(g => g.matcher === "Edit|Write|MultiEdit").flatMap(g => g.hooks);
-    assert.equal(edit.length, 1, config);
-    assert.match(edit[0].command, /hooks\/check-edited-file\.js/);
+test("command substitution, nested subshells, heredoc messages, wrappers, and Windows paths", (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "cew-cq-edge-"));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const repo = initRepo(root, "repo");
+  const inner = initRepo(repo, "inner");
+  const secret = "skTest0123456789abcdef012345";
+  fs.writeFileSync(path.join(inner, "s.js"), `const apiKey = "${secret}";\n`);
+  git(inner, "add", "s.js");
+
+  // $(...) in -C / GIT_DIR must warn explicitly rather than silently skipping or scanning wrong dir.
+  const subArg = run(payload('git -C $(pwd)/inner commit -m "feat: sub"'), { cwd: repo });
+  assert.match(subArg.stderr, /无法检查暂存区/);
+  const dynEnv = run(payload('GIT_DIR=$(git rev-parse --git-dir) git commit -m "feat: dyn"'), { cwd: inner });
+  assert.match(dynEnv.stderr, /无法检查暂存区/);
+
+  // $(...) in non-path option (-c) still runs and catches staged secret.
+  const cfgSub = run(payload('git -c user.name=$(whoami) commit -m "feat: c"'), { cwd: inner });
+  assert.equal(cfgSub.exitCode, 2);
+  assert.match(cfgSub.stderr, /s\.js:1/);
+
+  // Bare nested subshells ((cd inner); git commit) must not be dropped as arithmetic.
+  const nested = run(payload('((cd inner); git commit -m "feat: nested")'), { cwd: repo });
+  assert.equal(nested.exitCode, 0);
+  const nestedIn = run(payload('(cd inner && (git commit -m "feat: in"))'), { cwd: repo });
+  assert.equal(nestedIn.exitCode, 2);
+
+  // Claude Code heredoc commit with internal quotes and semicolons: no false format warning or split.
+  const heredocCmd = 'git commit -m "$(cat <<\'EOF\'\nfix: handle "foo; cd /tmp"\nEOF\n)"';
+  const heredocRes = run(payload(heredocCmd), { cwd: repo });
+  assert.equal(heredocRes.exitCode, 0);
+  assert.equal(heredocRes.stderr, undefined);
+
+  // cd -P, control keywords, wrappers, and ~ path warning.
+  const cdFlag = run(payload('cd -P inner && git commit -m "feat: flag"'), { cwd: repo });
+  assert.equal(cdFlag.exitCode, 2);
+  const ifWrap = run(payload('if true; then command git -C inner commit -m "feat: if"; fi'), { cwd: repo });
+  assert.equal(ifWrap.exitCode, 2);
+  const tildeWarn = run(payload('git -C ~/repo commit -m "feat: tilde"'), { cwd: repo });
+  assert.match(tildeWarn.stderr, /无法检查暂存区/);
+
+  // git add && git commit emits pre-staging notice.
+  const addCommit = run(payload('git add clean.js && git commit -m "feat: staged"'), { cwd: repo });
+  assert.match(addCommit.stderr, /仅检查执行前的已暂存区/);
+
+  // Windows paths and git.exe recognition.
+  const winCd = extractGitCommitInvocation('cd C:\\Users\\dev\\repo && git commit -m "feat: win"', "/tmp/base");
+  assert.equal(winCd.cdDir, "C:\\Users\\dev\\repo");
+  const winC = extractGitCommitInvocation('git -C C:\\Users\\dev\\repo commit -m "feat: winc"');
+  assert.deepEqual(winC.gitDirArgs, ["-C", "C:\\Users\\dev\\repo"]);
+  const winExe = extractGitCommitInvocation('"C:\\Program Files\\Git\\cmd\\git.exe" commit -m "feat: exe"');
+  assert.ok(winExe);
+  assert.equal(winExe.message, "feat: exe");
+
+  // Non-git and invalid -C errors preserve stderr reason rather than truncated command line.
+  const nonGit = run(payload('git commit -m "feat: nongit"'), { cwd: root });
+  assert.match(nonGit.stderr, /unknown option.*cached|not a git repository/i);
+  assert.doesNotMatch(nonGit.stderr, /Command failed:/);
+  const badDir = run(payload('git -C ./no-such-dir commit -m "feat: bad"'), { cwd: root });
+  assert.match(badDir.stderr, /cannot change to|No such file/i);
+
+  // env -i clears inherited GIT_* env vars, and identical sequential commits emit scan warnings once.
+  const origGitDir = process.env.GIT_DIR;
+  process.env.GIT_DIR = path.join(root, "nonexistent.git");
+  try {
+    const envCleared = run(payload('env -i git commit -m "feat: env-clear"'), { cwd: inner });
+    assert.equal(envCleared.exitCode, 2);
+    assert.match(envCleared.stderr, /s\.js:1/);
+  } finally {
+    if (origGitDir === undefined) delete process.env.GIT_DIR;
+    else process.env.GIT_DIR = origGitDir;
   }
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cew-edits-"));
-  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
-  const file = path.join(dir, "demo.ts");
-  fs.writeFileSync(file, "// @ts-ignore\n" + "a".repeat(121));
-  const stdin = JSON.stringify({ tool_input: { file_path: file } });
-  const runEdit = (disabled) => {
-    const result = require("node:child_process").spawnSync(process.execPath, [path.join(root, "hooks/check-edited-file.js")], {
-      input: stdin, encoding: "utf8", env: { ...process.env, ECC_HOOK_PROFILE: "standard", ECC_DISABLED_HOOKS: disabled },
-    });
-    assert.equal(result.status, 0, result.stderr);
-    return result.stderr;
-  };
-  const all = runEdit("");
-  assert.match(all, /@ts-ignore/);
-  assert.match(all, /120/);
-  assert.doesNotMatch(runEdit("post:edit:console-log"), /@ts-ignore/);
-  assert.doesNotMatch(runEdit("post:edit:code-size"), /120/);
-  assert.equal(runEdit("post:edit:console-log,post:edit:code-size"), "");
+
+  const dup = run(payload('git commit -m "feat: one" && git commit -m "feat: two"'), { cwd: inner });
+  assert.equal(dup.exitCode, 2);
+  assert.equal(dup.stderr.match(/s\.js:1/g)?.length, 1);
 });
