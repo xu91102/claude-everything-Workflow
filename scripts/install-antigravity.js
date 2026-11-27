@@ -221,6 +221,41 @@ function buildPluginManifest(sourceRoot) {
   return JSON.stringify(manifest, null, 2) + "\n";
 }
 
+function buildHooksConfig() {
+  return (
+    JSON.stringify(
+      {
+        "cew-commit-quality": {
+          PreToolUse: [
+            {
+              matcher: "run_command",
+              hooks: [
+                {
+                  type: "command",
+                  command: "node ./hooks/runtime/antigravity-pre-tool.js",
+                  timeout: 10,
+                },
+              ],
+            },
+          ],
+        },
+      },
+      null,
+      2,
+    ) + "\n"
+  );
+}
+
+function rewriteAntigravityReferences(relative, text) {
+  let updated = text
+    .replace(/`commands\/(pr|verify|to-spec|learn)\.md`/g, (_, cmd) => `\`${PLUGIN_HOME_REF}/skills/${cmd}/SKILL.md\``)
+    .replace(/`commands\/code-review\.md`/g, `\`${PLUGIN_HOME_REF}/skills/code-review/SKILL.md\``);
+  if (relative === "skills/continuous-learning-v2/SKILL.md") {
+    updated = updated.replace(/`commands\/`/g, `\`${PLUGIN_HOME_REF}/skills/learn/SKILL.md\``);
+  }
+  return updated;
+}
+
 function writeManagedFile({ pluginRoot, relative, content, mode, backupId, dryRun, log }) {
   const target = checkedPath(pluginRoot, relative);
   const next = Buffer.isBuffer(content) ? content : Buffer.from(content, "utf8");
@@ -250,7 +285,15 @@ function writeManagedFile({ pluginRoot, relative, content, mode, backupId, dryRu
       if (process.platform !== "win32" && writableMode !== undefined) {
         fs.chmodSync(temp, writableMode);
       }
-      fs.renameSync(temp, target);
+      const priorMode = process.platform === "win32" && existingStat ? existingStat.mode : null;
+      const readOnly = priorMode !== null && !(priorMode & 0o200);
+      if (readOnly) fs.chmodSync(target, priorMode | 0o200);
+      try {
+        fs.renameSync(temp, target);
+      } catch (error) {
+        if (readOnly) fs.chmodSync(target, priorMode);
+        throw error;
+      }
     } finally {
       fs.rmSync(temp, { force: true });
     }
@@ -371,17 +414,27 @@ function installAntigravity({
     path.join(sourceRoot, "scripts/learning"),
     "scripts/learning",
   );
+  const hookFiles = [
+    "hooks/commit-quality.js",
+    "hooks/runtime/hook-flags.js",
+    "hooks/runtime/antigravity-pre-tool.js",
+  ].map((relPath) => {
+    const srcPath = path.join(sourceRoot, relPath);
+    return { srcPath, relPath, mode: fs.statSync(srcPath).mode & 0o777 };
+  });
   const commandSkills = buildCommandSkills(sourceRoot);
   const agentFiles = buildAgentFiles(sourceRoot);
 
   const managedPaths = [
     BACKUP_ROOT_NAME,
     "plugin.json",
+    "hooks.json",
     "rules/AGENTS.md",
     "harness/manifest.json",
     ...refFiles.map((item) => item.relPath),
     ...skillFiles.map((item) => item.relPath),
     ...learningFiles.map((item) => item.relPath),
+    ...hookFiles.map((item) => item.relPath),
     ...commandSkills.map((item) => item.relative),
     ...agentFiles.map((item) => item.relative),
   ];
@@ -407,6 +460,14 @@ function installAntigravity({
   });
   writeManagedFile({
     pluginRoot,
+    relative: "hooks.json",
+    content: buildHooksConfig(),
+    backupId,
+    dryRun,
+    log,
+  });
+  writeManagedFile({
+    pluginRoot,
     relative: "rules/AGENTS.md",
     content: fs.readFileSync(path.join(sourceRoot, "AGENTS.md")),
     backupId,
@@ -421,11 +482,15 @@ function installAntigravity({
     log,
   });
 
-  for (const item of [...refFiles, ...skillFiles, ...learningFiles]) {
+  for (const item of [...refFiles, ...skillFiles, ...learningFiles, ...hookFiles]) {
+    let content = fs.readFileSync(item.srcPath);
+    if (item.relPath.startsWith("skills/") && item.relPath.endsWith(".md")) {
+      content = rewriteAntigravityReferences(item.relPath, content.toString("utf8"));
+    }
     writeManagedFile({
       pluginRoot,
       relative: item.relPath,
-      content: fs.readFileSync(item.srcPath),
+      content,
       mode: item.mode,
       dryRun,
       log,
@@ -448,6 +513,7 @@ function installAntigravity({
     backupId,
     dryRun,
     log,
+    transformContent: rewriteAntigravityReferences,
   });
 
   runRetiredSkillCleanup(sourceRoot, pluginRoot, dryRun, log);

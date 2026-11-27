@@ -73,9 +73,17 @@ function replaceFile(file, content, mode = 0o600) {
   }
 }
 
-function copyRule({ source, root, relative, backupId, dryRun, log, merged }) {
+function copyRule({ source, root, relative, backupId, dryRun, log, merged, transformContent }) {
   const target = checkedPath(root, relative);
-  const content = merged ?? fs.readFileSync(source);
+  let content;
+  if (merged) {
+    content = merged;
+  } else {
+    const raw = fs.readFileSync(source);
+    content = transformContent
+      ? Buffer.from(transformContent(relative, raw.toString("utf8")), "utf8")
+      : raw;
+  }
   const exists = fs.existsSync(target);
   if (exists) {
     const previous = fs.readFileSync(target);
@@ -331,7 +339,15 @@ function validateRuleTargets({ sourceRoot, installRoot, host }) {
   return { policy, root, rulesRoot, relatives };
 }
 
-function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupId(), dryRun = false, log = console.log }) {
+function installRules({
+  sourceRoot,
+  installRoot,
+  host,
+  backupId = defaultBackupId(),
+  dryRun = false,
+  log = console.log,
+  transformContent,
+}) {
   validateBackupId(backupId);
   const { policy, root, rulesRoot, relatives } = validateRuleTargets({ sourceRoot, installRoot, host });
   const legacy = JSON.parse(fs.readFileSync(path.join(sourceRoot, "scripts/legacy-common-rule-hashes.json"), "utf8"));
@@ -350,7 +366,7 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
       continue;
     }
     const targetDir = policy.dirFor(relative);
-    copyRule({ source, root, relative: `${targetDir}/${relative}`, backupId, dryRun, log });
+    copyRule({ source, root, relative: `${targetDir}/${relative}`, backupId, dryRun, log, transformContent });
     if (policy.retireColdFromRules && targetDir === "references/rules") {
       retireRule({
         source, root, relative: `rules/${relative}`,

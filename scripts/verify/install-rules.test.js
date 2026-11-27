@@ -461,7 +461,7 @@ function checkInstallerEntrypoint() {
   assert.deepEqual(installedSettings.hooks.PostToolUse[0], userHookGroup);
   assert.deepEqual(installedSettings.hooks.SessionStart, [unrelatedHook]);
   assert.equal(installedSettings.hooks.PostToolUse.flatMap(({ hooks }) => hooks)
-    .filter(({ command }) => command?.includes("hooks/check-console-log.js")).length, 1);
+    .filter(({ command }) => /hooks[\\/]check-console-log\.js/.test(command || "")).length, 1);
   const codexRule = path.join(profile, ".codex/rules/02-implementation.md");
   const customizedRule = read(codexRule) + "\nKeep unrelated work separate.\n";
   fs.writeFileSync(codexRule, customizedRule);
@@ -483,7 +483,11 @@ function checkInstallerEntrypoint() {
   assert.equal(read(codexRule), customizedRule, "the host installer must preserve the active Codex rule");
 
   // Once a regular ~/.gemini directory exists, default install syncs Antigravity automatically.
-  fs.unlinkSync(path.join(profile, ".gemini"));
+  if (windows) {
+    fs.rmdirSync(path.join(profile, ".gemini"));
+  } else {
+    fs.unlinkSync(path.join(profile, ".gemini"));
+  }
   fs.mkdirSync(path.join(profile, ".gemini"));
   run();
   assert.equal(read(codexRule), customizedRule, "the host installer must preserve the active Codex rule");
@@ -558,6 +562,79 @@ function checkInstallerEntrypoint() {
   assert.equal(fs.existsSync(path.join(agRoot, "scripts/learning/projects.js")), true);
   assert.equal(fs.existsSync(path.join(agRoot, "harness/manifest.json")), true);
   assert.equal(fs.existsSync(path.join(agRoot, "scripts/install-antigravity.js")), false);
+
+  // Antigravity hooks.json and rewritten plugin references.
+  const agHooks = JSON.parse(read(path.join(agRoot, "hooks.json")));
+  assert.equal(
+    agHooks["cew-commit-quality"]?.PreToolUse?.[0]?.matcher,
+    "run_command",
+  );
+  assert.equal(
+    agHooks["cew-commit-quality"]?.PreToolUse?.[0]?.hooks?.[0]?.command,
+    "node ./hooks/runtime/antigravity-pre-tool.js",
+  );
+  assert.equal(fs.existsSync(path.join(agRoot, "hooks/commit-quality.js")), true);
+  assert.equal(fs.existsSync(path.join(agRoot, "hooks/runtime/hook-flags.js")), true);
+  assert.equal(fs.existsSync(path.join(agRoot, "hooks/runtime/antigravity-pre-tool.js")), true);
+  assert.doesNotMatch(read(path.join(agRoot, "references/rules/05-git-workflow.md")), /`commands\/pr\.md`/);
+  assert.match(
+    read(path.join(agRoot, "references/rules/05-git-workflow.md")),
+    /~\/\.gemini\/config\/plugins\/claude-everything-workflow\/skills\/pr\/SKILL\.md/,
+  );
+  assert.doesNotMatch(read(path.join(agRoot, "skills/continuous-learning-v2/SKILL.md")), /`commands\/`/);
+
+  // Re-running Antigravity install with unchanged files must not create a spurious backup.
+  const agBackups = path.join(agRoot, BACKUP_ROOT_NAME);
+  const beforeSnapshots = fs.existsSync(agBackups) ? fs.readdirSync(agBackups) : [];
+  installAntigravity({ sourceRoot, homeDir: profile, backupId: "noop-reinstall", log: () => {} });
+  assert.equal(fs.existsSync(path.join(agBackups, "noop-reinstall")), false);
+  assert.deepEqual(fs.existsSync(agBackups) ? fs.readdirSync(agBackups) : [], beforeSnapshots);
+
+  // Exercise bundled Antigravity PreToolUse adapter against a disposable git repo.
+  const hookRepo = path.join(tempRoot, "ag-hook-repo");
+  fs.mkdirSync(hookRepo, { recursive: true });
+  const runGit = (...gitArgs) => {
+    const res = spawnSync("git", gitArgs, { cwd: hookRepo, encoding: "utf8" });
+    assert.equal(res.status, 0, res.stderr);
+  };
+  runGit("init", "-q");
+  runGit("config", "user.name", "Test");
+  runGit("config", "user.email", "test@example.com");
+  const invokeHook = (commandLine, extraEnv = {}) => {
+    const res = spawnSync(process.execPath, ["./hooks/runtime/antigravity-pre-tool.js"], {
+      cwd: agRoot,
+      env: { ...process.env, ...extraEnv },
+      input: JSON.stringify({
+        toolCall: { name: "run_command", args: { CommandLine: commandLine } },
+        cwd: hookRepo,
+      }),
+      encoding: "utf8",
+      timeout: 10000,
+    });
+    assert.ifError(res.error);
+    assert.equal(res.status, 0, res.stderr);
+    return JSON.parse(res.stdout);
+  };
+
+  fs.writeFileSync(path.join(hookRepo, "clean.js"), "export const ok = true;\n");
+  runGit("add", "clean.js");
+  assert.deepEqual(invokeHook('git commit -m "feat: clean"'), { decision: "allow" });
+  assert.deepEqual(invokeHook("git status"), { decision: "allow" });
+
+  const secretVal = "skTest0123456789abcdef012345";
+  fs.writeFileSync(path.join(hookRepo, "secret.js"), `const apiKey = "${secretVal}";\n`);
+  runGit("add", "secret.js");
+  const denied = invokeHook('git commit -m "feat: secret"');
+  assert.equal(denied.decision, "deny");
+  assert.match(denied.reason, /检测到疑似密钥/);
+  assert.equal(denied.reason.includes(secretVal), false);
+  assert.deepEqual(invokeHook('git commit -m "feat: secret"', { ECC_HOOK_PROFILE: "minimal" }), {
+    decision: "allow",
+  });
+  assert.deepEqual(
+    invokeHook('git commit -m "feat: secret"', { ECC_DISABLED_HOOKS: "pre:bash:commit-quality" }),
+    { decision: "allow" },
+  );
 }
 
 function checkAntigravityOnlyInstaller() {

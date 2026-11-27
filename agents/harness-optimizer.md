@@ -1,6 +1,6 @@
 ---
 name: harness-optimizer
-description: 当需要审计或改进 Claude/Codex Harness 配置时使用。只修改规则、commands、agents、skills、hooks、README 等 Harness 文件；按主循环、工具、上下文、状态、权限、验证六层找最小可逆改动，并返回证据、风险和验证结果。
+description: 当需要审计或改进 Claude/Codex/Antigravity Harness 配置时使用。只修改规则、commands、agents、skills、hooks、README 等 Harness 文件；按主循环、工具、上下文、状态、权限、验证六层找最小可逆改动，并返回证据、风险和验证结果。
 tools: ["Read", "Grep", "Glob", "Bash", "Edit"]
 ---
 

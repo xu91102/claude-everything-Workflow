@@ -404,26 +404,6 @@ if ($InstallAntigravity) {
 
 Test-RetiredSkillManifest
 
-function Resolve-AntigravityInstall {
-    if (-not $script:InstallAntigravity -or $ExplicitAntigravity) {
-        return
-    }
-
-    $geminiDir = Join-Path $HomeDir ".gemini"
-    $item = Get-Item -LiteralPath $geminiDir -Force -ErrorAction SilentlyContinue
-    if ($null -eq $item) {
-        Write-Host "Skipping Antigravity plugin sync ($geminiDir not found; use -AntigravityOnly to install)."
-        $script:InstallAntigravity = $false
-        return
-    }
-    if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -or (-not $item.PSIsContainer)) {
-        Write-Host "Skipping Antigravity plugin sync ($geminiDir is not a regular directory; use -AntigravityOnly to inspect)."
-        $script:InstallAntigravity = $false
-    }
-}
-
-Resolve-AntigravityInstall
-
 if ($InstallClaude) {
     Install-ClaudeWorkflow
 }
