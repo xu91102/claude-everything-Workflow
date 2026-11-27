@@ -36,14 +36,14 @@ CEW 使用你已有的项目和模型，不提供模型，也不替代 Claude Co
 
 ### 从 npm 安装
 
-先预览，再安装到全部支持的宿主：
+先预览，再执行安装（默认安装 Claude Code 和 Codex；若本机已存在非软链 `~/.gemini` 会一并自动同步 Antigravity）：
 
 ```sh
 npx claude-everything-workflow install --dry-run
 npx claude-everything-workflow install
 ```
 
-只安装到其中一个：
+只安装到其中一个（若本机尚未有 `~/.gemini`，请使用 `--antigravity-only` 显式安装）：
 
 ```sh
 npx claude-everything-workflow install --claude-only
@@ -75,7 +75,7 @@ node bin/claude-everything-workflow.js install
 
 Codex 安装器会保留 `~/.codex/rules/02-implementation.md` 中的个人修改；Antigravity 安装器也对 `~/.gemini/config/plugins/claude-everything-workflow/references/rules/02-implementation.md` 采用相同的 Git 三方合并机制。首次升级会记录本次分发的规则，供后续版本比较。此后上游规则变化时，安装器用 Git 自动合并互不冲突的改动。遇到冲突或 Git 不可用时，个人规则继续生效，安装日志会给出新版规则副本和手动合并方法。
 
-Antigravity 插件只把入口 `rules/AGENTS.md` 放入自动加载目录 `rules/`，其余详细规则放在 `references/rules/` 按需读取。若存在旧版 `~/.gemini/AGENTS.md`，安装器不会擅自删除，只打印提示供你手动备份或移除。
+Antigravity 插件只把入口 `rules/AGENTS.md` 放入自动加载目录 `rules/`，其余详细规则放在 `references/rules/` 按需读取。默认 `install` 仅在存在非符号链接的 `~/.gemini` 目录时自动同步 Antigravity，不存在则跳过；需要首次显式安装时使用 `--antigravity-only`。若存在旧版 `~/.gemini/AGENTS.md`，安装器不会擅自删除，只打印提示供你手动备份或移除。
 
 全新安装时，CEW 将执行原则、Git 和安全规则放入 Claude Code 自动读取的 `~/.claude/rules/`，其余规则从 `~/.claude/references/rules/` 按需读取。升级时，本次迁移的三份规则如有个人修改，仍在原处生效。更早版本遗留的退役规则也可能继续加载。
 

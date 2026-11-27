@@ -28,6 +28,7 @@ if (-not $HomeDir) {
 $InstallClaude = ($selectedOnly.Count -eq 0) -or [bool]$ClaudeOnly
 $InstallCodex = ($selectedOnly.Count -eq 0) -or [bool]$CodexOnly
 $InstallAntigravity = ($selectedOnly.Count -eq 0) -or [bool]$AntigravityOnly
+$ExplicitAntigravity = [bool]$AntigravityOnly
 $BackupId = Get-Date -Format 'yyyyMMddHHmmss'
 
 function Invoke-InstallCommand {
@@ -371,6 +372,26 @@ function Complete-WorkflowBackups {
     }
 }
 
+function Resolve-AntigravityInstall {
+    if (-not $script:InstallAntigravity -or $ExplicitAntigravity) {
+        return
+    }
+
+    $geminiDir = Join-Path $HomeDir ".gemini"
+    $item = Get-Item -LiteralPath $geminiDir -Force -ErrorAction SilentlyContinue
+    if ($null -eq $item) {
+        Write-Host "Skipping Antigravity plugin sync ($geminiDir not found; use -AntigravityOnly to install)."
+        $script:InstallAntigravity = $false
+        return
+    }
+    if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -or (-not $item.PSIsContainer)) {
+        Write-Host "Skipping Antigravity plugin sync ($geminiDir is not a regular directory; use -AntigravityOnly to inspect)."
+        $script:InstallAntigravity = $false
+    }
+}
+
+Resolve-AntigravityInstall
+
 if ($InstallClaude) {
     Test-InstallRoot -Destination (Join-Path $HomeDir ".claude")
 }
@@ -382,6 +403,26 @@ if ($InstallAntigravity) {
 }
 
 Test-RetiredSkillManifest
+
+function Resolve-AntigravityInstall {
+    if (-not $script:InstallAntigravity -or $ExplicitAntigravity) {
+        return
+    }
+
+    $geminiDir = Join-Path $HomeDir ".gemini"
+    $item = Get-Item -LiteralPath $geminiDir -Force -ErrorAction SilentlyContinue
+    if ($null -eq $item) {
+        Write-Host "Skipping Antigravity plugin sync ($geminiDir not found; use -AntigravityOnly to install)."
+        $script:InstallAntigravity = $false
+        return
+    }
+    if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -or (-not $item.PSIsContainer)) {
+        Write-Host "Skipping Antigravity plugin sync ($geminiDir is not a regular directory; use -AntigravityOnly to inspect)."
+        $script:InstallAntigravity = $false
+    }
+}
+
+Resolve-AntigravityInstall
 
 if ($InstallClaude) {
     Install-ClaudeWorkflow

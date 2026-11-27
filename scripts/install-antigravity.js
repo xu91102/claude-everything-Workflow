@@ -3,6 +3,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
 const {
   BACKUP_ROOT_NAME,
@@ -10,6 +11,8 @@ const {
   defaultBackupId,
   finalizeBackups,
   installRules,
+  validateBackupId,
+  validateRuleTargets,
 } = require("./install-rules");
 
 const PLUGIN_NAME = "claude-everything-workflow";
@@ -48,9 +51,6 @@ function lstatIfExists(target) {
 
 function assertNoSymlinkAncestors(homeDir) {
   const resolvedHome = path.resolve(homeDir);
-  if (lstatIfExists(resolvedHome)?.isSymbolicLink()) {
-    throw new Error(`Refusing symlinked home directory: ${resolvedHome}`);
-  }
   const chain = [
     ".gemini",
     ".gemini/config",
@@ -153,7 +153,7 @@ function parseFrontmatter(text) {
       const items = [];
       let j = i + 1;
       while (j < lines.length) {
-        const itemMatch = lines[j].match(/^\s+-\s+(.*)$/);
+        const itemMatch = lines[j].match(/^\s*-\s+(.*)$/);
         if (!itemMatch) break;
         items.push(unquoteScalar(itemMatch[1]));
         j += 1;
@@ -168,9 +168,12 @@ function parseFrontmatter(text) {
   return { data, body: match[2] };
 }
 
-function mapTools(rawTools) {
-  if (!Array.isArray(rawTools) || rawTools.length === 0) {
+function mapTools(rawTools, agentFile = "agent") {
+  if (rawTools === undefined) {
     return [...DEFAULT_ANTIGRAVITY_TOOLS];
+  }
+  if (!Array.isArray(rawTools)) {
+    throw new Error(`agents/${agentFile} declares invalid tools field`);
   }
   const mapped = [];
   const seen = new Set();
@@ -183,7 +186,10 @@ function mapTools(rawTools) {
       }
     }
   }
-  return mapped.length > 0 ? mapped : [...DEFAULT_ANTIGRAVITY_TOOLS];
+  if (mapped.length === 0) {
+    throw new Error(`agents/${agentFile} declares no supported Antigravity tools`);
+  }
+  return mapped;
 }
 
 function normalizeRepoUrl(repo) {
@@ -233,9 +239,21 @@ function writeManagedFile({ pluginRoot, relative, content, mode, backupId, dryRu
     }
   }
   if (!dryRun) {
+    const writableMode = mode !== undefined ? (mode & 0o777) | 0o200 : undefined;
     fs.mkdirSync(path.dirname(target), { recursive: true });
-    fs.writeFileSync(target, next, mode !== undefined ? { mode } : undefined);
-    if (mode !== undefined) fs.chmodSync(target, mode);
+    const temp = `${target}.tmp-${crypto.randomUUID()}`;
+    try {
+      fs.writeFileSync(temp, next, {
+        flag: "wx",
+        ...(writableMode !== undefined ? { mode: writableMode } : {}),
+      });
+      if (process.platform !== "win32" && writableMode !== undefined) {
+        fs.chmodSync(temp, writableMode);
+      }
+      fs.renameSync(temp, target);
+    } finally {
+      fs.rmSync(temp, { force: true });
+    }
   } else {
     log(`[dry-run] 写入文件: ${target}`);
   }
@@ -291,10 +309,16 @@ function buildAgentFiles(sourceRoot) {
     if (!entry.isFile() || !entry.name.endsWith(".md")) continue;
     const raw = fs.readFileSync(path.join(agentsDir, entry.name), "utf8");
     const { data, body } = parseFrontmatter(raw);
-    if (!data || !data.name || !data.description) {
+    if (
+      !data ||
+      typeof data.name !== "string" ||
+      !data.name.trim() ||
+      typeof data.description !== "string" ||
+      !data.description.trim()
+    ) {
       throw new Error(`agents/${entry.name} missing name or description`);
     }
-    const tools = mapTools(data.tools);
+    const tools = mapTools(data.tools, entry.name);
     const updatedBody = body
       .replace(/`(skills\/[^`\s]+)`/g, (_, target) => `\`${PLUGIN_HOME_REF}/${target}\``)
       .replace(/`(references\/agents\/[^`\s]+)`/g, (_, target) => `\`${PLUGIN_HOME_REF}/${target}\``)
@@ -366,7 +390,9 @@ function installAntigravity({
   for (const relative of managedPaths) {
     checkedPath(pluginRoot, relative);
   }
+  validateRuleTargets({ sourceRoot, installRoot: pluginRoot, host: "antigravity" });
 
+  validateBackupId(backupId);
   if (!dryRun) {
     fs.mkdirSync(pluginRoot, { recursive: true });
   }
@@ -435,7 +461,7 @@ function installAntigravity({
   return pluginRoot;
 }
 
-module.exports = { PLUGIN_SUBPATH, installAntigravity, parseFrontmatter };
+module.exports = { PLUGIN_SUBPATH, installAntigravity, parseFrontmatter, mapTools };
 
 function parseCli(argv) {
   let dryRun = false;
@@ -446,10 +472,7 @@ function parseCli(argv) {
     if (arg === "--dry-run") {
       dryRun = true;
     } else if (arg === "--backup-id") {
-      backupId = argv[++i];
-      if (!backupId || backupId.includes("/") || backupId.includes("\\") || backupId.includes("..")) {
-        throw new Error("Invalid --backup-id");
-      }
+      backupId = validateBackupId(argv[++i]);
     } else if (arg.startsWith("-")) {
       throw new Error(`Unknown option: ${arg}`);
     } else {

@@ -36,14 +36,14 @@ CEW works with your existing projects and model. It does not provide a model or 
 
 ### Install from npm
 
-Preview the changes, then install to all supported hosts:
+Preview the changes, then install (Claude Code + Codex, and auto-syncs Antigravity if `~/.gemini` already exists):
 
 ```sh
 npx claude-everything-workflow install --dry-run
 npx claude-everything-workflow install
 ```
 
-To install for only one host:
+To install for only one host (use `--antigravity-only` when installing Antigravity on a machine without `~/.gemini`):
 
 ```sh
 npx claude-everything-workflow install --claude-only
@@ -75,7 +75,7 @@ Installation updates user-level files and can affect multiple projects. Changed 
 
 The Codex installer preserves edits to `~/.codex/rules/02-implementation.md`, and the Antigravity installer uses the same three-way Git merge mechanism for `~/.gemini/config/plugins/claude-everything-workflow/references/rules/02-implementation.md`. On the first upgrade it records the packaged rule as a baseline. Later upgrades use Git to merge independent changes. If a merge conflicts or Git is unavailable, the personal rule stays active and the installer prints the incoming copy’s location and manual merge instructions.
 
-For Antigravity, only `rules/AGENTS.md` stays in the auto-loaded plugin `rules/` folder while all detailed rules live under `references/rules/` for on-demand loading. If a legacy `~/.gemini/AGENTS.md` exists, the installer leaves it untouched and prints a notice so you can review or remove it manually.
+For Antigravity, only `rules/AGENTS.md` stays in the auto-loaded plugin `rules/` folder while all detailed rules live under `references/rules/` for on-demand loading. Default `install` syncs Antigravity only when a non-symlink `~/.gemini` directory already exists; pass `--antigravity-only` to install it explicitly. If a legacy `~/.gemini/AGENTS.md` exists, the installer leaves it untouched and prints a notice so you can review or remove it manually.
 
 A fresh Claude Code installation puts CEW’s base, Git and security rules in `~/.claude/rules/`. Other CEW rules are available on demand under `~/.claude/references/rules/`. On upgrade, personally edited copies of the three newly migrated rules stay active. Obsolete rules left by older releases can also still load.
 

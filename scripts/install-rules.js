@@ -237,55 +237,111 @@ function finalizeBackups({ installRoot, dryRun = false, log = console.log }) {
   }
 }
 
-function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupId(), dryRun = false, log = console.log }) {
-  if (!["claude-code", "codex", "antigravity"].includes(host)) throw new Error(`Invalid host: ${host}`);
-  const root = path.resolve(installRoot);
+function validateBackupId(backupId) {
+  if (
+    !backupId ||
+    backupId === "." ||
+    backupId.includes("/") ||
+    backupId.includes("\\") ||
+    backupId.includes("..")
+  ) {
+    throw new Error("Invalid --backup-id");
+  }
+  return backupId;
+}
+
+function getHostRulePolicy(host) {
+  if (host === "claude-code") {
+    return {
+      dirFor: (relative) => (claudeResidentRules.has(relative) ? "rules" : "references/rules"),
+      mergedRule: null,
+      promotedRule: "02-implementation.md",
+      retireColdFromRules: true,
+      retiredDirs: ["rules", "references/rules"],
+    };
+  }
+  if (host === "codex") {
+    return {
+      dirFor: () => "rules",
+      mergedRule: { relative: "rules/02-implementation.md", hostLabel: "Codex" },
+      promotedRule: null,
+      retireColdFromRules: false,
+      retiredDirs: ["rules"],
+    };
+  }
+  if (host === "antigravity") {
+    return {
+      dirFor: () => "references/rules",
+      mergedRule: { relative: "references/rules/02-implementation.md", hostLabel: "Antigravity" },
+      promotedRule: null,
+      retireColdFromRules: false,
+      retiredDirs: ["references/rules"],
+    };
+  }
+  throw new Error(`Invalid host: ${host}`);
+}
+
+function collectRuleSources(sourceRoot) {
   const rulesRoot = path.join(sourceRoot, "rules");
-  const legacy = JSON.parse(fs.readFileSync(path.join(sourceRoot, "scripts/legacy-common-rule-hashes.json"), "utf8"));
   const files = fs.readdirSync(rulesRoot, { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
     .map((entry) => entry.name);
   const commonFiles = fs.readdirSync(path.join(rulesRoot, "common"), { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
     .map((entry) => `common/${entry.name}`);
-  const installedOnDemand = (relative) => host === "antigravity" ||
-    (host === "claude-code" && !claudeResidentRules.has(relative));
-  const promoted = (relative) => host === "claude-code" && relative === "02-implementation.md";
+  return { rulesRoot, relatives: [...files, ...commonFiles] };
+}
+
+function validateRuleTargets({ sourceRoot, installRoot, host }) {
+  const policy = getHostRulePolicy(host);
+  const root = path.resolve(installRoot);
+  const { rulesRoot, relatives } = collectRuleSources(sourceRoot);
   // Validate all managed destinations before the first write, including upgrade cleanup paths.
   checkedPath(root, BACKUP_ROOT_NAME);
-  if (host === "codex" || host === "antigravity") {
+  if (policy.mergedRule) {
     checkedPath(root, IMPLEMENTATION_RULE_BASE);
     checkedPath(root, IMPLEMENTATION_RULE_INCOMING);
   }
-  for (const relative of [...files, ...commonFiles]) {
-    if (host !== "antigravity") checkedPath(root, `rules/${relative}`);
-    if (installedOnDemand(relative) || promoted(relative)) {
+  for (const relative of relatives) {
+    const targetDir = policy.dirFor(relative);
+    checkedPath(root, `${targetDir}/${relative}`);
+    if (policy.retireColdFromRules && targetDir === "references/rules") {
+      checkedPath(root, `rules/${relative}`);
+    }
+    if (policy.promotedRule === relative) {
+      checkedPath(root, `rules/${relative}`);
       checkedPath(root, `references/rules/${relative}`);
     }
   }
   for (const retired of retiredTopLevelRules) {
-    if (host !== "antigravity") checkedPath(root, `rules/${retired}`);
-    if (host === "claude-code" || host === "antigravity") checkedPath(root, `references/rules/${retired}`);
+    for (const dir of policy.retiredDirs) {
+      checkedPath(root, `${dir}/${retired}`);
+    }
   }
-  for (const relative of [...files, ...commonFiles]) {
+  return { policy, root, rulesRoot, relatives };
+}
+
+function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupId(), dryRun = false, log = console.log }) {
+  validateBackupId(backupId);
+  const { policy, root, rulesRoot, relatives } = validateRuleTargets({ sourceRoot, installRoot, host });
+  const legacy = JSON.parse(fs.readFileSync(path.join(sourceRoot, "scripts/legacy-common-rule-hashes.json"), "utf8"));
+  for (const relative of relatives) {
     const source = path.join(rulesRoot, relative);
-    if ((host === "codex" || host === "antigravity") && relative === "02-implementation.md") {
-      const targetRelative = host === "antigravity" ? `references/rules/${relative}` : `rules/${relative}`;
-      const hostLabel = host === "antigravity" ? "Antigravity" : "Codex";
+    if (policy.mergedRule && relative === "02-implementation.md") {
       installMergedImplementationRule(
-        { source, root, relative: targetRelative, backupId, dryRun, log },
+        { source, root, relative: policy.mergedRule.relative, backupId, dryRun, log },
         legacy.files[relative] || [],
-        hostLabel,
+        policy.mergedRule.hostLabel,
       );
       continue;
     }
-    if (promoted(relative)) {
+    if (policy.promotedRule === relative) {
       installPromotedRule({ source, root, relative, knownHashes: legacy.files[relative] || [], backupId, dryRun, log });
       continue;
     }
-    const cold = installedOnDemand(relative);
-    copyRule({ source, root, relative: `${cold ? "references/rules" : "rules"}/${relative}`, backupId, dryRun, log });
-    if (cold && host === "claude-code") {
+    const targetDir = policy.dirFor(relative);
+    copyRule({ source, root, relative: `${targetDir}/${relative}`, backupId, dryRun, log });
+    if (policy.retireColdFromRules && targetDir === "references/rules") {
       retireRule({
         source, root, relative: `rules/${relative}`,
         knownHashes: legacy.files[relative] || [], dryRun, log,
@@ -294,16 +350,21 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
   }
   for (const retired of retiredTopLevelRules) {
     const knownHashes = legacy.files[retired] || [];
-    if (host !== "antigravity") {
-      retireRule({ source: null, root, relative: `rules/${retired}`, knownHashes, dryRun, log });
-    }
-    if (host === "claude-code" || host === "antigravity") {
-      retireRule({ source: null, root, relative: `references/rules/${retired}`, knownHashes, dryRun, log });
+    for (const dir of policy.retiredDirs) {
+      retireRule({ source: null, root, relative: `${dir}/${retired}`, knownHashes, dryRun, log });
     }
   }
 }
 
-module.exports = { BACKUP_ROOT_NAME, checkedPath, defaultBackupId, installRules, finalizeBackups };
+module.exports = {
+  BACKUP_ROOT_NAME,
+  checkedPath,
+  defaultBackupId,
+  validateBackupId,
+  validateRuleTargets,
+  installRules,
+  finalizeBackups,
+};
 
 function parseCli(argv) {
   let dryRun = false;
@@ -317,10 +378,7 @@ function parseCli(argv) {
     } else if (arg === "--finalize-backups") {
       finalize = true;
     } else if (arg === "--backup-id") {
-      backupId = argv[++i];
-      if (!backupId || backupId.includes("/") || backupId.includes("\\") || backupId.includes("..")) {
-        throw new Error("Invalid --backup-id");
-      }
+      backupId = validateBackupId(argv[++i]);
     } else if (arg.startsWith("-")) {
       throw new Error(`Unknown option: ${arg}`);
     } else {

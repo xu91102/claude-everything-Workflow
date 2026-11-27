@@ -7,6 +7,7 @@ HOME_DIR="${HOME:?HOME is required}"
 INSTALL_CLAUDE=1
 INSTALL_CODEX=1
 INSTALL_ANTIGRAVITY=1
+EXPLICIT_ANTIGRAVITY=0
 SELECTED_ONLY=""
 DRY_RUN=0
 SHOW_HELP=0
@@ -38,7 +39,10 @@ set_only_host() {
     case "$flag" in
         --claude-only) INSTALL_CLAUDE=1 ;;
         --codex-only) INSTALL_CODEX=1 ;;
-        --antigravity-only) INSTALL_ANTIGRAVITY=1 ;;
+        --antigravity-only)
+            INSTALL_ANTIGRAVITY=1
+            EXPLICIT_ANTIGRAVITY=1
+            ;;
     esac
 }
 
@@ -330,7 +334,25 @@ finalize_backups() {
     node "${options[@]}"
 }
 
+resolve_antigravity_install() {
+    if [ "$INSTALL_ANTIGRAVITY" -eq 0 ] || [ "$EXPLICIT_ANTIGRAVITY" -eq 1 ]; then
+        return
+    fi
+
+    local gemini_dir="$HOME_DIR/.gemini"
+    if [ -L "$gemini_dir" ]; then
+        echo "Skipping Antigravity plugin sync ($gemini_dir is a symlink; use --antigravity-only to inspect)."
+        INSTALL_ANTIGRAVITY=0
+        return
+    fi
+    if [ ! -d "$gemini_dir" ]; then
+        echo "Skipping Antigravity plugin sync ($gemini_dir not found; use --antigravity-only to install)."
+        INSTALL_ANTIGRAVITY=0
+    fi
+}
+
 validate_retired_skill_manifest
+resolve_antigravity_install
 if [ "$INSTALL_CLAUDE" -eq 1 ]; then
     check_install_root "$HOME_DIR/.claude"
 fi
