@@ -47,6 +47,9 @@ jobs:
       - name: Test plugin distribution
         run: npm run test:plugins
 
+      - name: Test commit-quality hook
+        run: npm run test:hooks
+
       - name: Validate npm package
         run: npm run pack:dry-run
 
@@ -75,9 +78,23 @@ jobs:
           /bin/bash --version
           npm run test:install-rules
 
+  test-windows-installer:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Test installer with Windows PowerShell
+        run: npm run test:install-rules
+
   publish:
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-    needs: [verify, test-macos-installer]
+    needs: [verify, test-macos-installer, test-windows-installer]
     runs-on: ubuntu-latest
     permissions:
       contents: write

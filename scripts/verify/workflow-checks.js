@@ -28,6 +28,9 @@ const RETIRED_RULE_PATHS = [
   "rules/08-specialty-rules-index.md",
   "rules/09-first-principles-adversarial-testing.md",
 ];
+const RETIRED_AGENT_PATHS = [
+  "agents/harness-optimizer.md",
+];
 
 function checkRouterBudget({ exists, read, fail }) {
   if (!exists(ROUTER_PATH)) {
@@ -83,6 +86,7 @@ function checkRetiredReferences({ managedFiles, isVerifierImplementation, read, 
     "scripts/install.ps1",
     "scripts/install-rules.js",
     "scripts/retired-skill-files.json",
+    "scripts/cleanup-retired-skills.js",
     "scripts/legacy-common-rule-hashes.json",
     "scripts/upstream-capability-map.json",
   ]);
@@ -90,7 +94,7 @@ function checkRetiredReferences({ managedFiles, isVerifierImplementation, read, 
     if (isVerifierImplementation(file) || skipFiles.has(file)) continue;
     if (!/\.(md|json|js|sh|ps1)$/.test(file)) continue;
     const body = read(file);
-    for (const retired of [...RETIRED_SKILL_PATHS, ...RETIRED_RULE_PATHS]) {
+    for (const retired of [...RETIRED_SKILL_PATHS, ...RETIRED_RULE_PATHS, ...RETIRED_AGENT_PATHS]) {
       if (body.includes(retired)) {
         fail(`${file} references retired path: ${retired}`);
       }

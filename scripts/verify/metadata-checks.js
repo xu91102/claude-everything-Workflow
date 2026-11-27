@@ -33,6 +33,7 @@ const PACKAGE_ONLY_PATHS = [
   "scripts/verify/install-rules.test.js",
   "scripts/verify/learning.test.js",
   "scripts/verify/plugin-distribution.test.js",
+  "scripts/verify/commit-quality.test.js",
 ];
 
 function bindContext(context) {
@@ -594,8 +595,10 @@ function checkGitHubWorkflows() {
     "workflow_dispatch:",
     "npm run verify",
     "npm run pack:dry-run",
+    "test-windows-installer:",
+    "windows-latest",
     "publish:",
-    "needs: [verify, test-macos-installer]",
+    "needs: [verify, test-macos-installer, test-windows-installer]",
     "id-token: write",
     "node-version: 22.14.0",
     "package-manager-cache: false",

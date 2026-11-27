@@ -52,6 +52,7 @@ function checkScriptLayout() {
 
   for (const requiredPath of [
     "hooks/runtime/run-with-flags.js",
+    "hooks/runtime/antigravity-pre-tool.js",
     "hooks/runtime/hook-flags.js",
     "hooks/commit-quality.js",
     "hooks/check-edited-file.js",
