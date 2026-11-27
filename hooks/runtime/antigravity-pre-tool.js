@@ -8,26 +8,12 @@
  * hooks/commit-quality.js，并输出符合 hooks.json 契约的 JSON 决策。
  */
 
-const fs = require("node:fs");
 const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 const { isHookEnabled } = require("./hook-flags");
 
 const HOOK_ID = "pre:bash:commit-quality";
 const PROFILES = "standard,strict";
-
-function resolveCwd(candidate) {
-  if (typeof candidate === "string" && candidate.trim()) {
-    try {
-      if (fs.statSync(candidate).isDirectory()) {
-        return candidate;
-      }
-    } catch {
-      // Fallback to process.cwd() when payload cwd is unavailable.
-    }
-  }
-  return process.cwd();
-}
 
 function run(raw) {
   if (!isHookEnabled(HOOK_ID, { profiles: PROFILES })) {
@@ -48,17 +34,21 @@ function run(raw) {
   }
 
   const commitQualityPath = path.resolve(__dirname, "..", "commit-quality.js");
-  if (!fs.existsSync(commitQualityPath)) {
-    return { decision: "allow" };
+  const cwd = payload.toolCall.args.Cwd ?? payload.cwd ?? process.cwd();
+  if (typeof cwd !== "string" || !cwd.trim() || cwd.includes("\0")) {
+    return { decision: "deny", reason: "Invalid run_command working directory." };
   }
 
   const result = spawnSync(process.execPath, [commitQualityPath], {
     input: JSON.stringify({ tool_input: { command: commandLine } }),
-    cwd: resolveCwd(payload?.cwd),
+    cwd,
     encoding: "utf8",
     timeout: 10000,
   });
 
+  if (result.error || (result.status !== 0 && result.status !== 2)) {
+    return { decision: "deny", reason: "Could not run the commit check in the requested working directory." };
+  }
   const reason = (result.stderr || "").trim();
   if (result.status === 2) {
     return {
