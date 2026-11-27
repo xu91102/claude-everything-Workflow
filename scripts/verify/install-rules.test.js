@@ -628,7 +628,7 @@ function checkAntigravityEdgeCases() {
   assert.deepEqual(fs.readdirSync(outsideRules), []);
 
   // 2. Read-only source files (0o444) install with owner-writable permissions so upgrades succeed.
-  if (process.platform !== "win32") {
+  {
     const roHome = path.join(tempRoot, "ag-ro-home");
     const roSource = path.join(tempRoot, "ag-ro-source");
     fs.cpSync(sourceRoot, roSource, {
@@ -636,17 +636,37 @@ function checkAntigravityEdgeCases() {
       filter: (src) => !src.includes(`${path.sep}node_modules`) && !src.includes(`${path.sep}.git`),
     });
     const roRef = path.join(roSource, "references/git-worktrees.md");
+    const roRule = path.join(roSource, "rules/01-base.md");
     fs.chmodSync(roRef, 0o444);
+    fs.chmodSync(roRule, 0o444);
     try {
       const installedRoot = installAntigravity({ sourceRoot: roSource, homeDir: roHome, log: () => {} });
       const installedRef = path.join(installedRoot, "references/git-worktrees.md");
+      const installedRule = path.join(installedRoot, "references/rules/01-base.md");
       assert.ok((fs.statSync(installedRef).mode & 0o200) !== 0, "installed file must keep owner write bit");
+      assert.ok(fs.statSync(installedRule).mode & 0o200, "installed rule must be owner-writable");
+      // Older installers could leave this target read-only.
+      fs.chmodSync(installedRule, 0o400);
       fs.chmodSync(roRef, 0o644);
       fs.writeFileSync(roRef, "# Updated worktrees\n");
-      installAntigravity({ sourceRoot: roSource, homeDir: roHome, log: () => {} });
+      const originalRule = read(roRule);
+      fs.chmodSync(roRule, 0o644);
+      fs.writeFileSync(roRule, "# Updated rule\n");
+      fs.chmodSync(roRule, 0o444);
+      installAntigravity({ sourceRoot: roSource, homeDir: roHome, backupId: "upgrade", log: () => {} });
       assert.equal(read(installedRef), "# Updated worktrees\n");
+      assert.equal(read(installedRule), "# Updated rule\n");
+      assert.ok(fs.statSync(installedRule).mode & 0o200, "upgraded rule must be owner-writable");
+      const backup = path.join(installedRoot, BACKUP_ROOT_NAME, "upgrade", "references/rules/01-base.md");
+      assert.equal(read(backup), originalRule);
+      // Reuse the same snapshot ID, as happens for two updates within the same second.
+      fs.writeFileSync(installedRule, "Previous local rule\n");
+      installAntigravity({ sourceRoot: roSource, homeDir: roHome, backupId: "upgrade", log: () => {} });
+      assert.equal(read(backup), "Previous local rule\n");
+      assert.equal(read(installedRule), "# Updated rule\n");
     } finally {
       fs.chmodSync(roRef, 0o644);
+      fs.chmodSync(roRule, 0o644);
     }
   }
 

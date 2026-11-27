@@ -54,8 +54,20 @@ function replaceFile(file, content, mode = 0o600) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   const temp = file + ".tmp-" + crypto.randomUUID();
   try {
-    fs.writeFileSync(temp, content, { flag: "wx", mode });
-    fs.renameSync(temp, file);
+    fs.writeFileSync(temp, content, { flag: "wx", mode: (mode & 0o777) | 0o200 });
+    if (process.umask() & 0o200) {
+      fs.chmodSync(temp, (fs.statSync(temp).mode & 0o777) | 0o200);
+    }
+    // Windows refuses to replace a target left read-only by an older installer.
+    const priorMode = process.platform === "win32" && fs.existsSync(file) ? fs.statSync(file).mode : null;
+    const readOnly = priorMode !== null && !(priorMode & 0o200);
+    if (readOnly) fs.chmodSync(file, priorMode | 0o200);
+    try {
+      fs.renameSync(temp, file);
+    } catch (error) {
+      if (readOnly) fs.chmodSync(file, priorMode);
+      throw error;
+    }
   } finally {
     fs.rmSync(temp, { force: true });
   }
@@ -64,21 +76,19 @@ function replaceFile(file, content, mode = 0o600) {
 function copyRule({ source, root, relative, backupId, dryRun, log, merged }) {
   const target = checkedPath(root, relative);
   const content = merged ?? fs.readFileSync(source);
-  if (fs.existsSync(target)) {
+  const exists = fs.existsSync(target);
+  if (exists) {
     const previous = fs.readFileSync(target);
     if (content.equals(previous)) return;
     const backup = checkedPath(root, path.posix.join(BACKUP_ROOT_NAME, backupId, relative));
     log(`${dryRun ? "[dry-run] " : ""}备份规则: ${backup}`);
     if (!dryRun) {
-      fs.mkdirSync(path.dirname(backup), { recursive: true });
-      fs.copyFileSync(target, backup);
+      replaceFile(backup, previous, fs.statSync(target).mode);
     }
   }
   log(`${dryRun ? "[dry-run] " : ""}安装规则: ${target}`);
   if (!dryRun) {
-    fs.mkdirSync(path.dirname(target), { recursive: true });
-    if (merged) replaceFile(target, merged, fs.statSync(target).mode);
-    else fs.copyFileSync(source, target);
+    replaceFile(target, content, fs.statSync(exists ? target : source).mode);
   }
 }
 
