@@ -73,9 +73,17 @@ function replaceFile(file, content, mode = 0o600) {
   }
 }
 
-function copyRule({ source, root, relative, backupId, dryRun, log, merged }) {
+function copyRule({ source, root, relative, backupId, dryRun, log, merged, transformContent }) {
   const target = checkedPath(root, relative);
-  const content = merged ?? fs.readFileSync(source);
+  let content;
+  if (merged) {
+    content = merged;
+  } else {
+    const raw = fs.readFileSync(source);
+    content = transformContent
+      ? Buffer.from(transformContent(relative, raw.toString("utf8")), "utf8")
+      : raw;
+  }
   const exists = fs.existsSync(target);
   if (exists) {
     const previous = fs.readFileSync(target);
@@ -114,13 +122,16 @@ function mergeRuleText(local, base, incoming) {
 }
 
 function installMergedImplementationRule(options, knownHashes, hostLabel) {
-  const { source, root, relative, dryRun, log } = options;
+  const { source, root, relative, dryRun, log, transformContent } = options;
   const target = checkedPath(root, relative);
   const base = checkedPath(root, IMPLEMENTATION_RULE_BASE);
   const incoming = checkedPath(root, IMPLEMENTATION_RULE_INCOMING);
   const previous = fs.existsSync(base) ? fs.readFileSync(base) : null;
   const local = fs.existsSync(target) ? fs.readFileSync(target) : null;
-  const next = fs.readFileSync(source);
+  const rawNext = fs.readFileSync(source);
+  const next = transformContent
+    ? Buffer.from(transformContent(relative, rawNext.toString("utf8")), "utf8")
+    : rawNext;
   const localHash = local && digest(local);
   const pristine = !local || localHash === digest(next) ||
     (previous ? localHash === digest(previous) : knownHashes.includes(localHash));
@@ -331,7 +342,15 @@ function validateRuleTargets({ sourceRoot, installRoot, host }) {
   return { policy, root, rulesRoot, relatives };
 }
 
-function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupId(), dryRun = false, log = console.log }) {
+function installRules({
+  sourceRoot,
+  installRoot,
+  host,
+  backupId = defaultBackupId(),
+  dryRun = false,
+  log = console.log,
+  transformContent,
+}) {
   validateBackupId(backupId);
   const { policy, root, rulesRoot, relatives } = validateRuleTargets({ sourceRoot, installRoot, host });
   const legacy = JSON.parse(fs.readFileSync(path.join(sourceRoot, "scripts/legacy-common-rule-hashes.json"), "utf8"));
@@ -339,7 +358,7 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
     const source = path.join(rulesRoot, relative);
     if (policy.mergedRule && relative === "02-implementation.md") {
       installMergedImplementationRule(
-        { source, root, relative: policy.mergedRule.relative, backupId, dryRun, log },
+        { source, root, relative: policy.mergedRule.relative, backupId, dryRun, log, transformContent },
         legacy.files[relative] || [],
         policy.mergedRule.hostLabel,
       );
@@ -350,7 +369,7 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
       continue;
     }
     const targetDir = policy.dirFor(relative);
-    copyRule({ source, root, relative: `${targetDir}/${relative}`, backupId, dryRun, log });
+    copyRule({ source, root, relative: `${targetDir}/${relative}`, backupId, dryRun, log, transformContent });
     if (policy.retireColdFromRules && targetDir === "references/rules") {
       retireRule({
         source, root, relative: `rules/${relative}`,
@@ -370,6 +389,7 @@ module.exports = {
   BACKUP_ROOT_NAME,
   checkedPath,
   defaultBackupId,
+  replaceFile,
   validateBackupId,
   validateRuleTargets,
   installRules,

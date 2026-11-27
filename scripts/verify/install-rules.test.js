@@ -353,6 +353,60 @@ function checkInstallerMergeFailure() {
   assert.equal(fs.readFileSync(settingsPath, "utf8"), previous);
 }
 
+function checkRetiredAgentCleanup() {
+  const fixture = path.join(tempRoot, "retired-agent");
+  const agents = path.join(fixture, "agents");
+  const name = "harness-optimizer.md";
+  const target = path.join(agents, name);
+  const cleanup = path.join(fixture, "cleanup-retired-skills.js");
+  const original = "Distributed agent\n";
+  const manifest = JSON.parse(read(path.join(sourceRoot, "scripts/retired-skill-files.json")));
+  manifest.retired_agent_hashes = { [name]: [crypto.createHash("sha256").update(original).digest("hex")] };
+  fs.mkdirSync(agents, { recursive: true });
+  fs.copyFileSync(path.join(sourceRoot, "scripts/cleanup-retired-skills.js"), cleanup);
+  fs.writeFileSync(path.join(fixture, "retired-skill-files.json"), JSON.stringify(manifest));
+  const run = (...args) => {
+    const result = spawnSync(process.execPath, [cleanup, fixture, ...args], { encoding: "utf8" });
+    assert.ifError(result.error);
+    assert.equal(result.status, 0, result.stderr);
+  };
+
+  fs.writeFileSync(target, original.replace("\n", "\r\n"));
+  fs.chmodSync(target, 0o444);
+  run("--dry-run");
+  assert.equal(read(target), original);
+  run();
+  assert.equal(fs.existsSync(target), false, "remove an unmodified distribution on upgrade");
+  fs.writeFileSync(target, original + "My changes\n");
+  run();
+  assert.equal(read(target), original + "My changes\n");
+
+  const outside = path.join(fixture, "personal-agents");
+  fs.renameSync(agents, outside);
+  fs.writeFileSync(path.join(outside, name), original);
+  fs.symlinkSync(outside, agents, process.platform === "win32" ? "junction" : "dir");
+  run();
+  assert.equal(read(path.join(outside, name)), original, "preserve files outside the install root's agents directory");
+
+  // File-level symlink inside a regular agents/ directory must also be preserved.
+  if (process.platform === "win32") {
+    fs.rmdirSync(agents);
+  } else {
+    fs.unlinkSync(agents);
+  }
+  fs.mkdirSync(agents);
+  const linkedFileTarget = path.join(outside, "linked.md");
+  fs.writeFileSync(linkedFileTarget, original);
+  if (process.platform !== "win32") {
+    fs.symlinkSync(linkedFileTarget, path.join(agents, name));
+    const linkRun = spawnSync(process.execPath, [cleanup, fixture], { encoding: "utf8" });
+    assert.ifError(linkRun.error);
+    assert.equal(linkRun.status, 0, linkRun.stderr);
+    assert.match(linkRun.stdout, /Preserving symlinked retired agent:/);
+    assert.equal(read(linkedFileTarget), original);
+  }
+}
+
 function checkInstallerEntrypoint() {
   const profile = path.join(tempRoot, "installer-profile");
   const windows = process.platform === "win32";
@@ -461,7 +515,7 @@ function checkInstallerEntrypoint() {
   assert.deepEqual(installedSettings.hooks.PostToolUse[0], userHookGroup);
   assert.deepEqual(installedSettings.hooks.SessionStart, [unrelatedHook]);
   assert.equal(installedSettings.hooks.PostToolUse.flatMap(({ hooks }) => hooks)
-    .filter(({ command }) => command?.includes("hooks/check-console-log.js")).length, 1);
+    .filter(({ command }) => /hooks[\\/]check-console-log\.js/.test(command || "")).length, 1);
   const codexRule = path.join(profile, ".codex/rules/02-implementation.md");
   const customizedRule = read(codexRule) + "\nKeep unrelated work separate.\n";
   fs.writeFileSync(codexRule, customizedRule);
@@ -483,7 +537,11 @@ function checkInstallerEntrypoint() {
   assert.equal(read(codexRule), customizedRule, "the host installer must preserve the active Codex rule");
 
   // Once a regular ~/.gemini directory exists, default install syncs Antigravity automatically.
-  fs.unlinkSync(path.join(profile, ".gemini"));
+  if (windows) {
+    fs.rmdirSync(path.join(profile, ".gemini"));
+  } else {
+    fs.unlinkSync(path.join(profile, ".gemini"));
+  }
   fs.mkdirSync(path.join(profile, ".gemini"));
   run();
   assert.equal(read(codexRule), customizedRule, "the host installer must preserve the active Codex rule");
@@ -543,7 +601,11 @@ function checkInstallerEntrypoint() {
   assert.doesNotMatch(read(path.join(agRoot, "skills/pr/SKILL.md")), /\$ARGUMENTS/);
   assert.doesNotMatch(read(path.join(agRoot, "skills/learn/SKILL.md")), /\$ARGUMENTS/);
   const agAgents = fs.readdirSync(path.join(agRoot, "agents")).sort();
-  assert.equal(agAgents.length, 5);
+  const expectedAgents = ["database-reviewer.md", "e2e-runner.md", "refactor-cleaner.md", "security-reviewer.md"];
+  assert.deepEqual(agAgents, expectedAgents);
+  for (const host of [".claude", ".codex"]) {
+    assert.deepEqual(fs.readdirSync(path.join(profile, host, "agents")).sort(), expectedAgents);
+  }
   for (const agentFile of agAgents) {
     const body = read(path.join(agRoot, "agents", agentFile));
     assert.match(body, /^subagent: true$/m);
@@ -558,6 +620,119 @@ function checkInstallerEntrypoint() {
   assert.equal(fs.existsSync(path.join(agRoot, "scripts/learning/projects.js")), true);
   assert.equal(fs.existsSync(path.join(agRoot, "harness/manifest.json")), true);
   assert.equal(fs.existsSync(path.join(agRoot, "scripts/install-antigravity.js")), false);
+
+  // Antigravity hooks.json and rewritten plugin references.
+  const agHooks = JSON.parse(read(path.join(agRoot, "hooks.json")));
+  assert.equal(
+    agHooks["cew-commit-quality"]?.PreToolUse?.[0]?.matcher,
+    "run_command",
+  );
+  assert.equal(
+    agHooks["cew-commit-quality"]?.PreToolUse?.[0]?.hooks?.[0]?.command,
+    "node ./hooks/runtime/antigravity-pre-tool.js",
+  );
+  assert.equal(fs.existsSync(path.join(agRoot, "hooks/commit-quality.js")), true);
+  assert.equal(fs.existsSync(path.join(agRoot, "hooks/runtime/hook-flags.js")), true);
+  assert.equal(fs.existsSync(path.join(agRoot, "hooks/runtime/antigravity-pre-tool.js")), true);
+  assert.doesNotMatch(read(path.join(agRoot, "references/rules/05-git-workflow.md")), /`commands\/pr\.md`/);
+  assert.match(
+    read(path.join(agRoot, "references/rules/05-git-workflow.md")),
+    /~\/\.gemini\/config\/plugins\/claude-everything-workflow\/skills\/pr\/SKILL\.md/,
+  );
+  assert.doesNotMatch(read(path.join(agRoot, "skills/continuous-learning-v2/SKILL.md")), /`commands\/`/);
+
+  // Re-running Antigravity install with unchanged files must not create a spurious backup.
+  const agBackups = path.join(agRoot, BACKUP_ROOT_NAME);
+  const beforeSnapshots = fs.existsSync(agBackups) ? fs.readdirSync(agBackups) : [];
+  installAntigravity({ sourceRoot, homeDir: profile, backupId: "noop-reinstall", log: () => {} });
+  assert.equal(fs.existsSync(path.join(agBackups, "noop-reinstall")), false);
+  assert.deepEqual(fs.existsSync(agBackups) ? fs.readdirSync(agBackups) : [], beforeSnapshots);
+
+  // Exercise bundled Antigravity PreToolUse adapter against a disposable git repo.
+  const hookRepo = path.join(tempRoot, "ag-hook-repo");
+  fs.mkdirSync(hookRepo, { recursive: true });
+  const runGit = (...gitArgs) => {
+    const res = spawnSync("git", gitArgs, { cwd: hookRepo, encoding: "utf8" });
+    assert.equal(res.status, 0, res.stderr);
+  };
+  runGit("init", "-q");
+  runGit("config", "user.name", "Test");
+  runGit("config", "user.email", "test@example.com");
+  const invokeHook = (commandLine, extraEnv = {}, opts = {}) => {
+    const toolCwd = "toolCwd" in opts ? opts.toolCwd : hookRepo;
+    const legacyCwd = "legacyCwd" in opts ? opts.legacyCwd : agRoot;
+    const args = { CommandLine: commandLine };
+    if (toolCwd !== undefined) args.Cwd = toolCwd;
+    const payload = { toolCall: { name: "run_command", args } };
+    if (legacyCwd !== undefined) payload.cwd = legacyCwd;
+    if (opts.workspacePaths !== undefined) payload.workspacePaths = opts.workspacePaths;
+    const res = spawnSync(process.execPath, ["./hooks/runtime/antigravity-pre-tool.js"], {
+      cwd: agRoot,
+      env: { ...process.env, ...extraEnv },
+      input: JSON.stringify(payload),
+      encoding: "utf8",
+      timeout: 10000,
+    });
+    assert.ifError(res.error);
+    assert.equal(res.status, 0, res.stderr);
+    return JSON.parse(res.stdout);
+  };
+
+  fs.writeFileSync(path.join(hookRepo, "clean.js"), "export const ok = true;\n");
+  runGit("add", "clean.js");
+  assert.deepEqual(invokeHook('git commit -m "feat: clean"'), { decision: "allow" });
+  assert.deepEqual(invokeHook("git status"), { decision: "allow" });
+  assert.deepEqual(
+    invokeHook("git status", {}, { toolCwd: path.join(tempRoot, "missing-cwd") }),
+    { decision: "allow" },
+  );
+
+  const secretVal = "skTest0123456789abcdef012345";
+  fs.writeFileSync(path.join(hookRepo, "secret.js"), `const apiKey = "${secretVal}";\n`);
+  runGit("add", "secret.js");
+  const denied = invokeHook('git commit -m "feat: secret"');
+  assert.equal(denied.decision, "deny");
+  assert.match(denied.reason, /检测到疑似密钥/);
+  assert.equal(denied.reason.includes(secretVal), false);
+  assert.equal(
+    invokeHook('git commit -m "feat: legacy"', {}, { toolCwd: null, legacyCwd: hookRepo }).decision,
+    "deny",
+  );
+  assert.equal(
+    invokeHook('git commit -m "feat: workspace"', {}, {
+      toolCwd: undefined,
+      legacyCwd: undefined,
+      workspacePaths: [hookRepo],
+    }).decision,
+    "deny",
+  );
+  assert.equal(
+    invokeHook('git commit -m "feat: empty-cwd"', {}, {
+      toolCwd: "",
+      legacyCwd: undefined,
+      workspacePaths: [hookRepo],
+    }).decision,
+    "deny",
+  );
+  assert.equal(
+    invokeHook('git commit -m "feat: rel-cwd"', {}, {
+      toolCwd: path.basename(hookRepo),
+      legacyCwd: undefined,
+      workspacePaths: [tempRoot],
+    }).decision,
+    "deny",
+  );
+  assert.equal(
+    invokeHook('git commit -m "feat: invalid"', {}, { toolCwd: path.join(tempRoot, "missing-cwd") }).decision,
+    "deny",
+  );
+  assert.deepEqual(invokeHook('git commit -m "feat: secret"', { ECC_HOOK_PROFILE: "minimal" }), {
+    decision: "allow",
+  });
+  assert.deepEqual(
+    invokeHook('git commit -m "feat: secret"', { ECC_DISABLED_HOOKS: "pre:bash:commit-quality" }),
+    { decision: "allow" },
+  );
 }
 
 function checkAntigravityOnlyInstaller() {
@@ -766,6 +941,7 @@ try {
   assert.deepEqual(fs.readdirSync(outside), []);
   assert.throws(() => install("invalid", "unknown"), /host/i);
   checkLegacyMigration();
+  checkRetiredAgentCleanup();
   checkPromotedImplementationRule();
   checkCodexImplementationRuleUpgrades();
   checkAntigravityImplementationRuleUpgrades();
