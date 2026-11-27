@@ -33,6 +33,7 @@ const PACKAGE_ONLY_PATHS = [
   "scripts/verify/install-rules.test.js",
   "scripts/verify/learning.test.js",
   "scripts/verify/plugin-distribution.test.js",
+  "scripts/verify/commit-quality.test.js",
 ];
 
 function bindContext(context) {

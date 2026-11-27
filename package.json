@@ -24,6 +24,7 @@
     "test:install-rules": "node scripts/verify/install-rules.test.js",
     "test:learning": "node --test scripts/verify/learning.test.js",
     "test:plugins": "node --test scripts/verify/plugin-distribution.test.js",
+    "test:hooks": "node --test scripts/verify/commit-quality.test.js",
     "eval:scenarios": "node scripts/eval-scenarios.js",
     "verify:upstream": "node scripts/verify-upstream-capability-map.js",
     "pack:dry-run": "npm pack --dry-run"
