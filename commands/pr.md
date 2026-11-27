@@ -38,8 +38,8 @@ description: 提交、推送和创建 Pull Request 的标准工作流
 5. 修复可安全修复的失败项，并重跑相关验证。
 6. 只暂存本次任务相关文件。
 7. 使用 conventional commit 提交。
-8. 按 `rules/05-git-workflow.md` 的授权边界执行推送与创建 PR。
-9. 创建 PR 后报告链接、验证结果、风险点和未运行检查。
+8. 按 `rules/05-git-workflow.md` 的授权边界执行推送与创建 PR；若用户明确要求跳过本地审查、改走线上审查（如 GitHub `@codex review`），建完 PR 后按要求评论触发对应线上审查。
+9. 创建 PR 后报告 PR 链接、工作区与分支、本地/线上审查状态（线上审查未出结果前标注待审查，不写成已通过）、验证结果、风险点和未运行检查。
 
 若当前工作来自 tracker ticket，在 commit/PR 描述中加入不会误触发关闭的 ticket reference
 及验证摘要。创建 PR does not authorize closing、resolve、改 label 或解锁其他 ticket；

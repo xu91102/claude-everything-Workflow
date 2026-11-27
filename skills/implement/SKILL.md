@@ -40,13 +40,15 @@ disable-model-invocation: true
 2. 用 pre-delivery base 冻结包含 task-owned committed、staged、unstaged、untracked 的完整审查包，
    范围合同作为 Spec source，按 `skills/code-review/SKILL.md` 启动独立只读子代理（`independent` 或 `dual`）完成审查；
    实施者不得自我审查，独立审查不可用时返回 `BLOCKED`，不得降级。
+   仅当用户明确要求跳过本地审查并改走线上审查（例如 GitHub `@codex review`）时，将本地审查记为
+   `SKIPPED（用户指定线上审查）`，不得用自审替代，且在拿到线上审查结果前不得声明审查通过。
    修复 Critical/Important findings 后复核受影响的验收与审查项，不把部分完成报告为交付完成。
 3. 逐条核对验收，按 `rules/common/testing.md` 运行 fresh commands。已在当前阶段运行且仍对应
    最终改动的证据可以复用；新改动、失败或未决风险才触发重跑。记录实际结果、未运行项和剩余风险。
 
 ## 收尾与授权
 
-- 无 ticket：选定的 review 与 fresh verification 均通过后报告范围、证据和风险；到此结束，不查询或刷新 frontier。
+- 无 ticket：选定的 review（或用户显式指定的线上审查替代记录）与 fresh verification 均完成后，报告工作区与分支、范围/改动文件、证据（含审查状态、未运行项）和风险；到此结束，不查询或刷新 frontier。
 - ticket：验收、review 和 verification 全部通过后，回到 ticket 引用完成 resolve 与后续处理。
 - 本地交付授权不覆盖 commit、push 或创建 PR，也不扩张产品范围。用户已明确授权的后续动作按授权继续，
   不重复索要同一批准；PR 仍须通过 `/verify pre-pr`。外部写入、merge 和 cleanup 遵循 Git 规则与用户授权。
