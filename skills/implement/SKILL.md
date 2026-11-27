@@ -48,7 +48,7 @@ disable-model-invocation: true
 
 ## 收尾与授权
 
-- 无 ticket：选定的 review（或用户显式指定的线上审查替代记录）与 fresh verification 均完成后，报告工作区与分支、范围/改动文件、证据（含审查状态、未运行项）和风险；到此结束，不查询或刷新 frontier。
-- ticket：验收、review 和 verification 全部通过后，回到 ticket 引用完成 resolve 与后续处理。
+- 无 ticket：选定的 review 通过（或按用户显式要求记录 `SKIPPED（用户指定线上审查）`）且 fresh verification 通过后，报告工作区与分支、范围/改动文件、证据（含审查状态、未运行项）和风险；到此结束，不查询或刷新 frontier。
+- ticket：验收、review 和 verification 全部通过后，回到 ticket 引用完成 resolve 与后续处理（用户显式指定线上 PR 审查替代不豁免单票/并行集成前门禁，也不授权在线上结果出来前 resolve 依赖审查的 ticket；仅 `FINISH_DELIVERY` 建 PR 前的全分支审查可按 [references/ticket-delivery.md](references/ticket-delivery.md) 延后）。
 - 本地交付授权不覆盖 commit、push 或创建 PR，也不扩张产品范围。用户已明确授权的后续动作按授权继续，
   不重复索要同一批准；PR 仍须通过 `/verify pre-pr`。外部写入、merge 和 cleanup 遵循 Git 规则与用户授权。
