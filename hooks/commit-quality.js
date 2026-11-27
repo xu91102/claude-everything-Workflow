@@ -38,7 +38,10 @@ const GIT_OPTIONS_WITH_ARG = new Set([
 const FORWARDED_GIT_VALUE_FLAGS = new Set(['-C', '--git-dir', '--work-tree'])
 
 function splitCommandSegments(command) {
-    const segments = []
+    const root = []
+    const groups = []
+    let segments = root
+    const functionHead = /(?:function[ \t]+([\w-]+)(?:\s*\(\s*\))?|([a-zA-Z_][\w-]*)[ \t]*\(\s*\))(?:\s|#[^\n]*\n)*(\{(?=[\s;&|()<>]|$)|\()/y
     const continuations = new Set(['&&', '||', '|'])
     let current = ''
     let quote = null
@@ -109,14 +112,31 @@ function splitCommandSegments(command) {
                 continue
             }
         }
-        if (ch === '(') {
+        let opener = ch
+        let functionName
+        if (/[a-zA-Z_]/.test(ch) && (!i || /[\s;&|({]/.test(command[i - 1])) && !current.trim()) {
+            functionHead.lastIndex = i
+            const header = functionHead.exec(command)
+            if (header) {
+                functionName = header[1] || header[2]
+                opener = header[3]
+                i = functionHead.lastIndex - 1
+            }
+        }
+        // Braces are shell reserved words only at a command boundary.
+        const braceWord = (ch === '{' || ch === '}') && !current.trim() &&
+            (i + 1 === command.length || /[\s;&|()<>]/.test(command[i + 1]))
+        if (functionName || ch === '(' || (braceWord && ch === '{')) {
             push()
-            segments.push({ scope: 'enter' })
+            const group = { body: [], shared: opener === '{', functionName }
+            segments.push(group)
+            groups.push({ parent: segments, close: group.shared ? '}' : ')' })
+            segments = group.body
             continue
         }
-        if (ch === ')') {
+        if ((ch === ')' || (braceWord && ch === '}')) && groups.at(-1)?.close === ch) {
             push()
-            segments.push({ scope: 'leave' })
+            segments = groups.pop().parent
             continue
         }
         if (ch === '\n' || ch === ';') {
@@ -146,7 +166,7 @@ function splitCommandSegments(command) {
         current += ch
     }
     push()
-    return segments
+    return root
 }
 
 function skipHereDocBodies(command, start, documents) {
@@ -251,17 +271,34 @@ function advanceShellScope(scope, operator) {
     scope.inPipeline = false
 }
 
+function isDynamicGitPath(value) {
+    return /[$\x60]/.test(value) || value.startsWith('~')
+}
+
 function* gitCommitInvocations(command, initialCwd) {
-    const scopes = [shellScope({ dir: initialCwd, unresolved: false })]
-    for (const segment of splitCommandSegments(command)) {
-        const scope = scopes.at(-1)
+    const scope = shellScope({ dir: initialCwd, unresolved: false, functions: new Map() })
+    const analysis = { initialCwd, active: new Set(), calls: 0 }
+    yield* walkShellCommands(splitCommandSegments(command), scope, analysis, {}, 0)
+}
+
+function* walkShellCommands(segments, scope, analysis, inheritedGitEnv, depth) {
+    // Limit expansion of recursive or repeatedly invoked shell functions.
+    if (depth > 64) {
+        yield { analysisWarning: 'Shell 嵌套过深' }
+        return
+    }
+    for (const segment of segments) {
         const directory = scope.directory
-        if (segment.scope === 'enter') {
-            scopes.push(shellScope(directory))
+        if (segment.functionName) {
+            const functions = new Map(directory.functions)
+            functions.set(segment.functionName, segment)
+            scope.directory = { ...directory, functions }
             continue
         }
-        if (segment.scope === 'leave') {
-            if (scopes.length > 1) scopes.pop()
+        if (segment.body) {
+            const child = shellScope(directory)
+            yield* walkShellCommands(segment.body, child, analysis, inheritedGitEnv, depth + 1)
+            if (segment.shared) scope.directory = child.directory
             continue
         }
         if (segment.operator) {
@@ -269,8 +306,8 @@ function* gitCommitInvocations(command, initialCwd) {
             continue
         }
         const tokens = tokenizeSegment(segment.text)
-        const gitEnv = {}
-        let unresolvedEnv = false
+        const gitEnv = { ...inheritedGitEnv }
+        let unresolvedEnv = Object.values(gitEnv).some(isDynamicGitPath)
         let idx = 0
         while (idx < tokens.length) {
             const assignment = /^([A-Za-z_][A-Za-z0-9_]*)=([\s\S]*)$/.exec(tokens[idx])
@@ -278,17 +315,32 @@ function* gitCommitInvocations(command, initialCwd) {
             if (assignment && GIT_PATH_ENV.has(assignment[1])) {
                 const [, name, value] = assignment
                 gitEnv[name] = value
-                if (/[$\x60]/.test(value) || value.startsWith('~')) unresolvedEnv = true
+                if (isDynamicGitPath(value)) unresolvedEnv = true
             }
             idx += 1
         }
         const executable = tokens[idx]
         if (!executable) continue
 
+        const definition = directory.functions.get(executable)
+        if (definition) {
+            if (analysis.active.has(definition) || ++analysis.calls > 128) {
+                yield { analysisWarning: 'Shell 函数调用超出静态分析范围' }
+                continue
+            }
+            analysis.active.add(definition)
+            const child = shellScope(directory)
+            yield* walkShellCommands(definition.body, child, analysis, gitEnv, depth + 1)
+            analysis.active.delete(definition)
+            if (definition.shared) scope.directory = child.directory
+            continue
+        }
+
         if (executable === 'cd') {
             const target = tokens[idx + 1] === '--' ? tokens[idx + 2] : tokens[idx + 1]
             const next = applyCdTarget(target, directory.dir)
             scope.directory = {
+                ...directory,
                 dir: next.dir,
                 unresolved: next.unresolved || (directory.unresolved && !path.isAbsolute(target || ''))
             }
@@ -341,7 +393,7 @@ function* gitCommitInvocations(command, initialCwd) {
                 gitDirArgs,
                 gitEnv,
                 unresolvedEnv,
-                cdDir: directory.dir !== initialCwd ? directory.dir : null,
+                cdDir: directory.dir !== analysis.initialCwd ? directory.dir : null,
                 unresolvedCd: directory.unresolved,
                 message: extractCommitMessage(tokens.slice(subIdx + 1))
             }
@@ -475,6 +527,10 @@ function run(raw, options = {}) {
     const warnings = []
     let shouldBlock = false
     for (const commitInvocation of gitCommitInvocations(command, baseCwd)) {
+        if (commitInvocation.analysisWarning) {
+            warnings.push(`[Hook] 无法检查暂存区（${commitInvocation.analysisWarning}）。`)
+            continue
+        }
         if (commitInvocation.message !== null && !COMMIT_MSG_REGEX.test(commitInvocation.message)) {
             warnings.push(
                 `[Hook] Commit message 格式不符合规范: "${commitInvocation.message}"\n` +

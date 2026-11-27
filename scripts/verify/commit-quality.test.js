@@ -199,6 +199,34 @@ test("pipeline stages and background command lists keep their own working direct
   assert.match(both.stderr, /outer\.js:1/);
 });
 
+test("brace groups share directory changes with their caller, including inside a pipeline", (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "cew-cq-braces-"));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const outer = initRepo(root, "outer");
+  const inner = initRepo(outer, "inner");
+  fs.writeFileSync(path.join(inner, "inner.js"), "debugger;\n");
+  git(inner, "add", "inner.js");
+  const commit = "git commit -m 'test: current'";
+  for (const cmd of ["{ cd inner; " + commit + "; }", "{ { cd inner; }; }; " + commit]) {
+    assert.match(run(payload(cmd), { cwd: outer }).stderr, /inner\.js:1/, cmd);
+  }
+  assert.equal(run(payload("{ cd inner; } | cat; " + commit), { cwd: outer }).stderr, undefined);
+});
+
+test("shell function definitions run at their call site and unused bodies are skipped", () => {
+  assert.equal(extractGitCommitInvocation("save() {\n git commit -m ignored;\n}\nprintf done"), null);
+  assert.equal(extractGitCommitInvocation("printf '%s' 'save() { git commit; }'"), null);
+  assert.match(run(payload("again() { again; }; again")).stderr, /静态分析范围/);
+  const body = "{ { git commit -m 'test: called'; }; }";
+  for (const definition of ["save() " + body, "function save " + body, "save () ( git commit -m 'test: called' )"]) {
+    assert.equal(extractGitCommitInvocation(definition + "\nprintf 'done'"), null);
+    assert.equal(extractGitCommitInvocation(definition + "\ngit commit -m 'test: direct'").message, "test: direct");
+    const called = extractGitCommitInvocation(definition + "\n(cd nested && save)", "/root");
+    assert.equal(called.cdDir, path.resolve("/root", "nested"));
+    assert.equal(called.message, "test: called");
+  }
+});
+
 test("here-document input is data, including tab-stripped and quoted terminators", () => {
   const doc = "cat <<'FIRST' <<-SECOND\ngit commit -m example\nFIRST\n\tgit commit -m other\n\tSECOND";
   assert.equal(extractGitCommitInvocation(doc), null);
