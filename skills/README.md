@@ -28,7 +28,7 @@
 
 ## Engineering / 开发实践
 
-- `code-review`：简单、明确、低风险且可验证的任务可自审；复杂或证据不足时使用一个独立子智能体，高风险使用 Standards/Spec 双轴；必要的独立审查不可用时阻塞。
+- `code-review`：基于固定基点和已确认范围启动独立只读子智能体审查，高风险升级为 Standards/Spec 双轴隔离审查；不提供自我审查，代理不可用时阻塞。
 - `test-driven-development`：行为变化的 Red Test Gate。
 - `systematic-debugging`：区分普通明确失败与疑难故障；预期 TDD RED 留在实现循环。
 - `resolving-merge-conflicts`：按双方原始意图逐 hunk 解决 merge/rebase 冲突。
