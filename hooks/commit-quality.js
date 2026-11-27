@@ -271,17 +271,44 @@ function advanceShellScope(scope, operator) {
     scope.inPipeline = false
 }
 
+const SHELL_ASSIGNMENT = /^([a-zA-Z_][a-zA-Z0-9_]*)=([\s\S]*)$/
+
+function updateGitVariables(previous, words, operation) {
+    const variables = { ...previous }
+    const removeExport = operation === 'export' && words.includes('-n')
+    if (words.includes('-f') || words.includes('-p')) return variables
+    for (const word of words) {
+        const assignment = SHELL_ASSIGNMENT.exec(word)
+        const name = assignment ? assignment[1] : word
+        if (!GIT_PATH_ENV.has(name)) continue
+        const old = variables[name]
+        if (operation === 'unset') {
+            variables[name] = { value: null, exported: false }
+        } else {
+            variables[name] = {
+                value: assignment ? assignment[2] : old?.value ?? null,
+                exported: operation === 'export' ? !removeExport : Boolean(old?.exported)
+            }
+        }
+    }
+    return variables
+}
+
 function isDynamicGitPath(value) {
-    return /[$\x60]/.test(value) || value.startsWith('~')
+    return typeof value === 'string' && (/[$\x60]/.test(value) || value.startsWith('~'))
 }
 
 function* gitCommitInvocations(command, initialCwd) {
-    const scope = shellScope({ dir: initialCwd, unresolved: false, functions: new Map() })
+    const variables = {}
+    for (const name of GIT_PATH_ENV) {
+        if (Object.hasOwn(process.env, name)) variables[name] = { value: process.env[name], exported: true }
+    }
+    const scope = shellScope({ dir: initialCwd, unresolved: false, functions: new Map(), variables })
     const analysis = { initialCwd, active: new Set(), calls: 0 }
-    yield* walkShellCommands(splitCommandSegments(command), scope, analysis, {}, 0)
+    yield* walkShellCommands(splitCommandSegments(command), scope, analysis, 0)
 }
 
-function* walkShellCommands(segments, scope, analysis, inheritedGitEnv, depth) {
+function* walkShellCommands(segments, scope, analysis, depth) {
     // Limit expansion of recursive or repeatedly invoked shell functions.
     if (depth > 64) {
         yield { analysisWarning: 'Shell 嵌套过深' }
@@ -297,7 +324,7 @@ function* walkShellCommands(segments, scope, analysis, inheritedGitEnv, depth) {
         }
         if (segment.body) {
             const child = shellScope(directory)
-            yield* walkShellCommands(segment.body, child, analysis, inheritedGitEnv, depth + 1)
+            yield* walkShellCommands(segment.body, child, analysis, depth + 1)
             if (segment.shared) scope.directory = child.directory
             continue
         }
@@ -306,22 +333,27 @@ function* walkShellCommands(segments, scope, analysis, inheritedGitEnv, depth) {
             continue
         }
         const tokens = tokenizeSegment(segment.text)
-        const gitEnv = { ...inheritedGitEnv }
-        let unresolvedEnv = Object.values(gitEnv).some(isDynamicGitPath)
+        const assignments = []
         let idx = 0
         while (idx < tokens.length) {
-            const assignment = /^([A-Za-z_][A-Za-z0-9_]*)=([\s\S]*)$/.exec(tokens[idx])
+            const assignment = SHELL_ASSIGNMENT.exec(tokens[idx])
             if (!assignment && tokens[idx] !== 'env') break
-            if (assignment && GIT_PATH_ENV.has(assignment[1])) {
-                const [, name, value] = assignment
-                gitEnv[name] = value
-                if (isDynamicGitPath(value)) unresolvedEnv = true
-            }
+            if (assignment && GIT_PATH_ENV.has(assignment[1])) assignments.push(tokens[idx])
             idx += 1
         }
         const executable = tokens[idx]
-        if (!executable) continue
-
+        if (!executable) {
+            if (assignments.length && !tokens.includes('env')) {
+                scope.directory = { ...directory, variables: updateGitVariables(directory.variables, assignments, 'assign') }
+            }
+            continue
+        }
+        if (executable === 'export' || executable === 'unset') {
+            const variables = updateGitVariables(directory.variables, tokens.slice(idx + 1), executable)
+            scope.directory = { ...directory, variables }
+            continue
+        }
+        const variables = assignments.length ? updateGitVariables(directory.variables, assignments, 'export') : directory.variables
         const definition = directory.functions.get(executable)
         if (definition) {
             if (analysis.active.has(definition) || ++analysis.calls > 128) {
@@ -329,10 +361,19 @@ function* walkShellCommands(segments, scope, analysis, inheritedGitEnv, depth) {
                 continue
             }
             analysis.active.add(definition)
-            const child = shellScope(directory)
-            yield* walkShellCommands(definition.body, child, analysis, gitEnv, depth + 1)
+            const child = shellScope({ ...directory, variables })
+            yield* walkShellCommands(definition.body, child, analysis, depth + 1)
             analysis.active.delete(definition)
-            if (definition.shared) scope.directory = child.directory
+            if (definition.shared) {
+                // Prefix assignments on a function call expire when it returns.
+                const restored = { ...child.directory.variables }
+                for (const assignment of assignments) {
+                    const name = SHELL_ASSIGNMENT.exec(assignment)[1]
+                    if (Object.hasOwn(directory.variables, name)) restored[name] = directory.variables[name]
+                    else delete restored[name]
+                }
+                scope.directory = { ...child.directory, variables: restored }
+            }
             continue
         }
 
@@ -389,10 +430,14 @@ function* walkShellCommands(segments, scope, analysis, inheritedGitEnv, depth) {
         }
 
         if (tokens[subIdx] === 'commit') {
+            const gitEnv = {}
+            for (const [name, variable] of Object.entries(variables)) {
+                gitEnv[name] = variable.exported ? variable.value : null
+            }
             yield {
                 gitDirArgs,
                 gitEnv,
-                unresolvedEnv,
+                unresolvedEnv: Object.values(gitEnv).some(isDynamicGitPath),
                 cdDir: directory.dir !== analysis.initialCwd ? directory.dir : null,
                 unresolvedCd: directory.unresolved,
                 message: extractCommitMessage(tokens.slice(subIdx + 1))
@@ -460,8 +505,13 @@ function scanStagedDiff(commitInvocation, baseCwd) {
             '--src-prefix=a/', '--dst-prefix=b/'
         ]
         const effectiveCwd = commitInvocation.cdDir || baseCwd
+        const env = { ...process.env }
+        for (const [name, value] of Object.entries(commitInvocation.gitEnv)) {
+            if (value === null) delete env[name]
+            else env[name] = value
+        }
         const execOptions = {
-            env: { ...process.env, ...commitInvocation.gitEnv },
+            env,
             encoding: 'utf8',
             stdio: ['ignore', 'pipe', 'pipe'],
             timeout: 10000,

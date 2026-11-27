@@ -246,6 +246,18 @@ test("Git directory and index settings select the actual staged files", (t) => {
   execFileSync("git", ["add", "alternate.js"], { cwd: inner, env: { ...process.env, GIT_INDEX_FILE: alternate } });
   const prefix = "env GIT_DIR='../inner repo/.git' GIT_WORK_TREE='../inner repo' GIT_INDEX_FILE='../inner repo/alternate.index'";
   assert.match(run(payload(prefix + " git commit -m 'test: index'"), { cwd: outer }).stderr, /alternate\.js:1/);
+  const commit = "git commit -m 'test: exported index'";
+  const exported = prefix.replace(/^env /, "export ");
+  for (const command of [exported + "; " + commit, "{ " + exported + "; }; " + commit,
+    prefix.slice(4) + "; export GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE; " + commit]) {
+    assert.match(run(payload(command), { cwd: outer }).stderr, /alternate\.js:1/, command);
+  }
+  for (const command of ["(" + exported + "); " + commit, exported + " | cat; " + commit,
+    exported + "; unset GIT_INDEX_FILE; " + commit, exported + "; export -n GIT_INDEX_FILE; " + commit]) {
+    assert.equal(run(payload(command), { cwd: outer }).stderr, undefined, command);
+  }
+  assert.match(run(payload("export GIT_INDEX_FILE=$LATER; " + commit), { cwd: outer }).stderr, /无法检查暂存区/);
+
   assert.match(run(payload('GIT_INDEX_FILE="$OTHER_INDEX" git commit -m "test: dynamic"'), { cwd: outer }).stderr, /无法检查暂存区/);
 });
 
