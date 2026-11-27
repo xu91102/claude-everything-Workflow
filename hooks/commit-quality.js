@@ -33,7 +33,9 @@ const GIT_PATH_ENV = new Set([
     'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES'
 ])
 const SHELL_ASSIGNMENT = /^([a-zA-Z_][a-zA-Z0-9_]*)=([\s\S]*)$/
-const SHELL_CONTROL_WORDS = new Set(['if', 'then', 'elif', 'else', 'do', 'while', 'until', '!'])
+const SHELL_CONTROL_WORDS = new Set(['!'])
+const CONDITIONAL_OPEN = new Set(['if', 'while', 'until', 'for', 'case'])
+const CONDITIONAL_CLOSE = new Map([['fi', 'if'], ['done', 'loop'], ['esac', 'case']])
 const CD_FLAGS = new Set(['-L', '-P', '-e', '-@'])
 const GIT_EXECUTABLE_REGEX = /^(?:.*[\\/])?git(?:\.exe)?$/i
 
@@ -315,7 +317,61 @@ function applyCdTarget(target, baseDir) {
 }
 
 function shellScope(directory) {
-    return { directory, pipelineStart: directory, listStart: directory, inPipeline: false }
+    return {
+        directory,
+        pipelineStart: directory,
+        listStart: directory,
+        inPipeline: false,
+        controlStack: [],
+        conditionalDepth: 0,
+        preConditionalDir: null,
+        listMutatedCd: false,
+        listMutatedEnv: false,
+        condMutatedCd: false,
+        condMutatedEnv: false
+    }
+}
+
+function resetConditionalState(scope) {
+    scope.conditionalDepth = 0
+    scope.preConditionalDir = null
+    scope.listMutatedCd = false
+    scope.listMutatedEnv = false
+    scope.condMutatedCd = false
+    scope.condMutatedEnv = false
+}
+
+function recordScopeMutation(scope, nextDirectory) {
+    const before = scope.directory
+    const cdChanged = nextDirectory.dir !== before.dir ||
+        Boolean(nextDirectory.unresolved) !== Boolean(before.unresolved)
+    const envChanged = nextDirectory.variables !== before.variables ||
+        Boolean(nextDirectory.unresolvedEnv) !== Boolean(before.unresolvedEnv)
+    scope.directory = nextDirectory
+    if (cdChanged) {
+        scope.listMutatedCd = true
+        if (scope.conditionalDepth > 0) scope.condMutatedCd = true
+        for (const frame of scope.controlStack) {
+            frame.mutatedCd = true
+            if (frame.phase === 'cond') frame.condMutatedCd = true
+        }
+    }
+    if (envChanged) {
+        scope.listMutatedEnv = true
+        if (scope.conditionalDepth > 0) scope.condMutatedEnv = true
+        for (const frame of scope.controlStack) {
+            frame.mutatedEnv = true
+            if (frame.phase === 'cond') frame.condMutatedEnv = true
+        }
+    }
+}
+
+function mergeConditionalUncertain(base, mutatedCd, mutatedEnv) {
+    return {
+        ...base,
+        unresolved: Boolean(base.unresolved || mutatedCd),
+        unresolvedEnv: Boolean(base.unresolvedEnv || mutatedEnv)
+    }
 }
 
 function advanceShellScope(scope, operator) {
@@ -324,11 +380,45 @@ function advanceShellScope(scope, operator) {
         scope.inPipeline = true
         return
     }
-    if (scope.inPipeline) scope.directory = scope.pipelineStart
-    if (operator === '&') scope.directory = scope.listStart
-    if (operator === '&' || operator === ';') scope.listStart = scope.directory
-    scope.pipelineStart = scope.directory
-    scope.inPipeline = false
+    if (scope.inPipeline) {
+        scope.directory = scope.pipelineStart
+        scope.inPipeline = false
+    }
+    if (operator === '&') {
+        scope.directory = scope.listStart
+        scope.pipelineStart = scope.directory
+        resetConditionalState(scope)
+        return
+    }
+    if (operator === ';') {
+        if (scope.condMutatedCd || scope.condMutatedEnv) {
+            scope.directory = mergeConditionalUncertain(
+                scope.preConditionalDir,
+                scope.condMutatedCd,
+                scope.condMutatedEnv
+            )
+        }
+        scope.listStart = scope.directory
+        scope.pipelineStart = scope.directory
+        resetConditionalState(scope)
+        return
+    }
+    if (operator === '&&' || operator === '||') {
+        if (operator === '||' && (scope.listMutatedCd || scope.listMutatedEnv)) {
+            scope.directory = mergeConditionalUncertain(
+                scope.directory,
+                scope.listMutatedCd,
+                scope.listMutatedEnv
+            )
+            if (scope.conditionalDepth > 0) {
+                if (scope.listMutatedCd) scope.condMutatedCd = true
+                if (scope.listMutatedEnv) scope.condMutatedEnv = true
+            }
+        }
+        if (scope.conditionalDepth === 0) scope.preConditionalDir = scope.directory
+        scope.conditionalDepth += 1
+        scope.pipelineStart = scope.directory
+    }
 }
 
 function updateGitVariables(previous, words, operation) {
@@ -358,8 +448,7 @@ function isDynamicGitPath(value) {
 
 function parseLeadingCommandPrefix(tokens, baseVariables) {
     const assignments = []
-    const unsetNames = []
-    let clearEnv = false
+    const ops = []
     let usedEnvCommand = false
     let idx = 0
 
@@ -375,13 +464,13 @@ function parseLeadingCommandPrefix(tokens, baseVariables) {
             while (idx < tokens.length) {
                 const opt = tokens[idx]
                 if (opt === '-i' || opt === '--ignore-environment') {
-                    clearEnv = true
+                    ops.push({ type: 'clear' })
                     idx += 1
                 } else if (opt === '-u' && idx + 1 < tokens.length) {
-                    unsetNames.push(tokens[idx + 1])
+                    ops.push({ type: 'unset', name: tokens[idx + 1] })
                     idx += 2
                 } else if (opt.startsWith('--unset=')) {
-                    unsetNames.push(opt.slice('--unset='.length))
+                    ops.push({ type: 'unset', name: opt.slice('--unset='.length) })
                     idx += 1
                 } else if (opt === '--') {
                     idx += 1
@@ -394,16 +483,25 @@ function parseLeadingCommandPrefix(tokens, baseVariables) {
         }
         const assignment = SHELL_ASSIGNMENT.exec(token)
         if (!assignment) break
-        if (GIT_PATH_ENV.has(assignment[1])) assignments.push(token)
+        if (GIT_PATH_ENV.has(assignment[1])) {
+            ops.push({ type: 'assign', token })
+            if (!usedEnvCommand) assignments.push(token)
+        }
         idx += 1
     }
 
-    let variables = clearEnv
-        ? Object.fromEntries([...GIT_PATH_ENV].map((name) => [name, { value: null, exported: false }]))
-        : { ...baseVariables }
-    if (unsetNames.length) variables = updateGitVariables(variables, unsetNames, 'unset')
-    if (assignments.length) {
-        variables = updateGitVariables(variables, assignments, tokens[idx] ? 'export' : 'assign')
+    const assignOp = tokens[idx] || usedEnvCommand ? 'export' : 'assign'
+    let variables = { ...baseVariables }
+    for (const op of ops) {
+        if (op.type === 'clear') {
+            variables = Object.fromEntries(
+                [...GIT_PATH_ENV].map((name) => [name, { value: null, exported: false }])
+            )
+        } else if (op.type === 'unset') {
+            variables = updateGitVariables(variables, [op.name], 'unset')
+        } else {
+            variables = updateGitVariables(variables, [op.token], assignOp)
+        }
     }
     return { idx, executable: tokens[idx], assignments, usedEnvCommand, variables }
 }
@@ -460,13 +558,71 @@ function parseCdTarget(tokens, startIdx) {
     return tokens[idx]
 }
 
+function consumeControlKeywords(tokens, scope) {
+    let idx = 0
+    while (idx < tokens.length) {
+        const token = tokens[idx]
+        if (CONDITIONAL_OPEN.has(token)) {
+            const kind = token === 'while' || token === 'until' || token === 'for' ? 'loop' : token
+            scope.controlStack.push({
+                kind,
+                phase: 'cond',
+                entryDir: scope.directory,
+                condMutatedCd: false,
+                condMutatedEnv: false,
+                mutatedCd: false,
+                mutatedEnv: false
+            })
+            if (token === 'for' || token === 'case') return { idx: tokens.length, skipCommand: true }
+            idx += 1
+            continue
+        }
+        if (token === 'then' || token === 'do') {
+            const top = scope.controlStack.at(-1)
+            if (top) top.phase = 'body'
+            idx += 1
+            continue
+        }
+        if (token === 'elif' || token === 'else') {
+            const top = scope.controlStack.at(-1)
+            if (top && top.kind === 'if') {
+                top.phase = token === 'elif' ? 'cond' : 'body'
+                scope.directory = mergeConditionalUncertain(top.entryDir, top.condMutatedCd, top.condMutatedEnv)
+                scope.listStart = scope.directory
+                scope.pipelineStart = scope.directory
+                resetConditionalState(scope)
+            }
+            idx += 1
+            continue
+        }
+        if (CONDITIONAL_CLOSE.has(token)) {
+            const expected = CONDITIONAL_CLOSE.get(token)
+            if (scope.controlStack.at(-1)?.kind === expected) {
+                const frame = scope.controlStack.pop()
+                if (frame.mutatedCd || frame.mutatedEnv) {
+                    recordScopeMutation(
+                        scope,
+                        mergeConditionalUncertain(frame.entryDir, frame.mutatedCd, frame.mutatedEnv)
+                    )
+                    scope.listStart = scope.directory
+                    scope.pipelineStart = scope.directory
+                }
+            }
+            idx += 1
+            continue
+        }
+        break
+    }
+    return { idx, skipCommand: false }
+}
+
 function* gitCommitInvocations(command, initialCwd) {
     const variables = {}
     for (const name of GIT_PATH_ENV) {
         if (Object.hasOwn(process.env, name)) variables[name] = { value: process.env[name], exported: true }
     }
     const scope = shellScope({
-        dir: initialCwd, unresolved: false, hasPriorStagingMutation: false,
+        dir: initialCwd, unresolved: false, unresolvedEnv: false, hasPriorStagingMutation: false,
         functions: new Map(), variables
     })
     const analysis = { initialCwd, active: new Set(), calls: 0 }
@@ -489,59 +645,63 @@ function* walkShellCommands(segments, scope, analysis, depth) {
         if (segment.body) {
             const child = shellScope(directory)
             yield* walkShellCommands(segment.body, child, analysis, depth + 1)
-            if (segment.shared) scope.directory = child.directory
+            if (segment.shared) recordScopeMutation(scope, child.directory)
             continue
         }
         if (segment.operator) {
             advanceShellScope(scope, segment.operator)
             continue
         }
-        const tokens = tokenizeSegment(segment.text)
+        const rawTokens = tokenizeSegment(segment.text)
+        const { idx: controlIdx, skipCommand } = consumeControlKeywords(rawTokens, scope)
+        if (skipCommand || controlIdx >= rawTokens.length) continue
+        const activeDir = scope.directory
+        const tokens = controlIdx > 0 ? rawTokens.slice(controlIdx) : rawTokens
         const { idx, executable, assignments, usedEnvCommand, variables } =
-            parseLeadingCommandPrefix(tokens, directory.variables)
+            parseLeadingCommandPrefix(tokens, activeDir.variables)
 
         if (!executable) {
             if (assignments.length && !usedEnvCommand) {
-                scope.directory = { ...directory, variables }
+                recordScopeMutation(scope, { ...activeDir, variables })
             }
             continue
         }
         if (executable === 'export' || executable === 'unset') {
-            scope.directory = {
-                ...directory,
-                variables: updateGitVariables(directory.variables, tokens.slice(idx + 1), executable)
-            }
+            recordScopeMutation(scope, {
+                ...activeDir,
+                variables: updateGitVariables(activeDir.variables, tokens.slice(idx + 1), executable)
+            })
             continue
         }
-        const definition = directory.functions.get(executable)
+        const definition = activeDir.functions.get(executable)
         if (definition) {
             if (analysis.active.has(definition) || ++analysis.calls > 128) {
                 yield { analysisWarning: 'Shell 函数调用超出静态分析范围' }
                 continue
             }
             analysis.active.add(definition)
-            const child = shellScope({ ...directory, variables })
+            const child = shellScope({ ...activeDir, variables })
             yield* walkShellCommands(definition.body, child, analysis, depth + 1)
             analysis.active.delete(definition)
             if (definition.shared) {
                 const restored = { ...child.directory.variables }
                 for (const assignment of assignments) {
                     const name = SHELL_ASSIGNMENT.exec(assignment)[1]
-                    if (Object.hasOwn(directory.variables, name)) restored[name] = directory.variables[name]
+                    if (Object.hasOwn(activeDir.variables, name)) restored[name] = activeDir.variables[name]
                     else delete restored[name]
                 }
-                scope.directory = { ...child.directory, variables: restored }
+                recordScopeMutation(scope, { ...child.directory, variables: restored })
             }
             continue
         }
         if (executable === 'cd') {
             const target = parseCdTarget(tokens, idx)
-            const next = applyCdTarget(target, directory.dir)
-            scope.directory = {
-                ...directory,
+            const next = applyCdTarget(target, activeDir.dir)
+            recordScopeMutation(scope, {
+                ...activeDir,
                 dir: next.dir,
-                unresolved: next.unresolved || (directory.unresolved && !path.isAbsolute(target || ''))
-            }
+                unresolved: next.unresolved || (activeDir.unresolved && !path.isAbsolute(target || ''))
+            })
             continue
         }
         if (!GIT_EXECUTABLE_REGEX.test(executable)) continue
@@ -549,7 +709,7 @@ function* walkShellCommands(segments, scope, analysis, depth) {
         const { subcommand, subIdx, gitDirArgs, gitArgValues } = parseGitCommand(tokens, idx)
         if ((subcommand === 'add' || subcommand === 'stage' || subcommand === 'rm') &&
             !tokens.slice(subIdx + 1).some(arg => arg === '-n' || arg === '--dry-run')) {
-            scope.directory = { ...directory, hasPriorStagingMutation: true }
+            scope.directory = { ...activeDir, hasPriorStagingMutation: true }
             continue
         }
         if (subcommand === 'commit') {
@@ -560,11 +720,11 @@ function* walkShellCommands(segments, scope, analysis, depth) {
             yield {
                 gitDirArgs,
                 gitEnv,
-                unresolvedEnv: Object.values(gitEnv).some(isDynamicGitPath),
+                unresolvedEnv: Boolean(activeDir.unresolvedEnv) || Object.values(gitEnv).some(isDynamicGitPath),
                 unresolvedGitArg: gitArgValues.some(isDynamicGitPath),
-                cdDir: directory.dir !== analysis.initialCwd ? directory.dir : null,
-                unresolvedCd: directory.unresolved,
-                hasPriorStagingMutation: Boolean(directory.hasPriorStagingMutation),
+                cdDir: activeDir.dir !== analysis.initialCwd ? activeDir.dir : null,
+                unresolvedCd: activeDir.unresolved,
+                hasPriorStagingMutation: Boolean(activeDir.hasPriorStagingMutation),
                 message: extractCommitMessage(tokens.slice(subIdx + 1))
             }
         }

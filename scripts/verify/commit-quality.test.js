@@ -346,4 +346,35 @@ test("command substitution, nested subshells, heredoc messages, wrappers, and Wi
   const dup = run(payload('git commit -m "feat: one" && git commit -m "feat: two"'), { cwd: inner });
   assert.equal(dup.exitCode, 2);
   assert.equal(dup.stderr.match(/s\.js:1/g)?.length, 1);
+
+  // env -u / -i applies in order and conditional branches do not assume cd/export took effect.
+  const unsetEnv = run(
+    payload("GIT_DIR=inner/.git GIT_WORK_TREE=inner env -u GIT_DIR -u GIT_WORK_TREE git commit -m 'feat: outer'"),
+    { cwd: repo },
+  );
+  assert.equal(unsetEnv.exitCode, 0);
+  assert.equal(unsetEnv.stderr, undefined);
+
+  const clearedPrefix = run(payload("GIT_DIR=inner/.git env -i git commit -m 'feat: outer'"), { cwd: repo });
+  assert.equal(clearedPrefix.exitCode, 0);
+  assert.equal(clearedPrefix.stderr, undefined);
+
+  for (const condCmd of [
+    "if false; then cd inner; fi; git commit -m 'feat: outer'",
+    "false && cd inner; git commit -m 'feat: outer'",
+    "true || cd inner; git commit -m 'feat: outer'",
+    "if false; then export GIT_DIR=inner/.git GIT_WORK_TREE=inner; fi; git commit -m 'feat: outer'",
+  ]) {
+    const condRes = run(payload(condCmd), { cwd: repo });
+    assert.equal(condRes.exitCode, 0, condCmd);
+    assert.match(condRes.stderr, /无法检查暂存区/, condCmd);
+  }
+
+  const inBranch = run(payload("if true; then cd inner && git commit -m 'feat: in'; fi"), { cwd: repo });
+  assert.equal(inBranch.exitCode, 2);
+  assert.match(inBranch.stderr, /s\.js:1/);
+
+  const elseBranch = run(payload("if false; then cd inner; else git commit -m 'feat: else'; fi"), { cwd: repo });
+  assert.equal(elseBranch.exitCode, 0);
+  assert.equal(elseBranch.stderr, undefined);
 });
