@@ -1,6 +1,7 @@
 param(
     [switch]$ClaudeOnly,
     [switch]$CodexOnly,
+    [switch]$AntigravityOnly,
     [switch]$DryRun
 )
 
@@ -9,8 +10,12 @@ $ErrorActionPreference = "Stop"
 if ($args.Count -gt 0) {
     throw "Unknown option: $($args[0])"
 }
-if ($ClaudeOnly -and $CodexOnly) {
-    throw "-ClaudeOnly and -CodexOnly cannot be used together"
+$selectedOnly = @()
+if ($ClaudeOnly) { $selectedOnly += "-ClaudeOnly" }
+if ($CodexOnly) { $selectedOnly += "-CodexOnly" }
+if ($AntigravityOnly) { $selectedOnly += "-AntigravityOnly" }
+if ($selectedOnly.Count -gt 1) {
+    throw "$($selectedOnly -join ' and ') cannot be used together"
 }
 
 $RootDir = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
@@ -20,8 +25,10 @@ if (-not $HomeDir) {
     throw "USERPROFILE or HOME is required"
 }
 
-$InstallClaude = -not $CodexOnly
-$InstallCodex = -not $ClaudeOnly
+$InstallClaude = ($selectedOnly.Count -eq 0) -or [bool]$ClaudeOnly
+$InstallCodex = ($selectedOnly.Count -eq 0) -or [bool]$CodexOnly
+$InstallAntigravity = ($selectedOnly.Count -eq 0) -or [bool]$AntigravityOnly
+$ExplicitAntigravity = [bool]$AntigravityOnly
 $BackupId = Get-Date -Format 'yyyyMMddHHmmss'
 
 function Invoke-InstallCommand {
@@ -159,6 +166,7 @@ function Remove-PackageOnlyPaths {
         "scripts\install.sh",
         "scripts\install.ps1",
         "scripts\install-rules.js",
+        "scripts\install-antigravity.js",
         "scripts\legacy-common-rule-hashes.json",
         "scripts\eval-scenarios.js",
         "scripts\verify-harness.js",
@@ -326,6 +334,22 @@ function Install-CodexWorkflow {
     Complete-WorkflowBackups -Destination $dest
 }
 
+function Test-AntigravityInstallRoot {
+    Test-InstallRoot -Destination (Join-Path $HomeDir ".gemini")
+    Test-InstallRoot -Destination (Join-Path $HomeDir ".gemini\config")
+    Test-InstallRoot -Destination (Join-Path $HomeDir ".gemini\config\plugins")
+    Test-InstallRoot -Destination (Join-Path $HomeDir ".gemini\config\plugins\claude-everything-workflow")
+}
+
+function Install-AntigravityWorkflow {
+    $antigravityArgs = @((Join-Path $RootDir "scripts\install-antigravity.js"), $HomeDir, "--backup-id", $BackupId)
+    if ($DryRun) { $antigravityArgs += "--dry-run" }
+    & node @antigravityArgs
+    if ($LASTEXITCODE -ne 0) {
+        throw "Antigravity plugin installation failed with exit code $LASTEXITCODE"
+    }
+}
+
 function Install-WorkflowRules {
     param([string]$Destination, [string]$HostName)
 
@@ -348,14 +372,57 @@ function Complete-WorkflowBackups {
     }
 }
 
+function Resolve-AntigravityInstall {
+    if (-not $script:InstallAntigravity -or $ExplicitAntigravity) {
+        return
+    }
+
+    $geminiDir = Join-Path $HomeDir ".gemini"
+    $item = Get-Item -LiteralPath $geminiDir -Force -ErrorAction SilentlyContinue
+    if ($null -eq $item) {
+        Write-Host "Skipping Antigravity plugin sync ($geminiDir not found; use -AntigravityOnly to install)."
+        $script:InstallAntigravity = $false
+        return
+    }
+    if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -or (-not $item.PSIsContainer)) {
+        Write-Host "Skipping Antigravity plugin sync ($geminiDir is not a regular directory; use -AntigravityOnly to inspect)."
+        $script:InstallAntigravity = $false
+    }
+}
+
+Resolve-AntigravityInstall
+
 if ($InstallClaude) {
     Test-InstallRoot -Destination (Join-Path $HomeDir ".claude")
 }
 if ($InstallCodex) {
     Test-InstallRoot -Destination (Join-Path $HomeDir ".codex")
 }
+if ($InstallAntigravity) {
+    Test-AntigravityInstallRoot
+}
 
 Test-RetiredSkillManifest
+
+function Resolve-AntigravityInstall {
+    if (-not $script:InstallAntigravity -or $ExplicitAntigravity) {
+        return
+    }
+
+    $geminiDir = Join-Path $HomeDir ".gemini"
+    $item = Get-Item -LiteralPath $geminiDir -Force -ErrorAction SilentlyContinue
+    if ($null -eq $item) {
+        Write-Host "Skipping Antigravity plugin sync ($geminiDir not found; use -AntigravityOnly to install)."
+        $script:InstallAntigravity = $false
+        return
+    }
+    if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -or (-not $item.PSIsContainer)) {
+        Write-Host "Skipping Antigravity plugin sync ($geminiDir is not a regular directory; use -AntigravityOnly to inspect)."
+        $script:InstallAntigravity = $false
+    }
+}
+
+Resolve-AntigravityInstall
 
 if ($InstallClaude) {
     Install-ClaudeWorkflow
@@ -363,6 +430,10 @@ if ($InstallClaude) {
 
 if ($InstallCodex) {
     Install-CodexWorkflow
+}
+
+if ($InstallAntigravity) {
+    Install-AntigravityWorkflow
 }
 
 Write-Host "Install complete."

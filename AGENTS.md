@@ -18,7 +18,7 @@
 ## 规则加载策略
 
 - 规则按需读取，不要默认全量加载 `rules/` 或 `rules/common/`。
-- `rules/...` 先查项目根 `rules/`；不存在时，Codex 回退 `~/.codex/rules/`，Claude Code 顶层规则回退 `~/.claude/rules/`，专项 `rules/common/...` 回退 `~/.claude/references/rules/common/...`。升级时保留的个人修改优先于同名分发参考。
+- `rules/...` 先查项目根 `rules/`；不存在时，Antigravity（Gemini）回退 `~/.gemini/config/plugins/claude-everything-workflow/references/rules/`，Codex 回退 `~/.codex/rules/`，Claude Code 顶层规则回退 `~/.claude/rules/`，专项 `rules/common/...` 回退 `~/.claude/references/rules/common/...`。升级时保留的个人修改优先于同名分发参考。
 
 ## 规则索引
 

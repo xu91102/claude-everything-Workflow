@@ -7,6 +7,7 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
 const { installRules, finalizeBackups, BACKUP_ROOT_NAME } = require("../install-rules");
+const { installAntigravity, parseFrontmatter, mapTools } = require("../install-antigravity");
 
 const sourceRoot = path.resolve(__dirname, "../..");
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "cew-rules-"));
@@ -177,13 +178,63 @@ function checkCodexImplementationRuleUpgrades() {
   assert.equal(read(stock), read(source), "a known older distribution still upgrades");
 }
 
+function checkAntigravityImplementationRuleUpgrades() {
+  const fixture = path.join(tempRoot, "ag-rule-source");
+  const filename = "02-implementation.md";
+  const source = path.join(fixture, "rules", filename);
+  const old = [
+    "# Implementation",
+    "Scope: fix bugs.",
+    "",
+    "# Checks",
+    "Run unit tests.",
+    "",
+  ].join("\n");
+  const hash = crypto.createHash("sha256").update(old).digest("hex");
+  fs.mkdirSync(path.join(fixture, "rules/common"), { recursive: true });
+  fs.mkdirSync(path.join(fixture, "scripts"));
+  fs.writeFileSync(source, old);
+  fs.writeFileSync(path.join(fixture, "rules/common/testing.md"), "Run checks.\n");
+  fs.writeFileSync(path.join(fixture, "scripts/legacy-common-rule-hashes.json"),
+    JSON.stringify({ files: { [filename]: [hash] } }));
+
+  const installRoot = path.join(tempRoot, "ag-rule-install");
+  const active = path.join(installRoot, "references/rules", filename);
+  const base = path.join(installRoot, ".cew-rule-state/02-implementation.base.md");
+  const incoming = path.join(installRoot, ".cew-rule-state/02-implementation.incoming.md");
+  const run = () => installRules({ sourceRoot: fixture, installRoot, host: "antigravity", log: () => {} });
+
+  run();
+  assert.equal(fs.existsSync(path.join(installRoot, "rules", filename)), false,
+    "Antigravity must keep detailed rules out of auto-loaded rules/");
+  assert.equal(read(active), old);
+  assert.equal(read(path.join(installRoot, "references/rules/common/testing.md")), "Run checks.\n");
+
+  const personal = old.replace("fix bugs.", "fix bugs. Leave unrelated work alone.").replace(/\n/g, "\r\n");
+  fs.writeFileSync(active, personal);
+  const updated = old.replace("unit tests", "unit and integration tests");
+  fs.writeFileSync(source, updated);
+  run();
+  const merged = personal.replace("unit tests", "unit and integration tests");
+  assert.equal(fs.readFileSync(active, "utf8"), merged, "Antigravity merges independent upstream edits");
+
+  fs.writeFileSync(source, updated.replace("Scope: fix bugs.", "Scope: add features."));
+  run();
+  assert.equal(fs.readFileSync(active, "utf8"), merged, "overlapping edits keep personal rule intact");
+  assert.equal(read(base), updated);
+  assert.equal(read(incoming), read(source));
+}
+
 function checkInstallerCliOptions() {
   const profile = path.join(tempRoot, "invalid-cli-profile");
   for (const [options, message] of [
     [["--unknown-option"], /Unknown option: --unknown-option/],
     [["--claude-only", "--codex-only"], /cannot be used together/],
     [["--codex-only", "--claude-only"], /cannot be used together/],
+    [["--claude-only", "--antigravity-only"], /cannot be used together/],
+    [["--codex-only", "--antigravity-only"], /cannot be used together/],
     [["--claude-only", "--codex-only", "--help"], /cannot be used together/],
+    [["--antigravity-only", "--claude-only", "--help"], /cannot be used together/],
   ]) {
     const result = spawnSync(process.execPath, [
       path.join(sourceRoot, "bin/claude-everything-workflow.js"), "install", ...options,
@@ -195,7 +246,7 @@ function checkInstallerCliOptions() {
     assert.notEqual(result.status, 0, "invalid CLI options must fail before installation");
     assert.match(result.stderr, message);
   }
-  for (const host of [".claude", ".codex"]) {
+  for (const host of [".claude", ".codex", ".gemini"]) {
     assert.equal(fs.existsSync(path.join(profile, host)), false);
   }
   for (const help of ["--help", "-h"]) {
@@ -208,7 +259,7 @@ function checkInstallerCliOptions() {
     assert.ifError(result.error);
     assert.equal(result.status, 0, "install help must succeed without installing");
     assert.match(result.stdout, /Usage:/);
-    for (const host of [".claude", ".codex"]) {
+    for (const host of [".claude", ".codex", ".gemini"]) {
       assert.equal(fs.existsSync(path.join(profile, host)), false);
     }
   }
@@ -222,6 +273,8 @@ function checkBashHelpOptions() {
     ["--help", "--claude-only", "--codex-only"],
     ["--claude-only", "--help", "--codex-only"],
     ["--claude-only", "--codex-only", "--help"],
+    ["--help", "--antigravity-only", "--codex-only"],
+    ["--claude-only", "--antigravity-only", "--help"],
     ["--help", "--unknown-option"],
     ["--unknown-option", "--help"],
   ];
@@ -238,14 +291,18 @@ function checkBashHelpOptions() {
       assert.notEqual(result.status, 0, `Bash must reject invalid options even with help: ${options.join(" ")}`);
       assert.match(result.stderr, /Unknown option|cannot be used together/);
     }
-    for (const host of [".claude", ".codex"]) {
+    for (const host of [".claude", ".codex", ".gemini"]) {
       assert.equal(fs.existsSync(path.join(profile, host)), false);
     }
   }
 }
 
 function checkInstallerLinkedRoots() {
-  for (const host of [".claude", ".codex"]) {
+  for (const [host, flag] of [
+    [".claude", "--claude-only"],
+    [".codex", "--codex-only"],
+    [".gemini", "--antigravity-only"],
+  ]) {
     const profile = path.join(tempRoot, "linked-profile" + host);
     const outside = path.join(tempRoot, "linked-outside" + host);
     fs.mkdirSync(profile);
@@ -253,8 +310,7 @@ function checkInstallerLinkedRoots() {
     fs.writeFileSync(path.join(outside, "AGENTS.md"), "Keep external user content\n");
     fs.symlinkSync(outside, path.join(profile, host), process.platform === "win32" ? "junction" : "dir");
     const result = spawnSync(process.execPath, [
-      path.join(sourceRoot, "bin/claude-everything-workflow.js"), "install",
-      host === ".claude" ? "--claude-only" : "--codex-only",
+      path.join(sourceRoot, "bin/claude-everything-workflow.js"), "install", flag,
     ], {
       cwd: sourceRoot,
       env: {
@@ -313,9 +369,11 @@ function checkInstallerEntrypoint() {
   assert.notEqual(invalid.status, 0, "direct installer must reject unknown options before writing");
   assert.equal(fs.existsSync(path.join(profile, ".claude")), false);
   assert.equal(fs.existsSync(path.join(profile, ".codex")), false);
+  assert.equal(fs.existsSync(path.join(profile, ".gemini")), false);
   for (const only of [
     windows ? ["-ClaudeOnly", "-CodexOnly"] : ["--claude-only", "--codex-only"],
     windows ? ["-CodexOnly", "-ClaudeOnly"] : ["--codex-only", "--claude-only"],
+    windows ? ["-ClaudeOnly", "-AntigravityOnly"] : ["--claude-only", "--antigravity-only"],
   ]) {
     const conflict = spawnSync(executable, [...args, ...only], {
       cwd: sourceRoot, env, encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024,
@@ -323,7 +381,7 @@ function checkInstallerEntrypoint() {
     assert.ifError(conflict.error);
     assert.notEqual(conflict.status, 0, "direct installer must reject conflicting host options");
     assert.match(conflict.stderr, /cannot be used together/);
-    for (const host of [".claude", ".codex"]) {
+    for (const host of [".claude", ".codex", ".gemini"]) {
       assert.equal(fs.existsSync(path.join(profile, host)), false);
     }
   }
@@ -333,10 +391,12 @@ function checkInstallerEntrypoint() {
     });
     assert.ifError(result.error);
     assert.equal(result.status, 0, result.stdout + result.stderr);
+    return result;
   };
   run([windows ? "-DryRun" : "--dry-run"]);
   assert.equal(fs.existsSync(path.join(profile, ".claude")), false);
   assert.equal(fs.existsSync(path.join(profile, ".codex")), false);
+  assert.equal(fs.existsSync(path.join(profile, ".gemini")), false);
   // Seed an older installation to exercise retirement and policy replacement through the real CLI.
   for (const host of [".claude", ".codex"]) {
     const skills = path.join(profile, host, "skills");
@@ -405,6 +465,26 @@ function checkInstallerEntrypoint() {
   const codexRule = path.join(profile, ".codex/rules/02-implementation.md");
   const customizedRule = read(codexRule) + "\nKeep unrelated work separate.\n";
   fs.writeFileSync(codexRule, customizedRule);
+  assert.equal(fs.existsSync(path.join(profile, ".gemini")), false,
+    "default install must not create ~/.gemini when it does not already exist");
+
+  // Default install must skip symlinked ~/.gemini without failing Claude/Codex updates.
+  const linkedGeminiOutside = path.join(tempRoot, "installer-linked-gemini");
+  fs.mkdirSync(linkedGeminiOutside);
+  fs.writeFileSync(path.join(linkedGeminiOutside, "sentinel.txt"), "keep\n");
+  fs.symlinkSync(
+    linkedGeminiOutside,
+    path.join(profile, ".gemini"),
+    windows ? "junction" : "dir",
+  );
+  const skippedLinked = run();
+  assert.match(skippedLinked.stdout, /Skipping Antigravity plugin sync/);
+  assert.deepEqual(fs.readdirSync(linkedGeminiOutside), ["sentinel.txt"]);
+  assert.equal(read(codexRule), customizedRule, "the host installer must preserve the active Codex rule");
+
+  // Once a regular ~/.gemini directory exists, default install syncs Antigravity automatically.
+  fs.unlinkSync(path.join(profile, ".gemini"));
+  fs.mkdirSync(path.join(profile, ".gemini"));
   run();
   assert.equal(read(codexRule), customizedRule, "the host installer must preserve the active Codex rule");
   assert.equal(read(path.join(backups, earlier, "AGENTS.md")), "My original instructions\n");
@@ -430,6 +510,7 @@ function checkInstallerEntrypoint() {
     }
     assert.equal(fs.existsSync(path.join(profile, host, "skills/wayfinder/agents")), false);
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/install-rules.js")), false);
+    assert.equal(fs.existsSync(path.join(profile, host, "scripts/install-antigravity.js")), false);
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/eval-scenarios.js")), false,
       "安装不应保留仅供包内评测的场景脚本");
     assert.equal(fs.existsSync(path.join(profile, host, "scripts/verify/scenario-checks.test.js")), false,
@@ -440,6 +521,204 @@ function checkInstallerEntrypoint() {
       "安装不应保留仅供包内验证的持续学习测试");
     assert.match(read(path.join(profile, host, "skills/handoff/agents/openai.yaml")),
       /allow_implicit_invocation: true/);
+  }
+
+  const agRoot = path.join(profile, ".gemini/config/plugins/claude-everything-workflow");
+  const pkg = JSON.parse(read(path.join(sourceRoot, "package.json")));
+  const manifest = JSON.parse(read(path.join(agRoot, "plugin.json")));
+  assert.equal(manifest.name, pkg.name);
+  assert.equal(manifest.version, pkg.version);
+  assert.deepEqual(fs.readdirSync(path.join(agRoot, "rules")), ["AGENTS.md"]);
+  assert.match(read(path.join(agRoot, "rules/AGENTS.md")), /plugins\/claude-everything-workflow\/references\/rules\//);
+  assert.equal(read(path.join(agRoot, "references/rules/common/testing.md")),
+    read(path.join(sourceRoot, "rules/common/testing.md")));
+  assert.equal(fs.existsSync(path.join(agRoot, "skills/README.md")), false);
+  const agSkills = fs.readdirSync(path.join(agRoot, "skills"), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory());
+  assert.equal(agSkills.length, 22);
+  for (const dir of agSkills) {
+    const skillMd = read(path.join(agRoot, "skills", dir.name, "SKILL.md"));
+    assert.match(skillMd, new RegExp(`^---\\nname: ${dir.name}\\ndescription: .+`, "m"));
+  }
+  assert.doesNotMatch(read(path.join(agRoot, "skills/pr/SKILL.md")), /\$ARGUMENTS/);
+  assert.doesNotMatch(read(path.join(agRoot, "skills/learn/SKILL.md")), /\$ARGUMENTS/);
+  const agAgents = fs.readdirSync(path.join(agRoot, "agents")).sort();
+  assert.equal(agAgents.length, 5);
+  for (const agentFile of agAgents) {
+    const body = read(path.join(agRoot, "agents", agentFile));
+    assert.match(body, /^subagent: true$/m);
+    assert.match(body, /^mainAgent: false$/m);
+    assert.match(body, /^tools: \[/m);
+    assert.doesNotMatch(body, /^model:/m);
+  }
+  assert.match(read(path.join(agRoot, "agents/e2e-runner.md")),
+    /~\/\.gemini\/config\/plugins\/claude-everything-workflow\/skills\/feature-acceptance\/references\/e2e-testing\.md/);
+  assert.match(read(path.join(agRoot, "agents/security-reviewer.md")),
+    /~\/\.gemini\/config\/plugins\/claude-everything-workflow\/references\/agents\/security-reviewer\.md/);
+  assert.equal(fs.existsSync(path.join(agRoot, "scripts/learning/projects.js")), true);
+  assert.equal(fs.existsSync(path.join(agRoot, "harness/manifest.json")), true);
+  assert.equal(fs.existsSync(path.join(agRoot, "scripts/install-antigravity.js")), false);
+}
+
+function checkAntigravityOnlyInstaller() {
+  const profile = path.join(tempRoot, "antigravity-only-profile");
+  const agRoot = path.join(profile, ".gemini/config/plugins/claude-everything-workflow");
+  const legacyAgents = path.join(profile, ".gemini/AGENTS.md");
+  fs.mkdirSync(path.join(agRoot, "skills/research"), { recursive: true });
+  fs.writeFileSync(path.join(agRoot, "skills/research/SKILL.md"), "Old distributed content\n");
+  fs.writeFileSync(path.join(agRoot, "skills/research/personal-notes.md"), "Keep my notes\n");
+  fs.writeFileSync(legacyAgents, "Keep legacy user file\n");
+
+  const runCli = (extra = []) => {
+    const result = spawnSync(process.execPath, [
+      path.join(sourceRoot, "bin/claude-everything-workflow.js"), "install", "--antigravity-only", ...extra,
+    ], {
+      cwd: sourceRoot,
+      env: { ...process.env, USERPROFILE: profile, HOME: profile },
+      encoding: "utf8",
+      timeout: 60000,
+      maxBuffer: 8 * 1024 * 1024,
+    });
+    assert.ifError(result.error);
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    return result;
+  };
+
+  runCli(["--dry-run"]);
+  assert.equal(fs.existsSync(path.join(agRoot, "plugin.json")), false);
+
+  const first = runCli();
+  assert.equal(fs.existsSync(path.join(profile, ".claude")), false);
+  assert.equal(fs.existsSync(path.join(profile, ".codex")), false);
+  assert.equal(read(legacyAgents), "Keep legacy user file\n", "legacy ~/.gemini/AGENTS.md must not be removed");
+  assert.match(first.stdout, /\.gemini[\\/]AGENTS\.md/);
+  assert.equal(fs.existsSync(path.join(agRoot, "skills/research/SKILL.md")), false);
+  assert.equal(read(path.join(agRoot, "skills/research/personal-notes.md")), "Keep my notes\n");
+
+  const agImpl = path.join(agRoot, "references/rules/02-implementation.md");
+  const customized = read(agImpl) + "\nKeep Antigravity personal rule.\n";
+  fs.writeFileSync(agImpl, customized);
+  fs.writeFileSync(path.join(agRoot, "plugin.json"), '{"name":"old"}\n');
+  runCli();
+  assert.equal(read(agImpl), customized, "reinstall must preserve Antigravity personal 02-implementation.md");
+  const backupsDir = path.join(agRoot, BACKUP_ROOT_NAME);
+  const snapshots = fs.readdirSync(backupsDir);
+  assert.equal(snapshots.length, 1);
+  assert.equal(read(path.join(backupsDir, snapshots[0], "plugin.json")), '{"name":"old"}\n');
+}
+
+function checkAntigravityEdgeCases() {
+  // 1. Pre-write rule target validation must refuse symlinked references/rules before writing any file.
+  const precheckHome = path.join(tempRoot, "ag-precheck-home");
+  const outsideRules = path.join(tempRoot, "ag-outside-rules");
+  const precheckPlugin = path.join(precheckHome, ".gemini/config/plugins/claude-everything-workflow");
+  fs.mkdirSync(outsideRules, { recursive: true });
+  fs.mkdirSync(path.join(precheckPlugin, "references"), { recursive: true });
+  fs.symlinkSync(
+    outsideRules,
+    path.join(precheckPlugin, "references/rules"),
+    process.platform === "win32" ? "junction" : "dir",
+  );
+  assert.throws(
+    () => installAntigravity({ sourceRoot, homeDir: precheckHome, log: () => {} }),
+    /symlink/i,
+  );
+  assert.equal(fs.existsSync(path.join(precheckPlugin, "plugin.json")), false,
+    "symlinked references/rules must fail before any partial plugin write");
+  assert.deepEqual(fs.readdirSync(outsideRules), []);
+
+  // 2. Read-only source files (0o444) install with owner-writable permissions so upgrades succeed.
+  {
+    const roHome = path.join(tempRoot, "ag-ro-home");
+    const roSource = path.join(tempRoot, "ag-ro-source");
+    fs.cpSync(sourceRoot, roSource, {
+      recursive: true,
+      filter: (src) => !src.includes(`${path.sep}node_modules`) && !src.includes(`${path.sep}.git`),
+    });
+    const roRef = path.join(roSource, "references/git-worktrees.md");
+    const roRule = path.join(roSource, "rules/01-base.md");
+    fs.chmodSync(roRef, 0o444);
+    fs.chmodSync(roRule, 0o444);
+    try {
+      const installedRoot = installAntigravity({ sourceRoot: roSource, homeDir: roHome, log: () => {} });
+      const installedRef = path.join(installedRoot, "references/git-worktrees.md");
+      const installedRule = path.join(installedRoot, "references/rules/01-base.md");
+      assert.ok((fs.statSync(installedRef).mode & 0o200) !== 0, "installed file must keep owner write bit");
+      assert.ok(fs.statSync(installedRule).mode & 0o200, "installed rule must be owner-writable");
+      // Older installers could leave this target read-only.
+      fs.chmodSync(installedRule, 0o400);
+      fs.chmodSync(roRef, 0o644);
+      fs.writeFileSync(roRef, "# Updated worktrees\n");
+      const originalRule = read(roRule);
+      fs.chmodSync(roRule, 0o644);
+      fs.writeFileSync(roRule, "# Updated rule\n");
+      fs.chmodSync(roRule, 0o444);
+      installAntigravity({ sourceRoot: roSource, homeDir: roHome, backupId: "upgrade", log: () => {} });
+      assert.equal(read(installedRef), "# Updated worktrees\n");
+      assert.equal(read(installedRule), "# Updated rule\n");
+      assert.ok(fs.statSync(installedRule).mode & 0o200, "upgraded rule must be owner-writable");
+      const backup = path.join(installedRoot, BACKUP_ROOT_NAME, "upgrade", "references/rules/01-base.md");
+      assert.equal(read(backup), originalRule);
+      // Reuse the same snapshot ID, as happens for two updates within the same second.
+      fs.writeFileSync(installedRule, "Previous local rule\n");
+      installAntigravity({ sourceRoot: roSource, homeDir: roHome, backupId: "upgrade", log: () => {} });
+      assert.equal(read(backup), "Previous local rule\n");
+      assert.equal(read(installedRule), "# Updated rule\n");
+    } finally {
+      fs.chmodSync(roRef, 0o644);
+      fs.chmodSync(roRule, 0o644);
+    }
+  }
+
+  // 3. Symlinked $HOME is allowed when .gemini chain itself is clean.
+  const realHome = path.join(tempRoot, "ag-real-home");
+  const linkedHome = path.join(tempRoot, "ag-linked-home");
+  fs.mkdirSync(realHome);
+  fs.symlinkSync(realHome, linkedHome, process.platform === "win32" ? "junction" : "dir");
+  const linkedPlugin = installAntigravity({ sourceRoot, homeDir: linkedHome, log: () => {} });
+  assert.equal(fs.existsSync(path.join(linkedPlugin, "plugin.json")), true);
+
+  // 4. Zero-indent YAML lists parse cleanly; invalid/unmapped explicit tools throw instead of fail-open.
+  const parsedList = parseFrontmatter("---\nname: demo\ntools:\n- Read\n- Grep\n---\n\nBody\n");
+  assert.deepEqual(parsedList.data.tools, ["Read", "Grep"]);
+  assert.deepEqual(mapTools(["Read", "Grep"], "demo.md"), ["read_file"]);
+  assert.throws(() => mapTools(["UnknownTool"], "demo.md"), /no supported Antigravity tools/);
+  assert.throws(() => mapTools([], "demo.md"), /no supported Antigravity tools/);
+  assert.throws(() => mapTools("Read", "demo.md"), /invalid tools/);
+
+  // 5. Reject "." as --backup-id in both CLI entrypoints.
+  for (const script of ["scripts/install-rules.js", "scripts/install-antigravity.js"]) {
+    const args = script.endsWith("install-rules.js")
+      ? [path.join(sourceRoot, script), "codex", path.join(tempRoot, "unused"), "--backup-id", "."]
+      : [path.join(sourceRoot, script), path.join(tempRoot, "unused"), "--backup-id", "."];
+    const res = spawnSync(process.execPath, args, { cwd: sourceRoot, encoding: "utf8" });
+    assert.notEqual(res.status, 0);
+    assert.match(res.stderr, /Invalid --backup-id/);
+  }
+
+  // 6. Bash --antigravity-only works without rsync on PATH.
+  if (process.platform !== "win32") {
+    const noRsyncProfile = path.join(tempRoot, "ag-no-rsync-profile");
+    const noRsyncBin = path.join(tempRoot, "ag-no-rsync-bin");
+    fs.mkdirSync(noRsyncBin, { recursive: true });
+    fs.symlinkSync(process.execPath, path.join(noRsyncBin, "node"));
+    for (const tool of ["dirname", "date"]) {
+      const located = spawnSync("which", [tool], { encoding: "utf8" }).stdout.trim();
+      if (located) fs.symlinkSync(located, path.join(noRsyncBin, tool));
+    }
+    const executable = process.env.CEW_TEST_BASH || "bash";
+    const res = spawnSync(executable, ["scripts/install.sh", "--antigravity-only"], {
+      cwd: sourceRoot,
+      env: { ...process.env, HOME: noRsyncProfile, PATH: `${noRsyncBin}:/bin` },
+      encoding: "utf8",
+      timeout: 60000,
+    });
+    assert.ifError(res.error);
+    assert.equal(res.status, 0, res.stdout + res.stderr);
+    assert.equal(
+      fs.existsSync(path.join(noRsyncProfile, ".gemini/config/plugins/claude-everything-workflow/plugin.json")),
+      true,
+    );
   }
 }
 
@@ -489,11 +768,14 @@ try {
   checkLegacyMigration();
   checkPromotedImplementationRule();
   checkCodexImplementationRuleUpgrades();
+  checkAntigravityImplementationRuleUpgrades();
   checkInstallerCliOptions();
   checkBashHelpOptions();
   checkInstallerLinkedRoots();
   checkInstallerMergeFailure();
   checkInstallerEntrypoint();
+  checkAntigravityOnlyInstaller();
+  checkAntigravityEdgeCases();
   console.log("Rule installation tests passed (migration, backups, custom rules, symlink safety, both hosts, installer dry-run and execution).");
 } finally {
   // Only remove the exact private directory returned by mkdtemp; never a caller-supplied path.

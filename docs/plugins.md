@@ -55,6 +55,24 @@ codex plugin add claude-everything-workflow@cew
 
 CLI 命令以宿主版本为准；缺少 `plugin` 子命令时使用支持插件的应用版本或继续使用 npm 安装。
 
+## Antigravity (Gemini)
+
+Antigravity 支持原生用户级插件（`~/.gemini/config/plugins/claude-everything-workflow/`）。可直接通过 npm 一键安装并在后续像 Codex 一样同步升级：
+
+```sh
+npx claude-everything-workflow install --antigravity-only
+```
+
+或者运行 `npx claude-everything-workflow install`（当本机已存在非符号链接的 `~/.gemini` 时会自动同步 Antigravity；未存在时跳过，可随时用 `--antigravity-only` 显式安装）。安装器会自动生成或同步：
+
+- `plugin.json`：原生插件清单（版本与 `package.json` 保持一致）。
+- `rules/AGENTS.md`：唯一的常驻入口规则，指引按需读取 `references/rules/` 下的基础规则与 `common/` 专项规则。
+- `skills/`：同步全部工作流技能，并把非重复命令（`pr`、`verify`、`to-spec`、`learn`）转换为原生技能；自动清理已退役技能。
+- `agents/`：转换工具名称与插件内引用路径为 Antigravity 原生子代理格式。
+- `references/rules/02-implementation.md`：采用与 Codex 相同的 Git 三方合并机制，升级时保留个人修改。
+
+不自动启用 Claude Code 专用 hooks。若本机存在旧版 `~/.gemini/AGENTS.md`，安装器不会自动删除，仅在输出中提示手动确认。
+
 ### 浏览器验证 MCP
 
 Claude 插件根目录的 `.mcp.json` 会注册 `chrome-devtools` MCP，启用插件后无需手动配置。前置条件、手动添加命令和复用已登录 Chrome 的说明见 README 的“浏览器验证（可选）”。
@@ -63,13 +81,13 @@ Claude 插件根目录的 `.mcp.json` 会注册 `chrome-devtools` MCP，启用�
 
 | 项目 | 插件安装 | npm 安装 |
 | --- | --- | --- |
-| 文件位置 | 宿主管理的插件目录或缓存 | `~/.claude/`、`~/.codex/` |
+| 文件位置 | 宿主管理的插件目录或缓存 | `~/.claude/`、`~/.codex/`、`~/.gemini/config/plugins/claude-everything-workflow/` |
 | 全局入口配置 | 不覆盖已有入口和设置 | 安装器备份并同步入口，Claude hooks 合并进设置 |
 | 工作流 | 宿主发现插件技能，保留原有规则查找方式 | 从用户级目录按需加载 |
 | Claude hooks | 插件生命周期内启用基础检查 | 原有安装器配置 |
 | 停用 | 用宿主插件管理功能禁用或卸载 | 按原有全局配置管理 |
 
-插件不会自动加载随包的 `AGENTS.md` 或注册 `rules/`，也不提供额外的资源路径适配；这些文件被打包不等于其规则已生效。需要全局入口和规则安装时使用 npm 安装器。只使用插件时，跨文件工作流仍需目标项目或用户已有配置提供可解析的规则及参考路径，不能视为与 npm 安装完全等价。
+Claude Code / Codex 市场插件不会自动加载随包的 `AGENTS.md` 或注册 `rules/`，也不提供额外的资源路径适配；这些文件被打包不等于其规则已生效。Antigravity 通过 npm 安装器生成的原生插件会将 `rules/AGENTS.md` 放入插件入口并把详细规则放到 `references/rules/` 按需加载。仅使用 Claude / Codex 市场插件时，跨文件工作流仍需目标项目或用户已有配置提供可解析的规则及参考路径，不能视为与 npm 安装完全等价。
 
 同一宿主建议选一种方式，避免同名技能和 Claude hooks 重复。已有 npm 安装不会被插件自动迁移或删除；学习系统仍需显式配置。脚本声明的可选外部工具和依赖也不会因安装插件自动安装。基础检查脚本需要 Node.js 18+；运行仓库校验器需要安装 package.json 中的依赖。
 

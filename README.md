@@ -30,24 +30,25 @@ CEW works with your existing projects and model. It does not provide a model or 
 
 ### Requirements
 
-- Claude Code and/or Codex, already installed and configured.
+- Claude Code, Codex, and/or Antigravity, already installed and configured.
 - Node.js **18+** and npm/npx.
-- macOS/Linux: Bash and `rsync`. Windows: PowerShell; Git Bash/WSL can use the shell installer if Bash and `rsync` are available.
+- macOS/Linux: Bash and `rsync` (`rsync` is required for Claude Code / Codex installs). Windows: PowerShell; Git Bash/WSL can use the shell installer if Bash and `rsync` are available.
 
 ### Install from npm
 
-Preview the changes, then install to both hosts:
+Preview the changes, then install (Claude Code + Codex, and auto-syncs Antigravity if `~/.gemini` already exists):
 
 ```sh
 npx claude-everything-workflow install --dry-run
 npx claude-everything-workflow install
 ```
 
-To install for only one host:
+To install for only one host (use `--antigravity-only` when installing Antigravity on a machine without `~/.gemini`):
 
 ```sh
 npx claude-everything-workflow install --claude-only
 npx claude-everything-workflow install --codex-only
+npx claude-everything-workflow install --antigravity-only
 ```
 
 ### Install from source
@@ -60,7 +61,7 @@ node bin/claude-everything-workflow.js install --dry-run
 node bin/claude-everything-workflow.js install
 ```
 
-The CLI selects the shell or PowerShell installer for your platform. The same `--claude-only` and `--codex-only` options apply. The npm command uses the published package; the source command uses your checkout.
+The CLI selects the shell or PowerShell installer for your platform. The same `--claude-only`, `--codex-only`, and `--antigravity-only` options apply. The npm command uses the published package; the source command uses your checkout.
 
 ### What changes on your machine
 
@@ -68,10 +69,13 @@ The CLI selects the shell or PowerShell installer for your platform. The same `-
 | --- | --- | --- |
 | Claude Code | `~/.claude/` | Shared workflow files, `CLAUDE.md` bootstrap, rules, and merged hook settings. |
 | Codex | `~/.codex/` | Shared workflow files and `AGENTS.md`; Claude Code hooks are not automatically enabled. |
+| Antigravity (Gemini) | `~/.gemini/config/plugins/claude-everything-workflow/` | Native plugin (`plugin.json`, `rules/AGENTS.md`, on-demand `references/rules/`, converted `skills/` and `agents/`, `scripts/learning/`). |
 
 Installation updates user-level files and can affect multiple projects. Changed top-level configuration files are backed up; matching files inside shared directories are synchronized from the repository. Unknown files are generally retained, while known retired files are removed by an explicit cleanup list. Back up any personal edits to shared files before upgrading. Use the installer instead of copying the entire `rules/` directory: it handles the different rule locations used by each host.
 
-The Codex installer preserves edits to `~/.codex/rules/02-implementation.md`. On the first upgrade it records the packaged rule as a baseline. Later upgrades use Git to merge independent changes. If a merge conflicts or Git is unavailable, the personal rule stays active and the installer prints the incoming copy’s location and manual merge instructions.
+The Codex installer preserves edits to `~/.codex/rules/02-implementation.md`, and the Antigravity installer uses the same three-way Git merge mechanism for `~/.gemini/config/plugins/claude-everything-workflow/references/rules/02-implementation.md`. On the first upgrade it records the packaged rule as a baseline. Later upgrades use Git to merge independent changes. If a merge conflicts or Git is unavailable, the personal rule stays active and the installer prints the incoming copy’s location and manual merge instructions.
+
+For Antigravity, only `rules/AGENTS.md` stays in the auto-loaded plugin `rules/` folder while all detailed rules live under `references/rules/` for on-demand loading. Default `install` syncs Antigravity only when a non-symlink `~/.gemini` directory already exists; pass `--antigravity-only` to install it explicitly. If a legacy `~/.gemini/AGENTS.md` exists, the installer leaves it untouched and prints a notice so you can review or remove it manually.
 
 A fresh Claude Code installation puts CEW’s base, Git and security rules in `~/.claude/rules/`. Other CEW rules are available on demand under `~/.claude/references/rules/`. On upgrade, personally edited copies of the three newly migrated rules stay active. Obsolete rules left by older releases can also still load.
 

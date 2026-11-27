@@ -7,8 +7,8 @@ const crypto = require("node:crypto");
 const os = require("node:os");
 const { spawnSync } = require("node:child_process");
 
-const CODEX_RULE_BASE = ".cew-rule-state/02-implementation.base.md";
-const CODEX_RULE_INCOMING = ".cew-rule-state/02-implementation.incoming.md";
+const IMPLEMENTATION_RULE_BASE = ".cew-rule-state/02-implementation.base.md";
+const IMPLEMENTATION_RULE_INCOMING = ".cew-rule-state/02-implementation.incoming.md";
 
 const BACKUP_ROOT_NAME = ".cew-backups";
 const LEGACY_TOP_LEVEL_BAK = /^(?:CLAUDE\.md|AGENTS\.md|settings\.json)\.bak\..+$/;
@@ -54,8 +54,20 @@ function replaceFile(file, content, mode = 0o600) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   const temp = file + ".tmp-" + crypto.randomUUID();
   try {
-    fs.writeFileSync(temp, content, { flag: "wx", mode });
-    fs.renameSync(temp, file);
+    fs.writeFileSync(temp, content, { flag: "wx", mode: (mode & 0o777) | 0o200 });
+    if (process.umask() & 0o200) {
+      fs.chmodSync(temp, (fs.statSync(temp).mode & 0o777) | 0o200);
+    }
+    // Windows refuses to replace a target left read-only by an older installer.
+    const priorMode = process.platform === "win32" && fs.existsSync(file) ? fs.statSync(file).mode : null;
+    const readOnly = priorMode !== null && !(priorMode & 0o200);
+    if (readOnly) fs.chmodSync(file, priorMode | 0o200);
+    try {
+      fs.renameSync(temp, file);
+    } catch (error) {
+      if (readOnly) fs.chmodSync(file, priorMode);
+      throw error;
+    }
   } finally {
     fs.rmSync(temp, { force: true });
   }
@@ -64,21 +76,19 @@ function replaceFile(file, content, mode = 0o600) {
 function copyRule({ source, root, relative, backupId, dryRun, log, merged }) {
   const target = checkedPath(root, relative);
   const content = merged ?? fs.readFileSync(source);
-  if (fs.existsSync(target)) {
+  const exists = fs.existsSync(target);
+  if (exists) {
     const previous = fs.readFileSync(target);
     if (content.equals(previous)) return;
     const backup = checkedPath(root, path.posix.join(BACKUP_ROOT_NAME, backupId, relative));
     log(`${dryRun ? "[dry-run] " : ""}备份规则: ${backup}`);
     if (!dryRun) {
-      fs.mkdirSync(path.dirname(backup), { recursive: true });
-      fs.copyFileSync(target, backup);
+      replaceFile(backup, previous, fs.statSync(target).mode);
     }
   }
   log(`${dryRun ? "[dry-run] " : ""}安装规则: ${target}`);
   if (!dryRun) {
-    fs.mkdirSync(path.dirname(target), { recursive: true });
-    if (merged) replaceFile(target, merged, fs.statSync(target).mode);
-    else fs.copyFileSync(source, target);
+    replaceFile(target, content, fs.statSync(exists ? target : source).mode);
   }
 }
 
@@ -103,11 +113,11 @@ function mergeRuleText(local, base, incoming) {
   }
 }
 
-function installCodexImplementationRule(options, knownHashes) {
+function installMergedImplementationRule(options, knownHashes, hostLabel) {
   const { source, root, relative, dryRun, log } = options;
   const target = checkedPath(root, relative);
-  const base = checkedPath(root, CODEX_RULE_BASE);
-  const incoming = checkedPath(root, CODEX_RULE_INCOMING);
+  const base = checkedPath(root, IMPLEMENTATION_RULE_BASE);
+  const incoming = checkedPath(root, IMPLEMENTATION_RULE_INCOMING);
   const previous = fs.existsSync(base) ? fs.readFileSync(base) : null;
   const local = fs.existsSync(target) ? fs.readFileSync(target) : null;
   const next = fs.readFileSync(source);
@@ -126,7 +136,7 @@ function installCodexImplementationRule(options, knownHashes) {
     }
     copyRule({ ...options, merged });
   } else {
-    log(`保留 Codex 个人实现规则: ${target}`);
+    log(`保留 ${hostLabel} 个人实现规则: ${target}`);
   }
   if (!dryRun) {
     if (!previous || !previous.equals(next)) replaceFile(base, next);
@@ -237,49 +247,111 @@ function finalizeBackups({ installRoot, dryRun = false, log = console.log }) {
   }
 }
 
-function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupId(), dryRun = false, log = console.log }) {
-  if (!["claude-code", "codex"].includes(host)) throw new Error(`Invalid host: ${host}`);
-  const root = path.resolve(installRoot);
+function validateBackupId(backupId) {
+  if (
+    !backupId ||
+    backupId === "." ||
+    backupId.includes("/") ||
+    backupId.includes("\\") ||
+    backupId.includes("..")
+  ) {
+    throw new Error("Invalid --backup-id");
+  }
+  return backupId;
+}
+
+function getHostRulePolicy(host) {
+  if (host === "claude-code") {
+    return {
+      dirFor: (relative) => (claudeResidentRules.has(relative) ? "rules" : "references/rules"),
+      mergedRule: null,
+      promotedRule: "02-implementation.md",
+      retireColdFromRules: true,
+      retiredDirs: ["rules", "references/rules"],
+    };
+  }
+  if (host === "codex") {
+    return {
+      dirFor: () => "rules",
+      mergedRule: { relative: "rules/02-implementation.md", hostLabel: "Codex" },
+      promotedRule: null,
+      retireColdFromRules: false,
+      retiredDirs: ["rules"],
+    };
+  }
+  if (host === "antigravity") {
+    return {
+      dirFor: () => "references/rules",
+      mergedRule: { relative: "references/rules/02-implementation.md", hostLabel: "Antigravity" },
+      promotedRule: null,
+      retireColdFromRules: false,
+      retiredDirs: ["references/rules"],
+    };
+  }
+  throw new Error(`Invalid host: ${host}`);
+}
+
+function collectRuleSources(sourceRoot) {
   const rulesRoot = path.join(sourceRoot, "rules");
-  const legacy = JSON.parse(fs.readFileSync(path.join(sourceRoot, "scripts/legacy-common-rule-hashes.json"), "utf8"));
   const files = fs.readdirSync(rulesRoot, { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
     .map((entry) => entry.name);
   const commonFiles = fs.readdirSync(path.join(rulesRoot, "common"), { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
     .map((entry) => `common/${entry.name}`);
-  const installedOnDemand = (relative) => host === "claude-code" && !claudeResidentRules.has(relative);
-  const promoted = (relative) => host === "claude-code" && relative === "02-implementation.md";
+  return { rulesRoot, relatives: [...files, ...commonFiles] };
+}
+
+function validateRuleTargets({ sourceRoot, installRoot, host }) {
+  const policy = getHostRulePolicy(host);
+  const root = path.resolve(installRoot);
+  const { rulesRoot, relatives } = collectRuleSources(sourceRoot);
   // Validate all managed destinations before the first write, including upgrade cleanup paths.
   checkedPath(root, BACKUP_ROOT_NAME);
-  if (host === "codex") {
-    checkedPath(root, CODEX_RULE_BASE);
-    checkedPath(root, CODEX_RULE_INCOMING);
+  if (policy.mergedRule) {
+    checkedPath(root, IMPLEMENTATION_RULE_BASE);
+    checkedPath(root, IMPLEMENTATION_RULE_INCOMING);
   }
-  for (const relative of [...files, ...commonFiles]) {
-    checkedPath(root, `rules/${relative}`);
-    if (installedOnDemand(relative) || promoted(relative)) {
+  for (const relative of relatives) {
+    const targetDir = policy.dirFor(relative);
+    checkedPath(root, `${targetDir}/${relative}`);
+    if (policy.retireColdFromRules && targetDir === "references/rules") {
+      checkedPath(root, `rules/${relative}`);
+    }
+    if (policy.promotedRule === relative) {
+      checkedPath(root, `rules/${relative}`);
       checkedPath(root, `references/rules/${relative}`);
     }
   }
   for (const retired of retiredTopLevelRules) {
-    checkedPath(root, `rules/${retired}`);
-    if (host === "claude-code") checkedPath(root, `references/rules/${retired}`);
+    for (const dir of policy.retiredDirs) {
+      checkedPath(root, `${dir}/${retired}`);
+    }
   }
-  for (const relative of [...files, ...commonFiles]) {
+  return { policy, root, rulesRoot, relatives };
+}
+
+function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupId(), dryRun = false, log = console.log }) {
+  validateBackupId(backupId);
+  const { policy, root, rulesRoot, relatives } = validateRuleTargets({ sourceRoot, installRoot, host });
+  const legacy = JSON.parse(fs.readFileSync(path.join(sourceRoot, "scripts/legacy-common-rule-hashes.json"), "utf8"));
+  for (const relative of relatives) {
     const source = path.join(rulesRoot, relative);
-    if (host === "codex" && relative === "02-implementation.md") {
-      installCodexImplementationRule({ source, root, relative: `rules/${relative}`, backupId, dryRun, log },
-        legacy.files[relative] || []);
+    if (policy.mergedRule && relative === "02-implementation.md") {
+      installMergedImplementationRule(
+        { source, root, relative: policy.mergedRule.relative, backupId, dryRun, log },
+        legacy.files[relative] || [],
+        policy.mergedRule.hostLabel,
+      );
       continue;
     }
-    if (promoted(relative)) {
+    if (policy.promotedRule === relative) {
       installPromotedRule({ source, root, relative, knownHashes: legacy.files[relative] || [], backupId, dryRun, log });
       continue;
     }
-    const cold = installedOnDemand(relative);
-    copyRule({ source, root, relative: `${cold ? "references/rules" : "rules"}/${relative}`, backupId, dryRun, log });
-    if (cold) {
+    const targetDir = policy.dirFor(relative);
+    copyRule({ source, root, relative: `${targetDir}/${relative}`, backupId, dryRun, log });
+    if (policy.retireColdFromRules && targetDir === "references/rules") {
       retireRule({
         source, root, relative: `rules/${relative}`,
         knownHashes: legacy.files[relative] || [], dryRun, log,
@@ -288,14 +360,21 @@ function installRules({ sourceRoot, installRoot, host, backupId = defaultBackupI
   }
   for (const retired of retiredTopLevelRules) {
     const knownHashes = legacy.files[retired] || [];
-    retireRule({ source: null, root, relative: `rules/${retired}`, knownHashes, dryRun, log });
-    if (host === "claude-code") {
-      retireRule({ source: null, root, relative: `references/rules/${retired}`, knownHashes, dryRun, log });
+    for (const dir of policy.retiredDirs) {
+      retireRule({ source: null, root, relative: `${dir}/${retired}`, knownHashes, dryRun, log });
     }
   }
 }
 
-module.exports = { BACKUP_ROOT_NAME, installRules, finalizeBackups };
+module.exports = {
+  BACKUP_ROOT_NAME,
+  checkedPath,
+  defaultBackupId,
+  validateBackupId,
+  validateRuleTargets,
+  installRules,
+  finalizeBackups,
+};
 
 function parseCli(argv) {
   let dryRun = false;
@@ -309,10 +388,7 @@ function parseCli(argv) {
     } else if (arg === "--finalize-backups") {
       finalize = true;
     } else if (arg === "--backup-id") {
-      backupId = argv[++i];
-      if (!backupId || backupId.includes("/") || backupId.includes("\\") || backupId.includes("..")) {
-        throw new Error("Invalid --backup-id");
-      }
+      backupId = validateBackupId(argv[++i]);
     } else if (arg.startsWith("-")) {
       throw new Error(`Unknown option: ${arg}`);
     } else {
@@ -334,7 +410,7 @@ if (require.main === module) {
     } else {
       const [host, installRoot] = positional;
       if (!host || !installRoot || positional.length !== 2) {
-        throw new Error("Usage: install-rules.js <claude-code|codex> <install-root> [--backup-id <id>] [--dry-run]");
+        throw new Error("Usage: install-rules.js <claude-code|codex|antigravity> <install-root> [--backup-id <id>] [--dry-run]");
       }
       installRules({
         sourceRoot: path.resolve(__dirname, ".."),

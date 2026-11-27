@@ -16,6 +16,7 @@ const PACKAGE_ONLY_PATHS = [
   "scripts/install.sh",
   "scripts/install.ps1",
   "scripts/install-rules.js",
+  "scripts/install-antigravity.js",
   "scripts/legacy-common-rule-hashes.json",
   "scripts/eval-scenarios.js",
   "scripts/verify-harness.js",
@@ -189,6 +190,15 @@ function checkInstallerSurface(ps, sh) {
       fail(`installers must route ${host} rules through the host adapter`);
     }
   }
+  const antigravityInstaller = exists("scripts/install-antigravity.js")
+    ? read("scripts/install-antigravity.js")
+    : "";
+  if (!antigravityInstaller.includes('host: "antigravity"')) {
+    fail('scripts/install-antigravity.js must route rules through host: "antigravity"');
+  }
+  if (antigravityInstaller.includes("settings.json")) {
+    fail("scripts/install-antigravity.js should not install Claude Code settings.json");
+  }
   if (sh.includes('copy_dir rules "$dest"') || /\$dirs\s*=\s*@\([^)]*"rules"/s.test(ps)) {
     fail("installers must not copy cold common rules into the shared automatic rules directory");
   }
@@ -226,9 +236,11 @@ function checkInstallRuntimePolicy() {
   requireTokens("scripts/install.ps1", [
     "Copy-ClaudeSettings",
     "Install-CodexWorkflow",
+    "Install-AntigravityWorkflow",
     "Copy-ConfigFile -Source (Join-Path $RootDir \"AGENTS.md\")",
     "Remove-PackageOnlyPaths",
     "scripts\\install.ps1",
+    "scripts\\install-antigravity.js",
     "scripts\\verify-harness.js",
     "scripts\\verify",
     "scripts\\verify\\scenario-checks.js",
@@ -237,13 +249,24 @@ function checkInstallRuntimePolicy() {
   requireTokens("scripts/install.sh", [
     "copy_claude_settings",
     "install_codex()",
+    "install_antigravity()",
     "copy_file \"$ROOT_DIR/AGENTS.md\" \"$dest/AGENTS.md\"",
     "remove_package_only_paths",
     "scripts/install.sh",
+    "scripts/install-antigravity.js",
     "scripts/verify-harness.js",
     "scripts/verify",
     "scripts/verify/scenario-checks.js",
     "scripts/verify/scenario-checks.test.js",
+  ]);
+  requireTokens("scripts/install-antigravity.js", [
+    "installRules",
+    "finalizeBackups",
+    "cleanup-retired-skills.js",
+  ]);
+  requireTokens("bin/claude-everything-workflow.js", [
+    "--antigravity-only",
+    "-AntigravityOnly",
   ]);
 
   const ps = read("scripts/install.ps1");
