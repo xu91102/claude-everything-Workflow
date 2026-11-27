@@ -45,6 +45,21 @@ function Invoke-InstallCommand {
     & $Action
 }
 
+function Get-Sha256Hex {
+    param([string]$LiteralPath)
+
+    $resolvedPath = (Resolve-Path -LiteralPath $LiteralPath).ProviderPath
+    $sha256 = [System.Security.Cryptography.SHA256]::Create()
+    $stream = [System.IO.File]::OpenRead($resolvedPath)
+    try {
+        $bytes = $sha256.ComputeHash($stream)
+        return ([BitConverter]::ToString($bytes) -replace '-', '')
+    } finally {
+        $stream.Dispose()
+        $sha256.Dispose()
+    }
+}
+
 function Backup-IfChanged {
     param(
         [string]$Source,
@@ -56,9 +71,9 @@ function Backup-IfChanged {
         return
     }
 
-    $sourceHash = Get-FileHash -LiteralPath $Source -Algorithm SHA256
-    $destHash = Get-FileHash -LiteralPath $Destination -Algorithm SHA256
-    if ($sourceHash.Hash -eq $destHash.Hash) {
+    $sourceHash = Get-Sha256Hex -LiteralPath $Source
+    $destHash = Get-Sha256Hex -LiteralPath $Destination
+    if ($sourceHash -eq $destHash) {
         return
     }
 
