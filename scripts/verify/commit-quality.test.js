@@ -160,3 +160,66 @@ test("non-git directory reports warning instead of silently skipping, and invali
   assert.match(result.stderr, /Commit message 格式不符合规范/);
   assert.match(result.stderr, /无法检查暂存区/);
 });
+
+test("subshells inherit and restore their working directories independently", (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "cew-cq-groups-"));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const outer = initRepo(root, "outer");
+  const inner = initRepo(outer, "inner");
+  fs.writeFileSync(path.join(inner, "inner.js"), "debugger;\n");
+  git(inner, "add", "inner.js");
+  assert.match(run(payload("(cd inner && (git commit -m 'test: nested'))"), { cwd: outer }).stderr, /inner\.js:1/);
+  assert.equal(run(payload("(cd inner); (git commit -m 'test: sibling')"), { cwd: outer }).stderr, undefined);
+  const multiple = run(payload("git commit -m 'test: outer'; (cd inner && git commit -m 'test: inner')"), { cwd: outer });
+  assert.match(multiple.stderr, /inner\.js:1/);
+});
+
+test("here-document input is data, including tab-stripped and quoted terminators", () => {
+  const doc = "cat <<'FIRST' <<-SECOND\ngit commit -m example\nFIRST\n\tgit commit -m other\n\tSECOND";
+  assert.equal(extractGitCommitInvocation(doc), null);
+  assert.equal(extractGitCommitInvocation("echo $((1 << 2))\ngit commit -m arithmetic").message, "arithmetic");
+  assert.equal(extractGitCommitInvocation(doc + "\ngit commit -m 'docs: real'").message, "docs: real");
+  assert.equal(extractGitCommitInvocation('echo "cat <<EOF"; git commit -m "docs: quoted"').message, "docs: quoted");
+  assert.equal(extractGitCommitInvocation('cat <<< word; git commit -m "docs: string"').message, "docs: string");
+});
+
+test("Git directory and index settings select the actual staged files", (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "cew-cq-env-"));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const outer = initRepo(root, "outer");
+  const inner = initRepo(root, "inner repo");
+  const alternate = path.join(inner, "alternate.index");
+  fs.writeFileSync(path.join(inner, "alternate.js"), "debugger;\n");
+  execFileSync("git", ["add", "alternate.js"], { cwd: inner, env: { ...process.env, GIT_INDEX_FILE: alternate } });
+  const prefix = "env GIT_DIR='../inner repo/.git' GIT_WORK_TREE='../inner repo' GIT_INDEX_FILE='../inner repo/alternate.index'";
+  assert.match(run(payload(prefix + " git commit -m 'test: index'"), { cwd: outer }).stderr, /alternate\.js:1/);
+  assert.match(run(payload('GIT_INDEX_FILE="$OTHER_INDEX" git commit -m "test: dynamic"'), { cwd: outer }).stderr, /无法检查暂存区/);
+});
+
+test("both Claude installation modes register one edit check and honor individual switches", (t) => {
+  const root = path.resolve(__dirname, "../..");
+  for (const config of ["settings.json", ".claude-plugin/hooks.json"]) {
+    const hooks = JSON.parse(fs.readFileSync(path.join(root, config))).hooks.PostToolUse;
+    const edit = hooks.filter(g => g.matcher === "Edit|Write|MultiEdit").flatMap(g => g.hooks);
+    assert.equal(edit.length, 1, config);
+    assert.match(edit[0].command, /hooks\/check-edited-file\.js/);
+  }
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cew-edits-"));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const file = path.join(dir, "demo.ts");
+  fs.writeFileSync(file, "// @ts-ignore\n" + "a".repeat(121));
+  const stdin = JSON.stringify({ tool_input: { file_path: file } });
+  const runEdit = (disabled) => {
+    const result = require("node:child_process").spawnSync(process.execPath, [path.join(root, "hooks/check-edited-file.js")], {
+      input: stdin, encoding: "utf8", env: { ...process.env, ECC_HOOK_PROFILE: "standard", ECC_DISABLED_HOOKS: disabled },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    return result.stderr;
+  };
+  const all = runEdit("");
+  assert.match(all, /@ts-ignore/);
+  assert.match(all, /120/);
+  assert.doesNotMatch(runEdit("post:edit:console-log"), /@ts-ignore/);
+  assert.doesNotMatch(runEdit("post:edit:code-size"), /120/);
+  assert.equal(runEdit("post:edit:console-log,post:edit:code-size"), "");
+});

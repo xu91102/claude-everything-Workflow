@@ -429,6 +429,8 @@ function checkInstallerEntrypoint() {
     hooks: [
       { type: "command", command: 'node "$HOME/.claude/my-hooks/observe.js"', timeout: 7 },
       { type: "command", command: 'node "$HOME/.claude/hooks/runtime/run-with-flags.js" post:edit:console-log "$HOME/.claude/hooks/my-team-check.js" standard,strict' },
+      // A user-tuned hook using the old entry point must still run with its own timeout.
+      { type: "command", command: 'node "$HOME/.claude/hooks/runtime/run-with-flags.js" post:edit:console-log "$HOME/.claude/hooks/check-console-log.js" standard,strict', timeout: 23 },
       { type: "prompt", prompt: "Keep this user hook" },
     ],
   };
@@ -444,9 +446,12 @@ function checkInstallerEntrypoint() {
     type: "command",
     command: 'node scripts/hooks/run-with-flags.js post:write:console-log hooks/check-console-log.js standard,strict',
   };
+  const oldEditHooks = [["console-log", "check-console-log"], ["code-size", "check-code-size"]].map(([id, script]) => ({
+    type: "command", command: `node "$HOME/.claude/hooks/runtime/run-with-flags.js" post:edit:${id} "$HOME/.claude/hooks/${script}.js" standard,strict`, timeout: 5,
+  }));
   fs.writeFileSync(settingsPath, JSON.stringify({
     hooks: {
-      PostToolUse: [{ ...userHookGroup, hooks: [...userHookGroup.hooks, retiredConsole] }],
+      PostToolUse: [{ ...userHookGroup, hooks: [...userHookGroup.hooks, retiredConsole, ...oldEditHooks] }],
       SessionStart: [{ ...unrelatedHook, hooks: [...unrelatedHook.hooks, retiredSession] }],
     },
   }));

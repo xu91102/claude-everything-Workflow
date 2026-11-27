@@ -42,10 +42,11 @@ function splitCommandSegments(command) {
     let current = ''
     let quote = null
     let escaped = false
-    let depth = 0
+    const hereDocs = []
+    let arithmeticDepth = 0
 
-    const push = (segDepth) => {
-        if (current.trim()) segments.push({ text: current.trim(), depth: segDepth })
+    const push = () => {
+        if (current.trim()) segments.push({ text: current.trim() })
         current = ''
     }
 
@@ -57,6 +58,10 @@ function splitCommandSegments(command) {
             continue
         }
         if (ch === '\\' && quote !== "'") {
+            if (command[i + 1] === '\n') {
+                i += 1
+                continue
+            }
             current += ch
             escaped = true
             continue
@@ -71,33 +76,83 @@ function splitCommandSegments(command) {
             current += ch
             continue
         }
+        // Inside arithmetic expressions, << is a bit shift, not a redirection.
+        if (arithmeticDepth) {
+            if (ch === '(') arithmeticDepth += 1
+            if (ch === ')') arithmeticDepth -= 1
+            current += ch
+            continue
+        }
+        if (command.startsWith('((', i)) {
+            arithmeticDepth = 2
+            current += '(('
+            i += 1
+            continue
+        }
+        if (ch === '#' && (!current || /\s$/.test(current))) {
+            const newline = command.indexOf('\n', i)
+            i = newline === -1 ? command.length : newline - 1
+            continue
+        }
+        if (command.startsWith('<<<', i)) {
+            current += '<<<'
+            i += 2
+            continue
+        }
+        if (command.startsWith('<<', i)) {
+            const match = /^<<(-?)[ \t]*((?:'[^'\n]*'|"(?:\\.|[^"\\\n])*"|\\[^\n]|[^\s;&|<>()\\'"])+)/.exec(command.slice(i))
+            if (match) {
+                hereDocs.push({ delimiter: tokenizeSegment(match[2])[0], stripTabs: Boolean(match[1]) })
+                current += ' '
+                i += match[0].length - 1
+                continue
+            }
+        }
         if (ch === '(') {
-            push(depth)
-            depth += 1
+            push()
+            segments.push({ scope: 'enter' })
             continue
         }
         if (ch === ')') {
-            push(depth)
-            depth = Math.max(0, depth - 1)
+            push()
+            segments.push({ scope: 'leave' })
             continue
         }
         if (ch === '\n' || ch === ';') {
-            push(depth)
+            push()
+            if (ch === '\n' && hereDocs.length) {
+                i = skipHereDocBodies(command, i + 1, hereDocs) - 1
+                hereDocs.length = 0
+            }
             continue
         }
         if ((ch === '&' || ch === '|') && command[i + 1] === ch) {
-            push(depth)
+            push()
             i += 1
             continue
         }
         if (ch === '&' || ch === '|') {
-            push(depth)
+            push()
             continue
         }
         current += ch
     }
-    push(depth)
+    push()
     return segments
+}
+
+function skipHereDocBodies(command, start, documents) {
+    let cursor = start
+    for (const { delimiter, stripTabs } of documents) {
+        while (cursor < command.length) {
+            const newline = command.indexOf('\n', cursor)
+            const end = newline === -1 ? command.length : newline
+            const line = command.slice(cursor, end).replace(/\r$/, '')
+            cursor = newline === -1 ? end : end + 1
+            if ((stripTabs ? line.replace(/^\t+/, '') : line) === delimiter) break
+        }
+    }
+    return cursor
 }
 
 function tokenizeSegment(segment) {
@@ -115,7 +170,7 @@ function tokenizeSegment(segment) {
             hasToken = true
             continue
         }
-        if (ch === '\\' && quote !== "'") {
+        if (ch === '\\' && quote !== "'" && (quote !== '"' || /["$\\\x60\n]/.test(segment[i + 1] || ''))) {
             escaped = true
             hasToken = true
             continue
@@ -158,38 +213,51 @@ function extractCommitMessage(commitArgs) {
 }
 
 function applyCdTarget(target, baseDir) {
-    if (!target || target === '-' || target.startsWith('$') || target.includes('`')) {
+    if (!target || target === '-' || target.startsWith('~') || /[$\x60]/.test(target)) {
         return { dir: baseDir, unresolved: true }
     }
     return { dir: baseDir ? path.resolve(baseDir, target) : target, unresolved: false }
 }
 
-function extractGitCommitInvocation(command, initialCwd = null) {
-    let trackedDir = initialCwd
-    let unresolvedDir = false
+const GIT_PATH_ENV = new Set([
+    'GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_COMMON_DIR',
+    'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES'
+])
 
-    for (const { text, depth } of splitCommandSegments(command)) {
-        const tokens = tokenizeSegment(text)
+function* gitCommitInvocations(command, initialCwd) {
+    const directories = [{ dir: initialCwd, unresolved: false }]
+    for (const segment of splitCommandSegments(command)) {
+        const directory = directories[directories.length - 1]
+        if (segment.scope === 'enter') {
+            directories.push({ ...directory })
+            continue
+        }
+        if (segment.scope === 'leave') {
+            if (directories.length > 1) directories.pop()
+            continue
+        }
+        const tokens = tokenizeSegment(segment.text)
+        const gitEnv = {}
+        let unresolvedEnv = false
         let idx = 0
-        while (idx < tokens.length && (/^[A-Za-z_][A-Za-z0-9_]*=/.test(tokens[idx]) || tokens[idx] === 'env')) {
+        while (idx < tokens.length) {
+            const assignment = /^([A-Za-z_][A-Za-z0-9_]*)=([\s\S]*)$/.exec(tokens[idx])
+            if (!assignment && tokens[idx] !== 'env') break
+            if (assignment && GIT_PATH_ENV.has(assignment[1])) {
+                const [, name, value] = assignment
+                gitEnv[name] = value
+                if (/[$\x60]/.test(value) || value.startsWith('~')) unresolvedEnv = true
+            }
             idx += 1
         }
         const executable = tokens[idx]
         if (!executable) continue
 
-        if (executable === 'cd' && depth === 0) {
-            const target = tokens[idx + 1]
-            if (target && target !== '--') {
-                const next = applyCdTarget(target, trackedDir)
-                trackedDir = next.dir
-                unresolvedDir = next.unresolved
-            } else if (tokens[idx + 1] === '--' && tokens[idx + 2]) {
-                const next = applyCdTarget(tokens[idx + 2], trackedDir)
-                trackedDir = next.dir
-                unresolvedDir = next.unresolved
-            } else {
-                unresolvedDir = true
-            }
+        if (executable === 'cd') {
+            const target = tokens[idx + 1] === '--' ? tokens[idx + 2] : tokens[idx + 1]
+            const next = applyCdTarget(target, directory.dir)
+            directory.unresolved = next.unresolved || (directory.unresolved && !path.isAbsolute(target || ''))
+            directory.dir = next.dir
             continue
         }
 
@@ -235,15 +303,20 @@ function extractGitCommitInvocation(command, initialCwd = null) {
         }
 
         if (tokens[subIdx] === 'commit') {
-            return {
+            yield {
                 gitDirArgs,
-                cdDir: trackedDir !== initialCwd ? trackedDir : null,
-                unresolvedCd: unresolvedDir && !gitDirArgs.length,
+                gitEnv,
+                unresolvedEnv,
+                cdDir: directory.dir !== initialCwd ? directory.dir : null,
+                unresolvedCd: directory.unresolved,
                 message: extractCommitMessage(tokens.slice(subIdx + 1))
             }
         }
     }
-    return null
+}
+
+function extractGitCommitInvocation(command, initialCwd = null) {
+    return gitCommitInvocations(command, initialCwd).next().value ?? null
 }
 
 function diffPath(value) {
@@ -281,6 +354,10 @@ function checkLinePatterns(line, filePath, lineNumber, warnings) {
 
 function scanStagedDiff(commitInvocation, baseCwd) {
     const warnings = []
+    if (commitInvocation.unresolvedEnv) {
+        warnings.push('[Hook] 无法检查暂存区（Git 环境路径无法静态解析）；本次密钥与调试检查未运行。')
+        return { warnings, shouldBlock: false }
+    }
     if (commitInvocation.unresolvedCd) {
         warnings.push('[Hook] 无法检查暂存区（cd 目标无法静态解析）；本次密钥与调试检查未运行。')
         return { warnings, shouldBlock: false }
@@ -298,6 +375,7 @@ function scanStagedDiff(commitInvocation, baseCwd) {
         ]
         const effectiveCwd = commitInvocation.cdDir || baseCwd
         const execOptions = {
+            env: { ...process.env, ...commitInvocation.gitEnv },
             encoding: 'utf8',
             stdio: ['ignore', 'pipe', 'pipe'],
             timeout: 10000,
@@ -356,31 +434,32 @@ function run(raw, options = {}) {
         return { exitCode: 0 }
     }
 
-    const baseCwd = options && typeof options.cwd === 'string' && options.cwd ? options.cwd : process.cwd()
-    const command = input.tool_input?.command || ''
-    const commitInvocation = extractGitCommitInvocation(command, baseCwd)
-    if (!commitInvocation) {
-        return { exitCode: 0 }
-    }
-
+    const cwd = options?.cwd || input?.cwd
+    const baseCwd = typeof cwd === 'string' && cwd ? cwd : process.cwd()
+    const command = input?.tool_input?.command
+    if (typeof command !== 'string') return { exitCode: 0 }
     const warnings = []
-    if (commitInvocation.message !== null && !COMMIT_MSG_REGEX.test(commitInvocation.message)) {
-        warnings.push(
-            `[Hook] Commit message 格式不符合规范: "${commitInvocation.message}"\n` +
-            '[Hook] 格式: <type>(<scope>): <description>\n' +
-            '[Hook] type: feat|fix|docs|style|refactor|perf|test|chore'
-        )
-    }
+    let shouldBlock = false
+    for (const commitInvocation of gitCommitInvocations(command, baseCwd)) {
+        if (commitInvocation.message !== null && !COMMIT_MSG_REGEX.test(commitInvocation.message)) {
+            warnings.push(
+                `[Hook] Commit message 格式不符合规范: "${commitInvocation.message}"\n` +
+                '[Hook] 格式: <type>(<scope>): <description>\n' +
+                '[Hook] type: feat|fix|docs|style|refactor|perf|test|chore'
+            )
+        }
 
-    const scan = scanStagedDiff(commitInvocation, baseCwd)
-    warnings.push(...scan.warnings)
+        const scan = scanStagedDiff(commitInvocation, baseCwd)
+        warnings.push(...scan.warnings)
+        if (scan.shouldBlock) shouldBlock = true
+    }
 
     if (warnings.length === 0) {
         return { exitCode: 0 }
     }
 
     const stderr = warnings.join('\n') + '\n'
-    if (scan.shouldBlock) {
+    if (shouldBlock) {
         return {
             exitCode: 2,
             stderr: stderr + '[Hook] 提交被阻止: 请移除密钥后重试\n'

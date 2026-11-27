@@ -54,6 +54,7 @@ function checkScriptLayout() {
     "hooks/runtime/run-with-flags.js",
     "hooks/runtime/hook-flags.js",
     "hooks/commit-quality.js",
+    "hooks/check-edited-file.js",
     "hooks/check-console-log.js",
     "hooks/check-code-size.js",
     "scripts/learning/review-confidence.js",
@@ -70,8 +71,7 @@ function checkScriptLayout() {
 
   requireTokens("settings.json", [
     "hooks/runtime/run-with-flags.js",
-    "hooks/check-console-log.js",
-    "hooks/check-code-size.js",
+    "hooks/check-edited-file.js",
     "hooks/commit-quality.js",
     "skills/continuous-learning-v2/hooks/observe-v2.js",
   ]);
