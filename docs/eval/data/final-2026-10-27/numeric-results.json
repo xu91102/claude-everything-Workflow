@@ -1,0 +1,3502 @@
+[
+  {
+    "group": "quality",
+    "version": "parent",
+    "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+    "cases": [
+      {
+        "case": "finite_float_huge_range",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 0
+      },
+      {
+        "case": "finite_float_huge_range",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "expected_index": 0
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 0
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "expected_index": 0
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 1
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "index",
+        "passed": true,
+        "value": "1",
+        "expected_index": 1
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 1
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "index",
+        "passed": true,
+        "value": "1",
+        "expected_index": 1
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "len",
+        "passed": true,
+        "value": "1"
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "first",
+        "passed": true,
+        "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "len",
+        "passed": true,
+        "value": "1"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "first",
+        "passed": true,
+        "value": "datetime.datetime(1, 1, 2, 0, 0)"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "contains",
+        "passed": true,
+        "value": "False"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "index",
+        "passed": true,
+        "exception": "ValueError",
+        "message": "9999-12-31 11:59:59.999999 is not in numeric range"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "contains",
+        "passed": true,
+        "value": "False"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "index",
+        "passed": true,
+        "exception": "ValueError",
+        "message": "0001-01-01 12:00:00 is not in numeric range"
+      }
+    ]
+  },
+  {
+    "group": "quality",
+    "version": "upstream_reference",
+    "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+    "cases": [
+      {
+        "case": "finite_float_huge_range",
+        "operation": "contains",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "cannot convert float infinity to integer"
+      },
+      {
+        "case": "finite_float_huge_range",
+        "operation": "index",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "cannot convert float infinity to integer"
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "contains",
+        "passed": false,
+        "exception": "InvalidOperation",
+        "message": "[<class 'decimal.DivisionImpossible'>]"
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "index",
+        "passed": false,
+        "exception": "InvalidOperation",
+        "message": "[<class 'decimal.DivisionImpossible'>]"
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "contains",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "cannot convert float infinity to integer"
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "index",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "cannot convert float infinity to integer"
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "contains",
+        "passed": false,
+        "exception": "InvalidOperation",
+        "message": "[<class 'decimal.DivisionImpossible'>]"
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "index",
+        "passed": false,
+        "exception": "InvalidOperation",
+        "message": "[<class 'decimal.DivisionImpossible'>]"
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "len",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "first",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "len",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "first",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "contains",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "index",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "contains",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "index",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      }
+    ]
+  },
+  {
+    "group": "quality",
+    "version": "gpt-cew-r1",
+    "source_sha256": "ad764d4b772cf523db01261e1e85e5105743ab4e7c1dd9895243c2920f62248c",
+    "cases": [
+      {
+        "case": "finite_float_huge_range",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 0
+      },
+      {
+        "case": "finite_float_huge_range",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "expected_index": 0
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 0
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "expected_index": 0
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 1
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "index",
+        "passed": true,
+        "value": "1",
+        "expected_index": 1
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 1
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "index",
+        "passed": true,
+        "value": "1",
+        "expected_index": 1
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "len",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "first",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "len",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "first",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "contains",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "index",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "contains",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "index",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      }
+    ]
+  },
+  {
+    "group": "quality",
+    "version": "gpt-fixed-r2",
+    "source_sha256": "0a22e1bbbdd8505ded8481e838e9c6438c3b6d489825ca9331369a9d15a48c6e",
+    "cases": [
+      {
+        "case": "finite_float_huge_range",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 0
+      },
+      {
+        "case": "finite_float_huge_range",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "expected_index": 0
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 0
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "expected_index": 0
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 1
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "index",
+        "passed": true,
+        "value": "1",
+        "expected_index": 1
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 1
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "index",
+        "passed": true,
+        "value": "1",
+        "expected_index": 1
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "len",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "first",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "len",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "first",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "contains",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "index",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "contains",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "index",
+        "passed": false,
+        "exception": "OverflowError",
+        "message": "date value out of range"
+      }
+    ]
+  },
+  {
+    "group": "quality",
+    "version": "gpt-fixed-r1",
+    "source_sha256": "ca8301dc35a7f8283695c62a5c4bff99c0ffa9bf09497dac46c19e09551b0a43",
+    "cases": [
+      {
+        "case": "finite_float_huge_range",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 0
+      },
+      {
+        "case": "finite_float_huge_range",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "expected_index": 0
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 0
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "expected_index": 0
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 1
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "index",
+        "passed": true,
+        "value": "1",
+        "expected_index": 1
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 1
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "index",
+        "passed": true,
+        "value": "1",
+        "expected_index": 1
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "len",
+        "passed": true,
+        "value": "1"
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "first",
+        "passed": true,
+        "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "len",
+        "passed": true,
+        "value": "1"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "first",
+        "passed": true,
+        "value": "datetime.datetime(1, 1, 2, 0, 0)"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "contains",
+        "passed": true,
+        "value": "False"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "index",
+        "passed": true,
+        "exception": "ValueError",
+        "message": "9999-12-31 11:59:59.999999 is not in numeric range"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "contains",
+        "passed": true,
+        "value": "False"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "index",
+        "passed": true,
+        "exception": "ValueError",
+        "message": "0001-01-01 12:00:00 is not in numeric range"
+      }
+    ]
+  },
+  {
+    "group": "quality",
+    "version": "gpt-cew-r2",
+    "source_sha256": "baa5ed45d6fe6398e2f00b5474793b8e225d66acaf2fc9b7ef9e008c15804100",
+    "cases": [
+      {
+        "case": "finite_float_huge_range",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 0
+      },
+      {
+        "case": "finite_float_huge_range",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "expected_index": 0
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 0
+      },
+      {
+        "case": "decimal_precision_2",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "expected_index": 0
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 1
+      },
+      {
+        "case": "finite_float_nonstart",
+        "operation": "index",
+        "passed": true,
+        "value": "1",
+        "expected_index": 1
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "expected_index": 1
+      },
+      {
+        "case": "decimal_nonstart",
+        "operation": "index",
+        "passed": true,
+        "value": "1",
+        "expected_index": 1
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "len",
+        "passed": true,
+        "value": "1"
+      },
+      {
+        "case": "datetime_upper_bound",
+        "operation": "first",
+        "passed": true,
+        "value": "datetime.datetime(9999, 12, 30, 23, 59, 59, 999999)"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "len",
+        "passed": true,
+        "value": "1"
+      },
+      {
+        "case": "datetime_lower_bound",
+        "operation": "first",
+        "passed": true,
+        "value": "datetime.datetime(1, 1, 2, 0, 0)"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "contains",
+        "passed": true,
+        "value": "False"
+      },
+      {
+        "case": "datetime_upper_nonmember",
+        "operation": "index",
+        "passed": true,
+        "exception": "ValueError",
+        "message": "9999-12-31 11:59:59.999999 is not in numeric range"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "contains",
+        "passed": true,
+        "value": "False"
+      },
+      {
+        "case": "datetime_lower_nonmember",
+        "operation": "index",
+        "passed": true,
+        "exception": "ValueError",
+        "message": "0001-01-01 12:00:00 is not in numeric range"
+      }
+    ]
+  },
+  {
+    "group": "cost",
+    "version": "parent",
+    "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+    "cases": [
+      {
+        "operation": "large_length",
+        "passed": false,
+        "length": 4000000000001,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38,
+        "boundary_matches_iteration_formula": false
+      },
+      {
+        "operation": "first_repeated_index",
+        "passed": false,
+        "timed_out": false,
+        "exit": 1,
+        "duration_ms": 37
+      },
+      {
+        "operation": "large_length_descending",
+        "passed": false,
+        "length": 4000000000001,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37,
+        "boundary_matches_iteration_formula": false
+      },
+      {
+        "operation": "first_repeated_index_descending",
+        "passed": false,
+        "timed_out": false,
+        "exit": 1,
+        "duration_ms": 36
+      }
+    ]
+  },
+  {
+    "group": "cost",
+    "version": "upstream_reference",
+    "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+    "cases": [
+      {
+        "operation": "large_length",
+        "passed": false,
+        "timed_out": true,
+        "exit": null,
+        "duration_ms": 2002
+      },
+      {
+        "operation": "first_repeated_index",
+        "passed": false,
+        "expected_first_index": 11,
+        "index": 19,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38,
+        "bounded_iteration_count": 30
+      },
+      {
+        "operation": "large_length_descending",
+        "passed": false,
+        "timed_out": true,
+        "exit": null,
+        "duration_ms": 2002
+      },
+      {
+        "operation": "first_repeated_index_descending",
+        "passed": false,
+        "expected_first_index": 11,
+        "index": 19,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 40,
+        "bounded_iteration_count": 30
+      }
+    ]
+  },
+  {
+    "group": "cost",
+    "version": "gpt-cew-r1",
+    "source_sha256": "ad764d4b772cf523db01261e1e85e5105743ab4e7c1dd9895243c2920f62248c",
+    "cases": [
+      {
+        "operation": "large_length",
+        "passed": false,
+        "timed_out": true,
+        "exit": null,
+        "duration_ms": 2003
+      },
+      {
+        "operation": "first_repeated_index",
+        "passed": false,
+        "expected_first_index": 11,
+        "index": 19,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 83,
+        "bounded_iteration_count": 30
+      },
+      {
+        "operation": "large_length_descending",
+        "passed": false,
+        "timed_out": true,
+        "exit": null,
+        "duration_ms": 2002
+      },
+      {
+        "operation": "first_repeated_index_descending",
+        "passed": false,
+        "expected_first_index": 11,
+        "index": 19,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 40,
+        "bounded_iteration_count": 30
+      }
+    ]
+  },
+  {
+    "group": "cost",
+    "version": "gpt-fixed-r2",
+    "source_sha256": "0a22e1bbbdd8505ded8481e838e9c6438c3b6d489825ca9331369a9d15a48c6e",
+    "cases": [
+      {
+        "operation": "large_length",
+        "passed": false,
+        "timed_out": true,
+        "exit": null,
+        "duration_ms": 2002
+      },
+      {
+        "operation": "first_repeated_index",
+        "passed": false,
+        "expected_first_index": 11,
+        "index": 18,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 41,
+        "bounded_iteration_count": 30
+      },
+      {
+        "operation": "large_length_descending",
+        "passed": false,
+        "timed_out": true,
+        "exit": null,
+        "duration_ms": 2002
+      },
+      {
+        "operation": "first_repeated_index_descending",
+        "passed": false,
+        "expected_first_index": 11,
+        "index": 18,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 40,
+        "bounded_iteration_count": 30
+      }
+    ]
+  },
+  {
+    "group": "cost",
+    "version": "gpt-fixed-r1",
+    "source_sha256": "ca8301dc35a7f8283695c62a5c4bff99c0ffa9bf09497dac46c19e09551b0a43",
+    "cases": [
+      {
+        "operation": "large_length",
+        "passed": false,
+        "timed_out": true,
+        "exit": null,
+        "duration_ms": 2002
+      },
+      {
+        "operation": "first_repeated_index",
+        "passed": false,
+        "expected_first_index": 11,
+        "index": 18,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 40,
+        "bounded_iteration_count": 30
+      },
+      {
+        "operation": "large_length_descending",
+        "passed": false,
+        "timed_out": true,
+        "exit": null,
+        "duration_ms": 2002
+      },
+      {
+        "operation": "first_repeated_index_descending",
+        "passed": false,
+        "expected_first_index": 11,
+        "index": 18,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 39,
+        "bounded_iteration_count": 30
+      }
+    ]
+  },
+  {
+    "group": "cost",
+    "version": "gpt-cew-r2",
+    "source_sha256": "baa5ed45d6fe6398e2f00b5474793b8e225d66acaf2fc9b7ef9e008c15804100",
+    "cases": [
+      {
+        "operation": "large_length",
+        "passed": false,
+        "timed_out": true,
+        "exit": null,
+        "duration_ms": 2002
+      },
+      {
+        "operation": "first_repeated_index",
+        "passed": false,
+        "expected_first_index": 11,
+        "index": 19,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 41,
+        "bounded_iteration_count": 30
+      },
+      {
+        "operation": "large_length_descending",
+        "passed": false,
+        "timed_out": true,
+        "exit": null,
+        "duration_ms": 2003
+      },
+      {
+        "operation": "first_repeated_index_descending",
+        "passed": false,
+        "expected_first_index": 11,
+        "index": 19,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 39,
+        "bounded_iteration_count": 30
+      }
+    ]
+  },
+  {
+    "group": "context",
+    "version": "parent",
+    "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+    "cases": [
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "len",
+        "passed": true,
+        "value": "2",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "index",
+        "passed": true,
+        "exception": "ValueError",
+        "message": "75 is not in numeric range",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "len",
+        "passed": true,
+        "value": "2",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 39
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "index",
+        "passed": true,
+        "exception": "ValueError",
+        "message": "-75 is not in numeric range",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('-1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      }
+    ]
+  },
+  {
+    "group": "context",
+    "version": "upstream_reference",
+    "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+    "cases": [
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "len",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 39
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "len",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "contains",
+        "passed": false,
+        "exception": "InvalidOperation",
+        "message": "[<class 'decimal.DivisionImpossible'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "InvalidOperation",
+        "message": "[<class 'decimal.DivisionImpossible'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "contains",
+        "passed": false,
+        "exception": "InvalidOperation",
+        "message": "[<class 'decimal.DivisionImpossible'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "InvalidOperation",
+        "message": "[<class 'decimal.DivisionImpossible'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('-1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 39
+      }
+    ]
+  },
+  {
+    "group": "context",
+    "version": "gpt-cew-r1",
+    "source_sha256": "ad764d4b772cf523db01261e1e85e5105743ab4e7c1dd9895243c2920f62248c",
+    "cases": [
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "len",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "len",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 39
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('-1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      }
+    ]
+  },
+  {
+    "group": "context",
+    "version": "gpt-fixed-r2",
+    "source_sha256": "0a22e1bbbdd8505ded8481e838e9c6438c3b6d489825ca9331369a9d15a48c6e",
+    "cases": [
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "len",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "len",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('-1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      }
+    ]
+  },
+  {
+    "group": "context",
+    "version": "gpt-fixed-r1",
+    "source_sha256": "ca8301dc35a7f8283695c62a5c4bff99c0ffa9bf09497dac46c19e09551b0a43",
+    "cases": [
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "len",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "len",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('-1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      }
+    ]
+  },
+  {
+    "group": "context",
+    "version": "gpt-cew-r2",
+    "source_sha256": "baa5ed45d6fe6398e2f00b5474793b8e225d66acaf2fc9b7ef9e008c15804100",
+    "cases": [
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "len",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "bounded_exponent_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "len",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "bounded_exponent_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "Overflow",
+        "message": "[<class 'decimal.Overflow'>]",
+        "constructor_failed": false,
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_positive",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "inexact_trap_negative",
+        "operation": "first",
+        "passed": true,
+        "value": "Decimal('-1.0')",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      }
+    ]
+  },
+  {
+    "group": "promotion",
+    "version": "parent",
+    "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+    "cases": [
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 46
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "len",
+        "passed": false,
+        "value": "5",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "len",
+        "passed": false,
+        "value": "5",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 39
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "contains",
+        "passed": true,
+        "value": "True",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 40
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "index",
+        "passed": true,
+        "value": "0",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      }
+    ]
+  },
+  {
+    "group": "promotion",
+    "version": "upstream_reference",
+    "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+    "cases": [
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "len",
+        "passed": true,
+        "value": "6",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "len",
+        "passed": true,
+        "value": "6",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "contains",
+        "passed": false,
+        "exception": "InvalidOperation",
+        "message": "[<class 'decimal.DivisionImpossible'>]",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "InvalidOperation",
+        "message": "[<class 'decimal.DivisionImpossible'>]",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      }
+    ]
+  },
+  {
+    "group": "promotion",
+    "version": "gpt-cew-r1",
+    "source_sha256": "ad764d4b772cf523db01261e1e85e5105743ab4e7c1dd9895243c2920f62248c",
+    "cases": [
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "len",
+        "passed": true,
+        "value": "6",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "len",
+        "passed": true,
+        "value": "6",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Rounded",
+        "message": "[<class 'decimal.Rounded'>]",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "Rounded",
+        "message": "[<class 'decimal.Rounded'>]",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      }
+    ]
+  },
+  {
+    "group": "promotion",
+    "version": "gpt-fixed-r2",
+    "source_sha256": "0a22e1bbbdd8505ded8481e838e9c6438c3b6d489825ca9331369a9d15a48c6e",
+    "cases": [
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "len",
+        "passed": true,
+        "value": "6",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "len",
+        "passed": true,
+        "value": "6",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 39
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Rounded",
+        "message": "[<class 'decimal.Rounded'>]",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 39
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "Rounded",
+        "message": "[<class 'decimal.Rounded'>]",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      }
+    ]
+  },
+  {
+    "group": "promotion",
+    "version": "gpt-fixed-r1",
+    "source_sha256": "ca8301dc35a7f8283695c62a5c4bff99c0ffa9bf09497dac46c19e09551b0a43",
+    "cases": [
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "len",
+        "passed": true,
+        "value": "6",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "len",
+        "passed": true,
+        "value": "6",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 39
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 39
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Rounded",
+        "message": "[<class 'decimal.Rounded'>]",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 40
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "Rounded",
+        "message": "[<class 'decimal.Rounded'>]",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 40
+      }
+    ]
+  },
+  {
+    "group": "promotion",
+    "version": "gpt-cew-r2",
+    "source_sha256": "baa5ed45d6fe6398e2f00b5474793b8e225d66acaf2fc9b7ef9e008c15804100",
+    "cases": [
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[9007199254740992.0, 9007199254740992.0, 9007199254740994.0, 9007199254740996.0, 9007199254740996.0, 9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "len",
+        "passed": true,
+        "value": "6",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "sequence",
+        "passed": true,
+        "value": "'[-9007199254740992.0, -9007199254740992.0, -9007199254740994.0, -9007199254740996.0, -9007199254740996.0, -9007199254740996.0]'",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "len",
+        "passed": true,
+        "value": "6",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 37
+      },
+      {
+        "case": "mixed_promotion_negative",
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "contains",
+        "passed": false,
+        "exception": "Rounded",
+        "message": "[<class 'decimal.Rounded'>]",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 40
+      },
+      {
+        "case": "rounded_trap_positive",
+        "operation": "index",
+        "passed": false,
+        "exception": "Rounded",
+        "message": "[<class 'decimal.Rounded'>]",
+        "timed_out": false,
+        "exit": 0,
+        "duration_ms": 38
+      }
+    ]
+  },
+  {
+    "group": "compatibility",
+    "version": "parent",
+    "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+    "cases": [
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "2 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "compatibility",
+    "version": "upstream_reference",
+    "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+    "cases": [
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "2 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "compatibility",
+    "version": "gpt-cew-r1",
+    "source_sha256": "ad764d4b772cf523db01261e1e85e5105743ab4e7c1dd9895243c2920f62248c",
+    "cases": [
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "2 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "compatibility",
+    "version": "gpt-fixed-r2",
+    "source_sha256": "0a22e1bbbdd8505ded8481e838e9c6438c3b6d489825ca9331369a9d15a48c6e",
+    "cases": [
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "2 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "compatibility",
+    "version": "gpt-fixed-r1",
+    "source_sha256": "ca8301dc35a7f8283695c62a5c4bff99c0ffa9bf09497dac46c19e09551b0a43",
+    "cases": [
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "2 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "compatibility",
+    "version": "gpt-cew-r2",
+    "source_sha256": "baa5ed45d6fe6398e2f00b5474793b8e225d66acaf2fc9b7ef9e008c15804100",
+    "cases": [
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "float_operation_nonmember_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "2 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "shortcircuit",
+    "version": "parent",
+    "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+    "cases": [
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "shortcircuit",
+    "version": "upstream_reference",
+    "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+    "cases": [
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "shortcircuit",
+    "version": "gpt-cew-r1",
+    "source_sha256": "ad764d4b772cf523db01261e1e85e5105743ab4e7c1dd9895243c2920f62248c",
+    "cases": [
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "shortcircuit",
+    "version": "gpt-fixed-r2",
+    "source_sha256": "0a22e1bbbdd8505ded8481e838e9c6438c3b6d489825ca9331369a9d15a48c6e",
+    "cases": [
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "shortcircuit",
+    "version": "gpt-fixed-r1",
+    "source_sha256": "ca8301dc35a7f8283695c62a5c4bff99c0ffa9bf09497dac46c19e09551b0a43",
+    "cases": [
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "shortcircuit",
+    "version": "gpt-cew-r2",
+    "source_sha256": "baa5ed45d6fe6398e2f00b5474793b8e225d66acaf2fc9b7ef9e008c15804100",
+    "cases": [
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_ascending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "contains",
+        "passed": true,
+        "value": "False",
+        "expected": "False",
+        "exit": 0
+      },
+      {
+        "case": "empty_large_integer_descending",
+        "operation": "index",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "0 is not in numeric range",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "floatstop",
+    "version": "parent",
+    "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+    "cases": [
+      {
+        "case": "stop_only_float_ascending",
+        "operation": "len",
+        "passed": false,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      },
+      {
+        "case": "stop_only_float_descending",
+        "operation": "len",
+        "passed": false,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "floatstop",
+    "version": "upstream_reference",
+    "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+    "cases": [
+      {
+        "case": "stop_only_float_ascending",
+        "operation": "len",
+        "passed": true,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      },
+      {
+        "case": "stop_only_float_descending",
+        "operation": "len",
+        "passed": true,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "floatstop",
+    "version": "gpt-cew-r1",
+    "source_sha256": "ad764d4b772cf523db01261e1e85e5105743ab4e7c1dd9895243c2920f62248c",
+    "cases": [
+      {
+        "case": "stop_only_float_ascending",
+        "operation": "len",
+        "passed": true,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      },
+      {
+        "case": "stop_only_float_descending",
+        "operation": "len",
+        "passed": true,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "floatstop",
+    "version": "gpt-fixed-r2",
+    "source_sha256": "0a22e1bbbdd8505ded8481e838e9c6438c3b6d489825ca9331369a9d15a48c6e",
+    "cases": [
+      {
+        "case": "stop_only_float_ascending",
+        "operation": "len",
+        "passed": true,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      },
+      {
+        "case": "stop_only_float_descending",
+        "operation": "len",
+        "passed": true,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "floatstop",
+    "version": "gpt-fixed-r1",
+    "source_sha256": "ca8301dc35a7f8283695c62a5c4bff99c0ffa9bf09497dac46c19e09551b0a43",
+    "cases": [
+      {
+        "case": "stop_only_float_ascending",
+        "operation": "len",
+        "passed": true,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      },
+      {
+        "case": "stop_only_float_descending",
+        "operation": "len",
+        "passed": true,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "floatstop",
+    "version": "gpt-cew-r2",
+    "source_sha256": "baa5ed45d6fe6398e2f00b5474793b8e225d66acaf2fc9b7ef9e008c15804100",
+    "cases": [
+      {
+        "case": "stop_only_float_ascending",
+        "operation": "len",
+        "passed": true,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      },
+      {
+        "case": "stop_only_float_descending",
+        "operation": "len",
+        "passed": true,
+        "value": 18014398509481984,
+        "expected": 18014398509481984,
+        "oracle": "builtin range over identical integral generated values and exact representable float boundary; no enumeration",
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "infinite-stop",
+    "version": "parent",
+    "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+    "cases": [
+      {
+        "case": "infinite_stop_ascending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      },
+      {
+        "case": "infinite_stop_descending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "infinite-stop",
+    "version": "upstream_reference",
+    "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+    "cases": [
+      {
+        "case": "infinite_stop_ascending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      },
+      {
+        "case": "infinite_stop_descending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "infinite-stop",
+    "version": "gpt-cew-r1",
+    "source_sha256": "ad764d4b772cf523db01261e1e85e5105743ab4e7c1dd9895243c2920f62248c",
+    "cases": [
+      {
+        "case": "infinite_stop_ascending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      },
+      {
+        "case": "infinite_stop_descending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "infinite-stop",
+    "version": "gpt-fixed-r2",
+    "source_sha256": "0a22e1bbbdd8505ded8481e838e9c6438c3b6d489825ca9331369a9d15a48c6e",
+    "cases": [
+      {
+        "case": "infinite_stop_ascending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      },
+      {
+        "case": "infinite_stop_descending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "infinite-stop",
+    "version": "gpt-fixed-r1",
+    "source_sha256": "ca8301dc35a7f8283695c62a5c4bff99c0ffa9bf09497dac46c19e09551b0a43",
+    "cases": [
+      {
+        "case": "infinite_stop_ascending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      },
+      {
+        "case": "infinite_stop_descending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "infinite-stop",
+    "version": "gpt-cew-r2",
+    "source_sha256": "baa5ed45d6fe6398e2f00b5474793b8e225d66acaf2fc9b7ef9e008c15804100",
+    "cases": [
+      {
+        "case": "infinite_stop_ascending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      },
+      {
+        "case": "infinite_stop_descending",
+        "operation": "len",
+        "passed": true,
+        "expected": "ValueError",
+        "exception": "ValueError",
+        "message": "cannot convert float NaN to integer",
+        "timed_out": false,
+        "exit": 0
+      }
+    ]
+  },
+  {
+    "group": "supplement",
+    "version": "parent",
+    "source_sha256": "3f1dd57de2dfa2fe1fcdf9311ae42571a02eb9b869dd67f04cfed80239011888",
+    "cases": [
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": 1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[1e+16, 1e+16]",
+        "sequence": "[1e+16, 1e+16]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": -1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[10000000000000001]",
+        "sequence": "[10000000000000001]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      }
+    ]
+  },
+  {
+    "group": "supplement",
+    "version": "upstream_reference",
+    "source_sha256": "a3e293dfdf3012c5c57bf35f4a3f42994bc5adecc7e535e4bc1d99872527e0e2",
+    "cases": [
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": 1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[1e+16, 1e+16]",
+        "sequence": "[1e+16, 1e+16]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": -1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[10000000000000001]",
+        "sequence": "[10000000000000001]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      }
+    ]
+  },
+  {
+    "group": "supplement",
+    "version": "gpt-cew-r1",
+    "source_sha256": "ad764d4b772cf523db01261e1e85e5105743ab4e7c1dd9895243c2920f62248c",
+    "cases": [
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": 1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[1e+16, 1e+16]",
+        "sequence": "[1e+16, 1e+16]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": -1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[10000000000000001]",
+        "sequence": "[10000000000000001]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      }
+    ]
+  },
+  {
+    "group": "supplement",
+    "version": "gpt-fixed-r2",
+    "source_sha256": "0a22e1bbbdd8505ded8481e838e9c6438c3b6d489825ca9331369a9d15a48c6e",
+    "cases": [
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": 1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[1e+16, 1e+16]",
+        "sequence": "[1e+16, 1e+16]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": -1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[10000000000000001]",
+        "sequence": "[10000000000000001]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      }
+    ]
+  },
+  {
+    "group": "supplement",
+    "version": "gpt-fixed-r1",
+    "source_sha256": "ca8301dc35a7f8283695c62a5c4bff99c0ffa9bf09497dac46c19e09551b0a43",
+    "cases": [
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": 1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[1e+16, 1e+16]",
+        "sequence": "[1e+16, 1e+16]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": -1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[10000000000000001]",
+        "sequence": "[10000000000000001]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      }
+    ]
+  },
+  {
+    "group": "supplement",
+    "version": "gpt-cew-r2",
+    "source_sha256": "baa5ed45d6fe6398e2f00b5474793b8e225d66acaf2fc9b7ef9e008c15804100",
+    "cases": [
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": 1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "contains",
+        "passed": false,
+        "value": "False",
+        "diagnostic_flags": [
+          "FloatOperation"
+        ],
+        "signal_contract": "default context only; no zero-flag or all-traps assertion"
+      },
+      {
+        "kind": "promoted_first_default",
+        "direction": -1,
+        "operation": "index",
+        "passed": false,
+        "exception": "ValueError",
+        "message": "-9007199254740992.0 is not in numeric range"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": 1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[1e+16, 1e+16]",
+        "sequence": "[1e+16, 1e+16]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      },
+      {
+        "kind": "zero_distance_length",
+        "direction": -1,
+        "operation": "len",
+        "passed": false,
+        "value": "0",
+        "expected": "[10000000000000001]",
+        "sequence": "[10000000000000001]",
+        "oracle": "direct start+i*step exclusive-bound enumeration, max four values"
+      }
+    ]
+  }
+]
