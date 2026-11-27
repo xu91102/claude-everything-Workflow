@@ -39,6 +39,7 @@ const FORWARDED_GIT_VALUE_FLAGS = new Set(['-C', '--git-dir', '--work-tree'])
 
 function splitCommandSegments(command) {
     const segments = []
+    const continuations = new Set(['&&', '||', '|'])
     let current = ''
     let quote = null
     let escaped = false
@@ -120,19 +121,26 @@ function splitCommandSegments(command) {
         }
         if (ch === '\n' || ch === ';') {
             push()
+            if (ch === ';' || !continuations.has(segments.at(-1)?.operator)) {
+                segments.push({ operator: ';' })
+            }
             if (ch === '\n' && hereDocs.length) {
                 i = skipHereDocBodies(command, i + 1, hereDocs) - 1
                 hereDocs.length = 0
             }
             continue
         }
-        if ((ch === '&' || ch === '|') && command[i + 1] === ch) {
-            push()
+        const pair = command.slice(i, i + 2)
+        if (pair === '>&' || pair === '<&' || pair === '&>' || pair === '>|') {
+            current += pair
             i += 1
             continue
         }
         if (ch === '&' || ch === '|') {
             push()
+            const paired = pair === '&&' || pair === '||' || pair === '|&'
+            segments.push({ operator: paired && pair !== '|&' ? pair : ch })
+            if (paired) i += 1
             continue
         }
         current += ch
@@ -224,16 +232,40 @@ const GIT_PATH_ENV = new Set([
     'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES'
 ])
 
+function shellScope(directory) {
+    return { directory, pipelineStart: directory, listStart: directory, inPipeline: false }
+}
+
+function advanceShellScope(scope, operator) {
+    // Each stage starts in the pipeline's original directory. A trailing & runs
+    // the whole AND/OR list in a child, including directory changes before &&.
+    if (operator === '|') {
+        scope.directory = scope.pipelineStart
+        scope.inPipeline = true
+        return
+    }
+    if (scope.inPipeline) scope.directory = scope.pipelineStart
+    if (operator === '&') scope.directory = scope.listStart
+    if (operator === '&' || operator === ';') scope.listStart = scope.directory
+    scope.pipelineStart = scope.directory
+    scope.inPipeline = false
+}
+
 function* gitCommitInvocations(command, initialCwd) {
-    const directories = [{ dir: initialCwd, unresolved: false }]
+    const scopes = [shellScope({ dir: initialCwd, unresolved: false })]
     for (const segment of splitCommandSegments(command)) {
-        const directory = directories[directories.length - 1]
+        const scope = scopes.at(-1)
+        const directory = scope.directory
         if (segment.scope === 'enter') {
-            directories.push({ ...directory })
+            scopes.push(shellScope(directory))
             continue
         }
         if (segment.scope === 'leave') {
-            if (directories.length > 1) directories.pop()
+            if (scopes.length > 1) scopes.pop()
+            continue
+        }
+        if (segment.operator) {
+            advanceShellScope(scope, segment.operator)
             continue
         }
         const tokens = tokenizeSegment(segment.text)
@@ -256,8 +288,10 @@ function* gitCommitInvocations(command, initialCwd) {
         if (executable === 'cd') {
             const target = tokens[idx + 1] === '--' ? tokens[idx + 2] : tokens[idx + 1]
             const next = applyCdTarget(target, directory.dir)
-            directory.unresolved = next.unresolved || (directory.unresolved && !path.isAbsolute(target || ''))
-            directory.dir = next.dir
+            scope.directory = {
+                dir: next.dir,
+                unresolved: next.unresolved || (directory.unresolved && !path.isAbsolute(target || ''))
+            }
             continue
         }
 

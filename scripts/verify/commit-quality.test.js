@@ -174,6 +174,31 @@ test("subshells inherit and restore their working directories independently", (t
   assert.match(multiple.stderr, /inner\.js:1/);
 });
 
+test("pipeline stages and background command lists keep their own working directories", (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "cew-cq-processes-"));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const outer = initRepo(root, "outer");
+  const inner = initRepo(outer, "inner");
+  for (const [dir, file] of [[outer, "outer.js"], [inner, "inner.js"]]) {
+    fs.writeFileSync(path.join(dir, file), "debugger;\n");
+    git(dir, "add", file);
+  }
+  const commit = "git commit -m 'test: context'";
+  for (const prefix of ["cd inner | cat;", "cat | cd inner;", "cat |&\n cd inner;",
+    "cd inner & wait;", "cd inner && true &", "cd inner |", "(cd inner) | cat;"]) {
+    const result = run(payload(prefix + " " + commit), { cwd: outer });
+    assert.match(result.stderr, /outer\.js:1/, prefix);
+    assert.doesNotMatch(result.stderr, /inner\.js:1/, prefix);
+  }
+  for (const command of ["cd inner 2>&1; " + commit, "cd inner && " + commit + " &",
+    "cd inner; cat | cd ..; " + commit]) {
+    assert.match(run(payload(command), { cwd: outer }).stderr, /inner\.js:1/, command);
+  }
+  const both = run(payload("cd inner &&\n " + commit + " & " + commit), { cwd: outer });
+  assert.match(both.stderr, /inner\.js:1/);
+  assert.match(both.stderr, /outer\.js:1/);
+});
+
 test("here-document input is data, including tab-stripped and quoted terminators", () => {
   const doc = "cat <<'FIRST' <<-SECOND\ngit commit -m example\nFIRST\n\tgit commit -m other\n\tSECOND";
   assert.equal(extractGitCommitInvocation(doc), null);
