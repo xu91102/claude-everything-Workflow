@@ -434,4 +434,48 @@ test("command substitution, nested subshells, heredoc messages, wrappers, and Wi
     assert.equal(res.exitCode, 2, reach);
     assert.match(res.stderr, /s\.js:1/, reach);
   }
+
+  // exec -c clears inherited Git env, and local -x applies within the function without leaking out.
+  const prevGitDir = process.env.GIT_DIR;
+  const prevGitWorkTree = process.env.GIT_WORK_TREE;
+  process.env.GIT_DIR = path.join(inner, ".git");
+  process.env.GIT_WORK_TREE = inner;
+  try {
+    const execClear = run(payload("exec -c git commit -m 'feat: exec-c'"), { cwd: repo });
+    assert.equal(execClear.exitCode, 0);
+    assert.equal(execClear.stderr, undefined);
+  } finally {
+    if (prevGitDir === undefined) delete process.env.GIT_DIR;
+    else process.env.GIT_DIR = prevGitDir;
+    if (prevGitWorkTree === undefined) delete process.env.GIT_WORK_TREE;
+    else process.env.GIT_WORK_TREE = prevGitWorkTree;
+  }
+
+  const execPrefixClear = run(
+    payload("GIT_DIR=inner/.git GIT_WORK_TREE=inner exec -c git commit -m 'feat: prefix-exec-c'"),
+    { cwd: repo },
+  );
+  assert.equal(execPrefixClear.exitCode, 0);
+  assert.equal(execPrefixClear.stderr, undefined);
+
+  const localIn = run(
+    payload("save() { local -x GIT_DIR=inner/.git GIT_WORK_TREE=inner; git commit -m 'feat: local-in'; }; save"),
+    { cwd: repo },
+  );
+  assert.equal(localIn.exitCode, 2);
+  assert.match(localIn.stderr, /s\.js:1/);
+
+  const localOut = run(
+    payload("save() { local -x GIT_DIR=inner/.git GIT_WORK_TREE=inner; }; save; git commit -m 'feat: local-out'"),
+    { cwd: repo },
+  );
+  assert.equal(localOut.exitCode, 0);
+  assert.equal(localOut.stderr, undefined);
+
+  const localClean = run(
+    payload("save() { local -x GIT_DIR=../.git GIT_WORK_TREE=..; git commit -m 'feat: local-clean'; }; save"),
+    { cwd: inner },
+  );
+  assert.equal(localClean.exitCode, 0);
+  assert.equal(localClean.stderr, undefined);
 });

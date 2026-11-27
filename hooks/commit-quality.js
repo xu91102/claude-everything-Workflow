@@ -334,13 +334,14 @@ function applyCdTarget(target, baseDir, physical = false) {
     return { dir: baseDir ? path.resolve(baseDir, target) : target, unresolved: false }
 }
 
-function shellScope(directory, inFunction = false) {
+function shellScope(directory, inFunction = false, localVars = null) {
     return {
         directory,
         pipelineStart: directory,
         listStart: directory,
         inPipeline: false,
         inFunction,
+        localVars,
         returned: false,
         exited: false,
         controlStack: [],
@@ -474,6 +475,40 @@ function updateGitVariables(previous, words, operation) {
     return variables
 }
 
+function updateDeclaredGitVariables(previous, args, isLocal, scope) {
+    let idx = 0
+    let exportFlag = null
+    let isGlobal = false
+    while (idx < args.length) {
+        const arg = args[idx]
+        if (arg === '--') {
+            idx += 1
+            break
+        }
+        if (!/^[-+][a-zA-Z]+$/.test(arg)) break
+        const plus = arg.startsWith('+')
+        for (const ch of arg.slice(1)) {
+            if (!plus && (ch === 'f' || ch === 'F' || ch === 'p')) return previous
+            if (ch === 'x') exportFlag = !plus
+            if (!plus && !isLocal && ch === 'g') isGlobal = true
+        }
+        idx += 1
+    }
+    const variables = { ...previous }
+    for (const word of args.slice(idx)) {
+        const assignment = SHELL_ASSIGNMENT.exec(word)
+        const name = assignment ? assignment[1] : word
+        if (!GIT_PATH_ENV.has(name)) continue
+        if (scope.inFunction && !isGlobal && scope.localVars) scope.localVars.add(name)
+        const old = variables[name]
+        variables[name] = {
+            value: assignment ? assignment[2] : (old?.value ?? null),
+            exported: exportFlag !== null ? exportFlag : Boolean(old?.exported)
+        }
+    }
+    return variables
+}
+
 function isDynamicGitPath(value) {
     return typeof value === 'string' && (isDynamicValue(value) || value.startsWith('~'))
 }
@@ -528,8 +563,10 @@ function parseLeadingCommandPrefix(tokens, baseVariables) {
                     break
                 }
                 if (opt === '-a' && idx + 1 < tokens.length) idx += 2
-                else if (opt === '-c' || opt === '-l') idx += 1
-                else break
+                else if (/^-[cl]+$/.test(opt)) {
+                    if (opt.includes('c')) ops.push({ type: 'clear' })
+                    idx += 1
+                } else break
             }
             continue
         }
@@ -735,7 +772,7 @@ function* walkShellCommands(segments, scope, analysis, depth) {
             continue
         }
         if (segment.body) {
-            const child = shellScope(directory, scope.inFunction)
+            const child = shellScope(directory, scope.inFunction, segment.shared ? scope.localVars : null)
             yield* walkShellCommands(segment.body, child, analysis, depth + 1)
             if (segment.shared) {
                 recordScopeMutation(scope, child.directory)
@@ -775,6 +812,16 @@ function* walkShellCommands(segments, scope, analysis, depth) {
             })
             continue
         }
+        if (executable === 'local' || executable === 'declare' || executable === 'typeset') {
+            const nextVars = updateDeclaredGitVariables(
+                activeDir.variables,
+                tokens.slice(idx + 1),
+                executable === 'local',
+                scope
+            )
+            recordScopeMutation(scope, { ...activeDir, variables: nextVars })
+            continue
+        }
         const definition = bypassFunctions ? null : activeDir.functions.get(executable)
         if (definition) {
             if (analysis.active.has(definition) || ++analysis.calls > 128) {
@@ -782,13 +829,16 @@ function* walkShellCommands(segments, scope, analysis, depth) {
                 continue
             }
             analysis.active.add(definition)
-            const child = shellScope({ ...activeDir, variables }, true)
+            const child = shellScope({ ...activeDir, variables }, true, new Set())
             yield* walkShellCommands(definition.body, child, analysis, depth + 1)
             analysis.active.delete(definition)
             if (definition.shared) {
                 const restored = { ...child.directory.variables }
-                for (const assignment of assignments) {
-                    const name = SHELL_ASSIGNMENT.exec(assignment)[1]
+                const restoreNames = [
+                    ...assignments.map((assignment) => SHELL_ASSIGNMENT.exec(assignment)[1]),
+                    ...(child.localVars || [])
+                ]
+                for (const name of restoreNames) {
                     if (Object.hasOwn(activeDir.variables, name)) restored[name] = activeDir.variables[name]
                     else delete restored[name]
                 }
