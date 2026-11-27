@@ -38,8 +38,8 @@ disable-model-invocation: true
    已确认失败原因正确的预期 TDD RED 继续 GREEN，不触发调试。其他失败按
    `systematic-debugging` 的分级入口处理，不跳过真实失败。
 2. 用 pre-delivery base 冻结包含 task-owned committed、staged、unstaged、untracked 的完整审查包，
-   范围合同作为 Spec source，按 `skills/code-review/SKILL.md` 选择相称的 review 模式。
-   满足该 Skill 的低风险与验证条件时可自审；需要独立审查却无法启动时不得降级。
+   范围合同作为 Spec source，按 `skills/code-review/SKILL.md` 启动独立只读子代理（`independent` 或 `dual`）完成审查；
+   实施者不得自我审查，独立审查不可用时返回 `BLOCKED`，不得降级。
    修复 Critical/Important findings 后复核受影响的验收与审查项，不把部分完成报告为交付完成。
 3. 逐条核对验收，按 `rules/common/testing.md` 运行 fresh commands。已在当前阶段运行且仍对应
    最终改动的证据可以复用；新改动、失败或未决风险才触发重跑。记录实际结果、未运行项和剩余风险。
