@@ -1,5 +1,17 @@
 {
   "version": 1,
+  "retired_agent_hashes": {
+    "harness-optimizer.md": [
+      "c5f8f99db42e5c63ebc2398dc426a37e283a653233e25193a1496a6ea3c8fa12",
+      "4530b8ff3cf3c1afa20732d3cad0f531ad15205865ee98feefdd2a3c2134a895",
+      "f14036aea8ff12806a0c5afb4fac12478471ebee50f6a13405f5c873b46f962a",
+      "5830fb4ad09823b9ae2d4e4821764782be4022bc9cd40aeeb20a6082abd662e1",
+      "c3ac215be413b024ec10475dbbb18d13f5618583c8ad5c9dd20d2cc99c0b6fe3",
+      "ec8b8873829b7dcd07b4bcac2ea9538b24b6417ce23b4a55da41646928a2bfd8",
+      "b83d828efde126a994efafc850cbb628999086383b5ceb8da207ab405680dcc9",
+      "63f8d6dfbd74b09548761d1e99d805850543769a664c9345293264862d062ebf"
+    ]
+  },
   "retired_skills": {
     "brainstorming": [
       "SKILL.md",

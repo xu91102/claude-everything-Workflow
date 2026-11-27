@@ -353,6 +353,42 @@ function checkInstallerMergeFailure() {
   assert.equal(fs.readFileSync(settingsPath, "utf8"), previous);
 }
 
+function checkRetiredAgentCleanup() {
+  const fixture = path.join(tempRoot, "retired-agent");
+  const agents = path.join(fixture, "agents");
+  const name = "harness-optimizer.md";
+  const target = path.join(agents, name);
+  const cleanup = path.join(fixture, "cleanup-retired-skills.js");
+  const original = "Distributed agent\n";
+  const manifest = JSON.parse(read(path.join(sourceRoot, "scripts/retired-skill-files.json")));
+  manifest.retired_agent_hashes = { [name]: [crypto.createHash("sha256").update(original).digest("hex")] };
+  fs.mkdirSync(agents, { recursive: true });
+  fs.copyFileSync(path.join(sourceRoot, "scripts/cleanup-retired-skills.js"), cleanup);
+  fs.writeFileSync(path.join(fixture, "retired-skill-files.json"), JSON.stringify(manifest));
+  const run = (...args) => {
+    const result = spawnSync(process.execPath, [cleanup, fixture, ...args], { encoding: "utf8" });
+    assert.ifError(result.error);
+    assert.equal(result.status, 0, result.stderr);
+  };
+
+  fs.writeFileSync(target, original.replace("\n", "\r\n"));
+  fs.chmodSync(target, 0o444);
+  run("--dry-run");
+  assert.equal(read(target), original);
+  run();
+  assert.equal(fs.existsSync(target), false, "remove an unmodified distribution on upgrade");
+  fs.writeFileSync(target, original + "My changes\n");
+  run();
+  assert.equal(read(target), original + "My changes\n");
+
+  const outside = path.join(fixture, "personal-agents");
+  fs.renameSync(agents, outside);
+  fs.writeFileSync(path.join(outside, name), original);
+  fs.symlinkSync(outside, agents, process.platform === "win32" ? "junction" : "dir");
+  run();
+  assert.equal(read(path.join(outside, name)), original, "preserve files outside the install root's agents directory");
+}
+
 function checkInstallerEntrypoint() {
   const profile = path.join(tempRoot, "installer-profile");
   const windows = process.platform === "win32";
@@ -547,7 +583,11 @@ function checkInstallerEntrypoint() {
   assert.doesNotMatch(read(path.join(agRoot, "skills/pr/SKILL.md")), /\$ARGUMENTS/);
   assert.doesNotMatch(read(path.join(agRoot, "skills/learn/SKILL.md")), /\$ARGUMENTS/);
   const agAgents = fs.readdirSync(path.join(agRoot, "agents")).sort();
-  assert.equal(agAgents.length, 5);
+  const expectedAgents = ["database-reviewer.md", "e2e-runner.md", "refactor-cleaner.md", "security-reviewer.md"];
+  assert.deepEqual(agAgents, expectedAgents);
+  for (const host of [".claude", ".codex"]) {
+    assert.deepEqual(fs.readdirSync(path.join(profile, host, "agents")).sort(), expectedAgents);
+  }
   for (const agentFile of agAgents) {
     const body = read(path.join(agRoot, "agents", agentFile));
     assert.match(body, /^subagent: true$/m);
@@ -843,6 +883,7 @@ try {
   assert.deepEqual(fs.readdirSync(outside), []);
   assert.throws(() => install("invalid", "unknown"), /host/i);
   checkLegacyMigration();
+  checkRetiredAgentCleanup();
   checkPromotedImplementationRule();
   checkCodexImplementationRuleUpgrades();
   checkAntigravityImplementationRuleUpgrades();
