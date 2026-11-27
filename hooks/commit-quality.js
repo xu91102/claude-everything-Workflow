@@ -12,6 +12,7 @@
 
 'use strict'
 
+const fs = require('fs')
 const path = require('path')
 
 const SECRET_PATTERNS = [
@@ -36,7 +37,6 @@ const SHELL_ASSIGNMENT = /^([a-zA-Z_][a-zA-Z0-9_]*)=([\s\S]*)$/
 const SHELL_CONTROL_WORDS = new Set(['!'])
 const CONDITIONAL_OPEN = new Set(['if', 'while', 'until', 'for', 'case'])
 const CONDITIONAL_CLOSE = new Map([['fi', 'if'], ['done', 'loop'], ['esac', 'case']])
-const CD_FLAGS = new Set(['-L', '-P', '-e', '-@'])
 const GIT_EXECUTABLE_REGEX = /^(?:.*[\\/])?git(?:\.exe)?$/i
 
 function isWindowsPathSuffix(text) {
@@ -193,6 +193,12 @@ function splitCommandSegments(command) {
         }
         const braceWord = (ch === '{' || ch === '}') && !current.trim() &&
             (i + 1 === command.length || /[\s;&|()<>]/.test(command[i + 1]))
+        if (!functionName && ch === '(' &&
+            /(?:^|\s)[a-zA-Z_][a-zA-Z0-9_]*(?:\[[^\]]*\])?\+?=$/.test(current)) {
+            i = readBalancedParen(command, i + 1)
+            current += '()'
+            continue
+        }
         if (functionName || ch === '(' || (braceWord && ch === '{')) {
             push()
             const group = { body: [], shared: opener === '{', functionName }
@@ -306,11 +312,23 @@ function extractCommitMessage(commitArgs) {
     return null
 }
 
-function applyCdTarget(target, baseDir) {
+function applyCdTarget(target, baseDir, physical = false) {
     if (!target || target === '-' || target.startsWith('~') || isDynamicValue(target)) {
         return { dir: baseDir, unresolved: true }
     }
-    if (/^(?:[A-Za-z]:[\\/]|\\\\)/.test(target)) {
+    const isWinAbs = /^(?:[A-Za-z]:[\\/]|\\\\)/.test(target)
+    if (physical) {
+        if (!path.isAbsolute(target) && !isWinAbs && !baseDir) {
+            return { dir: baseDir, unresolved: true }
+        }
+        const rawPath = path.isAbsolute(target) || isWinAbs ? target : `${baseDir}${path.sep}${target}`
+        try {
+            return { dir: fs.realpathSync.native(rawPath), unresolved: false }
+        } catch {
+            return { dir: baseDir, unresolved: true }
+        }
+    }
+    if (isWinAbs) {
         return { dir: target, unresolved: false }
     }
     return { dir: baseDir ? path.resolve(baseDir, target) : target, unresolved: false }
@@ -450,16 +468,65 @@ function parseLeadingCommandPrefix(tokens, baseVariables) {
     const assignments = []
     const ops = []
     let usedEnvCommand = false
+    let bypassFunctions = false
     let idx = 0
 
     while (idx < tokens.length) {
         const token = tokens[idx]
-        if (SHELL_CONTROL_WORDS.has(token) || token === 'command' || token === 'exec') {
+        if (SHELL_CONTROL_WORDS.has(token)) {
+            idx += 1
+            continue
+        }
+        if (token === 'command') {
+            bypassFunctions = true
+            idx += 1
+            while (idx < tokens.length) {
+                const opt = tokens[idx]
+                if (opt === '--') {
+                    idx += 1
+                    break
+                }
+                if (/^-[pvV]+$/.test(opt)) {
+                    if (opt.includes('v') || opt.includes('V')) {
+                        return {
+                            idx: tokens.length,
+                            executable: undefined,
+                            assignments,
+                            usedEnvCommand,
+                            bypassFunctions,
+                            variables: baseVariables
+                        }
+                    }
+                    idx += 1
+                } else {
+                    break
+                }
+            }
+            continue
+        }
+        if (token === 'exec') {
+            bypassFunctions = true
+            idx += 1
+            while (idx < tokens.length) {
+                const opt = tokens[idx]
+                if (opt === '--') {
+                    idx += 1
+                    break
+                }
+                if (opt === '-a' && idx + 1 < tokens.length) idx += 2
+                else if (opt === '-c' || opt === '-l') idx += 1
+                else break
+            }
+            continue
+        }
+        if (token === 'builtin') {
+            bypassFunctions = true
             idx += 1
             continue
         }
         if (token === 'env') {
             usedEnvCommand = true
+            bypassFunctions = true
             idx += 1
             while (idx < tokens.length) {
                 const opt = tokens[idx]
@@ -503,7 +570,7 @@ function parseLeadingCommandPrefix(tokens, baseVariables) {
             variables = updateGitVariables(variables, [op.token], assignOp)
         }
     }
-    return { idx, executable: tokens[idx], assignments, usedEnvCommand, variables }
+    return { idx, executable: tokens[idx], assignments, usedEnvCommand, bypassFunctions, variables }
 }
 
 function parseGitCommand(tokens, startIdx) {
@@ -553,9 +620,16 @@ function parseGitCommand(tokens, startIdx) {
 
 function parseCdTarget(tokens, startIdx) {
     let idx = startIdx + 1
-    while (idx < tokens.length && CD_FLAGS.has(tokens[idx])) idx += 1
+    let physical = false
+    while (idx < tokens.length && /^-[LPe@]+$/.test(tokens[idx])) {
+        for (const flag of tokens[idx].slice(1)) {
+            if (flag === 'P') physical = true
+            else if (flag === 'L') physical = false
+        }
+        idx += 1
+    }
     if (tokens[idx] === '--') idx += 1
-    return tokens[idx]
+    return { target: tokens[idx], physical }
 }
 
 function consumeControlKeywords(tokens, scope) {
@@ -657,7 +731,7 @@ function* walkShellCommands(segments, scope, analysis, depth) {
         if (skipCommand || controlIdx >= rawTokens.length) continue
         const activeDir = scope.directory
         const tokens = controlIdx > 0 ? rawTokens.slice(controlIdx) : rawTokens
-        const { idx, executable, assignments, usedEnvCommand, variables } =
+        const { idx, executable, assignments, usedEnvCommand, bypassFunctions, variables } =
             parseLeadingCommandPrefix(tokens, activeDir.variables)
 
         if (!executable) {
@@ -673,7 +747,7 @@ function* walkShellCommands(segments, scope, analysis, depth) {
             })
             continue
         }
-        const definition = activeDir.functions.get(executable)
+        const definition = bypassFunctions ? null : activeDir.functions.get(executable)
         if (definition) {
             if (analysis.active.has(definition) || ++analysis.calls > 128) {
                 yield { analysisWarning: 'Shell 函数调用超出静态分析范围' }
@@ -695,12 +769,13 @@ function* walkShellCommands(segments, scope, analysis, depth) {
             continue
         }
         if (executable === 'cd') {
-            const target = parseCdTarget(tokens, idx)
-            const next = applyCdTarget(target, activeDir.dir)
+            const { target, physical } = parseCdTarget(tokens, idx)
+            const next = applyCdTarget(target, activeDir.dir, physical)
+            const isAbs = path.isAbsolute(target || '') || /^(?:[A-Za-z]:[\\/]|\\\\)/.test(target || '')
             recordScopeMutation(scope, {
                 ...activeDir,
                 dir: next.dir,
-                unresolved: next.unresolved || (activeDir.unresolved && !path.isAbsolute(target || ''))
+                unresolved: next.unresolved || (activeDir.unresolved && !isAbs)
             })
             continue
         }

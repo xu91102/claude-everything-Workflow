@@ -377,4 +377,38 @@ test("command substitution, nested subshells, heredoc messages, wrappers, and Wi
   const elseBranch = run(payload("if false; then cd inner; else git commit -m 'feat: else'; fi"), { cwd: repo });
   assert.equal(elseBranch.exitCode, 0);
   assert.equal(elseBranch.stderr, undefined);
+
+  // command suppresses function lookup; array assignments are data; cd -P resolves physical symlinks.
+  const bypassCmd = "git() { /usr/bin/git commit -m 'test: helper'; }; command git status --short";
+  const bypassRes = run(payload(bypassCmd), { cwd: inner });
+  assert.equal(bypassRes.exitCode, 0);
+  assert.equal(bypassRes.stderr, undefined);
+
+  const cmdV = run(payload("command -v git commit -m 'test: v'"), { cwd: inner });
+  assert.equal(cmdV.exitCode, 0);
+  assert.equal(cmdV.stderr, undefined);
+
+  for (const arrCmd of [
+    "args=(git commit -m 'test: example'); printf '%s\\n' \"${args[@]}\"",
+    "args=( git commit -m 'test: spaced' )",
+  ]) {
+    const arrRes = run(payload(arrCmd), { cwd: inner });
+    assert.equal(arrRes.exitCode, 0, arrCmd);
+    assert.equal(arrRes.stderr, undefined, arrCmd);
+  }
+
+  const physOuter = initRepo(root, "phys-outer");
+  fs.writeFileSync(path.join(physOuter, "secret.js"), `const apiKey = "${secret}";\n`);
+  git(physOuter, "add", "secret.js");
+  const physInner = initRepo(root, "phys-inner");
+  const physChild = path.join(physInner, "child");
+  fs.mkdirSync(physChild, { recursive: true });
+  fs.symlinkSync(physChild, path.join(physOuter, "link"), process.platform === "win32" ? "junction" : "dir");
+  const physRes = run(payload("cd -P link/.. && git commit -m 'test: physical'"), { cwd: physOuter });
+  assert.equal(physRes.exitCode, 0);
+  assert.equal(physRes.stderr, undefined);
+
+  const badPhys = run(payload("cd -P nonexistent/.. && git commit -m 'feat: bad-phys'"), { cwd: root });
+  assert.equal(badPhys.exitCode, 0);
+  assert.match(badPhys.stderr, /无法检查暂存区/);
 });
